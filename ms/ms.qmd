@@ -1,0 +1,30 @@
+---
+title: "Untitled"
+format: html
+editor: visual
+---
+
+hooks:
+
+argument that closure rate is constant (requires a hysteresis)
+
+argument that stomatal size controls kinetics (only once you control for levels)
+
+Haworth et al (2018) paper arguing faster adaxial kinetics (I think). Check other cites in Woning and Horak
+
+## Introduction
+
+Stomatal kinetics are important for optimizing response to rapid fluctuations in light, leaf temperture, and VPD
+
+curve shape does not match what you'd expect for constant alpha term
+
+Anatomy possibly matters: shape and size
+
+Adaxial stomata might close faster (why?)
+
+What we did:\
+1. model stomatal close with hysteresis (can it explain overshoot and wrong-way response?
+
+2.  compare tau in tomatoes to that in rice
+3.  test for effect of size
+4.  test if adaxial+abaxial is faster than abaxial alone

@@ -1,0 +1,15 @@
+rm(list = ls())
+
+library(brms)
+library(checkmate)
+library(cowplot)
+library(dplyr)
+library(furrr)
+library(future)
+library(ggplot2)
+library(magrittr)
+library(posterior)
+library(purrr)
+library(readr)
+
+theme_set(theme_cowplot())
