@@ -74,7 +74,6 @@ write_rds(nls_summary, "objects/nls_summary.rds")
 # brms ----
 rh_curves |>
   split( ~ curve) |>
-  extract2(1)
   future_iwalk(\(df, curve_id) {
     file = paste0(sk_dir, curve_id, ".rds")
     if (!file.exists(file)) {
