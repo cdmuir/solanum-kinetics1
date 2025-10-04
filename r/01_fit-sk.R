@@ -74,28 +74,17 @@ write_rds(nls_summary, "objects/nls_summary.rds")
 # brms ----
 rh_curves |>
   split( ~ curve) |>
+  extract2(1)
   future_iwalk(\(df, curve_id) {
     file = paste0(sk_dir, curve_id, ".rds")
     if (!file.exists(file)) {
       
-      # need to figure out somethign with priors/init
-      # prior1 = prior(normal(1/3, 1/3), nlpar = "gf") +
-      #   prior(normal(-1/4, 1/4), nlpar = "dg", ub = 0) +
-      #   # prior(normal(-1, 1), nlpar = "lambda", ub = 0) +
-      #   prior(normal(100, 100), nlpar = "tau", lb = 0)
-      # df = filter(rh_curves, curve == "LA0107-C_pseudohypo_2000")
-      # init = list(gf = min(df$gsw),
-      #             dg = diff(range(df$gsw)),
-      #             tau = 50)
-      # fit_vico = nls(form_vico, data = df, start = init)
-      # init = c(as.list(coef(fit_vico)), lambda = 1)
-      # fit_cdweibull = nls(form_cdweibull, data = df, start = init)
-
       x = 2
       ad = 0.8
       n_divergent = Inf
+      converged = FALSE
       
-      while (n_divergent > 10 & x < 10) {
+      while (n_divergent > 10 & converged & x < 10) {
         fit_curve = brm(
           formula = bform_cdweibull,
           iter = x * 2000,
@@ -103,15 +92,27 @@ rh_curves |>
           data = df,
           chains = 1,
           cores = 1,
-          # prior = prior1,
           backend = "cmdstanr",
           control = list(adapt_delta = ad),
           seed = 360036340 + df$ci[1]
         )
+        
+        # Check divergent transitions
         n_divergent = nuts_params(fit_curve) |>
           subset(Parameter == "divergent__") |>
           pull(Value) |>
           sum()
+        
+        # Check convergence and effective sample size
+        converged = fit_curve |>
+          as_draws_df() |>
+          summarise_draws() |>
+          as_tibble() |>
+          filter(variable != "lprior", rhat >= 1.05 |
+                   ess_bulk <= 400) |>
+          nrow() |>
+          equals(0)
+        
         x = x + 1
         ad = min(ad * 1.1, 0.99)
       }
