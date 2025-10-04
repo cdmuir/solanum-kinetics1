@@ -25,7 +25,7 @@ bform_cdweibull = bf(
 # nls ----
 safe_nls = safely(nls)
 
-plan(multisession, workers = 10)
+plan(multisession, workers = 16)
 nls_summary = rh_curves |>
   split(~ curve) |>
   future_imap_dfr(\(df, curve_id) {
@@ -83,7 +83,7 @@ rh_curves |>
       n_divergent = Inf
       converged = FALSE
       
-      while (n_divergent > 10 & converged & x < 10) {
+      while ((n_divergent > 10 | !converged) & x < 10) {
         fit_curve = brm(
           formula = bform_cdweibull,
           iter = x * 2000,
