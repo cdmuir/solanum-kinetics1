@@ -72,20 +72,30 @@ nls_summary = rh_curves |>
 write_rds(nls_summary, "objects/nls_summary.rds")
 
 # brms ----
+
+bform_cdweibull1 = bf(
+  gsw ~ (1 - (exp(-(t_sec / tau) ^ lambda))) * gi * inv_logit(logitp) + gi * (exp(-(t_sec / tau) ^ lambda)),
+  gi ~ 1,
+  logitp ~ 1,
+  tau ~ 1,
+  lambda ~ 1,
+  nl = TRUE
+)
+
 rh_curves |>
   split( ~ curve) |>
   future_iwalk(\(df, curve_id) {
     file = paste0(sk_dir, curve_id, ".rds")
     if (!file.exists(file)) {
       
-      x = 2
+      x = 1
       ad = 0.8
       n_divergent = Inf
       converged = FALSE
       
       while ((n_divergent > 10 | !converged) & x < 10) {
         fit_curve = brm(
-          formula = bform_cdweibull,
+          formula = bform_cdweibull1,
           iter = x * 2000,
           thin = x,
           data = df,
