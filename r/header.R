@@ -1,5 +1,7 @@
 rm(list = ls())
 
+source("r/functions.R")
+
 library(brms)
 library(checkmate)
 library(cowplot)
@@ -16,3 +18,12 @@ library(readr)
 library(stringr)
 
 theme_set(theme_cowplot())
+
+form_vico = gsw ~ gf + dg * exp(-(t_sec / tau))  
+form_cdweibull = gsw ~ gf + dg * exp(-(t_sec / tau) ^ lambda)
+
+convergence_criteria = list(
+  rhat_max = 1.05,
+  ess_min = 400,
+  n_divergent = 10
+)
