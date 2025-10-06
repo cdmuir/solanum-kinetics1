@@ -11,3 +11,7 @@ read_rds("https://github.com/cdmuir/solanum-aa/raw/refs/heads/main/data/trimmed_
   mutate(ci = as.numeric(as.factor(curve))) |>
   mutate(t_sec = elapsed - min(elapsed), .by = ci) |>
   write_rds("data/rh_curves.rds")
+
+read_rds("https://github.com/cdmuir/solanum-aa/raw/refs/heads/main/data/stomata.rds") |>
+  select(-contains("pavement"), -contains("index")) |>
+  write_rds("data/stomata.rds")

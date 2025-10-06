@@ -5,11 +5,14 @@ plan(multisession, workers = 16)
 
 sk_dir = c("objects/sk-curves/")
 list.files(sk_dir, full.names = TRUE) |>
-  future_walk(refit_rh, convergence_criteria = convergence_criteria)
+  future_walk(
+    refit_rh,
+    convergence_criteria = convergence_criteria,
+    .progress = TRUE,
+    .options = furrr_options(seed = TRUE)
+  )
 
 # zip
-zip::zipr(
-  "objects/sk-curves.zip",
-  list.files(sk_dir, full.names = TRUE),
-  recurse = TRUE
-)
+zip::zipr("objects/sk-curves.zip",
+          list.files(sk_dir, full.names = TRUE),
+          recurse = TRUE)
