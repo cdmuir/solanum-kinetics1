@@ -17,6 +17,7 @@ library(posterior)
 library(purrr)
 library(readr)
 library(stringr)
+library(tidyr)
 
 theme_set(theme_cowplot())
 

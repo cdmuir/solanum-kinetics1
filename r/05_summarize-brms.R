@@ -11,6 +11,7 @@ brms_summary = list.files(sk_dir) |>
     fit = read_rds(file.path(sk_dir, paste0(.x, ".rds")))
     fit |>
       as_draws_df() |>
+      mutate(log_gi = log(exp(b_loggf_Intercept) + exp(b_logdg_Intercept))) |>
       summarize_draws() |>
       mutate(id = .x)
   }, .progress = TRUE)
