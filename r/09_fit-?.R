@@ -29,6 +29,7 @@ fit = brm(
   control = list(max_treedepth = 10)
 )
 
+write_rds(fit, "objects/fit.rds")
 conditional_effects(fit)
 bayes_R2(fit)
 
