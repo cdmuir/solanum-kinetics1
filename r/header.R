@@ -2,6 +2,7 @@ rm(list = ls())
 
 source("r/functions.R")
 
+library(ape)
 library(brms)
 library(checkmate)
 library(cowplot)
@@ -10,12 +11,14 @@ library(forcats)
 library(furrr)
 library(future)
 library(ggplot2)
+library(ggpp)
 library(glue)
 library(magrittr)
 library(posterior)
 library(purrr)
 library(readr)
 library(stringr)
+library(tidyr)
 
 theme_set(theme_cowplot())
 
