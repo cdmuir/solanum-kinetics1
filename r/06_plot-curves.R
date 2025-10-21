@@ -10,7 +10,7 @@ r2 = read_rds("objects/r2.rds")
 fig_width = 6
 fig_height = 5
 
-plan(multisession, workers = 10)
+plan(multisession, workers = 19)
 
 rh_curves = list.files("objects/sk-curves") |>
   str_remove(".rds$") |>

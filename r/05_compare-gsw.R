@@ -3,7 +3,7 @@ source("r/header.R")
 
 sk_dir = "objects/sk-curves"
 
-plan(multisession, workers = 10)
+plan(multisession, workers = 19)
 
 df1 = list.files(sk_dir) |>
   str_remove(".rds$") |>

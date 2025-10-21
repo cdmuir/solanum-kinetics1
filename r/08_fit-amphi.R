@@ -25,6 +25,10 @@ bf1 = bf(logtaumean | se(logtausd, sigma = TRUE) ~ lighttreatment + (1|a|accessi
 bf2 = bf(loggcl ~ lighttreatment + (1|a|accession) + (1|b|gr(phy, cov = A)))
 bf3 = bf(logfgmax ~ lighttreatment + (1|a|accession) + (1|b|gr(phy, cov = A)))
 
+bf1 = bf(logtaumean | se(logtausd, sigma = TRUE) ~ lighttreatment + (1|b|gr(phy, cov = A)))
+bf2 = bf(loggcl ~ lighttreatment + (1|b|gr(phy, cov = A)))
+bf3 = bf(logfgmax ~ lighttreatment + (1|b|gr(phy, cov = A)))
+
 # Fit model under high measurement light intensity
 fit_amphi_high = brm(
   bf1 + bf2 + bf3 + set_rescor(TRUE),

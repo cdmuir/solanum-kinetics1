@@ -8,7 +8,7 @@ if (!dir.exists(sk_dir)) {
 
 rh_curves = read_rds("data/rh_curves.rds")
 
-plan(multisession, workers = 16)
+plan(multisession, workers = 19)
 
 # Alternative formulation of CDWeibull
 form_cdweibull = gsw ~ exp(loggf) + exp(logdg) * exp(-(t_sec / exp(logtau))^exp(loglambda))

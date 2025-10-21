@@ -1,7 +1,7 @@
 # Refit each curve to achieve convergence
 source("r/header.R")
 
-plan(multisession, workers = 16)
+plan(multisession, workers = 19)
 
 sk_dir = c("objects/sk-curves/")
 list.files(sk_dir, full.names = TRUE) |>
