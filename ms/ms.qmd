@@ -1,4 +1,5 @@
 ---
+<<<<<<< HEAD
 title: "Guard cell size and pore aperture influence stomatal closure kinetics"
 format: html
 editor: visual
@@ -33,10 +34,79 @@ These are related because the benefit of small stomata goes away if gop is reall
 
 
 hooks:
+=======
+title: Stomatal size and aperture influence stomatal closure kinetics
+format:
+  pdf:
+    keep-tex: true  
+    toc: false
+author:
+  - name: "Christopher D. Muir$^{1,2*}$"
+    orcid: 0000-0003-2555-3878
+  - name: "Wei Shen Lim$^{1}$"
+affiliations: false
+number-sections: false
+header-includes: |
+  \usepackage{hyperref}
+  \addtokomafont{disposition}{\rmfamily}
+  \usepackage{siunitx}
+  \newcommand{\Aamphi}{$A_{\mathrm{amphi}}$}
+  \newcommand{\Ahypo}{$A_{\mathrm{hypo}}$}
+  \newcommand{\agcurve}{$A \textendash g_\text{sw}$}
+  \newcommand{\ca}{$C_\mathrm{a}$}
+  \newcommand{\caequals}[1]{$C_\mathrm{a} = \qty{#1}{\micro\mol\raiseto{-1}\mol}$}
+  \newcommand{\cabetween}[2]{#1 < $C_\mathrm{a} < \qty{#2}{\micro\mol\raiseto{-1}\mol}$}
+  \newcommand{\gmax}{$g_\text{max}$}
+  \newcommand{\gmaxratio}{$g_\text{max,ratio}$}
+  \newcommand{\gmaxshade}{$g_\text{max,shade}$}
+  \newcommand{\gmaxsun}{$g_\text{max,sun}$}
+  \newcommand{\gsw}{$g_\text{sw}$}
+  \newcommand{\loggsw}{$\log(g_\text{sw})$}
+  \newcommand{\logA}{$\log(A)$}
+  \newcommand{\ppfd}{$\mathrm{PPFD}$}
+  \newcommand{\ppfdequals}[1]{$\mathrm{PPFD} = \qty{#1}{\micro\mol\raiseto{-2}\meter\raiseto{-1}\second}$}
+  \newcommand{\ppfdqty}[1]{$\qty{#1}{\micro\mol\raiseto{-2}\meter\raiseto{-1}\second}$}
+  \newcommand{\rh}{$\mathrm{RH}$}
+  \newcommand{\rhequals}[1]{$\mathrm{RH} = #1\%$}
+  \newcommand{\tleafequals}[1]{$T_\mathrm{leaf} = \qty{#1}{\degreeCelsius}$}
+  \usepackage{setspace}
+  \usepackage[modulo]{lineno}
+mainfont: Times New Roman
+bibliography: solanum-kinetics.bib
+csl: https://www.zotero.org/styles/pnas
+---
 
-argument that closure rate is constant (requires a hysteresis)
+```{=latex}
+\begin{center}
+$^1$School of Life Sciences, University of Hawaiʻi; Mānoa, Hawaiʻi, USA\\
+$^2$Department of Botany, University of Wisconsin, Madison; Wisconsin, USA\\
+\medskip
+*Corresponding author: cdmuir@wisc.edu\\
+\medskip
+ORCID: Christopher D. Muir — \href{https://orcid.org/0000-0003-2555-3878}{0000-0003-2555-3878}\\
+\medskip
+Classification: Biological Sciences, Ecology\\
+\medskip
+Keywords: amphistomy, leaf gas exchange, \textit{Solanum}, stomatal kinetics, stomatal size
+\end{center}
+```
 
-argument that stomatal size controls kinetics (only once you control for levels)
+```{r load-objects, echo=FALSE, eval=TRUE, message=FALSE, warning=FALSE}
+library(brms)
+library(cowplot)
+library(dplyr)
+library(ggplot2)
+library(glue)
+library(kableExtra)
+library(knitr)
+library(lubridate)
+library(magrittr)
+library(readr)
+library(stringr)
+library(tibble)
+library(tidyr)
+
+theme_set(theme_cowplot())
 
 Haworth et al (2018) paper arguing faster adaxial kinetics (I think). Check other cites in Woning and Horak
 
@@ -61,3 +131,5 @@ What we did:\
 CD WEibull in Woning et al
 
 g_s = g_f + (g_i - g_f) * exp(-(t/tau)^lambda)
+=======
+source("../r/functions.R")
