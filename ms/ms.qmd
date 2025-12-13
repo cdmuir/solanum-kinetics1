@@ -1,41 +1,5 @@
 ---
-<<<<<<< HEAD
-title: "Guard cell size and pore aperture influence stomatal closure kinetics"
-format: html
-editor: visual
----
-
-## Abstract
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-## Introduction
-
-In nature, change is the only constant. One way that vascular plants (tracheophytes) cope with change is by adjusting stomatal pore aperture to optimize the trade-off between carbon gain and water loss. In the absence of physical limits and energentic tradeoffs, stomatal conductance (gsw) would respond instantaneously to perfectly track dynamic environmental conditions. In reality, stomatal responses take time. X ions must be pumped across ... and active responses depend on multiple feedback loops involving gene expression/ABA synthesis?/etc (Buckley). [illustrative empirical example or real numbers illustrating the problem]. Changes in stomatal aperture could be faster if there were more channels (?) per area, but this would require more energy (ATP?) and space in the guard cell membrane. 
-
-At first it might seem that natural selection should always favor faster stomatal responses to get closer to the ideal of instantaneous optimization. However, once you account for time lags and tradeoffs, it is less clear that faster is always better. Review some lit...
-
-There are two related hypotheses about how leaves might ... Two major hypotheses that are related but not well connected. One hypothesis is that smaller stomata are speedier. Explain why. Evidence is mixed. 
-
-One factor that might complicate the relationship between size and speed is aperture. As gop approaches gmax, large changes in turbot are required to make small changes in a. Over the long-term, selection optimizes gop:gmax ratio (Franks et al. 2012). What's evidence or progress on this?
-
-
-Is there a connection here to size-density scaling? It’s an empirical regularity, not a law of nature that higher gmax is associated with smaller stomata. This is an observation that requires explanation, not a presumption of truth. 
-
-What's never been done before is to put these two ideas together. This means that weak relationships between size and speed might be because people have not controlled for aperture (gop:gmax ratio).
-
-Factors cannot also manifest at different scales of biological organization. Here we focus on two levels: variation among species and variation among individuals within species. To consider it abstractly, if factors A and B influnce trait C according to some mechanistic model, but factor A is typically fixed within species but varies among species, then B will explain much of the variation in C within species. But if A varies among species, then A will explain much of the variation in C among species. We hypothesize that stomatal size is relatively constant within species, but varies among species.  In contrast, aperture (gop:gmax) varies because of mismatches between leaf anatomy and gopt.
-
-
-And that smaller stomata are faster.
-
-These are related because the benefit of small stomata goes away if gop is really high.
-
-
-
-hooks:
-=======
-title: Stomatal size and aperture influence stomatal closure kinetics
+title: Guard cell size and pore aperture influence stomatal closure kinetics
 format:
   pdf:
     keep-tex: true  
@@ -108,6 +72,42 @@ library(tidyr)
 
 theme_set(theme_cowplot())
 
+source("../r/functions.R")
+
+```
+
+
+## Abstract
+
+Guard cell size and stomatal density vary over X and X orders of magnitude among extant vascular land plants, yet the adaptive significance of much of this variation remains unclear. The evolution of guard cell size in particular is poorly understood and may even be constrained by nonadaptive features like genome size. One hypothesis is that natural selection may favor smaller guard cells to increase the rate at which stomatal conductance responds to fluctuating environmental conditions. A related hypothesis is that operational stomatal conductance (gop) is often $\approx 25\%$ of its theoretical maximum (gmax) because at this stomatal aperture, guard cell volume is poised to change rapidly with changes in turgor pressure. The support for both hypothesis is limited and mixed, in part because they have not been tested together, even though both guard cell size and the ratio of gop to gmax (gop:gmax) should influence stomatal kinetics. We measured stomatal closure kinetics in response to an abrupt increase in vapor pressure deficit (VPD) among 29 diverse wild tomato populations in the genus \textit{Solanum}. Both smaller guard cell size and lower gop:gmax were associated with faster stomatal closure kinetics, but at different levels of biological organization. Guard cell size explained X% of the variance in stomatal kinetics among populations, whereas gop:gmax explained X% of the variance among individuals within populations. [neither result would have been supported if analyzed in isolation - is this true?]. We conclude that guard cell size may respond to selection on stomatal kinetics over evolutionary time, but actual kinetics are modulated by a tradeoff between maximizing gop and minimizing the time required for stomatal closure. Putting these hypotheses together with stabilizing selection on gop may explain why stomatal size and density negatively covary among species.
+
+## Introduction
+
+In nature, change is the only constant. One way that vascular plants (tracheophytes) cope with change is by adjusting stomatal pore aperture to optimize the trade-off between carbon gain and water loss. In the absence of physical limits and energentic tradeoffs, stomatal conductance (gsw) would respond instantaneously to perfectly track dynamic environmental conditions. In reality, stomatal responses take time. X ions must be pumped across ... and active responses depend on multiple feedback loops involving gene expression/ABA synthesis?/etc (Buckley). [illustrative empirical example or real numbers illustrating the problem]. Changes in stomatal aperture could be faster if there were more channels (?) per area, but this would require more energy (ATP?) and space in the guard cell membrane. 
+
+At first it might seem that natural selection should always favor faster stomatal responses to get closer to the ideal of instantaneous optimization. However, once you account for time lags and tradeoffs, it is less clear that faster is always better. Review some lit...
+
+There are two related hypotheses about how leaves might ... Two major hypotheses that are related but not well connected. One hypothesis is that smaller stomata are speedier. Explain why. Evidence is mixed. 
+
+One factor that might complicate the relationship between size and speed is aperture. As gop approaches gmax, large changes in turbot are required to make small changes in a. Over the long-term, selection optimizes gop:gmax ratio (Franks et al. 2012). What's evidence or progress on this?
+
+
+Is there a connection here to size-density scaling? It’s an empirical regularity, not a law of nature that higher gmax is associated with smaller stomata. This is an observation that requires explanation, not a presumption of truth. 
+
+What's never been done before is to put these two ideas together. This means that weak relationships between size and speed might be because people have not controlled for aperture (gop:gmax ratio).
+
+Factors cannot also manifest at different scales of biological organization. Here we focus on two levels: variation among species and variation among individuals within species. To consider it abstractly, if factors A and B influnce trait C according to some mechanistic model, but factor A is typically fixed within species but varies among species, then B will explain much of the variation in C within species. But if A varies among species, then A will explain much of the variation in C among species. We hypothesize that stomatal size is relatively constant within species, but varies among species.  In contrast, aperture (gop:gmax) varies because of mismatches between leaf anatomy and gopt.
+
+
+And that smaller stomata are faster.
+
+These are related because the benefit of small stomata goes away if gop is really high.
+
+
+
+hooks:
+
+
 Haworth et al (2018) paper arguing faster adaxial kinetics (I think). Check other cites in Woning and Horak
 
 
@@ -131,14 +131,3 @@ What we did:\
 CD WEibull in Woning et al
 
 g_s = g_f + (g_i - g_f) * exp(-(t/tau)^lambda)
-=======
-source("../r/functions.R")
-
-```
-
-## Abstract
-
-Guard cell size and stomatal density vary over X and X orders of magnitude among extant vascular land plants, yet the adaptive significance of much of this variation remains unclear. The evolution of guard cell size in particular is poorly understood and may even be constrained by nonadaptive features like genome size. One hypothesis is that natural selection may favor smaller guard cells to increase the rate at which stomatal conductance responds to fluctuating environmental conditions. A related hypothesis is that operational stomatal conductance (gop) is often $\approx 25\%$ of its theoretical maximum (gmax) because at this stomatal aperture, guard cell volume is poised to change rapidly with changes in turgor pressure. The support for both hypothesis is limited and mixed, in part because they have not been tested together, even though both guard cell size and the ratio of gop to gmax (gop:gmax) should influence stomatal kinetics. We measured stomatal closure kinetics in response to an abrupt increase in vapor pressure deficit (VPD) among 29 diverse wild tomato populations in the genus \textit{Solanum}. Both smaller guard cell size and lower gop:gmax were associated with faster stomatal closure kinetics, but at different levels of biological organization. Guard cell size explained X% of the variance in stomatal kinetics among populations, whereas gop:gmax explained X% of the variance among individuals within populations. [neither result would have been supported if analyzed in isolation - is this true?]. We conclude that guard cell size may respond to selection on stomatal kinetics over evolutionary time, but actual kinetics are modulated by a tradeoff between maximizing gop and minimizing the time required for stomatal closure. Putting these hypotheses together with stabilizing selection on gop may explain why stomatal size and density negatively covary among species.
-
-## Introduction
-
