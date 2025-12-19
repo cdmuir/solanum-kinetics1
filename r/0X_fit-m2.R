@@ -1,7 +1,7 @@
-# Fit CDWeibulll mode to each curve separately
+# Fit model 2 to each curve separately
 source("r/header.R")
 
-sk_dir = c("objects/sk-curves/")
+sk_dir = c("objects/sk-curves2/")
 if (!dir.exists(sk_dir)) {
   dir.create(sk_dir)
 }
@@ -9,22 +9,16 @@ if (!dir.exists(sk_dir)) {
 rh_curves = read_rds("data/rh_curves.rds")
 
 plan(multisession, workers = 9)
+# a_exact = a_max + (a_star - a_max) * R ^ exp(-t/tau_P)
 
-# Alternative formulation of CDWeibull
-form_cdweibull = gsw ~ exp(loggf) + exp(logdg) * exp(-(t_sec / exp(logtau))^exp(loglambda))
+form2 = gsw ~ exp(loggmax) + (exp(loggf) - exp(loggmax)) * R ^ exp(-(t_sec / exp(logtau)))
 
-bform_cdweibull = bf(form_cdweibull, loggf ~ 1, logdg ~ 1, logtau ~ 1, loglambda ~ 1, nl = TRUE)
+bform2 = bf(form2, loggf ~ 1, R ~ 1, loggmax ~ 1, logtau ~ 1, nl = TRUE)
 
 pri = c(
   prior(
     normal(log(0.1), 2),
     nlpar = "loggf",
-    lb = log(0.001),
-    ub = log(2)
-  ),
-  prior(
-    normal(log(0.5), 2),
-    nlpar = "logdg",
     lb = log(0.001),
     ub = log(2)
   ),
@@ -35,10 +29,14 @@ pri = c(
     ub = log(10000)
   ),
   prior(
-    normal(log(2), 1),
-    nlpar = "loglambda",
-    lb = log(0.1),
-    ub = log(10)
+    normal(log(0.5), 2),
+    nlpar = "loggmax",
+    lb = log(0.001),
+    ub = log(2)
+  ),
+  prior(
+    normal(0, 1),
+    nlpar = "R"
   )
 )
 
@@ -50,7 +48,7 @@ rh_curves |>
     file = paste0(sk_dir, curve_id, ".rds")
 
     fit = fit_rh1(
-      formula = bform_cdweibull,
+      formula = bform2,
       data = df,
       prior = pri,
       thin = 2,
