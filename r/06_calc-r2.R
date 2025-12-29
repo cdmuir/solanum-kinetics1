@@ -1,19 +1,40 @@
 # Estimate Bayesian R2 for all curves
 source("r/header.R")
 
-sk_dir = "objects/sk-curves"
+assert_true(setequal(
+  list.files("objects/weibull"),
+  list.files("objects/inertia")
+))
+
+sk_dir1 = "objects/weibull"
+sk_dir2 = "objects/inertia"
 
 plan(multisession, workers = 19)
 
-r2 = list.files(sk_dir) |>
-  str_remove(".rds$") |>
+r2 = list.files(sk_dir1) |>
   future_map_dfr(\(.x) {
-    fit = read_rds(file.path(sk_dir, paste0(.x, ".rds")))
-    fit |>
-      bayes_R2() |>
-      as_tibble() |>
-      mutate(id = .x,
-             converged = check_convergence(fit, convergence_criteria))
+    fit_weibull = read_rds(file.path(sk_dir1, .x, ".rds"))
+    fit_inertia = read_rds(file.path(sk_dir2, .x, ".rds"))
+    
+    bind_rows(
+      fit_weibull |>
+        bayes_R2() |>
+        as_tibble() |>
+        mutate(
+          id = .x,
+          converged = check_convergence(fit_weibull, convergence_criteria),
+          model = "weibull"
+        ),
+      fit_inertia |>
+        bayes_R2() |>
+        as_tibble() |>
+        mutate(
+          id = .x,
+          converged = check_convergence(fit_inertia, convergence_criteria),
+          model = "inertia"
+        )
+    )
+    
   }, .progress = TRUE)
 
 write_rds(r2, "objects/r2.rds")
