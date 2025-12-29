@@ -1,9 +1,9 @@
-# Refit each CDWeibull model curve to achieve convergence if needed
+# Refit each inertia model curve to achieve convergence if needed
 source("r/header.R")
 
 plan(multisession, workers = 19)
 
-sk_dir = c("objects/weibull/")
+sk_dir = c("objects/inertia/")
 list.files(sk_dir, full.names = TRUE) |>
   future_walk(
     refit_rh,
@@ -13,6 +13,6 @@ list.files(sk_dir, full.names = TRUE) |>
   )
 
 # zip
-zipr("objects/weibull.zip",
+zipr("objects/inertia.zip",
      list.files(sk_dir, full.names = TRUE),
      recurse = TRUE)
