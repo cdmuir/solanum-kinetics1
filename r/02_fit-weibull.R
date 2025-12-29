@@ -54,7 +54,7 @@ joined_data |>
       prior = pri,
       thin = 2,
       adapt_delta = 0.8,
-      seed = 360036340 + 1000 * df$gsw[1]
+      seed = 360036340 + round(1000 * df$gsw[1])
     )
     
     write_rds(fit, file)
