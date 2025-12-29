@@ -13,8 +13,8 @@ plan(multisession, workers = 19)
 
 r2 = list.files(sk_dir1) |>
   future_map_dfr(\(.x) {
-    fit_weibull = read_rds(file.path(sk_dir1, .x, ".rds"))
-    fit_inertia = read_rds(file.path(sk_dir2, .x, ".rds"))
+    fit_weibull = read_rds(file.path(sk_dir1, .x))
+    fit_inertia = read_rds(file.path(sk_dir2, .x))
     
     bind_rows(
       fit_weibull |>
