@@ -16,15 +16,19 @@ pars_summary = list.files(sk_dir1) |>
     fit_weibull = read_rds(file.path(sk_dir1, .x))
     fit_inertia = read_rds(file.path(sk_dir2, .x))
     
-    fit_weibull |>
-      as_draws_df() |>
-      mutate(log_gi = log(exp(b_loggf_Intercept) + exp(b_logdg_Intercept))) |>
-      summarize_draws() |>
-      mutate(id = str_remove(.x, "\\.rds$"), model = "weibull")
-    fit_inertia |>
-      as_draws_df() |>
-      summarize_draws() |>
-      mutate(id = str_remove(.x, "\\.rds$"), model = "inertia")
+    bind_rows(
+      fit_weibull |>
+        as_draws_df() |>
+        mutate(log_gi = log(
+          exp(b_loggf_Intercept) + exp(b_logdg_Intercept)
+        )) |>
+        summarize_draws() |>
+        mutate(id = str_remove(.x, "\\.rds$"), model = "weibull"),
+      fit_inertia |>
+        as_draws_df() |>
+        summarize_draws() |>
+        mutate(id = str_remove(.x, "\\.rds$"), model = "inertia")
+    )
   }, .progress = TRUE)
 
 write_rds(pars_summary, "objects/pars-summary.rds")
