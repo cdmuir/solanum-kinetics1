@@ -21,7 +21,7 @@ r2 = list.files(sk_dir1) |>
         bayes_R2() |>
         as_tibble() |>
         mutate(
-          id = .x,
+          id = str_remove(.x, "\\.rds$"),
           converged = check_convergence(fit_weibull, convergence_criteria),
           model = "weibull"
         ),
@@ -29,7 +29,7 @@ r2 = list.files(sk_dir1) |>
         bayes_R2() |>
         as_tibble() |>
         mutate(
-          id = .x,
+          id = str_remove(.x, "\\.rds$"),
           converged = check_convergence(fit_inertia, convergence_criteria),
           model = "inertia"
         )
