@@ -1,4 +1,5 @@
 # Fit model 2 to each curve separately
+# this is model where da/dP declines exponentially with P
 source("r/header.R")
 
 sk_dir = c("objects/sk-curves2/")

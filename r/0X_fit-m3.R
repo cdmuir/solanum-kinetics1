@@ -1,4 +1,5 @@
-# Fit model 3 to each curve separately
+# Fit model 3 (power function) to each curve separately
+# this is not quite correct since it's using raw g, not g normalized distance to gmax
 source("r/header.R")
 
 sk_dir = c("objects/sk-curves3/")
@@ -9,11 +10,12 @@ if (!dir.exists(sk_dir)) {
 rh_curves = read_rds("data/rh_curves.rds")
 
 plan(multisession, workers = 9)
-# a_exact = a_max + (a_star - a_max) * R ^ exp(-t/tau_P)
+# g_final ^ (1/k) + (g_init ^ (1/k) - g_final ^ (1/k)) * exp(-t/tau_P)
+# let lambda = -1/k
 
-form3 = gsw ~ exp(loggmax) + (exp(loggf) - exp(loggmax)) * R ^ exp(-(t_sec / exp(logtau))^exp(loglambda))
+form3 = gsw ~ exp(loggf) ^ -exp(loglambda) + (exp(loggi) ^ -exp(loglambda) - exp(loggf) ^ -exp(loglambda)) * exp(-t_sec / exp(logtau)) 
 
-bform3 = bf(form3, loggf ~ 1, R ~ 1, loggmax ~ 1, logtau ~ 1, loglambda ~ 1, nl = TRUE)
+bform3 = bf(form3, loggf ~ 1, loggi ~ 1, logtau ~ 1, loglambda ~ 1, nl = TRUE)
 
 pri = c(
   prior(
@@ -23,20 +25,16 @@ pri = c(
     ub = log(2)
   ),
   prior(
-    normal(0, 1),
-    nlpar = "R"
+    normal(log(0.1), 2),
+    nlpar = "loggi",
+    lb = log(0.001),
+    ub = log(2)
   ),
   prior(
     normal(log(300), 1),
     nlpar = "logtau",
     lb = log(10),
     ub = log(10000)
-  ),
-  prior(
-    normal(log(0.5), 2),
-    nlpar = "loggmax",
-    lb = log(0.001),
-    ub = log(2)
   ),
   prior(
     normal(log(2), 1),

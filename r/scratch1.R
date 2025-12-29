@@ -1,3 +1,4 @@
+# Deriving model with da / dP as exponential function
 library(cowplot)
 library(dplyr)
 library(ggplot2)

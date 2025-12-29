@@ -1,6 +1,6 @@
 # quick and dirty model comparison while doing model dev
 x = list.files("objects/sk-curves")
-i <- 1
+i <- 9
 m1 = read_rds(paste0("objects/sk-curves/", x[i])) |>
   add_criterion("loo", moment_match = FALSE)
 m2 = read_rds(paste0("objects/sk-curves2/", x[i])) |>
@@ -15,6 +15,8 @@ loo_compare(m1, m2, m3)
 
 conditional_effects(m1)
 conditional_effects(m2)
+conditional_effects(m3)
+
 
 ggplot(m1$data, aes(t_sec, gsw)) +
   geom_point() +
@@ -27,7 +29,7 @@ ggplot(m1$data, aes(t_sec, gsw)) +
     alpha = 0.2,
     fill = "tomato"
   ) +
-geom_line(data = conditional_effects(m2)[[1]],
+  geom_line(data = conditional_effects(m2)[[1]],
             aes(t_sec, estimate__),
             color = "steelblue") +
   geom_ribbon(
@@ -46,3 +48,12 @@ geom_line(data = conditional_effects(m2)[[1]],
     fill = "red"
   )
 
+
+m1$data |>
+  mutate(
+    gsmax = 0.2,
+    gsmin = 0.03,
+    Z = ((gsw - gsmax) / (gsmin - gsmax)) ^ (1 / -2)
+  ) |>
+  ggplot(aes(x = t_sec, y = Z)) +
+  geom_point() 
