@@ -11,7 +11,7 @@ sk_dir2 = "objects/inertia"
 
 plan(multisession, workers = 19)
 
-brms_summary = list.files(sk_dir1) |>
+pars_summary = list.files(sk_dir1) |>
   future_map_dfr(\(.x) {
     fit_weibull = read_rds(file.path(sk_dir1, .x))
     fit_inertia = read_rds(file.path(sk_dir2, .x))
@@ -27,4 +27,4 @@ brms_summary = list.files(sk_dir1) |>
       mutate(id = str_remove(.x, "\\.rds$"), model = "inertia")
   }, .progress = TRUE)
 
-write_rds(brms_summary, "objects/brms-summary.rds")
+write_rds(pars_summary, "objects/pars-summary.rds")
