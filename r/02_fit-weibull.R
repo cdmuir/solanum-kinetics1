@@ -1,14 +1,14 @@
 # Fit CDWeibulll mode to each curve separately
 source("r/header.R")
 
-sk_dir = c("objects/sk-curves/")
+sk_dir = c("objects/weibull/")
 if (!dir.exists(sk_dir)) {
   dir.create(sk_dir)
 }
 
-rh_curves = read_rds("data/rh_curves.rds")
+joined_data = read_rds("data/joined-data.rds")
 
-plan(multisession, workers = 9)
+plan(multisession, workers = 19)
 
 # Alternative formulation of CDWeibull
 form_cdweibull = gsw ~ exp(loggf) + exp(logdg) * exp(-(t_sec / exp(logtau))^exp(loglambda))
@@ -42,9 +42,8 @@ pri = c(
   )
 )
 
-rh_curves |>
+joined_data |>
   split( ~ curve) |>
-  magrittr::extract(1:9) |>
   future_iwalk(\(df, curve_id) {
     
     file = paste0(sk_dir, curve_id, ".rds")
