@@ -1,9 +1,9 @@
-# Refit each curve to achieve convergence
+# Refit each CDWeibull curve to achieve convergence if needed
 source("r/header.R")
 
 plan(multisession, workers = 19)
 
-sk_dir = c("objects/sk-curves/")
+sk_dir = c("objects/weibull/")
 list.files(sk_dir, full.names = TRUE) |>
   future_walk(
     refit_rh,
@@ -13,6 +13,6 @@ list.files(sk_dir, full.names = TRUE) |>
   )
 
 # zip
-zip::zipr("objects/sk-curves.zip",
+zip::zipr("objects/weibull.zip",
           list.files(sk_dir, full.names = TRUE),
           recurse = TRUE)
