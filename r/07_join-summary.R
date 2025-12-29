@@ -47,4 +47,4 @@ full_join(
     total_gmax = lower_gmax + upper_gmax,
     f_gmax = exp(log_gi_mean) / total_gmax
   ) |>
-  write_rds("data/joined-data.rds")
+  write_rds("data/joined-summary.rds")

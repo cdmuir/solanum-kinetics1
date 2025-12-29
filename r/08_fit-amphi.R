@@ -3,7 +3,7 @@
 # of light_intensity, light_treatment, log_gcl, or log_fgmax
 source("r/header.R")
 
-joined_data = read_rds("data/joined-data.rds") |>
+joined_summary = read_rds("data/joined-summary.rds") |>
   # need to do more careful outlier removal
   filter(log_tau_mean < 7) |>
   mutate(loggcl = log(guard_cell_length_um),
@@ -30,7 +30,7 @@ bf3 = bf(logfgmax ~ lighttreatment + (1|a|accession) + (1|b|gr(phy, cov = A)))
 # Fit model under high measurement light intensity
 fit_amphi_high0 = brm(
   bf1 + bf2 + bf3 + set_rescor(TRUE),
-  data = joined_data |>
+  data = joined_summary |>
     filter(curve_type == "amphi", lightintensity == "high") |>
     mutate(phy = accession),
   data2 = list(A = A),
@@ -47,7 +47,7 @@ fit_amphi_high0 = brm(
 # Fit model under low measurement light intensity
 fit_amphi_low0 = brm(
   bf1 + bf2 + bf3 + set_rescor(TRUE),
-  data = joined_data |>
+  data = joined_summary |>
     filter(curve_type == "amphi", lightintensity == "low") |>
     mutate(phy = accession),
   data2 = list(A = A),
@@ -71,7 +71,7 @@ bf3 = bf(logfgmax ~ lighttreatment + (1|b|gr(phy, cov = A)))
 # Fit model under high measurement light intensity
 fit_amphi_high1 = brm(
   bf1 + bf2 + bf3 + set_rescor(TRUE),
-  data = joined_data |>
+  data = joined_summary |>
     filter(curve_type == "amphi", lightintensity == "high") |>
     mutate(phy = accession),
   data2 = list(A = A),
@@ -88,7 +88,7 @@ fit_amphi_high1 = brm(
 # Fit model under low measurement light intensity
 fit_amphi_low1 = brm(
   bf1 + bf2 + bf3 + set_rescor(TRUE),
-  data = joined_data |>
+  data = joined_summary |>
     filter(curve_type == "amphi", lightintensity == "low") |>
     mutate(phy = accession),
   data2 = list(A = A),
@@ -112,7 +112,7 @@ bf3 = bf(logfgmax ~ lighttreatment + (1|a|accession))
 # Fit model under high measurement light intensity
 fit_amphi_high2 = brm(
   bf1 + bf2 + bf3 + set_rescor(TRUE),
-  data = joined_data |>
+  data = joined_summary |>
     filter(curve_type == "amphi", lightintensity == "high") |>
     mutate(phy = accession),
   data2 = list(A = A),
@@ -129,7 +129,7 @@ fit_amphi_high2 = brm(
 # Fit model under low measurement light intensity
 fit_amphi_low2 = brm(
   bf1 + bf2 + bf3 + set_rescor(TRUE),
-  data = joined_data |>
+  data = joined_summary |>
     filter(curve_type == "amphi", lightintensity == "low") |>
     mutate(phy = accession),
   data2 = list(A = A),
@@ -153,7 +153,7 @@ bf3 = bf(logfgmax ~ lighttreatment)
 # Fit model under high measurement light intensity
 fit_amphi_high3 = brm(
   bf1 + bf2 + bf3 + set_rescor(TRUE),
-  data = joined_data |>
+  data = joined_summary |>
     filter(curve_type == "amphi", lightintensity == "high") |>
     mutate(phy = accession),
   data2 = list(A = A),
@@ -170,7 +170,7 @@ fit_amphi_high3 = brm(
 # Fit model under low measurement light intensity
 fit_amphi_low3 = brm(
   bf1 + bf2 + bf3 + set_rescor(TRUE),
-  data = joined_data |>
+  data = joined_summary |>
     filter(curve_type == "amphi", lightintensity == "low") |>
     mutate(phy = accession),
   data2 = list(A = A),
