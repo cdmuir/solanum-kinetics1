@@ -20,7 +20,6 @@ bform_inertia = bf(form_inertia, gmin ~ 1, gstar ~ 1, ginit ~ 1, ik ~ 1, logtau 
 
 joined_data |>
   split(~ curve) |>
-  magrittr::extract(1:9) |>
   future_iwalk(\(df, curve_id) {
     file = paste0(sk_dir, curve_id, ".rds")
     
