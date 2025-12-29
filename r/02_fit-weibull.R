@@ -1,4 +1,4 @@
-# Fit CDWeibulll mode to each curve separately
+# Fit CDWeibulll model to each curve separately
 source("r/header.R")
 
 sk_dir = c("objects/weibull/")

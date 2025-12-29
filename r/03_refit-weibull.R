@@ -13,6 +13,6 @@ list.files(sk_dir, full.names = TRUE) |>
   )
 
 # zip
-zip::zipr("objects/weibull.zip",
-          list.files(sk_dir, full.names = TRUE),
-          recurse = TRUE)
+zipr("objects/weibull.zip",
+     list.files(sk_dir, full.names = TRUE),
+     recurse = TRUE)

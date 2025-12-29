@@ -27,4 +27,6 @@ left_join(
     ),
   by = join_by(acc, id, curve_type)
 ) |>
+  # Remove those without stomatal anatomy data
+  filter(!is.na(gmax)) |>
   write_rds("data/joined-data.rds")

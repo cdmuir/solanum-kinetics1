@@ -145,3 +145,39 @@ summarize_parcor = function(fit) {
     separate_wider_delim(pair, "_", names = c("trait1", "trait2"))
   
 }
+
+# Function to set priors for inertia model
+get_interia_prior = function(.dat) {
+  
+  c(
+    set_prior(
+      "normal(0.01, 1)",
+      nlpar = "gmin",
+      lb = 0,
+      ub = min(.dat$gsw)
+    ),
+    set_prior(
+      glue("normal({mu}, 1)", mu = min(.dat$gsw)),
+      nlpar = "gstar",
+      lb = min(.dat$gsw) * 0.95,
+      ub = min(.dat$gsw) * 1.05
+    ),
+    set_prior(
+      glue("normal({mu}, 1)", mu = max(.dat$gsw)),
+      nlpar = "ginit",
+      lb = max(.dat$gsw) * 0.9,
+      ub = first(.dat$gmax)
+    ),
+    prior(
+      normal(0, 100),
+      nlpar = "ik"
+    ),
+    prior(
+      normal(log(300), 1),
+      nlpar = "logtau",
+      lb = log(10),
+      ub = log(10000)
+    )
+  )
+  
+}

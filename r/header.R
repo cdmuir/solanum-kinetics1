@@ -19,6 +19,7 @@ library(purrr)
 library(readr)
 library(stringr)
 library(tidyr)
+library(zip)
 
 theme_set(theme_cowplot())
 
