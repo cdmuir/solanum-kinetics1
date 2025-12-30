@@ -2,19 +2,21 @@
 source("r/header.R")
 
 full_join(
-  read_rds("objects/brms-summary.rds") |>
+  read_rds("objects/pars-summary.rds") |>
     filter(
-      variable %in% c("b_logtau_Intercept", "log_gi"),
+      variable %in% c("b_logtau_Intercept", "ginit", "b_ginit_Intercept", "b_ik_Intercept"),
       rhat < convergence_criteria$rhat_max,
       ess_bulk > convergence_criteria$ess_min
     ) |>
     mutate(
       variable = case_when(
-        variable == "b_logtau_Intercept" ~ "log_tau",
-        variable == "log_gi" ~ "log_gi"
+        variable == "b_logtau_Intercept" ~ "logtau",
+        variable == "ginit" ~ "ginit",
+        variable == "b_ginit_Intercept" ~ "ginit",
+        variable == "b_ik_Intercept" ~ "ik"
       )
     ) |>
-    select(variable, mean, sd, id) |>
+    select(variable, mean, model, sd, id) |>
     pivot_wider(
       names_from = variable,
       values_from = c(mean, sd),
@@ -30,7 +32,7 @@ full_join(
   by = join_by(accession, replicate)
 ) |>
   # missing kinetic data or any data contributed to gmax_ratio
-  filter(!is.na(log_tau_mean), !is.na(gmax_ratio)) |>
+  filter(!is.na(logtau_mean), !is.na(gmax_ratio)) |>
   left_join(
     read_rds("data/plant_info.rds") |>
       select(acc_id, accession, replicate, light_treatment),
@@ -45,6 +47,6 @@ full_join(
       fct_recode(low = "150", high = "2000"),
     guard_cell_length_um = lower_guard_cell_length_um * (1 - stomatal_ratio) + upper_guard_cell_length_um * stomatal_ratio,
     total_gmax = lower_gmax + upper_gmax,
-    f_gmax = exp(log_gi_mean) / total_gmax
+    f_gmax = ginit_mean / total_gmax
   ) |>
   write_rds("data/joined-summary.rds")

@@ -1,6 +1,14 @@
 # Plot curve fits
 source("r/header.R")
 
+assert_true(setequal(
+  list.files("objects/weibull"),
+  list.files("objects/inertia")
+))
+
+sk_dir1 = "objects/weibull"
+sk_dir2 = "objects/inertia"
+
 accession_info = read_rds("data/accession_info.rds")
 plant_info = read_rds("data/plant_info.rds")
 
@@ -10,11 +18,14 @@ r2 = read_rds("objects/r2.rds")
 fig_width = 6
 fig_height = 5
 
-plan(multisession, workers = 19)
+plan(multisession, workers = 9)
 
-rh_curves = list.files("objects/sk-curves") |>
-  str_remove(".rds$") |>
+rh_curves = list.files(sk_dir1) |>
+  
   future_map(\(.x) {
+    
+    id1 = str_remove(.x, "\\.rds$")
+    
     pix = plant_info |>
       filter(
         acc_id == str_extract(.x, "^(LA[0-9]{4}A*|nelsonii|sandwicense)-[A-Z][AB]{0,1}")
@@ -31,19 +42,34 @@ rh_curves = list.files("objects/sk-curves") |>
       ) |>
       left_join(select(accession_info, species, accession), by = join_by(accession))
     
-    m = read_rds(file.path("objects/sk-curves/", paste0(.x, ".rds")))
+    fit_weibull = read_rds(file.path(sk_dir1, .x))
+    fit_inertia = read_rds(file.path(sk_dir2, .x))
     
     br2 = r2 |>
-      filter(id == .x) |>
-      pull(Estimate)
+      filter(id == id1) |>
+      arrange(model) |>
+      mutate(s = paste0(model, '~(Bayes~italic(R)^2==', sprintf('%.3f', Estimate), ')'))
     
-    df_new = tibble(t_sec = seq(min(m$data$t_sec), max(m$data$t_sec), length.out = 1e2))
+    df_new = tibble(t_sec = seq(
+      min(fit_weibull$data$t_sec),
+      max(fit_weibull$data$t_sec),
+      length.out = 1e2
+    ))
     
-    df_pred = posterior_epred(m, new = df_new) |>
-      as_draws() |>
-      summarize_draws() |>
-      bind_cols(df_new) |>
-      rename(gsw = median)
+    df_pred = bind_rows(
+      posterior_epred(fit_weibull, new = df_new) |>
+        as_draws() |>
+        summarize_draws() |>
+        bind_cols(df_new) |>
+        rename(gsw = median) |>
+        mutate(model = "weibull"),
+      posterior_epred(fit_weibull, new = df_new) |>
+        as_draws() |>
+        summarize_draws() |>
+        bind_cols(df_new) |>
+        rename(gsw = median) |>
+        mutate(model = "inertia")
+    )
     
     main = glue(
       "{acc}-{rep} ({sp})",
@@ -58,8 +84,9 @@ rh_curves = list.files("objects/sk-curves") |>
       y = pix$light_intensity
     )
     
-    ggplot(m$data, aes(t_sec, gsw)) +
-      geom_line(data = df_pred) +
+    ggplot(fit_weibull$data, aes(t_sec, gsw)) +
+      geom_line(data = left_join(df_pred, br2, by = join_by(model)),
+                mapping = aes(color = s)) +
       geom_point() +
       labs(title = main,
            subtitle = sub,
@@ -69,13 +96,13 @@ rh_curves = list.files("objects/sk-curves") |>
       } ~ s^{
         -1
       }))) +
-      annotate(
-        "text_npc",
-        npcx = 0.95,
-        npcy = 0.95,
-        label = paste0('Bayes~italic(R)^2==\"', sprintf('%.3f', br2), '\"'),
-        parse = TRUE
-      )
+      scale_color_discrete(
+        labels = function(x)
+          parse(text = x),
+        name = "Model"
+      ) +
+      theme(legend.position = "bottom", legend.direction = "vertical")
+    
   }, .progress = TRUE)
 
 pdf("figures/rh-curves.pdf", width = fig_width, height = fig_height)

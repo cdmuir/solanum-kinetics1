@@ -19,9 +19,8 @@ pars_summary = list.files(sk_dir1) |>
     bind_rows(
       fit_weibull |>
         as_draws_df() |>
-        mutate(log_gi = log(
-          exp(b_loggf_Intercept) + exp(b_logdg_Intercept)
-        )) |>
+        mutate(ginit =
+                 exp(b_loggf_Intercept) + exp(b_logdg_Intercept)) |>
         summarize_draws() |>
         mutate(id = str_remove(.x, "\\.rds$"), model = "weibull"),
       fit_inertia |>

@@ -170,7 +170,8 @@ get_interia_prior = function(.dat) {
     ),
     prior(
       normal(0, 100),
-      nlpar = "ik"
+      nlpar = "ik",
+      ub = 0
     ),
     prior(
       normal(log(300), 1),
