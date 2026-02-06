@@ -1,13 +1,7 @@
 # Plot curve fits
 source("r/header.R")
 
-assert_true(setequal(
-  list.files("objects/weibull"),
-  list.files("objects/inertia")
-))
-
 sk_dir1 = "objects/weibull"
-sk_dir2 = "objects/inertia"
 
 accession_info = read_rds("data/accession_info.rds")
 plant_info = read_rds("data/plant_info.rds")
@@ -18,12 +12,11 @@ r2 = read_rds("objects/r2.rds")
 fig_width = 6
 fig_height = 5
 
-plan(multisession, workers = 9)
+plan(multisession, workers = 19)
 
 rh_curves = list.files(sk_dir1) |>
   
   future_map(\(.x) {
-    
     id1 = str_remove(.x, "\\.rds$")
     
     pix = plant_info |>
@@ -43,12 +36,14 @@ rh_curves = list.files(sk_dir1) |>
       left_join(select(accession_info, species, accession), by = join_by(accession))
     
     fit_weibull = read_rds(file.path(sk_dir1, .x))
-    fit_inertia = read_rds(file.path(sk_dir2, .x))
     
     br2 = r2 |>
       filter(id == id1) |>
-      arrange(model) |>
-      mutate(s = paste0(model, '~(Bayes~italic(R)^2==', sprintf('%.3f', Estimate), ')'))
+      mutate(
+        s = paste0('Bayes~italic(R)^2=="', sprintf('%.3f', Estimate), '"'),
+        t_sec = Inf,
+        gsw = Inf
+      )
     
     df_new = tibble(t_sec = seq(
       min(fit_weibull$data$t_sec),
@@ -61,14 +56,7 @@ rh_curves = list.files(sk_dir1) |>
         as_draws() |>
         summarize_draws() |>
         bind_cols(df_new) |>
-        rename(gsw = median) |>
-        mutate(model = "weibull"),
-      posterior_epred(fit_weibull, new = df_new) |>
-        as_draws() |>
-        summarize_draws() |>
-        bind_cols(df_new) |>
-        rename(gsw = median) |>
-        mutate(model = "inertia")
+        rename(gsw = median)
     )
     
     main = glue(
@@ -85,30 +73,35 @@ rh_curves = list.files(sk_dir1) |>
     )
     
     ggplot(fit_weibull$data, aes(t_sec, gsw)) +
-      geom_line(data = left_join(df_pred, br2, by = join_by(model)),
-                mapping = aes(color = s)) +
+      geom_line(data = df_pred, color = "darkgrey") +
       geom_point() +
-      labs(title = main,
-           subtitle = sub,
-           x = "time (s)") +
-      ylab(expression(italic(g)[sw] ~ (mol ~ m^{
-        -2
-      } ~ s^{
-        -1
-      }))) +
-      scale_color_discrete(
-        labels = function(x)
-          parse(text = x),
-        name = "Model"
-      ) +
-      theme(legend.position = "bottom", legend.direction = "vertical")
+      geom_text(data = br2, mapping = aes(label = s), parse = TRUE, vjust = 1.05,
+                hjust = 1.05) +
+      labs(
+        title = main,
+        subtitle = sub,
+        x = "time (s)",
+        y = expression(italic(g)[sw] ~ (mol ~ m^{
+          -2
+        } ~ s^{
+          -1
+        }))
+      )
+      
     
   }, .progress = TRUE)
 
 pdf("figures/rh-curves.pdf", width = fig_width, height = fig_height)
+pb <- progress_bar$new(
+  total = length(rh_curves),
+  format = "  plotting curves [:bar] :percent eta: :eta",
+  clear = FALSE,
+  width = 60
+)
+
 for (i in seq_along(rh_curves)) {
   print(rh_curves[[i]])
+  pb$tick()
 }
 
 dev.off()
-
