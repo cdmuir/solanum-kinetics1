@@ -69,9 +69,60 @@ gP <- function(P, gmax, gmin, k) {
 }
 
 tibble(
-  P = seq(0, 60, 0.1),
-  g = gP(P, gmax = 5, gmin = 0.01, k = -1 / 55)
+  P = seq(0, 6, 0.1),
+  g = gP(P, gmax = 5, gmin = 0.01, k = -1.5)
 ) |>
   ggplot(aes(P, g)) +
   geom_line()
 
+
+source("r/header.R")
+form_inertia = gsw ~ gmax * (1 -
+                               ((1 - gstar / gmax)^ik +
+                                  ((1 - ginit / gmax)^ik -
+                                     (1 - gstar / gmax)^ik) * exp(-t_sec / exp(logtau)))^(1 / ik))
+
+bform_inertia = bf(form_inertia, gmax ~ 1, gstar ~ 1, ginit ~ 1, ik ~ 1, logtau ~ 1, nl = TRUE)
+
+joined_data = read_rds("data/joined-data.rds")
+df1 = filter(joined_data, curve == "LA2951-M_amphi_2000") # good example of stretched curve
+
+pri = c(
+  set_prior(
+    "normal(5, 1)",
+    nlpar = "gmax",
+    lb = max(df1$gsw)
+  ),
+  set_prior(
+    glue("normal({mu}, 1)", mu = min(df1$gsw)),
+    nlpar = "gstar",
+    lb = min(df1$gsw) * 0.95,
+    ub = min(df1$gsw) * 1.05
+  ),
+  set_prior(
+    glue("normal({mu}, 1)", mu = max(df1$gsw)),
+    nlpar = "ginit",
+    lb = max(df1$gsw) * 0.9,
+    ub = first(df1$gmax)
+  ),
+  prior(
+    normal(0, 100),
+    nlpar = "ik",
+    ub = 0
+  ),
+  prior(
+    normal(log(300), 1),
+    nlpar = "logtau",
+    lb = log(10),
+    ub = log(10000)
+  )
+)
+
+fit = fit_rh1(
+  formula = bform_inertia,
+  data = df1,
+  prior = pri,
+  thin = 2,
+  adapt_delta = 0.8,
+  seed = 360036340
+)

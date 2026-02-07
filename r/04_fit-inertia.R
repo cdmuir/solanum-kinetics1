@@ -14,9 +14,18 @@ plan(multisession, workers = 19)
 # ginit = initial conductance
 # gstar = target conductance
 
+# Original one with empirical gmax
 form_inertia = gsw ~ gmax + (gmin - gmax) * (((gstar - gmax) / (gmin - gmax)) ^ ik + (((ginit - gmax) / (gmin - gmax)) ^ ik - ((gstar - gmax) / (gmin - gmax)) ^ ik) * exp(-t_sec / exp(logtau))) ^ (1 / ik) 
 
 bform_inertia = bf(form_inertia, gmin ~ 1, gstar ~ 1, ginit ~ 1, ik ~ 1, logtau ~ 1, nl = TRUE)
+
+# New with gmin = 0 and estimated gmax
+form_inertia = gsw ~ gmax * (1 -
+          ((1 - gstar / gmax)^ik +
+             ((1 - ginit / gmax)^ik -
+                (1 - gstar / gmax)^ik) * exp(-t_sec / exp(logtau)))^(1 / ik))
+
+bform_inertia = bf(form_inertia, gmax ~ 1, gstar ~ 1, ginit ~ 1, ik ~ 1, logtau ~ 1, nl = TRUE)
 
 joined_data |>
   split(~ curve) |>
