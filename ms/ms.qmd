@@ -145,6 +145,21 @@ g_s = g_f + (g_i - g_f) * exp(-(t/tau)^lambda)
 
 ## Methods
 
+lorem ipsum
+
+## Results (writing on 2/6 that will be merged)
+
+Stomatal conductance decrease rapidly in response to a sudden increase in VPD. The median time constant ($\tau) among wild tomato accessions was 
+
+
+
+
+
+
+## MANUSCRAPS
+
+Note: this theory did not really pan out. It did not come up with models that really fit better than the CD Weibull model and they included an extra parameter. Therefore, I am tabling this for now and trying OnGuard3 instead.
+
 ### Theory
 
 Our goal here is derive equations that integrate the effects of guard cell size and aperture on stomatal kinetics. A fully mechanistic model is beyond the scope of our goals here. Instead, we use phenomenological equations that adequately capture empirical patterns. There are three main assumptions of our model. First, we assume linear relaxation kinetics for guard cell turgor pressure ($P$):

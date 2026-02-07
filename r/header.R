@@ -15,6 +15,7 @@ library(ggpp)
 library(glue)
 library(magrittr)
 library(posterior)
+library(progress)
 library(purrr)
 library(readr)
 library(stringr)
@@ -23,7 +24,6 @@ library(zip)
 
 theme_set(theme_cowplot())
 
-form_vico = gsw ~ gf + dg * exp(-(t_sec / tau))  
 form_cdweibull = gsw ~ gf + dg * exp(-(t_sec / tau) ^ lambda)
 
 convergence_criteria = list(
@@ -31,3 +31,9 @@ convergence_criteria = list(
   ess_min = 400,
   n_divergent = 10
 )
+
+# There was a pretty clear break in the distribution of logtau_mean around 7.
+# The four curves above that showed unusual patterns of stomatal closure based
+# on visual inspection.
+
+logtau_threshold = 7

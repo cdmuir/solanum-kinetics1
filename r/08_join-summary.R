@@ -1,22 +1,23 @@
+# NEED TO FIX CALCULATION OF gsmax (divide by 1000 and make different for lower versus total)
+# NEED TO DECIDE WHETHER THIS HAPPENS HERE OR IN 01_join-data.R
 # Join stomatal kinetic data with stomatal anatomical data
 source("r/header.R")
 
 full_join(
   read_rds("objects/pars-summary.rds") |>
     filter(
-      variable %in% c("b_logtau_Intercept", "ginit", "b_ginit_Intercept", "b_ik_Intercept"),
+      variable %in% c("ginit", "b_logtau_Intercept", "b_loglambda_Intercept"),
       rhat < convergence_criteria$rhat_max,
       ess_bulk > convergence_criteria$ess_min
     ) |>
     mutate(
       variable = case_when(
-        variable == "b_logtau_Intercept" ~ "logtau",
         variable == "ginit" ~ "ginit",
-        variable == "b_ginit_Intercept" ~ "ginit",
-        variable == "b_ik_Intercept" ~ "ik"
+        variable == "b_logtau_Intercept" ~ "logtau",
+        variable == "b_loglambda_Intercept" ~ "loglambda"
       )
     ) |>
-    select(variable, mean, model, sd, id) |>
+    select(variable, mean, sd, id) |>
     pivot_wider(
       names_from = variable,
       values_from = c(mean, sd),
@@ -50,3 +51,7 @@ full_join(
     f_gmax = ginit_mean / total_gmax
   ) |>
   write_rds("data/joined-summary.rds")
+
+foo |>
+  filter(acc_id == "LA1777-B") |>
+  select(id, lower_gmax, upper_gmax)

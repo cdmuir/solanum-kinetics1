@@ -182,3 +182,20 @@ get_interia_prior = function(.dat) {
   )
   
 }
+
+# Helper function to prepare data for estimating effects of guard cell size and
+# f_gmax on tau
+prepare_tau_anatomy_data = function(joined_summary, logtau_threshold) {
+  joined_summary |>
+    filter(logtau_mean < logtau_threshold) |>
+    mutate(loggcl = log(guard_cell_length_um),
+           logfgmax = log(f_gmax)) |>
+    rename(
+      logtaumean = logtau_mean,
+      logtausd = logtau_sd,
+      accid = acc_id,
+      lightintensity = light_intensity,
+      lighttreatment = light_treatment
+    )
+  
+}
