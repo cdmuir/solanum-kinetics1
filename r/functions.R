@@ -199,3 +199,34 @@ prepare_tau_anatomy_data = function(joined_summary, logtau_threshold) {
     )
   
 }
+
+# Helpers for writing data dictionaries. From ChatGPT5.2
+
+# ---- helper: infer "acceptable values" for categorical-like columns ----
+acceptable_values = function(x, max_unique = 30) {
+  if (is.list(x)) return(NA_character_)
+  ux <- sort(unique(na.omit(x)))
+  n <- length(ux)
+  
+  if (inherits(x, "factor") || inherits(x, "character")) {
+    if (n == 0) return(NA_character_)
+    if (n <= max_unique) return(paste(ux, collapse = "; "))
+    return(paste0(n, " unique values (too many to list)"))
+  }
+  
+  # For numeric/integer/logical: usually not enumerated
+  NA_character_
+}
+
+# ---- helper: pretty type label ----
+type_label = function(x) {
+  if (inherits(x, "Date")) return("Date")
+  if (inherits(x, "POSIXct")) return("POSIXct")
+  if (inherits(x, "POSIXlt")) return("POSIXlt")
+  if (inherits(x, "factor")) return("factor")
+  if (inherits(x, "character")) return("character")
+  if (inherits(x, "integer")) return("integer")
+  if (inherits(x, "numeric")) return("numeric")
+  if (inherits(x, "logical")) return("logical")
+  paste(class(x), collapse = "/")
+}
