@@ -193,6 +193,8 @@ prepare_tau_anatomy_data = function(joined_summary, logtau_threshold) {
     rename(
       logtaumean = logtau_mean,
       logtausd = logtau_sd,
+      loglambdamean = loglambda_mean,
+      loglambdasd = loglambda_sd,
       accid = acc_id,
       lightintensity = light_intensity,
       lighttreatment = light_treatment
