@@ -8,19 +8,20 @@ joined_summary = read_rds("data/joined-summary.rds") |>
 
 phy = read_rds("data/phylogeny.rds")
 A = vcv(phy, corr = TRUE)
-thin = 3
+thin = 4
 
 # Model 0 ----
 # fixed effect of lighttreatment, random effects of accession and phylogeny
 
 # Define formula
-bf1 = bf(logtaumean | se(logtausd, sigma = TRUE) ~ lighttreatment + (1|a|accession) + (1|b|gr(phy, cov = A)))
-bf2 = bf(loggcl ~ lighttreatment + (1|a|accession) + (1|b|gr(phy, cov = A)))
-bf3 = bf(logfgmax ~ lighttreatment + (1|a|accession) + (1|b|gr(phy, cov = A)))
+bf1 = bf(loglambdamean | se(loglambdasd, sigma = TRUE) ~ lighttreatment + (1|a|accession) + (1|b|gr(phy, cov = A)))
+bf2 = bf(logtaumean | se(logtausd, sigma = TRUE) ~ lighttreatment + (1|a|accession) + (1|b|gr(phy, cov = A)))
+bf3 = bf(loggcl ~ lighttreatment + (1|a|accession) + (1|b|gr(phy, cov = A)))
+bf4 = bf(logfgmax ~ lighttreatment + (1|a|accession) + (1|b|gr(phy, cov = A)))
 
 # Fit model under high measurement light intensity
 fit_amphi_high0 = brm(
-  bf1 + bf2 + bf3 + set_rescor(TRUE),
+  bf1 + bf2 + bf3 + bf4 + set_rescor(TRUE),
   data = joined_summary |>
     filter(curve_type == "amphi", lightintensity == "high") |>
     mutate(phy = accession),
@@ -37,7 +38,7 @@ fit_amphi_high0 = brm(
 
 # Fit model under low measurement light intensity
 fit_amphi_low0 = brm(
-  bf1 + bf2 + bf3 + set_rescor(TRUE),
+  bf1 + bf2 + bf3 + bf4 + set_rescor(TRUE),
   data = joined_summary |>
     filter(curve_type == "amphi", lightintensity == "low") |>
     mutate(phy = accession),
@@ -56,13 +57,14 @@ fit_amphi_low0 = brm(
 # fixed effect of lighttreatment, random effect of phylogeny only
 
 # Define formula
-bf1 = bf(logtaumean | se(logtausd, sigma = TRUE) ~ lighttreatment + (1|b|gr(phy, cov = A)))
-bf2 = bf(loggcl ~ lighttreatment + (1|b|gr(phy, cov = A)))
-bf3 = bf(logfgmax ~ lighttreatment + (1|b|gr(phy, cov = A)))
+bf1 = bf(loglambdamean | se(loglambdasd, sigma = TRUE) ~ lighttreatment + (1|b|gr(phy, cov = A)))
+bf2 = bf(logtaumean | se(logtausd, sigma = TRUE) ~ lighttreatment + (1|b|gr(phy, cov = A)))
+bf3 = bf(loggcl ~ lighttreatment + (1|b|gr(phy, cov = A)))
+bf4 = bf(logfgmax ~ lighttreatment + (1|b|gr(phy, cov = A)))
 
 # Fit model under high measurement light intensity
 fit_amphi_high1 = brm(
-  bf1 + bf2 + bf3 + set_rescor(TRUE),
+  bf1 + bf2 + bf3 + bf4 + set_rescor(TRUE),
   data = joined_summary |>
     filter(curve_type == "amphi", lightintensity == "high") |>
     mutate(phy = accession),
@@ -79,7 +81,7 @@ fit_amphi_high1 = brm(
 
 # Fit model under low measurement light intensity
 fit_amphi_low1 = brm(
-  bf1 + bf2 + bf3 + set_rescor(TRUE),
+  bf1 + bf2 + bf3 + bf4 + set_rescor(TRUE),
   data = joined_summary |>
     filter(curve_type == "amphi", lightintensity == "low") |>
     mutate(phy = accession),
@@ -98,13 +100,14 @@ fit_amphi_low1 = brm(
 # fixed effect of lighttreatment, random effect of accession only
 
 # Define formula
-bf1 = bf(logtaumean | se(logtausd, sigma = TRUE) ~ lighttreatment + (1|a|accession))
-bf2 = bf(loggcl ~ lighttreatment + (1|a|accession))
-bf3 = bf(logfgmax ~ lighttreatment + (1|a|accession))
+bf1 = bf(loglambdamean | se(loglambdasd, sigma = TRUE) ~ lighttreatment + (1|a|accession))
+bf2 = bf(logtaumean | se(logtausd, sigma = TRUE) ~ lighttreatment + (1|a|accession))
+bf3 = bf(loggcl ~ lighttreatment + (1|a|accession))
+bf4 = bf(logfgmax ~ lighttreatment + (1|a|accession))
 
 # Fit model under high measurement light intensity
 fit_amphi_high2 = brm(
-  bf1 + bf2 + bf3 + set_rescor(TRUE),
+  bf1 + bf2 + bf3 + bf4 + set_rescor(TRUE),
   data = joined_summary |>
     filter(curve_type == "amphi", lightintensity == "high") |>
     mutate(phy = accession),
@@ -121,7 +124,7 @@ fit_amphi_high2 = brm(
 
 # Fit model under low measurement light intensity
 fit_amphi_low2 = brm(
-  bf1 + bf2 + bf3 + set_rescor(TRUE),
+  bf1 + bf2 + bf3 + bf4 + set_rescor(TRUE),
   data = joined_summary |>
     filter(curve_type == "amphi", lightintensity == "low") |>
     mutate(phy = accession),
@@ -140,13 +143,14 @@ fit_amphi_low2 = brm(
 # fixed effect of lighttreatment only
 
 # Define formula
-bf1 = bf(logtaumean | se(logtausd, sigma = TRUE) ~ lighttreatment)
-bf2 = bf(loggcl ~ lighttreatment)
-bf3 = bf(logfgmax ~ lighttreatment)
+bf1 = bf(loglambdamean | se(loglambdasd, sigma = TRUE) ~ lighttreatment)
+bf2 = bf(logtaumean | se(logtausd, sigma = TRUE) ~ lighttreatment)
+bf3 = bf(loggcl ~ lighttreatment)
+bf4 = bf(logfgmax ~ lighttreatment)
 
 # Fit model under high measurement light intensity
 fit_amphi_high3 = brm(
-  bf1 + bf2 + bf3 + set_rescor(TRUE),
+  bf1 + bf2 + bf3 + bf4 + set_rescor(TRUE),
   data = joined_summary |>
     filter(curve_type == "amphi", lightintensity == "high") |>
     mutate(phy = accession),
@@ -163,7 +167,7 @@ fit_amphi_high3 = brm(
 
 # Fit model under low measurement light intensity
 fit_amphi_low3 = brm(
-  bf1 + bf2 + bf3 + set_rescor(TRUE),
+  bf1 + bf2 + bf3 + bf4 + set_rescor(TRUE),
   data = joined_summary |>
     filter(curve_type == "amphi", lightintensity == "low") |>
     mutate(phy = accession),

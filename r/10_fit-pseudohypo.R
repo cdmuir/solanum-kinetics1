@@ -10,7 +10,7 @@ joined_summary = read_rds("data/joined-summary.rds") |>
 
 phy = read_rds("data/phylogeny.rds")
 A = vcv(phy, corr = TRUE)
-thin = 3
+thin = 4
 
 # Fit model under high measurement light intensity
 fit_pseudohypo_high = brm(
