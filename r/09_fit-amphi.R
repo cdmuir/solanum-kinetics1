@@ -199,36 +199,36 @@ bf2 = bf(loggcl ~ lighttreatment + (lighttreatment|a|accession) + (lighttreatmen
 bf3 = bf(logfgmax ~ lighttreatment + (lighttreatment|a|accession) + (lighttreatment|b|gr(phy, cov = A)))
 
 # Fit model under high measurement light intensity
-fit_amphi_highX = brm(
-  bf1 + bf2 + bf3 + set_rescor(TRUE),
-  data = joined_summary |>
-    filter(curve_type == "amphi", lightintensity == "high") |>
-    mutate(phy = accession),
-  data2 = list(A = A),
-  cores = 1,
-  chains = 1,
-  iter = thin * 2e3,
-  thin = thin,
-  refresh = thin * 1e2,
-  backend = "cmdstanr",
-  seed = 613135062,
-) |>
-  add_criterion("loo")
-
-fit_amphi_lowX = brm(
-  bf1 + bf2 + bf3 + set_rescor(TRUE),
-  data = joined_summary |>
-    filter(curve_type == "amphi", lightintensity == "low") |>
-    mutate(phy = accession),
-  data2 = list(A = A),
-  cores = 1,
-  chains = 1,
-  iter = thin * 2e3,
-  thin = thin,
-  refresh = thin * 1e2,
-  backend = "cmdstanr",
-  seed = 613135062,
-) |>
-  add_criterion("loo")
-
-  
+# fit_amphi_highX = brm(
+#   bf1 + bf2 + bf3 + set_rescor(TRUE),
+#   data = joined_summary |>
+#     filter(curve_type == "amphi", lightintensity == "high") |>
+#     mutate(phy = accession),
+#   data2 = list(A = A),
+#   cores = 1,
+#   chains = 1,
+#   iter = thin * 2e3,
+#   thin = thin,
+#   refresh = thin * 1e2,
+#   backend = "cmdstanr",
+#   seed = 613135062,
+# ) |>
+#   add_criterion("loo")
+# 
+# fit_amphi_lowX = brm(
+#   bf1 + bf2 + bf3 + set_rescor(TRUE),
+#   data = joined_summary |>
+#     filter(curve_type == "amphi", lightintensity == "low") |>
+#     mutate(phy = accession),
+#   data2 = list(A = A),
+#   cores = 1,
+#   chains = 1,
+#   iter = thin * 2e3,
+#   thin = thin,
+#   refresh = thin * 1e2,
+#   backend = "cmdstanr",
+#   seed = 613135062,
+# ) |>
+#   add_criterion("loo")
+# 
+#   
