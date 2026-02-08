@@ -74,6 +74,29 @@ theme_set(theme_cowplot())
 
 source("../r/functions.R")
 
+# Results
+tab_estimates = read_csv("../tables/tab-estimates.csv", show_col_types = FALSE)
+
+median_tau = tab_estimates |>
+  filter(trait == "tau") |>
+  pull(estimate) |>
+  median()
+
+max_tau = tab_estimates |>
+  filter(trait == "tau") |>
+  pull(estimate) |>
+  max()
+
+median_lambda = tab_estimates |>
+  filter(trait == "lambda") |>
+  pull(estimate) |>
+  median()
+
+max_lambda = tab_estimates |>
+  filter(trait == "lambda") |>
+  pull(estimate) |>
+  max()
+
 ```
 
 
@@ -91,7 +114,7 @@ It might seem that natural selection should favor faster stomatal responses to g
 
 What traits respond to selection on stomatal kinetics? We consider two interconnected hypotheses that have thus far been treated in isolation. The first hypothesis is that smaller guard cells open and close faster because of their intrinsically greater surface area to volume ration [@drake_smaller_2013; @woning_revisiting_2026]. For approximately cylindrical cell geometries, like that found in guard cells (citation on guard cell shape?), surface area increases linearly with radius, whereas volume increases in proportion to the radius squared. Consequently, larger guard cells will require more time to pump enough ions (wc?) to achieve a given change in turgor pressure and, hence, stomatal pore aperture. A plant with large guard cells can partially compensate for this geometric constraint by increasing the density of transporters (wc?) in the guard cell membrane [@raven_speedy_2014] (haworth et al 2023 have some cites about this). However, this may be limited by the available membrane area and/or energetic costs of maintaining high transporter densities. Empirical support for the hypothesis that smaller guard cells are faster is mixed. Some studies have found negative correlations between guard cell size and stomatal response rate [@drake_smaller_2013; @wang_large_2014], whereas others have found no relationship [@mott_stomatal_2007; @muir_leaf_2020; @woning_revisiting_2026]. (apparently hetherington and woodward 2003 mention size-speed relationship too - check that. Lawson and Blatt 2014 throw shade on size being deterministic)
 
-One factor that might complicate the relationship between size and speed is aperture. As gop approaches gmax, large changes in turbot are required to make small changes in a. Over the long-term, selection optimizes gop:gmax ratio (Franks et al. 2012). What's evidence or progress on this?
+One factor that might complicate the relationship between size and speed is aperture. As gop approaches gmax, large changes in turgor are required to make small changes in a. Over the long-term, selection optimizes gop:gmax ratio (Franks et al. 2012). What's evidence or progress on this?
  
 
 [not sure where this goes]
@@ -147,11 +170,11 @@ g_s = g_f + (g_i - g_f) * exp(-(t/tau)^lambda)
 
 lorem ipsum
 
-## Results (writing on 2/6 that will be merged)
+## Results
 
-Stomatal conductance decrease rapidly in response to a sudden increase in VPD. The median time constant ($\tau) among wild tomato accessions was 
+Stomatal conductance (gsw) decrease rapidly in response to a step increase in VPD. Consider a typical leaf in the experiment possessing the median time constant ($\tau$) and lag time ($\lambda$) among wild tomato accessions in all treatments. After VPD increased the transient wrong way response elapsed, it took `r prettyNum(round(median_tau * log(2) ^ (1 / median_lambda)))` s for gsw to decrease half-way ($t_{50}$) from its initial to final steady state value. In terms of the kinetic model parameters, most variation among leaves was due to difference in the time constant rather than the lag time. In the previous example, increasing $\lambda$ from its median to its maximum estimated value among accessions increased the $t_{50}$ by only `r prettyNum(round(median_tau * log(2) ^ (1 / max_lambda) - median_tau * log(2) ^ (1 / median_lambda), 1))` s. In contrast, increasing $\tau$ from its median to maximum value increased $t_{50}$ by `r prettyNum(round(max_tau * log(2) ^ (1 / median_lambda) - median_tau * log(2) ^ (1 / median_lambda)))` s
 
-
+Variation in stomatal kinetic parameters were associated with variation in guard cell size and fgmax at different levels of organization. We focus first on untreated leaves from plants grown and measured under high light intensity treatments. The phylogenetic variance in guard cell size among accessions was X $\times$ greater than the variance among individuals within the same accession WORKING HERE - GET THIS NUMBER FROM MODEL.
 
 
 
