@@ -27,7 +27,7 @@ tab_estimates = crossing(
     df_new = crossing(
       lighttreatment = unique(fit$data$lighttreatment),
       phy = unique(fit$data$phy),
-      logtausd = 0
+      logtausd = 0, loglambdasd = 0
     ) |>
       mutate(variable = paste0("...", row_number()))
     
@@ -40,6 +40,16 @@ tab_estimates = crossing(
         tau_upperCI = exp(q95),
       ) |>
       select(variable, starts_with("tau_"))
+
+    df_pred_lambda = posterior_epred(fit, newdata = df_new, resp = "loglambdamean") |>
+      as_draws_df() |>
+      summarise_draws() |>
+      mutate(
+        lambda_estimate = exp(median),
+        lambda_lowerCI = exp(q5),
+        lambda_upperCI = exp(q95),
+      ) |>
+      select(variable, starts_with("lambda_"))
     
     df_pred_gcl = posterior_epred(fit, newdata = df_new, resp = "loggcl") |>
       as_draws_df() |>
@@ -62,10 +72,11 @@ tab_estimates = crossing(
       select(variable, starts_with("fgmax_"))
     
     df_pred = df_pred_tau |>
+      full_join(df_pred_lambda, by = join_by(variable)) |>
       full_join(df_pred_gcl, by = join_by(variable)) |>
       full_join(df_pred_fgmax, by = join_by(variable)) |>
       full_join(df_new, by = join_by(variable)) |>
-      select(-variable, -logtausd)
+      select(-variable, -logtausd, -loglambdasd)
     
     full_join(sample_sizes, df_pred, by = join_by(lighttreatment, phy)) |>
       select(accession = phy,
