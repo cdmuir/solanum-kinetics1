@@ -232,3 +232,43 @@ type_label = function(x) {
   if (inherits(x, "logical")) return("logical")
   paste(class(x), collapse = "/")
 }
+
+# Function to estimate phylogenetic h2 from fitted models
+get_phy_h2 = function(fit) {
+  vars = crossing(
+    resp = fit$formula$responses,
+    term = c("sd_phy__", "sd_accession__", "sigma_")
+  ) |>
+    mutate(var = paste0(term, resp, if_else(term == "sigma_", "", "_Intercept")), .keep = "unused") |>
+    pull(var)
+  
+  fit |>
+    as_draws_df() |>
+    select(starts_with("."), all_of(vars)) |>
+    rename_with(\(.x) {
+      str_remove(.x, "_Intercept")
+    }, .cols = ends_with("_Intercept")) |>
+    rename_with(\(.x) {
+      str_replace(.x, "sigma_", "sd_resid__")
+    }, .cols = starts_with("sigma_")) |>
+    pivot_longer(
+      cols = -starts_with("."),
+      names_to = c("component", "resp"),
+      names_sep = "__",
+      values_to = "sd"
+    ) |>
+    mutate(
+      var = sd^2,
+      component = str_remove(component, "^sd_"),
+      .keep = "unused"
+    ) |>
+    pivot_wider(names_from = component, values_from = var) |>
+    mutate(h2 = phy / (phy + accession + resid), .keep = "unused") |>
+    summarize(
+      estimate = median(h2),
+      lowerCI = quantile(h2, 0.025),
+      upperCI = quantile(h2, 0.975),
+      .by = resp
+    )
+  
+}
