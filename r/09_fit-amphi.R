@@ -10,7 +10,7 @@ joined_summary = read_rds("data/joined-summary.rds") |>
 
 phy = read_rds("data/phylogeny.rds")
 A = vcv(phy, corr = TRUE)
-thin = 5
+thin = 6
 
 # Define formula
 # bf1 = bf(loglambdamean | se(loglambdasd, sigma = TRUE) ~ lighttreatment + loggcl + logfgmax + (1|a|accession) + (1|b|gr(phy, cov = A)))
@@ -64,6 +64,7 @@ fits_amphi = crossing(
         iter = thin * 2e3,
         thin = thin,
         refresh = thin * 1e2,
+        control = list(adapt_delta = 0.9),
         backend = "cmdstanr",
         seed = 613135062 + i
       ) |> add_criterion("loo")

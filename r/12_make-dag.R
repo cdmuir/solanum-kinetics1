@@ -1,3 +1,4 @@
+# original output from ChatGPT. good start for what I want, but need to update model and clean up. add results somehow?
 library(DiagrammeR)
 
 grViz("

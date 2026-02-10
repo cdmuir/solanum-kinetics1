@@ -1,15 +1,11 @@
 # Estimate phylogenetic h2 from fitted models
 source("r/header.R")
 
-fit_amphi_high = read_rds("objects/fit_amphi_high.rds")
-fit_amphi_low = read_rds("objects/fit_amphi_low.rds")
+fit_amphi = read_rds("objects/best_amphi_model.rds")
 
-bind_rows(
-  get_phy_h2(fit_amphi_high) |>
-    mutate(light_intensity = "high"),
-  get_phy_h2(fit_amphi_low) |>
-    mutate(light_intensity = "low")
-) |>
+get_phy_h2(fit_amphi)
+
+get_phy_h2(fit_amphi) |>
   mutate(
     Trait = case_when(
       resp == "loglambdamean" ~ "log(lambda)",
@@ -24,7 +20,6 @@ bind_rows(
     ymin = lowerCI,
     ymax = upperCI
   )) +
-  facet_wrap( ~ light_intensity) +
   geom_pointrange() +
   scale_x_discrete(labels = scales::label_parse()) +
   labs(y = "Phylogenetic heritability") +

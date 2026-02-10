@@ -1,9 +1,13 @@
-# i did this at work. might already have version going at home? merge/delete
+# Compare models using LOOIC
 source("r/header.R")
 fits_amphi = read_rds("objects/fits_amphi.rds") |>
   mutate(loo = map(fit, \(.x) .x$criteria$loo))
 
-fits_amphi$loo |>
+looic_table = fits_amphi$loo |>
   set_names(paste0("model", seq_along(fits_amphi$loo))) |>
-loo_compare()
-fits_amphi$fit[[2]]
+  loo_compare()
+
+write_rds(
+  fits_amphi$fit[[as.numeric(str_extract(rownames(looic_table)[1], "\\d+"))]],
+  "objects/best_amphi_model.rds"
+)
