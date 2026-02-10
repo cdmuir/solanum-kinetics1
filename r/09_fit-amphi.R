@@ -10,20 +10,15 @@ joined_summary = read_rds("data/joined-summary.rds") |>
 
 phy = read_rds("data/phylogeny.rds")
 A = vcv(phy, corr = TRUE)
-thin = 6
+thin = 4
 
 # Define formula
-# bf1 = bf(loglambdamean | se(loglambdasd, sigma = TRUE) ~ lighttreatment + loggcl + logfgmax + (1|a|accession) + (1|b|gr(phy, cov = A)))
-# bf2 = bf(logtaumean | se(logtausd, sigma = TRUE) ~ lighttreatment + loggcl + logfgmax + (1|a|accession) + (1|b|gr(phy, cov = A)))
-# bf3 = bf(loggcl ~ lighttreatment + (1|a|accession) + (1|b|gr(phy, cov = A)))
-# bf4 = bf(logfgmax ~ lighttreatment + (1|a|accession) + (1|b|gr(phy, cov = A)))
-
 bf_lambda0 = bf(loglambdamean | se(loglambdasd, sigma = TRUE) ~ 
                   lighttreatment + 
                   lightintensity +
                   loggcl + 
                   logfgmax + 
-                  (1|id) +
+                  (1|accid) +
                   (1|a|accession) +
                   (1|b|gr(phy, cov = A)))
 bf_lambda1 = update(bf_lambda0, . ~ . - loggcl)
@@ -35,7 +30,7 @@ bf_tau0 = bf(logtaumean | se(logtausd, sigma = TRUE) ~
                lightintensity +
                loggcl + 
                logfgmax + 
-               (1|id) +
+               (1|accid) +
                (1|a|accession) +
                (1|b|gr(phy, cov = A)))
 
@@ -43,8 +38,17 @@ bf_tau1 = update(bf_tau0, . ~ . - loggcl)
 bf_tau2 = update(bf_tau0, . ~ . - logfgmax)
 bf_tau3 = update(bf_tau0, . ~ . - loggcl - logfgmax)
 
-bf_gcl = bf(loggcl ~ lighttreatment + (1|a|accession) + (1|b|gr(phy, cov = A)))
-bf_fgmax = bf(logfgmax ~ lighttreatment + lightintensity + (1|id) + (1|a|accession) + (1|b|gr(phy, cov = A)))
+bf_gcl = bf(loggcl ~ 
+              lighttreatment + 
+              (1|a|accession) + 
+              (1|b|gr(phy, cov = A)))
+
+bf_fgmax = bf(logfgmax ~ 
+                lighttreatment + 
+                lightintensity + 
+                (1|accid) +
+                (1|a|accession) + 
+                (1|b|gr(phy, cov = A)))
 
 fits_amphi = crossing(
   bf_lambda = list(bf_lambda0, bf_lambda1, bf_lambda2, bf_lambda3),
