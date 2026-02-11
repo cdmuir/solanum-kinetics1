@@ -4,16 +4,10 @@ source("r/header.R")
 phy = read_rds("data/phylogeny.rds")
 A = vcv(phy, corr = TRUE)
 
-fit_amphi_high = read_rds("objects/fit_amphi_high.rds")
-fit_amphi_low = read_rds("objects/fit_amphi_low.rds")
-fit_pseudohypo_high = read_rds("objects/fit_pseudohypo_high.rds")
-fit_pseudohypo_low = read_rds("objects/fit_pseudohypo_low.rds")
+fit_amphi = read_rds("objects/best_amphi_model.rds")
+# fit_pseudohypo = read_rds("objects/best_pseudohypo_model.rds")
 
-assert_true(check_convergence(fit_amphi_high, convergence_criteria))
-assert_true(check_convergence(fit_amphi_low, convergence_criteria))
-assert_true(check_convergence(fit_pseudohypo_high, convergence_criteria))
-assert_true(check_convergence(fit_pseudohypo_low, convergence_criteria))
-
+# THIS NEEDS TO BE UPDATED
 tab_estimates = crossing(
   leaf_type = c("amphi", "pseudohypo"),
   light_intensity = c("high", "low")

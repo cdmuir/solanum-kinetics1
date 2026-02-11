@@ -170,7 +170,23 @@ g_s = g_f + (g_i - g_f) * exp(-(t/tau)^lambda)
 
 lorem ipsum
 
+### Phylogenetic heritability (somewhere)
+
+Should among individual variance be included in calculation of phylogenetic heritability? Consult de Villem? and Nagasaki? paper
+
 ## Results
+
+```{r, echo = FALSE, eval = FALSE}
+# Derivation of t_50 for CD Weibull model:
+# gf + dg / 2 = gf + dg * exp(-(t_sec / tau)^lambda)
+# dg / 2 = dg * exp(-(t_sec / tau)^lambda)
+# 1 / 2 = exp(-(t_sec / tau)^lambda)
+# log(1 / 2) = -(t_sec / tau)^lambda
+# -log(1 / 2) = (t_sec / tau)^lambda
+# log(2) = (t_sec / tau)^lambda
+# log(2) ^ (1 / lambda) = t_sec / tau
+# tau * log(2) ^ (1 / lambda) = t_sec
+```
 
 Stomatal conductance (gsw) decrease rapidly in response to a step increase in VPD. Consider a typical leaf in the experiment possessing the median time constant ($\tau$) and lag time ($\lambda$) among wild tomato accessions in all treatments. After VPD increased the transient wrong way response elapsed, it took `r prettyNum(round(median_tau * log(2) ^ (1 / median_lambda)))` s for gsw to decrease half-way ($t_{50}$) from its initial to final steady state value. In terms of the kinetic model parameters, most variation among leaves was due to difference in the time constant rather than the lag time. In the previous example, increasing $\lambda$ from its median to its maximum estimated value among accessions increased the $t_{50}$ by only `r prettyNum(round(median_tau * log(2) ^ (1 / max_lambda) - median_tau * log(2) ^ (1 / median_lambda), 1))` s. In contrast, increasing $\tau$ from its median to maximum value increased $t_{50}$ by `r prettyNum(round(max_tau * log(2) ^ (1 / median_lambda) - median_tau * log(2) ^ (1 / median_lambda)))` s
 
