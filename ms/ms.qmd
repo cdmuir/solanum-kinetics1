@@ -99,6 +99,9 @@ max_lambda = tab_estimates |>
 
 ```
 
+Reminder: Halliwell et al. 2025 paper has useful info on multiresponse models. I might use Van de Pol and Wright (2009) method for within versus between slope estimation. This is in the phylogenetic comparative example in the brms vignette too. Actually, this is hard to implement because I would have to calculate individual residuals for each light treatment combination and then means of those, etc.
+
+Westoby et al (2023) (10.1111/1365-2745.14150) is similar to Halliwell. Maybe another way to think about it using the mutliresponse approach.
 
 ## Abstract
 
@@ -114,8 +117,15 @@ It might seem that natural selection should favor faster stomatal responses to g
 
 What traits respond to selection on stomatal kinetics? We consider two interconnected hypotheses that have thus far been treated in isolation. The first hypothesis is that smaller guard cells open and close faster because of their intrinsically greater surface area to volume ration [@drake_smaller_2013; @woning_revisiting_2026]. For approximately cylindrical cell geometries, like that found in guard cells (citation on guard cell shape?), surface area increases linearly with radius, whereas volume increases in proportion to the radius squared. Consequently, larger guard cells will require more time to pump enough ions (wc?) to achieve a given change in turgor pressure and, hence, stomatal pore aperture. A plant with large guard cells can partially compensate for this geometric constraint by increasing the density of transporters (wc?) in the guard cell membrane [@raven_speedy_2014] (haworth et al 2023 have some cites about this). However, this may be limited by the available membrane area and/or energetic costs of maintaining high transporter densities. Empirical support for the hypothesis that smaller guard cells are faster is mixed. Some studies have found negative correlations between guard cell size and stomatal response rate [@drake_smaller_2013; @wang_large_2014], whereas others have found no relationship [@mott_stomatal_2007; @muir_leaf_2020; @woning_revisiting_2026]. (apparently hetherington and woodward 2003 mention size-speed relationship too - check that. Lawson and Blatt 2014 throw shade on size being deterministic)
 
-One factor that might complicate the relationship between size and speed is aperture. As gop approaches gmax, large changes in turgor are required to make small changes in a. Over the long-term, selection optimizes gop:gmax ratio (Franks et al. 2012). What's evidence or progress on this?
- 
+One factor that might complicate the relationship between size and speed is aperture. Stomatal aperture can vary from near 0 when guard cell turgor pressure is low and asymptotically approach gmax as guard cell turgor pressure approaches $\infty$ (Figure 1X). The nonlinear relationship between guard cell turgor and pore aperture implies that if rate of change in turgor change is constant ($\diff P / \diff t = C$), the rate of change in aperture, and hence stomatal conductance, will vary depending on the initial aperture. When initial aperture is high, stomatal conductance will respond more slowly than when initial aperture is low. Since we generally do not observe individual stomatal aperture, extending this idea to macroscale phenomena requires scaling by stomatal density. We will use the term "fraction of anatomical maximum stomatal conductance", symbolized as fgmax. This value should be proportional to the average aperture divided by its maximum aperture for any arbitrary stomatal density [could a figure show how this interacts with stomatal density?]. Leaves operating at fgmax closer to unity will, all else being equal, will be slower to respond than leaves operating with a fgmax close to zero, independent of stomatal density. @franks_physiological_2012 hypothesized that selection on stomatal density would maintain typical operational stomatal conductance (gop) relative to gmax at a sufficiently low value that stomatal conductance would be sensitive to relatively small changes in guard cell turgor pressure. Consistent will this hypothesis, gop:gmax is often near 0.25 [@mcelwain_using_2016; @murray_consistent_2020], well below fgmax = 1, and in a range where gsw would be responsive to small changes in guard cell turgor pressure.
+
+Putting these two hypotheses together, we predict that both guard cell size and fgmax will influence stomatal kinetics, but possibly at different scales of biological organization. WORKING HERE: guard cell size and fsgax may act at very different scales because...
+
+<!-- might be good paper to revisit and cite: -->
+<!-- Pinpointing the causal influences of stomatal anatomy and behavior on minimum, operational, and maximum leaf surface conductance -->
+
+<!-- another recent paper on gop:gmax using Franks et al 2012 concept: -->
+<!-- https://doi.org/10.1093/aob/mcaf224 -->
 
 [not sure where this goes]
 many, large - slow because of large size, but fast because of low gop
