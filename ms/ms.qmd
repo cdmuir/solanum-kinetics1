@@ -119,7 +119,7 @@ What traits respond to selection on stomatal kinetics? We consider two interconn
 
 One factor that might complicate the relationship between size and speed is aperture. Stomatal aperture can vary from near 0 when guard cell turgor pressure is low and asymptotically approach gmax as guard cell turgor pressure approaches $\infty$ (Figure 1X). The nonlinear relationship between guard cell turgor and pore aperture implies that if rate of change in turgor change is constant ($\diff P / \diff t = C$), the rate of change in aperture, and hence stomatal conductance, will vary depending on the initial aperture. When initial aperture is high, stomatal conductance will respond more slowly than when initial aperture is low. Since we generally do not observe individual stomatal aperture, extending this idea to macroscale phenomena requires scaling by stomatal density. We will use the term "fraction of anatomical maximum stomatal conductance", symbolized as fgmax. This value should be proportional to the average aperture divided by its maximum aperture for any arbitrary stomatal density [could a figure show how this interacts with stomatal density?]. Leaves operating at fgmax closer to unity will, all else being equal, will be slower to respond than leaves operating with a fgmax close to zero, independent of stomatal density. @franks_physiological_2012 hypothesized that selection on stomatal density would maintain typical operational stomatal conductance (gop) relative to gmax at a sufficiently low value that stomatal conductance would be sensitive to relatively small changes in guard cell turgor pressure. Consistent will this hypothesis, gop:gmax is often near 0.25 [@mcelwain_using_2016; @murray_consistent_2020], well below fgmax = 1, and in a range where gsw would be responsive to small changes in guard cell turgor pressure.
 
-Putting these two hypotheses together, we predict that both guard cell size and fgmax will influence stomatal kinetics, but possibly at different scales of biological organization. WORKING HERE: guard cell size and fsgax may act at very different scales because...
+Putting these two hypotheses together, we predict that both guard cell size and fgmax will influence stomatal kinetics, but possibly at different scales of biological organization. Guard cell size tends to vary less than stomatal density or aperture at many biological scales. On a mature leaf, guard cell size is essentially fixed other than small changes in volume caused by turgor pressure (cite). Guard cell size is also less developmentally plastic than density and there is less intraspecific genetic variance in gcl (cites). WORKING HERE: guard cell size and fsgax may act at very different scales because...
 
 <!-- might be good paper to revisit and cite: -->
 <!-- Pinpointing the causal influences of stomatal anatomy and behavior on minimum, operational, and maximum leaf surface conductance -->
@@ -202,8 +202,10 @@ Stomatal conductance (gsw) decrease rapidly in response to a step increase in VP
 
 Variation in stomatal kinetic parameters were associated with variation in guard cell size and fgmax at different levels of organization. We focus first on untreated leaves from plants grown and measured under high light intensity treatments. The phylogenetic variance in guard cell size among accessions was X $\times$ greater than the variance among individuals within the same accession WORKING HERE - GET THIS NUMBER FROM MODEL.
 
-
-
+Need to show (this is a growing, incomplete list):
+- plot of tau and lambda versus t50 to show that the latter is more sensitive to tau
+- guard cell size is less variable than stomatal density and fgmax
+- partial correlation showing that gcl and tau are (only?) significant phylogenetic covariates
 
 ## MANUSCRAPS
 
