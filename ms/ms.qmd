@@ -195,6 +195,7 @@ Should among individual variance be included in calculation of phylogenetic heri
 ## Results
 
 ```{r, echo = FALSE, eval = FALSE}
+# ACTUALLY, i think just get rid of t50 because if you use 1 / e instead of 1 / 2, then tau is all that matters
 # Derivation of t_50 for CD Weibull model:
 # gf + dg / 2 = gf + dg * exp(-(t_sec / tau)^lambda)
 # dg / 2 = dg * exp(-(t_sec / tau)^lambda)
