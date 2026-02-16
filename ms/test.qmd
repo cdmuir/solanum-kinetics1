@@ -29,7 +29,7 @@ header-includes: |
   \newcommand{\logA}{$\log(A)$}
   \newcommand{\ppfd}{$\mathrm{PPFD}$}
   \newcommand{\ppfdequals}[1]{$\mathrm{PPFD} = \SI{#1}{\micro\mol\raiseto{-2}\meter\raiseto{-1}\second}$}
-  \newcommand{\ppfdqty}[1]{$\SI{#1}{\micro\mol\raiseto{-2}\meter\raiseto{-1}\second}$}
+  \newcommand{\ppfdqty}[1]{$\SI{#1}{\micro\mole\per\meter\squared\per\second}$}
   \newcommand{\rh}{$\mathrm{RH}$}
   \newcommand{\rhequals}[1]{$\mathrm{RH} = #1\%$}
   \newcommand{\tleafequals}[1]{$T_\mathrm{leaf} = \SI{#1}{\degreeCelsius}$}
@@ -66,7 +66,6 @@ library(kableExtra)
 library(knitr)
 library(lubridate)
 library(magrittr)
-library(purrr)
 library(readr)
 library(stringr)
 library(tibble)
@@ -77,7 +76,7 @@ theme_set(theme_cowplot())
 source("../r/functions.R")
 
 # Results
-fit_amphi = read_rds("objects/best_amphi_model.rds")
+fit_amphi = read_rds("../objects/best_amphi_model.rds")
 
 n_acc = length(unique(fit_amphi$data$accession))
 
@@ -226,7 +225,7 @@ Should among individual variance be included in calculation of phylogenetic heri
 
 Stomatal conductance (gsw) decrease rapidly in response to a step increase in VPD. Consider a typical leaf in the experiment possessing the median time constant ($\tau$) and lag time ($\lambda$) among wild tomato accessions in all treatments. After VPD increased the transient wrong way response elapsed, it took `r prettyNum(round(median_tau * log(2) ^ (1 / median_lambda)))` s for gsw to decrease half-way ($t_{50}$) from its initial to final steady state value. In terms of the kinetic model parameters, most variation among leaves was due to difference in the time constant rather than the lag time. In the previous example, increasing $\lambda$ from its median to its maximum estimated value among accessions increased the $t_{50}$ by only `r prettyNum(round(median_tau * log(2) ^ (1 / max_lambda) - median_tau * log(2) ^ (1 / median_lambda), 1))` s. In contrast, increasing $\tau$ from its median to maximum value increased $t_{50}$ by `r prettyNum(round(max_tau * log(2) ^ (1 / median_lambda) - median_tau * log(2) ^ (1 / median_lambda)))` s
 
-Growth light intensity did not significantly affect $\tau$ [@fig-accession-kinetics; @tab-fit-amphi]. In sun plants, $\tau$ was on average `r signif(100 * (exp(post_tau_sun["Estimate"]) - 1), 3)`% [95% CI: `r signif(100 * (exp(post_tau_sun["Q2.5"]) - 1), 3)` to `r signif(100 * (exp(post_tau_sun["Q97.5"]) - 1), 3)`%] lower than in shade plants after accounting for other explanatory variables. Within the same leaf, increasing the measurement light intensity prior to the VPD step change from $\ppfdequals{150}$ to $\ppfdequals{2000}$ significantly increased $\tau$ by `r signif(100 * (exp(post_tau_high["Estimate"]) - 1), 3)`% [95% CI: `r signif(100 * (exp(post_tau_high["Q2.5"]) - 1), 3)` to `r signif(100 * (exp(post_tau_high["Q97.5"]) - 1), 3)`%] [@fig-accession-kinetics; @tab-fit-amphi]. The time lag $\lambda$ responded to growth, but not measurement light intensity after accounting for other explanatory variables [@fig-accession-kinetics; @tab-fit-amphi]. In sun plants, $\tau$ was on average `r signif(100 * (exp(post_lambda_sun["Estimate"]) - 1), 3)`% [95% CI: `r signif(100 * (exp(post_lambda_sun["Q2.5"]) - 1), 3)` to `r signif(100 * (exp(post_lambda_sun["Q97.5"]) - 1), 3)`%] greater than in shade plants. Higher measurement light decreased increased $\lambda$ slightly by `r signif(100 * (exp(post_lambda_high["Estimate"]) - 1), 3)`% [95% CI: `r signif(100 * (exp(post_lambda_high["Q2.5"]) - 1), 3)` to `r signif(100 * (exp(post_lambda_high["Q97.5"]) - 1), 3)`%]. 
+Growth light intensity did not significantly affect $\tau$ [@fig-accession-kinetics; @tab-fit-amphi]. In sun plants, $\tau$ was on average `r signif(100 * (exp(post_tau_sun["Estimate"]) - 1), 3)`% [95% CI: `r signif(100 * (exp(post_tau_sun["Q2.5"]) - 1), 3)` to `r signif(100 * (exp(post_tau_sun["Q97.5"]) - 1), 3)`%] lower than in shade plants after accounting for other explanatory variables. Within the same leaf, increasing the measurement light intensity prior to the VPD step change from \ppfdqty{150} to \ppfdqty{2000} significantly increased $\tau$ by `r signif(100 * (exp(post_tau_high["Estimate"]) - 1), 3)`% [95% CI: `r signif(100 * (exp(post_tau_high["Q2.5"]) - 1), 3)` to `r signif(100 * (exp(post_tau_high["Q97.5"]) - 1), 3)`%] [@fig-accession-kinetics; @tab-fit-amphi]. The time lag $\lambda$ responded to growth, but not measurement light intensity after accounting for other explanatory variables [@fig-accession-kinetics; @tab-fit-amphi]. In sun plants, $\tau$ was on average `r signif(100 * (exp(post_lambda_sun["Estimate"]) - 1), 3)`% [95% CI: `r signif(100 * (exp(post_lambda_sun["Q2.5"]) - 1), 3)` to `r signif(100 * (exp(post_lambda_sun["Q97.5"]) - 1), 3)`%] greater than in shade plants. Higher measurement light decreased increased $\lambda$ slightly by `r signif(100 * (exp(post_lambda_high["Estimate"]) - 1), 3)`% [95% CI: `r signif(100 * (exp(post_lambda_high["Q2.5"]) - 1), 3)` to `r signif(100 * (exp(post_lambda_high["Q97.5"]) - 1), 3)`%]. 
 
 - Partition variance in tau and lambda
 - table of model estimates for tau and lambda
@@ -263,6 +262,15 @@ Need to show (this is a growing, incomplete list):
 #| echo: false
 #| message: false
 #| warning: false
+
+library(brms)
+library(dplyr)
+library(stringr)
+library(tidyr)
+library(knitr)
+library(kableExtra)
+library(purrr)
+
 
 clean_repsonse_var = function(.x) {
   case_when(
@@ -328,7 +336,7 @@ fx1 |>
       booktabs = TRUE,
       longtable = TRUE,
       escape = FALSE,
-      caption = "Fixed effects (posterior mean, SE, and 95\\% confidence intervals)."
+      caption = "Fixed effects (posterior mean, SE, and 95\\% credible intervals)."
     ) |>
     kable_styling(latex_options = c("repeat_header", "hold_position")) |>
     row_spec(0, bold = TRUE) |>
@@ -352,24 +360,3 @@ fx1 |>
   column_spec(2, width = "2in")
 
 ```
-
-## MANUSCRAPS
-
-Note: this theory did not really pan out. It did not come up with models that really fit better than the CD Weibull model and they included an extra parameter. Therefore, I am tabling this for now and trying OnGuard3 instead.
-
-### Theory
-
-Our goal here is derive equations that integrate the effects of guard cell size and aperture on stomatal kinetics. A fully mechanistic model is beyond the scope of our goals here. Instead, we use phenomenological equations that adequately capture empirical patterns. There are three main assumptions of our model. First, we assume linear relaxation kinetics for guard cell turgor pressure ($P$):
-
-$$ \frac{d P}{d t} = \frac{P^* - P}{\tau}.$$
-In this differential equation, $P^*$ is the equilibrium turgor pressure and $\tau$ is a time constant that determines the speed of relaxation. Solving this equation gives:
-
-$$ P(t) = P^* + [P(0) - P^*] e^{-t/\tau}, $$
-where $P(0)$ is the initial turgor pressure at time $t=0$.
-
-The rate of relaxation is determined by the surface area to volume ratio. Assume constant transport per surface area. Surface area determined by geometry. 
-
-What is eqn for this?
-
-
-
