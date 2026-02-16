@@ -26,7 +26,7 @@ df_var = fit_amphi |>
   rowwise() |>
   mutate(total_var = sum(c_across(where(is_double)))) |>
   ungroup() |>
-  mutate(h2_phy = phy / total_var, across(accession:resid, ~ .x / total_var)) |>
+  mutate(across(where(is_double), ~ .x / total_var)) |>
   split(~ trait) |>
   map(summarize_draws) |>
   map(filter, variable != "trait") |>
@@ -42,16 +42,14 @@ df_var = fit_amphi |>
       phylogenetic = "phy",
       population = "accession",
       `within-individual` = "accid",
-      `between-individual` = "resid",
-      `$h^2_\\mathrm{phy}$` = "h2_phy"
+      `between-individual` = "resid"
     ) |>
       fct_relevel(
         c(
           "phylogenetic",
           "population",
           "between-individual",
-          "within-individual",
-          "$h^2_\\mathrm{phy}$"
+          "within-individual"
         )
       ),
     trait1 = fct_recode(
@@ -65,7 +63,6 @@ df_var = fit_amphi |>
 
 # Bar plot
 gp1 = df_var |>
-  filter(variable != "h2_phy") |>
   ggplot(aes(median, trait1, fill = vc)) +
   geom_bar(stat = "identity", position = "stack") +
   # scale_y_discrete(labels = label_parse()) +
@@ -76,7 +73,6 @@ gp1 = df_var |>
 
 # Alternate - point range
 gp2 =  df_var |>
-  filter(variable != "h2_phy") |>
   ggplot(aes(
     trait1,
     median,
@@ -98,7 +94,7 @@ tikz(
   "figures/variance.tex",
   standAlone = TRUE,
   width = 6,
-  height = 4
+  height = 2
 )
 print(gp1)
 dev.off()
@@ -109,10 +105,10 @@ system("cd figures; pdflatex variance.tex; rm variance.aux variance.log")
 df_var |>
   mutate(
     Trait = trait1,
-    `% variance` = formatC(median * 100, format = "f", digits = 1),
-    `95% CI` = glue("[{formatC(q5 * 100, format = 'f', digits = 1)}, {formatC(q95 * 100, format = 'f', digits = 1)}]"),
+    `\\% variance` = formatC(median * 100, format = "f", digits = 1),
+    `95\\% CI` = glue("[{formatC(q5 * 100, format = 'f', digits = 1)}, {formatC(q95 * 100, format = 'f', digits = 1)}]"),
   ) |>
-  filter(!is.na(`% variance`)) |>
+  filter(`\\% variance` != "NA") |>
   arrange(Trait, vc) |>
-  select(Trait, component = vc, `% variance`, `95% CI`) |>
+  select(Trait, component = vc, `\\% variance`, `95\\% CI`) |>
   write_rds("objects/tbl-variance.rds")

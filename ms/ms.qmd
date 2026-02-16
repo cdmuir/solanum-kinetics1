@@ -20,6 +20,8 @@ header-includes: |
   \newcommand{\ca}{$C_\mathrm{a}$}
   \newcommand{\caequals}[1]{$C_\mathrm{a} = \SI{#1}{\micro\mol\raiseto{-1}\mol}$}
   \newcommand{\cabetween}[2]{#1 < $C_\mathrm{a} < \SI{#2}{\micro\mol\raiseto{-1}\mol}$}
+  \newcommand{\fgmax}{$f_\text{gmax}$}
+  \newcommand{\gcl}{$l_\text{gc}$}
   \newcommand{\gmax}{$g_\text{max}$}
   \newcommand{\gmaxratio}{$g_\text{max,ratio}$}
   \newcommand{\gmaxshade}{$g_\text{max,shade}$}
@@ -257,7 +259,7 @@ iris %>%
   kable_styling()
 ```
 
-Among the four traits in our model (\fgmax, \gcl, $\lambda$, and $tau$), the preponderance of the variance was within or between individuals after accounting for treatment effects [@fig-variance]. The exception to this pattern was \gcl{}, for which the phylogenetic component was larger [@fig-variance].  The phylogenetic variance component was significantly higher than that of other response variables [@fig-variance]. add table to show CIs in supplement?
+Among the four traits in our model (\fgmax, \gcl, $\lambda$, and $tau$), the preponderance of the variance was within or between individuals after accounting for treatment effects [@fig-variance; @tbl-variance]. The exception to this pattern was \gcl{}, for which the phylogenetic component was larger [@fig-variance].  The phylogenetic variance component was significantly higher than that of other response variables [@fig-variance]. add table to show CIs in supplement?
 
 ```{r, variance, echo = FALSE}
 #| label: fig-variance
@@ -274,7 +276,40 @@ knitr::include_graphics("../figures/variance.pdf")
 #| message: false
 #| warning: false
 
-read_rds("../objects/tbl-variance.rds")
+tab_variance = read_rds("../objects/tbl-variance.rds") 
+
+tv2 = tab_variance |>
+  summarize(n = n(), .by = Trait) |>
+  mutate(
+    Trait = str_replace_all(Trait, "\\\\", "\\\\\\\\"),
+    cumsum = cumsum(n))
+
+tab_variance |>
+  select(-Trait) |>
+  kable(
+      format = "latex",
+      booktabs = TRUE,
+      longtable = TRUE,
+      escape = FALSE,
+      caption = "Variance components and phylogenetic heritability of stomatal kinetic traits."
+    ) |>
+    kable_styling(latex_options = c("repeat_header", "hold_position")) |>
+    pack_rows(tv2$Trait[1],
+             1,
+             tv2$cumsum[2],
+             escape = FALSE) |>
+    pack_rows(tv2$Trait[2],
+             tv2$cumsum[1] + 1,
+             tv2$cumsum[2],
+             escape = FALSE) |>
+    pack_rows(tv2$Trait[3],
+             tv2$cumsum[2] + 1,
+             tv2$cumsum[3],
+             escape = FALSE) |>
+    pack_rows(tv2$Trait[4],
+             tv2$cumsum[3] + 1,
+             tv2$cumsum[4],
+             escape = FALSE) 
 ```
 
 Variation in stomatal kinetic parameters were associated with variation in guard cell size and fgmax at different levels of organization. We focus first on untreated leaves from plants grown and measured under high light intensity treatments. The phylogenetic variance in guard cell size among accessions was X $\times$ greater than the variance among individuals within the same accession WORKING HERE - GET THIS NUMBER FROM MODEL.

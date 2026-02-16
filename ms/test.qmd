@@ -111,252 +111,47 @@ max_lambda = tab_estimates |>
 
 ```
 
-Reminder: Halliwell et al. 2025 paper has useful info on multiresponse models. I might use Van de Pol and Wright (2009) method for within versus between slope estimation. This is in the phylogenetic comparative example in the brms vignette too. Actually, this is hard to implement because I would have to calculate individual residuals for each light treatment combination and then means of those, etc.
+blah [@tbl-variance]
 
-Westoby et al (2023) (10.1111/1365-2745.14150) is similar to Halliwell. Maybe another way to think about it using the mutliresponse approach.
-
-## Abstract
-
-Guard cell size and stomatal density vary over X and X orders of magnitude among extant vascular land plants, yet the adaptive significance of much of this variation remains unclear. The evolution of guard cell size in particular is poorly understood and may even be constrained by nonadaptive features like genome size. One hypothesis is that natural selection may favor smaller guard cells to increase the rate at which stomatal conductance responds to fluctuating environmental conditions. A related hypothesis is that operational stomatal conductance (gop) is often $\approx 25\%$ of its theoretical maximum (gmax) because at this stomatal aperture, guard cell volume is poised to change rapidly with changes in turgor pressure. The support for both hypothesis is limited and mixed, in part because they have not been tested together, even though both guard cell size and the ratio of gop to gmax (gop:gmax) should influence stomatal kinetics. We measured stomatal closure kinetics in response to an abrupt increase in vapor pressure deficit (VPD) among 29 diverse wild tomato populations in the genus \textit{Solanum}. Both smaller guard cell size and lower gop:gmax were associated with faster stomatal closure kinetics, but at different levels of biological organization. Guard cell size explained X% of the variance in stomatal kinetics among populations, whereas gop:gmax explained X% of the variance among individuals within populations. [neither result would have been supported if analyzed in isolation - is this true?]. We conclude that guard cell size may respond to selection on stomatal kinetics over evolutionary time, but actual kinetics are modulated by a tradeoff between maximizing gop and minimizing the time required for stomatal closure. Putting these hypotheses together with stabilizing selection on gop may explain why stomatal size and density negatively covary among species.
-
-## Introduction
-
-NOTE: I need to develop a consistent terminology - stomatal response rate? speed? kinetics?
-
-In nature, change is the only constant. One way that vascular plants (tracheophytes) cope with change is by adjusting stomatal pore aperture to optimize the trade-off between carbon gain and water loss. In the absence of physical limits and energetic tradeoffs, natural selection would favor plants that could instantaneously adjust stomatal conductance (gsw)  to perfectly track dynamic environmental conditions. In reality, stomatal responses take time, creating a lag between actual and optimal stomatal aperture. X ions must be pumped across ... and active responses depend on multiple feedback loops involving gene expression/ABA synthesis?/etc (Buckley). [illustrative empirical example or real numbers illustrating the problem]. Changes in stomatal aperture could be faster if there were more channels (?) per area, but this would require more energy (ATP?) and space allocated to XX proteins in the guard cell membrane. 
-
-It might seem that natural selection should favor faster stomatal responses to get closer to the ideal of instantaneous optimization. Under this assumption, variation in stomatal kinetics would depend on how strong directional selection for faster responses is counterbalanced by costs of faster stomata. We discuss multiple, nonmutually exclusive costs below [WHERE?]. However, once models account for inevitable time lags, natural selection can favor slower responses when this prevents overreacting to unpredictable and shortlived changes in the environment. [Review some lit] It is therefore likely that the direction of selection on stomatal response rate varies depending on the predictability and duration of environmental fluctuations, as well as the energetic costs of stomatal movements.
-
-What traits respond to selection on stomatal kinetics? We consider two interconnected hypotheses that have thus far been treated in isolation. The first hypothesis is that smaller guard cells open and close faster because of their intrinsically greater surface area to volume ration [@drake_smaller_2013; @woning_revisiting_2026]. For approximately cylindrical cell geometries, like that found in guard cells (citation on guard cell shape?), surface area increases linearly with radius, whereas volume increases in proportion to the radius squared. Consequently, larger guard cells will require more time to pump enough ions (wc?) to achieve a given change in turgor pressure and, hence, stomatal pore aperture. A plant with large guard cells can partially compensate for this geometric constraint by increasing the density of transporters (wc?) in the guard cell membrane [@raven_speedy_2014] (haworth et al 2023 have some cites about this). However, this may be limited by the available membrane area and/or energetic costs of maintaining high transporter densities. Empirical support for the hypothesis that smaller guard cells are faster is mixed. Some studies have found negative correlations between guard cell size and stomatal response rate [@drake_smaller_2013; @wang_large_2014], whereas others have found no relationship [@mott_stomatal_2007; @muir_leaf_2020; @woning_revisiting_2026]. (apparently hetherington and woodward 2003 mention size-speed relationship too - check that. Lawson and Blatt 2014 throw shade on size being deterministic)
-
-One factor that might complicate the relationship between size and speed is aperture. Stomatal aperture can vary from near 0 when guard cell turgor pressure is low and asymptotically approach gmax as guard cell turgor pressure approaches $\infty$ (Figure 1X). The nonlinear relationship between guard cell turgor and pore aperture implies that if rate of change in turgor change is constant ($\dv{P}{t} = C$), the rate of change in aperture, and hence stomatal conductance, will vary depending on the initial aperture. When initial aperture is high, stomatal conductance will respond more slowly than when initial aperture is low. Since we generally do not observe individual stomatal aperture, extending this idea to macroscale phenomena requires scaling by stomatal density. We will use the term "fraction of anatomical maximum stomatal conductance", symbolized as fgmax. This value should be proportional to the average aperture divided by its maximum aperture for any arbitrary stomatal density [could a figure show how this interacts with stomatal density?]. Leaves operating at fgmax closer to unity will, all else being equal, will be slower to respond than leaves operating with a fgmax close to zero, independent of stomatal density. @franks_physiological_2012 hypothesized that selection on stomatal density would maintain typical operational stomatal conductance (gop) relative to gmax at a sufficiently low value that stomatal conductance would be sensitive to relatively small changes in guard cell turgor pressure. Consistent will this hypothesis, gop:gmax is often near 0.25 [@mcelwain_using_2016; @murray_consistent_2020], well below fgmax = 1, and in a range where gsw would be responsive to small changes in guard cell turgor pressure.
-
-Putting these two hypotheses together, we predict that both guard cell size and fgmax will influence stomatal kinetics, but possibly at different scales of biological organization. Guard cell size tends to vary less than stomatal density or aperture at many biological scales. For example, on a mature leaf, guard cell size is essentially fixed other than small changes in volume caused by turgor pressure (cite). Compared to stomatal density, guard cell size is also less developmentally plastic varies less genetically within species (cites). If there is relatively little plastic or genetic variation among individuals within a species, then most of the variance in stomatal kinetics within species cannot be explained by variation in stomatal size. In contrast, fgmax varies immensely within and among individuals because stomatal aperture responds dynamically over the day and in response to environmental variation. Within a single leaf, fgmax will change over the course of a day in response to light signalling, change in VPD, and starch accumulation (or sink strength? cite). During the life a leaf, fgmax will change in response to long-term stresses such as drought. Because guard cell size and aperture typically vary at different levels of biological organization, we predict that guard cell size likely explains more variation in stomatal kinetics among species, whereas fgmax will explain more variation within species. Within species variation can arise from either genetic or environmental differences between individuals. Neither of these traits along will determine all or even most of the variance in stomatal kinetics, which is a complex response to many internal and external signals (cites).
-
-Here we extend recent advances in phylogenetic comparative methods [@westoby_phylogenetically_2023; @muir_how_2023; @halliwell_multi-response_2025] to test these predictions using data on stomatal closure kinetics in response to an abrupt increase in VPD among `r n_acc` diverse wild tomato populations in the genus *Solanum*. We leveraged natural variation in guard cell size among and within species to test whether leaves with smaller guard cells close faster. We induced variation in fgmax through a combination of growth and measurement light intensity. Growth light intensity caused developmental plasticity in stomatal density that, when crossed factorially with measurement light intensity, resulted in variation in fgmax. By measuring multiple individuals from multiple treatments across multiple species enabled us to estimate the effect of guard cell size and fsmax on stomatal kinetics and partition their significance within and among species.
-
-
-
-
-
-<!-- might be good paper to revisit and cite: -->
-<!-- Pinpointing the causal influences of stomatal anatomy and behavior on minimum, operational, and maximum leaf surface conductance -->
-
-<!-- another recent paper on gop:gmax using Franks et al 2012 concept: -->
-<!-- https://doi.org/10.1093/aob/mcaf224 -->
-
-[not sure where this goes]
-many, large - slow because of large size, but fast because of low gop
-few, small - slow because of high gop, but fast because of small size
-some, moderate - best of both worlds?
-IDEA FOR FIGURE - use empircal estimates to predict tau (z-axis) for a given optimal gs as a function of 
-
-
-
-
-Is there a connection here to size-density scaling? It’s an empirical regularity, not a law of nature that higher gmax is associated with smaller stomata. This is an observation that requires explanation, not a presumption of truth. 
-
-What's never been done before is to put these two ideas together. This means that weak relationships between size and speed might be because people have not controlled for aperture (gop:gmax ratio).
-
-Factors cannot also manifest at different scales of biological organization. Here we focus on two levels: variation among species and variation among individuals within species. To consider it abstractly, if factors A and B influnce trait C according to some mechanistic model, but factor A is typically fixed within species but varies among species, then B will explain much of the variation in C within species. But if A varies among species, then A will explain much of the variation in C among species. We hypothesize that stomatal size is relatively constant within species, but varies among species.  In contrast, aperture (gop:gmax) varies because of mismatches between leaf anatomy and gopt.
-
-
-And that smaller stomata are faster.
-
-These are related because the benefit of small stomata goes away if gop is really high.
-
-
-
-hooks:
-
-
-Haworth et al (2018) paper arguing faster adaxial kinetics (I think). Check other cites in Woning and Horak
-
-
-
-
-Stomatal kinetics are important for optimizing response to rapid fluctuations in light, leaf temperture, and VPD
-
-curve shape does not match what you'd expect for constant alpha term
-
-Anatomy possibly matters: shape and size
-
-Adaxial stomata might close faster (why?)
-
-What we did:\
-1. model stomatal close with hysteresis (can it explain overshoot and wrong-way response?
-
-2.  compare tau in tomatoes to that in rice
-3.  test for effect of size
-4.  test if adaxial+abaxial is faster than abaxial alone
-
-CD WEibull in Woning et al
-
-g_s = g_f + (g_i - g_f) * exp(-(t/tau)^lambda)
-
-## Methods
-
-### Hypothesis generation
-
-The primary aims and *a priori* hypotheses of this study are described in @muir_adaptation_2025. The idea to use gsw response curve to test hypotheses about which traits influence stomatal kinetics came after the data had been collected, but not yet analyzed. We started with an *a priori* hypothesis that guard cell size would influence $\tau$ based on a recent metaanalysis of stomatal responses to light [@woning_revisiting_2026] and we planned to compare relationships within and among species, as described in this paper. We made the decision to test for an association between fgmax and $\tau$ after exploratory analyses revealed a potential association. Adding hypotheses after some results have been analyzed, also known as "Hypothesizing After Results Known" (HARKing), can lead to reports of spurious associations that are not repeatable in later studies (cite). Therefore, our conclusions about the effect of fgmax on stomatal kinetics should be interpreted with caution until they are replicated.
-
-### Stomatal kinetics
-
-Equation from @woning_revisiting_2026. Point out that tau matters most.
-
-### Phylogenetic heritability (somewhere)
-
-Should among individual variance be included in calculation of phylogenetic heritability? Consult de Villem? and Nagasaki? paper
-
-## Results
-
-```{r, echo = FALSE, eval = FALSE}
-# ACTUALLY, i think just get rid of t50 because if you use 1 / e instead of 1 / 2, then tau is all that matters
-# Derivation of t_50 for CD Weibull model:
-# gf + dg / 2 = gf + dg * exp(-(t_sec / tau)^lambda)
-# dg / 2 = dg * exp(-(t_sec / tau)^lambda)
-# 1 / 2 = exp(-(t_sec / tau)^lambda)
-# log(1 / 2) = -(t_sec / tau)^lambda
-# -log(1 / 2) = (t_sec / tau)^lambda
-# log(2) = (t_sec / tau)^lambda
-# log(2) ^ (1 / lambda) = t_sec / tau
-# tau * log(2) ^ (1 / lambda) = t_sec
-```
-
-Stomatal conductance (gsw) decrease rapidly in response to a step increase in VPD. Consider a typical leaf in the experiment possessing the median time constant ($\tau$) and lag time ($\lambda$) among wild tomato accessions in all treatments. After VPD increased the transient wrong way response elapsed, it took `r prettyNum(round(median_tau * log(2) ^ (1 / median_lambda)))` s for gsw to decrease half-way ($t_{50}$) from its initial to final steady state value. In terms of the kinetic model parameters, most variation among leaves was due to difference in the time constant rather than the lag time. In the previous example, increasing $\lambda$ from its median to its maximum estimated value among accessions increased the $t_{50}$ by only `r prettyNum(round(median_tau * log(2) ^ (1 / max_lambda) - median_tau * log(2) ^ (1 / median_lambda), 1))` s. In contrast, increasing $\tau$ from its median to maximum value increased $t_{50}$ by `r prettyNum(round(max_tau * log(2) ^ (1 / median_lambda) - median_tau * log(2) ^ (1 / median_lambda)))` s
-
-Growth light intensity did not significantly affect $\tau$ [@fig-accession-kinetics; @tab-fit-amphi]. In sun plants, $\tau$ was on average `r signif(100 * (exp(post_tau_sun["Estimate"]) - 1), 3)`% [95% CI: `r signif(100 * (exp(post_tau_sun["Q2.5"]) - 1), 3)` to `r signif(100 * (exp(post_tau_sun["Q97.5"]) - 1), 3)`%] lower than in shade plants after accounting for other explanatory variables. Within the same leaf, increasing the measurement light intensity prior to the VPD step change from \ppfdqty{150} to \ppfdqty{2000} significantly increased $\tau$ by `r signif(100 * (exp(post_tau_high["Estimate"]) - 1), 3)`% [95% CI: `r signif(100 * (exp(post_tau_high["Q2.5"]) - 1), 3)` to `r signif(100 * (exp(post_tau_high["Q97.5"]) - 1), 3)`%] [@fig-accession-kinetics; @tab-fit-amphi]. The time lag $\lambda$ responded to growth, but not measurement light intensity after accounting for other explanatory variables [@fig-accession-kinetics; @tab-fit-amphi]. In sun plants, $\tau$ was on average `r signif(100 * (exp(post_lambda_sun["Estimate"]) - 1), 3)`% [95% CI: `r signif(100 * (exp(post_lambda_sun["Q2.5"]) - 1), 3)` to `r signif(100 * (exp(post_lambda_sun["Q97.5"]) - 1), 3)`%] greater than in shade plants. Higher measurement light decreased increased $\lambda$ slightly by `r signif(100 * (exp(post_lambda_high["Estimate"]) - 1), 3)`% [95% CI: `r signif(100 * (exp(post_lambda_high["Q2.5"]) - 1), 3)` to `r signif(100 * (exp(post_lambda_high["Q97.5"]) - 1), 3)`%]. 
-
-- Partition variance in tau and lambda
-- table of model estimates for tau and lambda
-
-```{r, accession-kinetics, echo = FALSE}
-#| label: fig-accession-kinetics
-#| fig-align: center
-#| fig-cap: "\\textbf{Stomatal kinetics parameters $\\lambda$ (lag time; top facets) and $\\tau$ (time constant; lower facets) vary among wild tomato populations.} Stomatal conductance decreases faster (lower $\\tau$) in response to a step change in vapor pressure deficit (VPD) in leaves when measured under low light intensity. The pattern was consistent for both shade (left facets) and sun (right facets) grown plants. The pattern for $\\lambda$$ was qualitatively similar to that for $\\tau$. Each point is the average parameter value for one accession in that treatment combination. The growth and measurement light intensity treatments are described in the Materials and Methods section."
-
-knitr::include_graphics("../figures/accession-kinetics.pdf")
-```
-
-```{r, fit-amphi, echo = FALSE}
-#| label: tab-fit-amphi
-
-# placeholder for table of model estimates
-iris %>%
-  group_by(Species) %>%
-  summarise(mean = mean(Sepal.Length), sd = sd(Sepal.Length)) %>%
-  kable() %>%
-  kable_styling()
-```
-
-Variation in stomatal kinetic parameters were associated with variation in guard cell size and fgmax at different levels of organization. We focus first on untreated leaves from plants grown and measured under high light intensity treatments. The phylogenetic variance in guard cell size among accessions was X $\times$ greater than the variance among individuals within the same accession WORKING HERE - GET THIS NUMBER FROM MODEL.
-
-Need to show (this is a growing, incomplete list):
-- plot of tau and lambda versus t50 to show that the latter is more sensitive to tau
-- guard cell size is less variable than stomatal density and fgmax
-- partial correlation showing that gcl and tau are (only?) significant phylogenetic covariates
-
-```{r fit_amphi}
-#| label: tbl-fit_amphi
+```{r, variance}
+#| label: tbl-variance
 #| results: asis
 #| echo: false
 #| message: false
 #| warning: false
 
-library(brms)
-library(dplyr)
-library(stringr)
-library(tidyr)
-library(knitr)
-library(kableExtra)
-library(purrr)
+tab_variance = read_rds("../objects/tbl-variance.rds") 
 
-
-clean_repsonse_var = function(.x) {
-  case_when(
-    .x == "logfgmax" ~ "$\\log(f_g)$",
-    .x == "loggcl" ~ "$\\log(l_\\mathrm{gc})$",
-    .x == "loglambdamean" ~ "$\\log(\\lambda)$",
-    .x == "logtaumean" ~ "$\\log(\\tau)$",
-    TRUE ~ .x
-  )
-}
-
-clean_explanatory_var = function(.x) {
-  case_when(
-    .x == "Intercept" ~ "intercept (shade, low light)",
-    .x == "lighttreatmentsun" ~ "sun growth treatment",
-    .x == "lightintensityhigh" ~ "high measurement light intensity",
-    .x == "logfgmax" ~ "$\\log(f_g)$",
-    .x == "loggcl" ~ "$\\log(l_\\mathrm{gc})$",
-    .x == "loglambdamean" ~ "$\\log(\\lambda)$",
-    .x == "logtaumean" ~ "$\\log(\\tau)$",
-    TRUE ~ .x
-  )
-}
-
-describe_effect = function(explanatory, response) {
-  if (str_detect(explanatory, "^intercept")) {
-    explanatory
-  } else {
-    glue("effect of {explanatory} on {response}")
-  }
-}
-
-fx1 = fixef(fit_amphi, summary = TRUE) |>
-  as.data.frame() |>
-  tibble::rownames_to_column("par") |>
+tv2 = tab_variance |>
+  summarize(n = n(), .by = Trait) |>
   mutate(
-    across(where(is_double), ~ formatC(., format = "f", digits = 2)),
-    `Estimate [95\\% CI]` = glue("{Estimate} [{Q2.5}, {Q97.5}]")
-  ) |>
-  separate_wider_delim(par, delim = "_", names = c("response", "explanatory")) |>
-  mutate(
-    response = clean_repsonse_var(response),
-    explanatory = clean_explanatory_var(explanatory)
-  ) |>
-  rowwise() |>
-  mutate(
-    Parameter = describe_effect(explanatory, response)
-  ) |>
-  ungroup() |>
-  arrange(response, explanatory) 
+    Trait = str_replace_all(Trait, "\\\\", "\\\\\\\\"),
+    cumsum = cumsum(n))
 
-fx2 = fx1 |>
-  summarize(n = n(), .by = response) |>
-  mutate(
-    response = str_replace_all(response, "\\\\", "\\\\\\\\"),
-    cumsum = cumsum(n)
-  )
-
-fx1 |>
-  select(Parameter, `Estimate [95\\% CI]`) |>
-    kable(
+tab_variance |>
+  select(-Trait) |>
+  kable(
       format = "latex",
       booktabs = TRUE,
       longtable = TRUE,
       escape = FALSE,
-      caption = "Fixed effects (posterior mean, SE, and 95\\% credible intervals)."
+      caption = "Variance components and phylogenetic heritability of stomatal kinetic traits."
     ) |>
     kable_styling(latex_options = c("repeat_header", "hold_position")) |>
-    row_spec(0, bold = TRUE) |>
-    pack_rows(fx2$response[1],
-            1,
-            fx2$cumsum[1],
-            escape = FALSE) |>
-    pack_rows(fx2$response[2],
-             fx2$cumsum[1] + 1,
-             fx2$cumsum[2],
+    pack_rows(tv2$Trait[1],
+             1,
+             tv2$cumsum[2],
              escape = FALSE) |>
-  pack_rows(fx2$response[3],
-             fx2$cumsum[2] + 1,
-             fx2$cumsum[3],
+    pack_rows(tv2$Trait[2],
+             tv2$cumsum[1] + 1,
+             tv2$cumsum[2],
              escape = FALSE) |>
-  pack_rows(fx2$response[4],
-             fx2$cumsum[3] + 1,
-             fx2$cumsum[4],
+    pack_rows(tv2$Trait[3],
+             tv2$cumsum[2] + 1,
+             tv2$cumsum[3],
              escape = FALSE) |>
-  column_spec(1, width = "4in") |>
-  column_spec(2, width = "2in")
-
+    pack_rows(tv2$Trait[4],
+             tv2$cumsum[3] + 1,
+             tv2$cumsum[4],
+             escape = FALSE) 
 ```
