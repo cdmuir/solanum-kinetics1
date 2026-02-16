@@ -257,7 +257,7 @@ iris %>%
   kable_styling()
 ```
 
-The phylogenetic variance component was significantly higher than that of other response variables [@fig-variance]. add table to show CIs in supplement?
+Among the four traits in our model (\fgmax, \gcl, $\lambda$, and $tau$), the preponderance of the variance was within or between individuals after accounting for treatment effects [@fig-variance]. The exception to this pattern was \gcl{}, for which the phylogenetic component was larger [@fig-variance].  The phylogenetic variance component was significantly higher than that of other response variables [@fig-variance]. add table to show CIs in supplement?
 
 ```{r, variance, echo = FALSE}
 #| label: fig-variance
@@ -265,6 +265,16 @@ The phylogenetic variance component was significantly higher than that of other 
 #| fig-cap: "\\textbf{foo} bar."
 
 knitr::include_graphics("../figures/variance.pdf")
+```
+
+```{r, variance}
+#| label: tbl-variance
+#| results: asis
+#| echo: false
+#| message: false
+#| warning: false
+
+read_rds("../objects/tbl-variance.rds")
 ```
 
 Variation in stomatal kinetic parameters were associated with variation in guard cell size and fgmax at different levels of organization. We focus first on untreated leaves from plants grown and measured under high light intensity treatments. The phylogenetic variance in guard cell size among accessions was X $\times$ greater than the variance among individuals within the same accession WORKING HERE - GET THIS NUMBER FROM MODEL.

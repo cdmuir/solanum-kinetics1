@@ -26,8 +26,8 @@ df_var = fit_amphi |>
   rowwise() |>
   mutate(total_var = sum(c_across(where(is_double)))) |>
   ungroup() |>
-  mutate(across(where(is_double), ~ .x / total_var)) |>
-  split( ~ trait) |>
+  mutate(h2_phy = phy / total_var, across(accession:resid, ~ .x / total_var)) |>
+  split(~ trait) |>
   map(summarize_draws) |>
   map(filter, variable != "trait") |>
   imap_dfr(\(.x, .y) {
@@ -41,15 +41,17 @@ df_var = fit_amphi |>
       variable,
       phylogenetic = "phy",
       population = "accession",
-      `within individual` = "accid",
-      `between individual` = "resid"
+      `within-individual` = "accid",
+      `between-individual` = "resid",
+      `$h^2_\\mathrm{phy}$` = "h2_phy"
     ) |>
       fct_relevel(
         c(
           "phylogenetic",
           "population",
-          "between individual",
-          "within individual"
+          "between-individual",
+          "within-individual",
+          "$h^2_\\mathrm{phy}$"
         )
       ),
     trait1 = fct_recode(
@@ -62,7 +64,9 @@ df_var = fit_amphi |>
   )
 
 # Bar plot
-gp1 = ggplot(df_var, aes(median, trait1, fill = vc)) +
+gp1 = df_var |>
+  filter(variable != "h2_phy") |>
+  ggplot(aes(median, trait1, fill = vc)) +
   geom_bar(stat = "identity", position = "stack") +
   # scale_y_discrete(labels = label_parse()) +
   scale_fill_viridis_d() +
@@ -71,13 +75,15 @@ gp1 = ggplot(df_var, aes(median, trait1, fill = vc)) +
 
 
 # Alternate - point range
-gp2 = ggplot(df_var, aes(
-  trait1,
-  median,
-  color = vc,
-  ymin = q5,
-  ymax = q95
-)) +
+gp2 =  df_var |>
+  filter(variable != "h2_phy") |>
+  ggplot(aes(
+    trait1,
+    median,
+    color = vc,
+    ymin = q5,
+    ymax = q95
+  )) +
   geom_pointrange(position = position_dodge2(width = 0.5)) +
   scale_x_discrete(labels = label_parse()) +
   scale_y_continuous(limits = c(0, 1)) +
@@ -88,8 +94,25 @@ gp2 = ggplot(df_var, aes(
 # ggsave("figures/variance.pdf", plot = gp1, width = 6, height = 4)
 # ggsave("figures/variance-alt.pdf", plot = gp2, width = 6, height = 4)
 
-tikz("figures/variance.tex", standAlone = TRUE, width = 6, height = 4)
+tikz(
+  "figures/variance.tex",
+  standAlone = TRUE,
+  width = 6,
+  height = 4
+)
 print(gp1)
 dev.off()
 
-system("cd figures; pdflatex variance.tex; rm texput.log variance.aux variance.log")
+system("cd figures; pdflatex variance.tex; rm variance.aux variance.log")
+
+# Table
+df_var |>
+  mutate(
+    Trait = trait1,
+    `% variance` = formatC(median * 100, format = "f", digits = 1),
+    `95% CI` = glue("[{formatC(q5 * 100, format = 'f', digits = 1)}, {formatC(q95 * 100, format = 'f', digits = 1)}]"),
+  ) |>
+  filter(!is.na(`% variance`)) |>
+  arrange(Trait, vc) |>
+  select(Trait, component = vc, `% variance`, `95% CI`) |>
+  write_rds("objects/tbl-variance.rds")
