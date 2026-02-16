@@ -78,6 +78,21 @@ theme_set(theme_cowplot())
 
 source("../r/functions.R")
 
+response_vars = tibble(
+  definition = c(
+    fgmax = "stomatal conductance as a fraction of anatomical maximum stomatal conductance",
+    gcl = "guard cell length",
+    lambda = "lag time",
+    tau = "time constant"
+  ),
+  symbol = c(
+    fgmax = "$f_\\text{gmax}$",
+    gcl = "$l_\\text{gc}$",
+    lambda = "$\\lambda$",
+    tau = "$\\tau$"
+  )
+)
+
 # Results
 fit_amphi = read_rds("../objects/best_amphi_model.rds")
 
@@ -126,13 +141,13 @@ Guard cell size and stomatal density vary over X and X orders of magnitude among
 
 NOTE: I need to develop a consistent terminology - stomatal response rate? speed? kinetics?
 
-In nature, change is the only constant. One way that vascular plants (tracheophytes) cope with change is by adjusting stomatal pore aperture to optimize the trade-off between carbon gain and water loss. In the absence of physical limits and energetic tradeoffs, natural selection would favor plants that could instantaneously adjust stomatal conductance (gsw)  to perfectly track dynamic environmental conditions. In reality, stomatal responses take time, creating a lag between actual and optimal stomatal aperture. X ions must be pumped across ... and active responses depend on multiple feedback loops involving gene expression/ABA synthesis?/etc (Buckley). [illustrative empirical example or real numbers illustrating the problem]. Changes in stomatal aperture could be faster if there were more channels (?) per area, but this would require more energy (ATP?) and space allocated to XX proteins in the guard cell membrane. 
+In nature, change is the only constant. One way that vascular plants (tracheophytes) cope with change is by adjusting stomatal pore aperture to optimize the trade-off between carbon gain and water loss. In the absence of physical limits and energetic tradeoffs, natural selection would favor plants that could instantaneously adjust stomatal conductance (\gsw)  to perfectly track dynamic environmental conditions. In reality, stomatal responses take time, creating a lag between actual and optimal stomatal aperture. X ions must be pumped across ... and active responses depend on multiple feedback loops involving gene expression/ABA synthesis?/etc (Buckley). [illustrative empirical example or real numbers illustrating the problem]. Changes in stomatal aperture could be faster if there were more channels (?) per area, but this would require more energy (ATP?) and space allocated to XX proteins in the guard cell membrane. 
 
 It might seem that natural selection should favor faster stomatal responses to get closer to the ideal of instantaneous optimization. Under this assumption, variation in stomatal kinetics would depend on how strong directional selection for faster responses is counterbalanced by costs of faster stomata. We discuss multiple, nonmutually exclusive costs below [WHERE?]. However, once models account for inevitable time lags, natural selection can favor slower responses when this prevents overreacting to unpredictable and shortlived changes in the environment. [Review some lit] It is therefore likely that the direction of selection on stomatal response rate varies depending on the predictability and duration of environmental fluctuations, as well as the energetic costs of stomatal movements.
 
 What traits respond to selection on stomatal kinetics? We consider two interconnected hypotheses that have thus far been treated in isolation. The first hypothesis is that smaller guard cells open and close faster because of their intrinsically greater surface area to volume ration [@drake_smaller_2013; @woning_revisiting_2026]. For approximately cylindrical cell geometries, like that found in guard cells (citation on guard cell shape?), surface area increases linearly with radius, whereas volume increases in proportion to the radius squared. Consequently, larger guard cells will require more time to pump enough ions (wc?) to achieve a given change in turgor pressure and, hence, stomatal pore aperture. A plant with large guard cells can partially compensate for this geometric constraint by increasing the density of transporters (wc?) in the guard cell membrane [@raven_speedy_2014] (haworth et al 2023 have some cites about this). However, this may be limited by the available membrane area and/or energetic costs of maintaining high transporter densities. Empirical support for the hypothesis that smaller guard cells are faster is mixed. Some studies have found negative correlations between guard cell size and stomatal response rate [@drake_smaller_2013] (cites), whereas others have found no relationship (cites). (apparently hetherington and woodward 2003 mention size-speed relationship too - check that. Lawson and Blatt 2014 throw shade on size being deterministic)
 
-One factor that might complicate the relationship between size and speed is aperture. Stomatal aperture can vary from near 0 when guard cell turgor pressure is low and asymptotically approach gmax as guard cell turgor pressure approaches $\infty$ (Figure 1X). The nonlinear relationship between guard cell turgor and pore aperture implies that if rate of change in turgor change is constant ($\dv{P}{t} = C$), the rate of change in aperture, and hence stomatal conductance, will vary depending on the initial aperture. When initial aperture is high, stomatal conductance will respond more slowly than when initial aperture is low. Since we generally do not observe individual stomatal aperture, extending this idea to macroscale phenomena requires scaling by stomatal density. We will use the term "fraction of anatomical maximum stomatal conductance", symbolized as fgmax. This value should be proportional to the average aperture divided by its maximum aperture for any arbitrary stomatal density [could a figure show how this interacts with stomatal density?]. Leaves operating at fgmax closer to unity will, all else being equal, will be slower to respond than leaves operating with a fgmax close to zero, independent of stomatal density. @franks_physiological_2012 hypothesized that selection on stomatal density would maintain typical operational stomatal conductance (gop) relative to gmax at a sufficiently low value that stomatal conductance would be sensitive to relatively small changes in guard cell turgor pressure. Consistent will this hypothesis, gop:gmax is often near 0.25 [@mcelwain_using_2016; @murray_consistent_2020], well below fgmax = 1, and in a range where gsw would be responsive to small changes in guard cell turgor pressure.
+One factor that might complicate the relationship between size and speed is aperture. Stomatal aperture can vary from near 0 when guard cell turgor pressure is low and asymptotically approach gmax as guard cell turgor pressure approaches $\infty$ (Figure 1X). The nonlinear relationship between guard cell turgor and pore aperture implies that if rate of change in turgor change is constant ($\dv{P}{t} = C$), the rate of change in aperture, and hence stomatal conductance, will vary depending on the initial aperture. When initial aperture is high, stomatal conductance will respond more slowly than when initial aperture is low. Since we generally do not observe individual stomatal aperture, extending this idea to macroscale phenomena requires scaling by stomatal density. We will use the term "fraction of anatomical maximum stomatal conductance", symbolized as fgmax. This value should be proportional to the average aperture divided by its maximum aperture for any arbitrary stomatal density [could a figure show how this interacts with stomatal density?]. Leaves operating at fgmax closer to unity will, all else being equal, will be slower to respond than leaves operating with a fgmax close to zero, independent of stomatal density. @franks_physiological_2012 hypothesized that selection on stomatal density would maintain typical operational stomatal conductance (gop) relative to gmax at a sufficiently low value that stomatal conductance would be sensitive to relatively small changes in guard cell turgor pressure. Consistent will this hypothesis, gop:gmax is often near 0.25 [@mcelwain_using_2016; @murray_consistent_2020], well below fgmax = 1, and in a range where \gsw would be responsive to small changes in guard cell turgor pressure.
 
 Putting these two hypotheses together, we predict that both guard cell size and fgmax will influence stomatal kinetics, but possibly at different scales of biological organization. Guard cell size tends to vary less than stomatal density or aperture at many biological scales. For example, on a mature leaf, guard cell size is essentially fixed other than small changes in volume caused by turgor pressure (cite). Compared to stomatal density, guard cell size is also less developmentally plastic varies less genetically within species (cites). If there is relatively little plastic or genetic variation among individuals within a species, then most of the variance in stomatal kinetics within species cannot be explained by variation in stomatal size. In contrast, fgmax varies immensely within and among individuals because stomatal aperture responds dynamically over the day and in response to environmental variation. Within a single leaf, fgmax will change over the course of a day in response to light signalling, change in VPD, and starch accumulation (or sink strength? cite). During the life a leaf, fgmax will change in response to long-term stresses such as drought. Because guard cell size and aperture typically vary at different levels of biological organization, we predict that guard cell size likely explains more variation in stomatal kinetics among species, whereas fgmax will explain more variation within species. Within species variation can arise from either genetic or environmental differences between individuals. Neither of these traits along will determine all or even most of the variance in stomatal kinetics, which is a complex response to many internal and external signals (cites).
 
@@ -201,7 +216,7 @@ g_s = g_f + (g_i - g_f) * exp(-(t/tau)^lambda)
 
 ### Hypothesis generation
 
-The primary aims and *a priori* hypotheses of this study are described in @muir_plasticity_2025. The idea to use gsw response curve to test hypotheses about which traits influence stomatal kinetics came after the data had been collected, but not yet analyzed. We started with an *a priori* hypothesis that guard cell size would influence $\tau$ based on a recent metaanalysis of stomatal responses to light [@woning_revisiting_2026] and we planned to compare relationships within and among species, as described in this paper. We made the decision to test for an association between fgmax and $\tau$ after exploratory analyses revealed a potential association. Adding hypotheses after some results have been analyzed, also known as "Hypothesizing After Results Known" (HARKing), can lead to reports of spurious associations that are not repeatable in later studies (cite). Therefore, our conclusions about the effect of fgmax on stomatal kinetics should be interpreted with caution until they are replicated.
+The primary aims and *a priori* hypotheses of this study are described in @muir_plasticity_2025. The idea to use \gsw response curve to test hypotheses about which traits influence stomatal kinetics came after the data had been collected, but not yet analyzed. We started with an *a priori* hypothesis that guard cell size would influence $\tau$ based on a recent metaanalysis of stomatal responses to light [@woning_revisiting_2026] and we planned to compare relationships within and among species, as described in this paper. We made the decision to test for an association between fgmax and $\tau$ after exploratory analyses revealed a potential association. Adding hypotheses after some results have been analyzed, also known as "Hypothesizing After Results Known" (HARKing), can lead to reports of spurious associations that are not repeatable in later studies (cite). Therefore, our conclusions about the effect of fgmax on stomatal kinetics should be interpreted with caution until they are replicated.
 
 ### Stomatal kinetics
 
@@ -209,14 +224,10 @@ Equation from @woning_revisiting_2026. Point out that tau matters most.
 
 ### Variance decomposition and heritability (somewhere)
 
-We decomposed the variance in log-transformed response variables ($\lambda$, $tau$, fgmax, gcl) into phylogenetic, population, between-individual, and within-individual levels. The phylogenetic variance component quantifies trait evolution between populations congruent with the phylogenetic relationships, whereas the population component quantifies variance among populations independent of phylogenetic relationships [@lynch_methods_1991; @garamszegi_general_2014]. The between- and within-individual variance components quantify variance among individuals within the same population and treatment. The within-individual component was estimated from repeated measures of the same leaf at different light intensities. It was not possible to estimate within-individual variance in guard cell length with our study design because we only measured average guard cell length once per leaf. We estimated the between-individual variance from the residual variance, which also includes measurement error. The phylogenetic heritability was estimated following @lynch_methods_1991; @garamszegi_general_2014 as:
+We decomposed the variance in log-transformed response variables ($\lambda$, $tau$, fgmax, gcl) into phylogenetic, population, between-individual, and within-individual levels. The phylogenetic variance component quantifies trait evolution between populations congruent with the phylogenetic relationships, whereas the population component quantifies variance among populations independent of phylogenetic relationships [@lynch_methods_1991; @garamszegi_general_2014]. The between- and within-individual variance components quantify variance among individuals within the same population and treatment. The within-individual component was estimated from repeated measures of the same leaf at different light intensities. It was not possible to estimate within-individual variance in guard cell length with our study design because we only measured average guard cell length once per leaf. We estimated the between-individual variance from the residual variance, which also includes measurement error. The phylogenetic heritability is equivalent to the phylogenetic variance component and is estimated following @lynch_methods_1991; @garamszegi_general_2014 as:
 
 $$h^2_{\mathrm{phy}} = \frac{\sigma^2_\mathrm{phy}}{\sigma^2_\mathrm{phy} + \sigma^2_\mathrm{pop} + \sigma^2_\mathrm{between} + \sigma^2_\mathrm{within}},$$
 where $\sigma^2_\mathrm{phy}$, $\sigma^2_\mathrm{pop}$, $\sigma^2_\mathrm{between}$, and $\sigma^2_\mathrm{within}$ are the phylogenetic, population, between-individual, and within-individual variance components, respectively. 
-
-### Phylogenetic heritability (somewhere)
-
-Should among individual variance be included in calculation of phylogenetic heritability? Consult de Villem? and Nagasaki? paper
 
 ## Results
 
@@ -233,7 +244,7 @@ Should among individual variance be included in calculation of phylogenetic heri
 # tau * log(2) ^ (1 / lambda) = t_sec
 ```
 
-Stomatal conductance (gsw) decrease rapidly in response to a step increase in VPD. Consider a typical leaf in the experiment possessing the median time constant ($\tau$) and lag time ($\lambda$) among wild tomato accessions in all treatments. After VPD increased the transient wrong way response elapsed, it took `r prettyNum(round(median_tau * log(2) ^ (1 / median_lambda)))` s for gsw to decrease half-way ($t_{50}$) from its initial to final steady state value. In terms of the kinetic model parameters, most variation among leaves was due to difference in the time constant rather than the lag time. In the previous example, increasing $\lambda$ from its median to its maximum estimated value among accessions increased the $t_{50}$ by only `r prettyNum(round(median_tau * log(2) ^ (1 / max_lambda) - median_tau * log(2) ^ (1 / median_lambda), 1))` s. In contrast, increasing $\tau$ from its median to maximum value increased $t_{50}$ by `r prettyNum(round(max_tau * log(2) ^ (1 / median_lambda) - median_tau * log(2) ^ (1 / median_lambda)))` s
+Stomatal conductance (\gsw) decrease rapidly in response to a step increase in VPD. Consider a typical leaf in the experiment possessing the median time constant ($\tau$) and lag time ($\lambda$) among wild tomato accessions in all treatments. After VPD increased the transient wrong way response elapsed, it took `r prettyNum(round(median_tau * log(2) ^ (1 / median_lambda)))` s for \gsw to decrease half-way ($t_{50}$) from its initial to final steady state value. In terms of the kinetic model parameters, most variation among leaves was due to difference in the time constant rather than the lag time. In the previous example, increasing $\lambda$ from its median to its maximum estimated value among accessions increased the $t_{50}$ by only `r prettyNum(round(median_tau * log(2) ^ (1 / max_lambda) - median_tau * log(2) ^ (1 / median_lambda), 1))` s. In contrast, increasing $\tau$ from its median to maximum value increased $t_{50}$ by `r prettyNum(round(max_tau * log(2) ^ (1 / median_lambda) - median_tau * log(2) ^ (1 / median_lambda)))` s
 
 Growth light intensity did not significantly affect $\tau$ [@fig-accession-kinetics; @tab-fit-amphi]. In sun plants, $\tau$ was on average `r signif(100 * (exp(post_tau_sun["Estimate"]) - 1), 3)`% [95% CI: `r signif(100 * (exp(post_tau_sun["Q2.5"]) - 1), 3)` to `r signif(100 * (exp(post_tau_sun["Q97.5"]) - 1), 3)`%] lower than in shade plants after accounting for other explanatory variables. Within the same leaf, increasing the measurement light intensity prior to the VPD step change from \ppfdqty{150} to \ppfdqty{2000} significantly increased $\tau$ by `r signif(100 * (exp(post_tau_high["Estimate"]) - 1), 3)`% [95% CI: `r signif(100 * (exp(post_tau_high["Q2.5"]) - 1), 3)` to `r signif(100 * (exp(post_tau_high["Q97.5"]) - 1), 3)`%] [@fig-accession-kinetics; @tab-fit-amphi]. The time lag $\lambda$ responded to growth, but not measurement light intensity after accounting for other explanatory variables [@fig-accession-kinetics; @tab-fit-amphi]. In sun plants, $\tau$ was on average `r signif(100 * (exp(post_lambda_sun["Estimate"]) - 1), 3)`% [95% CI: `r signif(100 * (exp(post_lambda_sun["Q2.5"]) - 1), 3)` to `r signif(100 * (exp(post_lambda_sun["Q97.5"]) - 1), 3)`%] greater than in shade plants. Higher measurement light decreased increased $\lambda$ slightly by `r signif(100 * (exp(post_lambda_high["Estimate"]) - 1), 3)`% [95% CI: `r signif(100 * (exp(post_lambda_high["Q2.5"]) - 1), 3)` to `r signif(100 * (exp(post_lambda_high["Q97.5"]) - 1), 3)`%]. 
 
@@ -259,7 +270,7 @@ iris %>%
   kable_styling()
 ```
 
-Among the four traits in our model (\fgmax, \gcl, $\lambda$, and $tau$), the preponderance of the variance was within or between individuals after accounting for treatment effects [@fig-variance; @tbl-variance]. The exception to this pattern was \gcl{}, for which the phylogenetic component was larger [@fig-variance].  The phylogenetic variance component was significantly higher than that of other response variables [@fig-variance]. add table to show CIs in supplement?
+Among the four traits in our model (\fgmax, \gcl, $\lambda$, and $\tau$), the preponderance of the variance was typically within or between individuals after accounting for treatment effects [@fig-variance; @tbl-variance]. The exception to this pattern was \gcl{}, for which the phylogenetic component (aka phylogenetic heritability) was larger [@fig-variance]. The population component independent of phylogeny explained little of the trait variation. The between-individual variance was usually high, but this component confounds true between-individual variance with measurement error, so should be interpreted with caution. 
 
 ```{r, variance, echo = FALSE}
 #| label: fig-variance
@@ -269,8 +280,15 @@ Among the four traits in our model (\fgmax, \gcl, $\lambda$, and $tau$), the pre
 knitr::include_graphics("../figures/variance.pdf")
 ```
 
+```{r, variance-cap, echo = FALSE}
+symbol_definitions = glue("{symbol}: {definition}", .envir = as.environment(response_vars)) |>
+  str_c(collapse = "; ")
+cap_text = glue("Variance components of stomatal kinetic traits. The phylogenetic component is equivalent to the phylogenetic heritability. The population component is the nonphylogenetic variance among populations. Between- and within-individual variance components are among individuals within a population after accounting for treatment effect. Estimates and 95% confidence intervals (CI) are estimated as the median and quantile intervals of the posterior distribution. {symbol_definitions}.")
+```
+
 ```{r, variance}
 #| label: tbl-variance
+#| tbl-cap: !expr cap_text
 #| results: asis
 #| echo: false
 #| message: false
@@ -290,9 +308,8 @@ tab_variance |>
       format = "latex",
       booktabs = TRUE,
       longtable = TRUE,
-      escape = FALSE,
-      caption = "Variance components and phylogenetic heritability of stomatal kinetic traits."
-    ) |>
+      escape = FALSE
+      ) |>
     kable_styling(latex_options = c("repeat_header", "hold_position")) |>
     pack_rows(tv2$Trait[1],
              1,
@@ -312,10 +329,9 @@ tab_variance |>
              escape = FALSE) 
 ```
 
-Variation in stomatal kinetic parameters were associated with variation in guard cell size and fgmax at different levels of organization. We focus first on untreated leaves from plants grown and measured under high light intensity treatments. The phylogenetic variance in guard cell size among accessions was X $\times$ greater than the variance among individuals within the same accession WORKING HERE - GET THIS NUMBER FROM MODEL.
+Guard cell size and \fgmax affected stomatal kinetics, but at different levels of biological organization. WORKING HERE
 
 Need to show (this is a growing, incomplete list):
-- plot of tau and lambda versus t50 to show that the latter is more sensitive to tau
 - guard cell size is less variable than stomatal density and fgmax
 - partial correlation showing that gcl and tau are (only?) significant phylogenetic covariates
 

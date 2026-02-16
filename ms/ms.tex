@@ -284,7 +284,7 @@ In nature, change is the only constant. One way that vascular plants
 to optimize the trade-off between carbon gain and water loss. In the
 absence of physical limits and energetic tradeoffs, natural selection
 would favor plants that could instantaneously adjust stomatal
-conductance (gsw) to perfectly track dynamic environmental conditions.
+conductance (\gsw) to perfectly track dynamic environmental conditions.
 In reality, stomatal responses take time, creating a lag between actual
 and optimal stomatal aperture. X ions must be pumped across \ldots{} and
 active responses depend on multiple feedback loops involving gene
@@ -352,7 +352,7 @@ stomatal conductance (gop) relative to gmax at a sufficiently low value
 that stomatal conductance would be sensitive to relatively small changes
 in guard cell turgor pressure. Consistent will this hypothesis, gop:gmax
 is often near 0.25 (5, 6), well below fgmax = 1, and in a range where
-gsw would be responsive to small changes in guard cell turgor pressure.
+\gsw would be responsive to small changes in guard cell turgor pressure.
 
 Putting these two hypotheses together, we predict that both guard cell
 size and fgmax will influence stomatal kinetics, but possibly at
@@ -464,19 +464,20 @@ g\_s = g\_f + (g\_i - g\_f) * exp(-(t/tau)\^{}lambda)
 \subsubsection{Hypothesis generation}\label{hypothesis-generation}
 
 The primary aims and \emph{a priori} hypotheses of this study are
-described in (10). The idea to use gsw response curve to test hypotheses
-about which traits influence stomatal kinetics came after the data had
-been collected, but not yet analyzed. We started with an \emph{a priori}
-hypothesis that guard cell size would influence \(\tau\) based on a
-recent metaanalysis of stomatal responses to light (2) and we planned to
-compare relationships within and among species, as described in this
-paper. We made the decision to test for an association between fgmax and
-\(\tau\) after exploratory analyses revealed a potential association.
-Adding hypotheses after some results have been analyzed, also known as
-``Hypothesizing After Results Known'' (HARKing), can lead to reports of
-spurious associations that are not repeatable in later studies (cite).
-Therefore, our conclusions about the effect of fgmax on stomatal
-kinetics should be interpreted with caution until they are replicated.
+described in (10). The idea to use \gsw response curve to test
+hypotheses about which traits influence stomatal kinetics came after the
+data had been collected, but not yet analyzed. We started with an
+\emph{a priori} hypothesis that guard cell size would influence \(\tau\)
+based on a recent metaanalysis of stomatal responses to light (2) and we
+planned to compare relationships within and among species, as described
+in this paper. We made the decision to test for an association between
+fgmax and \(\tau\) after exploratory analyses revealed a potential
+association. Adding hypotheses after some results have been analyzed,
+also known as ``Hypothesizing After Results Known'' (HARKing), can lead
+to reports of spurious associations that are not repeatable in later
+studies (cite). Therefore, our conclusions about the effect of fgmax on
+stomatal kinetics should be interpreted with caution until they are
+replicated.
 
 \subsubsection{Stomatal kinetics}\label{stomatal-kinetics}
 
@@ -499,7 +500,8 @@ It was not possible to estimate within-individual variance in guard cell
 length with our study design because we only measured average guard cell
 length once per leaf. We estimated the between-individual variance from
 the residual variance, which also includes measurement error. The
-phylogenetic heritability was estimated following (11); (12) as:
+phylogenetic heritability is equivalent to the phylogenetic variance
+component and is estimated following (11); (12) as:
 
 \[h^2_{\mathrm{phy}} = \frac{\sigma^2_\mathrm{phy}}{\sigma^2_\mathrm{phy} + \sigma^2_\mathrm{pop} + \sigma^2_\mathrm{between} + \sigma^2_\mathrm{within}},\]
 where \(\sigma^2_\mathrm{phy}\), \(\sigma^2_\mathrm{pop}\),
@@ -507,19 +509,13 @@ where \(\sigma^2_\mathrm{phy}\), \(\sigma^2_\mathrm{pop}\),
 phylogenetic, population, between-individual, and within-individual
 variance components, respectively.
 
-\subsubsection{Phylogenetic heritability
-(somewhere)}\label{phylogenetic-heritability-somewhere}
-
-Should among individual variance be included in calculation of
-phylogenetic heritability? Consult de Villem? and Nagasaki? paper
-
 \subsection{Results}\label{results}
 
-Stomatal conductance (gsw) decrease rapidly in response to a step
+Stomatal conductance (\gsw) decrease rapidly in response to a step
 increase in VPD. Consider a typical leaf in the experiment possessing
 the median time constant (\(\tau\)) and lag time (\(\lambda\)) among
 wild tomato accessions in all treatments. After VPD increased the
-transient wrong way response elapsed, it took 121 s for gsw to decrease
+transient wrong way response elapsed, it took 121 s for \gsw to decrease
 half-way (\(t_{50}\)) from its initial to final steady state value. In
 terms of the kinetic model parameters, most variation among leaves was
 due to difference in the time constant rather than the lag time. In the
@@ -581,13 +577,15 @@ virginica & 6.588 & 0.6358796\\
 \end{longtable*}
 
 Among the four traits in our model (\fgmax, \gcl, \(\lambda\), and
-\(tau\)), the preponderance of the variance was within or between
-individuals after accounting for treatment effects
+\(\tau\)), the preponderance of the variance was typically within or
+between individuals after accounting for treatment effects
 Figure~\ref{fig-variance}, Table~\ref{tbl-variance}. The exception to
-this pattern was \gcl{}, for which the phylogenetic component was larger
-Figure~\ref{fig-variance}. The phylogenetic variance component was
-significantly higher than that of other response variables
-Figure~\ref{fig-variance}. add table to show CIs in supplement?
+this pattern was \gcl{}, for which the phylogenetic component (aka
+phylogenetic heritability) was larger Figure~\ref{fig-variance}. The
+population component independent of phylogeny explained little of the
+trait variation. The between-individual variance was usually high, but
+this component confounds true between-individual variance with
+measurement error, so should be interpreted with caution.
 
 \begin{figure}
 
@@ -601,19 +599,26 @@ Figure~\ref{fig-variance}. add table to show CIs in supplement?
 
 \end{figure}%
 
-\begin{longtable}[t]{lll}
+\begin{longtable}{lll}
 
-\caption{\label{tbl-variance}Variance components and phylogenetic
-heritability of stomatal kinetic traits.}
+\caption{\label{tbl-variance}Variance components of stomatal kinetic
+traits. The phylogenetic component is equivalent to the phylogenetic
+heritability. The population component is the nonphylogenetic variance
+among populations. Between- and within-individual variance components
+are among individuals within a population after accounting for treatment
+effect. Estimates and 95\% confidence intervals (CI) are estimated as
+the median and quantile intervals of the posterior distribution.
+\(f_\text{gmax}\): stomatal conductance as a fraction of anatomical
+maximum stomatal conductance; \(l_\text{gc}\): guard cell length;
+\(\lambda\): lag time; \(\tau\): time constant.}
 
 \tabularnewline
 
-\\
 \toprule
 component & \% variance & 95\% CI\\
 \midrule
 \endfirsthead
-\caption[]{Variance components and phylogenetic heritability of stomatal kinetic traits. \textit{(continued)}}\\
+\multicolumn{3}{@{}l}{\textit{(continued)}}\\
 \toprule
 component & \% variance & 95\% CI\\
 \midrule
