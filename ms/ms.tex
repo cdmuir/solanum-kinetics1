@@ -1,4 +1,5 @@
 % Options for packages loaded elsewhere
+% Options for packages loaded elsewhere
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
 \PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
@@ -7,21 +8,22 @@
   letterpaper,
   DIV=11,
   numbers=noendperiod]{scrartcl}
-
+\usepackage{xcolor}
 \usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
 \usepackage{iftex}
 \ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
 \else % if luatex or xetex
-  \usepackage{unicode-math}
+  \usepackage{unicode-math} % this also loads fontspec
   \defaultfontfeatures{Scale=MatchLowercase}
   \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
 \fi
 \usepackage{lmodern}
-\ifPDFTeX\else  
-    % xetex/luatex font selection
+\ifPDFTeX\else
+  % xetex/luatex font selection
   \setmainfont[]{Times New Roman}
 \fi
 % Use upquote if available, for straight quotes in verbatim environments
@@ -40,22 +42,32 @@
 }{% if KOMA class
   \KOMAoptions{parskip=half}}
 \makeatother
-\usepackage{xcolor}
-\setlength{\emergencystretch}{3em} % prevent overfull lines
-\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
 % Make \paragraph and \subparagraph free-standing
+\makeatletter
 \ifx\paragraph\undefined\else
   \let\oldparagraph\paragraph
-  \renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+  \renewcommand{\paragraph}{
+    \@ifstar
+      \xxxParagraphStar
+      \xxxParagraphNoStar
+  }
+  \newcommand{\xxxParagraphStar}[1]{\oldparagraph*{#1}\mbox{}}
+  \newcommand{\xxxParagraphNoStar}[1]{\oldparagraph{#1}\mbox{}}
 \fi
 \ifx\subparagraph\undefined\else
   \let\oldsubparagraph\subparagraph
-  \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+  \renewcommand{\subparagraph}{
+    \@ifstar
+      \xxxSubParagraphStar
+      \xxxSubParagraphNoStar
+  }
+  \newcommand{\xxxSubParagraphStar}[1]{\oldsubparagraph*{#1}\mbox{}}
+  \newcommand{\xxxSubParagraphNoStar}[1]{\oldsubparagraph{#1}\mbox{}}
 \fi
+\makeatother
 
 
-\providecommand{\tightlist}{%
-  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}\usepackage{longtable,booktabs,array}
+\usepackage{longtable,booktabs,array}
 \usepackage{calc} % for calculating minipage widths
 % Correct order of tables after \paragraph or \subparagraph
 \usepackage{etoolbox}
@@ -67,17 +79,21 @@
 \makesavenoteenv{longtable}
 \usepackage{graphicx}
 \makeatletter
-\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
-\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
-\makeatother
-% Scale images if necessary, so that they will not overflow the page
-% margins by default, and it is still possible to overwrite the defaults
-% using explicit options in \includegraphics[width, height, ...]{}
-\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
 % Set default figure placement to htbp
-\makeatletter
 \def\fps@figure{htbp}
 \makeatother
+
+
 % definitions for citeproc citations
 \NewDocumentCommand\citeproctext{}{}
 \NewDocumentCommand\citeproc{mm}{%
@@ -111,6 +127,18 @@
 \newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{\strut#1\strut}}
 \newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{\strut#1\strut}}
 \newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
+
+
+
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+
+
+ 
+
 
 \usepackage{booktabs}
 \usepackage{longtable}
@@ -154,6 +182,8 @@
 \usepackage{setspace}
 \usepackage[modulo]{lineno}
 \usepackage{physics}
+\usepackage{pifont}
+\newcommand{\cmark}{\ding{51}}
 \makeatletter
 \@ifpackageloaded{caption}{}{\usepackage{caption}}
 \AtBeginDocument{%
@@ -195,13 +225,9 @@
 \@ifpackageloaded{caption}{}{\usepackage{caption}}
 \@ifpackageloaded{subcaption}{}{\usepackage{subcaption}}
 \makeatother
-\ifLuaTeX
-  \usepackage{selnolig}  % disable illegal ligatures
-\fi
 \usepackage{bookmark}
-
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
-\urlstyle{same} % disable monospaced font for URLs
+\urlstyle{same}
 \hypersetup{
   pdftitle={Guard cell size and pore aperture influence stomatal closure kinetics},
   pdfauthor={Christopher D. Muir\^{}\{1,2*\}; Wei Shen Lim\^{}\{1\}},
@@ -212,13 +238,14 @@
   urlcolor={Blue},
   pdfcreator={LaTeX via pandoc}}
 
+
 \title{Guard cell size and pore aperture influence stomatal closure
 kinetics}
 \author{Christopher D. Muir\(^{1,2*}\) \and Wei Shen Lim\(^{1}\)}
 \date{}
-
 \begin{document}
 \maketitle
+
 
 \begin{center}
 $^1$School of Life Sciences, University of Hawaiʻi; Mānoa, Hawaiʻi, USA\\
@@ -483,6 +510,22 @@ replicated.
 
 Equation from (2). Point out that tau matters most.
 
+\subsubsection{inferring different levels of
+effects??}\label{inferring-different-levels-of-effects}
+
+We analyzed three nonmutually exclusive paths through which \fgmax and
+\gcl could influence stomatal kinetic parameters \(\lambda\) and
+\(\tau\): phylogenetic covariance individual effect mediating treatment
+effects (plasticity)
+
+For individual effect of \gcl and \fgmax on \(\tau\) and \(\lambda\): We
+used the leave-one-out cross-validation information criterion (LOOIC) to
+compare the fit of models using the \emph{R} package \textbf{loo}
+version 2.9.0 (\textbf{vehtari\_practical\_2017?}) to calculate LOOIC
+values. We selected the model with the lowest LOOIC value
+(\textbf{?@tbl-comparison}) to generate posterior predictions for
+hypothesis testing.
+
 \subsubsection{Variance decomposition and heritability
 (somewhere)}\label{variance-decomposition-and-heritability-somewhere}
 
@@ -504,10 +547,16 @@ phylogenetic heritability is equivalent to the phylogenetic variance
 component and is estimated following (11); (12) as:
 
 \[h^2_{\mathrm{phy}} = \frac{\sigma^2_\mathrm{phy}}{\sigma^2_\mathrm{phy} + \sigma^2_\mathrm{pop} + \sigma^2_\mathrm{between} + \sigma^2_\mathrm{within}},\]
+
 where \(\sigma^2_\mathrm{phy}\), \(\sigma^2_\mathrm{pop}\),
 \(\sigma^2_\mathrm{between}\), and \(\sigma^2_\mathrm{within}\) are the
 phylogenetic, population, between-individual, and within-individual
 variance components, respectively.
+
+\subsubsection{Model comparison
+(somewhere)}\label{model-comparison-somewhere}
+
+add info
 
 \subsection{Results}\label{results}
 
@@ -550,7 +599,7 @@ increased \(\lambda\) slightly by -1.4\% {[}95\% CI: -4.67 to 1.64\%{]}.
 
 \centering{
 
-\includegraphics{../figures/accession-kinetics.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{../figures/accession-kinetics.pdf}}
 
 }
 
@@ -591,7 +640,7 @@ measurement error, so should be interpreted with caution.
 
 \centering{
 
-\includegraphics{../figures/variance.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{../figures/variance.pdf}}
 
 }
 
@@ -653,19 +702,20 @@ component & \% variance & 95\% CI\\
 
 \end{longtable}
 
-Variation in stomatal kinetic parameters were associated with variation
-in guard cell size and fgmax at different levels of organization. We
-focus first on untreated leaves from plants grown and measured under
-high light intensity treatments. The phylogenetic variance in guard cell
-size among accessions was X \(\times\) greater than the variance among
-individuals within the same accession WORKING HERE - GET THIS NUMBER
-FROM MODEL.
+Guard cell size and \fgmax affected stomatal kinetics, but at different
+levels of biological organization. In the model with the lowest LOOIC
+(see \textbf{?@tbl-comparison} for model comparison results), there was
+a significant phylogenetic correlation between \gcl and \(\tau\)
+(\textbf{fig?}-?). PARTIAL CORRELATION RESULT. Variation in \gcl within
+populations did not explain within-population variation in \(\tau\)
+Table~\ref{tbl-fit_amphi}. NOTE THAT BEST MODEL RETAINED INDIVIDUAL
+LEVEL EFFECT OF GCL, BUT COEFFICIENT WAS NOT SIGNIFICANT. OTHER BEST
+MODELS DID NOT RETAIN THIS. DID GCL MEDIATE AFFECT OF TREATMENTS?
 
-Need to show (this is a growing, incomplete list): - plot of tau and
-lambda versus t50 to show that the latter is more sensitive to tau -
-guard cell size is less variable than stomatal density and fgmax -
-partial correlation showing that gcl and tau are (only?) significant
-phylogenetic covariates
+Need to show (this is a growing, incomplete list): - model comparison
+results table - figure of tau versus gcl per accession - phylogenetic
+partial correlation - partial correlation showing that gcl and tau are
+(only?) significant phylogenetic covariates
 
 \begin{longtable}[t]{>{\raggedright\arraybackslash}p{4in}>{\raggedright\arraybackslash}p{2in}}
 
@@ -712,6 +762,45 @@ phylogenetic covariates
 \hspace{1em}effect of sun growth treatment on $\log(l_\mathrm{gc})$ & 0.10 [0.09, 0.12]\\*
 
 \end{longtable}
+
+\begin{table}
+
+\caption{\label{tbl-foo}}
+
+\centering{
+
+\centering
+\begin{tabular}[t]{lcccc}
+\toprule
+\multicolumn{1}{c}{ } & \multicolumn{2}{c}{$\lambda$} & \multicolumn{2}{c}{$\tau$} \\
+\cmidrule(l{3pt}r{3pt}){2-3} \cmidrule(l{3pt}r{3pt}){4-5}
+$\Delta \text{LOOIC}$ & \fgmax & \gcl & \fgmax & \gcl\\
+\midrule
+\cellcolor{gray!10}{0.00} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark}\\
+0.49 & \cmark & \cmark & \cmark & \\
+\cellcolor{gray!10}{0.61} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{}\\
+11.34 & \cmark & \cmark & \cmark & \cmark\\
+\cellcolor{gray!10}{39.06} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{}\\
+\addlinespace
+41.37 & \cmark &  &  & \\
+\cellcolor{gray!10}{43.46} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark}\\
+45.92 & \cmark & \cmark &  & \cmark\\
+\cellcolor{gray!10}{66.95} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{}\\
+83.83 &  &  & \cmark & \cmark\\
+\addlinespace
+\cellcolor{gray!10}{85.30} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark}\\
+86.39 &  &  & \cmark & \\
+\cellcolor{gray!10}{96.02} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark}\\
+99.92 &  &  &  & \\
+\cellcolor{gray!10}{101.00} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark}\\
+\addlinespace
+103.59 &  & \cmark &  & \\
+\bottomrule
+\end{tabular}
+
+}
+
+\end{table}%
 
 \subsection{MANUSCRAPS}\label{manuscraps}
 
@@ -836,6 +925,7 @@ the analysis of comparative data in evolutionary biology}.
 (Springer Berlin Heidelberg, 2014), pp. 287--303.}
 
 \end{CSLReferences}
+
 
 
 

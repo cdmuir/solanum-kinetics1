@@ -20,6 +20,8 @@ header-includes: |
   \newcommand{\ca}{$C_\mathrm{a}$}
   \newcommand{\caequals}[1]{$C_\mathrm{a} = \SI{#1}{\micro\mol\raiseto{-1}\mol}$}
   \newcommand{\cabetween}[2]{#1 < $C_\mathrm{a} < \SI{#2}{\micro\mol\raiseto{-1}\mol}$}
+  \newcommand{\fgmax}{$f_\text{gmax}$}
+  \newcommand{\gcl}{$l_\text{gc}$}
   \newcommand{\gmax}{$g_\text{max}$}
   \newcommand{\gmaxratio}{$g_\text{max,ratio}$}
   \newcommand{\gmaxshade}{$g_\text{max,shade}$}
@@ -28,7 +30,7 @@ header-includes: |
   \newcommand{\loggsw}{$\log(g_\text{sw})$}
   \newcommand{\logA}{$\log(A)$}
   \newcommand{\ppfd}{$\mathrm{PPFD}$}
-  \newcommand{\ppfdequals}[1]{$\mathrm{PPFD} = \SI{#1}{\micro\mol\raiseto{-2}\meter\raiseto{-1}\second}$}
+  \newcommand{\ppfdequals}[1]{$\mathrm{PPFD} = \SI{#1}{\micro\mole\per\meter\squared\per\second}$}
   \newcommand{\ppfdqty}[1]{$\SI{#1}{\micro\mole\per\meter\squared\per\second}$}
   \newcommand{\rh}{$\mathrm{RH}$}
   \newcommand{\rhequals}[1]{$\mathrm{RH} = #1\%$}
@@ -36,6 +38,8 @@ header-includes: |
   \usepackage{setspace}
   \usepackage[modulo]{lineno}
   \usepackage{physics}
+  \usepackage{pifont}
+  \newcommand{\cmark}{\ding{51}}
 mainfont: Times New Roman
 bibliography: solanum-kinetics.bib
 csl: https://www.zotero.org/styles/pnas
@@ -111,47 +115,26 @@ max_lambda = tab_estimates |>
 
 ```
 
-blah [@tbl-variance]
+blah [@tbl-foo]
 
-```{r, variance}
-#| label: tbl-variance
+```{r, foo}
+#| label: tbl-foo
 #| results: asis
 #| echo: false
 #| message: false
 #| warning: false
 
-tab_variance = read_rds("../objects/tbl-variance.rds") 
+df_comparison = read_rds("../objects/tbl-comparison.rds") |>
+  select(`$\\Delta \\text{LOOIC}$`, `$\\lambda$__\\fgmax`, `$\\lambda$__\\gcl`, `$\\tau$__\\fgmax`, `$\\tau$__\\gcl`)
 
-tv2 = tab_variance |>
-  summarize(n = n(), .by = Trait) |>
-  mutate(
-    Trait = str_replace_all(Trait, "\\\\", "\\\\\\\\"),
-    cumsum = cumsum(n))
-
-tab_variance |>
-  select(-Trait) |>
-  kable(
-      format = "latex",
-      booktabs = TRUE,
-      longtable = TRUE,
-      escape = FALSE,
-      caption = "Variance components and phylogenetic heritability of stomatal kinetic traits."
-    ) |>
-    kable_styling(latex_options = c("repeat_header", "hold_position")) |>
-    pack_rows(tv2$Trait[1],
-             1,
-             tv2$cumsum[2],
-             escape = FALSE) |>
-    pack_rows(tv2$Trait[2],
-             tv2$cumsum[1] + 1,
-             tv2$cumsum[2],
-             escape = FALSE) |>
-    pack_rows(tv2$Trait[3],
-             tv2$cumsum[2] + 1,
-             tv2$cumsum[3],
-             escape = FALSE) |>
-    pack_rows(tv2$Trait[4],
-             tv2$cumsum[3] + 1,
-             tv2$cumsum[4],
-             escape = FALSE) 
+kbl(
+  df_comparison,
+  format = "latex",
+  booktabs = TRUE,
+  escape = FALSE,
+  col.names = str_remove(colnames(df_comparison), "^.*__"),
+  align = c("l", rep("c", 4))
+) |>
+  add_header_above(c(" " = 1, "$\\\\lambda$" = 2, "$\\\\tau$" = 2), escape = FALSE) |>
+  kable_styling(latex_options = c("hold_position", "striped"))
 ```
