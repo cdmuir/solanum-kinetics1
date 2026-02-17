@@ -15,13 +15,6 @@ looic_table = fits_amphi$loo |>
   set_names(paste0("model", seq_along(fits_amphi$loo))) |>
   loo_compare()
 
-# Write table of model comparisons
-### THIS IS CLOSE. need to:
-### 1. add LOOIC
-### 2. add delta LOOIC
-### 3. chance explanatory var names, only use gcl and fgmax
-### 4. change to check marks
-
 fits_amphi = fits_amphi |>
   mutate(model = paste0("model", row_number()))
 
