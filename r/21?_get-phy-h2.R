@@ -1,3 +1,4 @@
+# not sure I need this anymore since 16_plot-variance shows that gcl is more phylogeneticlaly conserved trait.
 # Estimate phylogenetic h2 from fitted models
 source("r/header.R")
 

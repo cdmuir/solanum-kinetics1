@@ -129,6 +129,11 @@ max_lambda = tab_estimates |>
   pull(estimate) |>
   max()
 
+partial_cor = read_rds("../objects/partial-cor.rds") |>
+  filter(name == "logtaumean_Intercept__loggcl_Intercept")
+rho = partial_cor$median
+rho_lower = partial_cor$lower
+rho_upper = partial_cor$upper
 ```
 
 Reminder: Halliwell et al. 2025 paper has useful info on multiresponse models. I might use Van de Pol and Wright (2009) method for within versus between slope estimation. This is in the phylogenetic comparative example in the brms vignette too. Actually, this is hard to implement because I would have to calculate individual residuals for each light treatment combination and then means of those, etc.
@@ -226,7 +231,7 @@ Equation from @woning_revisiting_2026. Point out that tau matters most.
 
 ### inferring different levels of effects??
 
-We analyzed three nonmutually exclusive paths through which \fgmax and \gcl could influence stomatal kinetic parameters $\lambda$ and $\tau$. First, we inferred phylogenetic effects by estimating the phylogenetic correlation among populations between anatomical (\fgmax and \gcl) and kinetic ($\lambda$ and $\tau$) variables. To test for causation, we used the phylogenetic covariance matrix to estimate partial correlations between anatomical and kinetic variables [@halliwell_multiresponse_2025]. Second, we inferred individual-level effects of \fgmax and \gcl on kinetic parameters using linear multiple regression that simultaneously accounts for phylogenetic and treatment effects. We used the leave-one-out cross-validation information criterion (LOOIC) to compare the fit of models using the *R* package **loo** version `r packageVersion("loo")` [@vehtari_practical_2017] to calculate LOOIC values. We compared models with all permutations of \fgmax and \gcl influencing $\lambda$ and $\tau$. We selected the model with the lowest LOOIC value (@tbl-comparison) to generate posterior predictions for hypothesis testing. If an effect was included in the best model (lowest LOOIC), then we considered whether the 95% confidence interval overlapped zero to ascertain a significant effect. 
+We analyzed three nonmutually exclusive paths through which \fgmax and \gcl could influence stomatal kinetic parameters $\lambda$ and $\tau$. First, we inferred phylogenetic effects by estimating the phylogenetic correlation among populations between anatomical (\fgmax and \gcl) and kinetic ($\lambda$ and $\tau$) variables. To test for causation, we used the phylogenetic covariance matrix to estimate partial correlations between anatomical and kinetic variables [@halliwell_multiresponse_2025]. We interpret a significant partial correlation between variables as a plausible causal hypothesis. Second, we inferred individual-level effects of \fgmax and \gcl on kinetic parameters using linear multiple regression that simultaneously accounts for phylogenetic and treatment effects. We used the leave-one-out cross-validation information criterion (LOOIC) to compare the fit of models using the *R* package **loo** version `r packageVersion("loo")` [@vehtari_practical_2017] to calculate LOOIC values. We compared models with all permutations of \fgmax and \gcl influencing $\lambda$ and $\tau$. We selected the model with the lowest LOOIC value (@tbl-comparison) to generate posterior predictions for hypothesis testing. If an effect was included in the best model (lowest LOOIC), then we considered whether the 95% confidence interval overlapped zero to ascertain a significant effect. 
 
 THIRD: mediating treatment effects (plasticity)
 
@@ -343,7 +348,8 @@ tab_variance |>
              escape = FALSE) 
 ```
 
-Guard cell size and \fgmax affected stomatal kinetics, but at different levels of biological organization. In the model with the lowest LOOIC (see @tbl-comparison for model comparison results), there was a significant phylogenetic correlation between \gcl and $\tau$ [@fig-?]. PARTIAL CORRELATION RESULT. Variation in \gcl within populations did not explain within-population variation in $\tau$ [@tbl-fit_amphi]. NOTE THAT BEST MODEL RETAINED INDIVIDUAL LEVEL EFFECT OF GCL, BUT COEFFICIENT WAS NOT SIGNIFICANT. OTHER BEST MODELS DID NOT RETAIN THIS. DID GCL MEDIATE AFFECT OF TREATMENTS?
+Guard cell size and \fgmax affected stomatal kinetics, but at different levels of biological organization. In the model with the lowest LOOIC (see @tbl-comparison for model comparison results), the only significant partial correlation was between \gcl and $\tau$ ($\rho = `r signif(rho2, 2)`$ [95% CI: `r signif(rho2_lower, 2)` to `r signif(rho2_upper, 2)`$) was a significant phylogenetic correlation between \gcl and $\tau$ [@fig-?]. PARTIAL CORRELATION RESULT. Variation in \gcl within populations did not explain within-population variation in $\tau$ [@tbl-fit_amphi]. NOTE THAT BEST MODEL RETAINED INDIVIDUAL LEVEL EFFECT OF GCL, BUT COEFFICIENT WAS NOT SIGNIFICANT. OTHER BEST MODELS DID NOT RETAIN THIS. DID GCL MEDIATE AFFECT OF TREATMENTS?
+
 
 Need to show (this is a growing, incomplete list):
 - model comparison results table
