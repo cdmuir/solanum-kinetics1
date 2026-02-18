@@ -1,48 +1,76 @@
 # Analyze effect of anatomy on tau in treated (pseudohypostomatous) leaves
 source("r/header.R")
 
-# Use same model structure as amphi for direct comparison
-fit_amphi_high = read_rds("objects/fit_amphi_high.rds")
-fit_amphi_low = read_rds("objects/fit_amphi_low.rds")
+plan(multisession, workers = 16)
 
 joined_summary = read_rds("data/joined-summary.rds") |>
   prepare_tau_anatomy_data(logtau_threshold)
 
 phy = read_rds("data/phylogeny.rds")
 A = vcv(phy, corr = TRUE)
-thin = 4
+thin = 9
 
-# Fit model under high measurement light intensity
-fit_pseudohypo_high = brm(
-  formula(fit_amphi_high),
-  data = joined_summary |>
-    filter(curve_type == "pseudohypo", lightintensity == "high") |>
-    mutate(phy = accession),
-  data2 = list(A = A),
-  cores = 1,
-  chains = 1,
-  iter = thin * 2e3,
-  thin = thin,
-  refresh = thin * 1e2,
-  backend = "cmdstanr",
-  seed = 850704602,
-)
+# Define formula
+bf_lambda0 = bf(loglambdamean | se(loglambdasd, sigma = TRUE) ~ 
+                  lighttreatment + 
+                  lightintensity +
+                  loggcl + 
+                  logfgmax + 
+                  (1|accid) +
+                  (1|a|accession) +
+                  (1|b|gr(phy, cov = A)))
+bf_lambda1 = update(bf_lambda0, . ~ . - loggcl)
+bf_lambda2 = update(bf_lambda0, . ~ . - logfgmax)
+bf_lambda3 = update(bf_lambda0, . ~ . - loggcl - logfgmax)
 
-# Fit model under low measurement light intensity
-fit_pseudohypo_low = brm(
-  formula(fit_amphi_low),
-  data = joined_summary |>
-    filter(curve_type == "pseudohypo", lightintensity == "low") |>
-    mutate(phy = accession),
-  data2 = list(A = A),
-  cores = 1,
-  chains = 1,
-  iter = thin * 2e3,
-  thin = thin,
-  refresh = thin * 1e2,
-  backend = "cmdstanr",
-  seed = 789804965
-)
+bf_tau0 = bf(logtaumean | se(logtausd, sigma = TRUE) ~ 
+               lighttreatment + 
+               lightintensity +
+               loggcl + 
+               logfgmax + 
+               (1|accid) +
+               (1|a|accession) +
+               (1|b|gr(phy, cov = A)))
 
-write_rds(fit_pseudohypo_high, "objects/fit_pseudohypo_high.rds")
-write_rds(fit_pseudohypo_low, "objects/fit_pseudohypo_low.rds")
+bf_tau1 = update(bf_tau0, . ~ . - loggcl)
+bf_tau2 = update(bf_tau0, . ~ . - logfgmax)
+bf_tau3 = update(bf_tau0, . ~ . - loggcl - logfgmax)
+
+bf_gcl = bf(loggcl ~ 
+              lighttreatment + 
+              (1|a|accession) + 
+              (1|b|gr(phy, cov = A)))
+
+bf_fgmax = bf(logfgmax ~ 
+                lighttreatment + 
+                lightintensity + 
+                (1|accid) +
+                (1|a|accession) + 
+                (1|b|gr(phy, cov = A)))
+
+fits_pseudo = crossing(
+  bf_lambda = list(bf_lambda0, bf_lambda1, bf_lambda2, bf_lambda3),
+  bf_tau = list(bf_tau0, bf_tau1, bf_tau2, bf_tau3)
+) |>
+  mutate(
+    form = map2(bf_lambda, bf_tau, ~ .x + .y + bf_gcl + bf_fgmax + set_rescor(TRUE)),
+    fit = future_map2(form, row_number(), \(.form, i) {
+      brm(
+        formula = .form,
+        data = joined_summary |>
+          filter(curve_type == "pseudohypo") |>
+          mutate(phy = accession),
+        data2 = list(A = A),
+        cores = 1,
+        chains = 1,
+        iter = thin * 2e3,
+        thin = thin,
+        refresh = thin * 1e2,
+        control = list(adapt_delta = 0.9),
+        backend = "cmdstanr",
+        seed = 613135062 + i
+      ) |> add_criterion("loo")
+    }, .options = furrr_options(seed = TRUE), .progress = TRUE)
+  )
+
+write_rds(fits_pseudo, "objects/fits_pseudo.rds")
