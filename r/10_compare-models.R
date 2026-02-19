@@ -1,29 +1,30 @@
 # Compare models using LOOIC
 source("r/header.R")
 
-plan(multisession, workers = 16)
+plan(multisession, workers = 9)
 
-fits_amphi = read_rds("objects/fits_amphi.rds") |>
+fits = read_rds("objects/fits.rds") |>
   mutate(loo = map(fit, \(.x) .x$criteria$loo))
 
-converged = fits_amphi$fit |>
+converged = fits$fit |>
   future_map_lgl(check_convergence, convergence_criteria)
 
 assert_true(all(converged))
 
-looic_table = fits_amphi$loo |>
-  set_names(paste0("model", seq_along(fits_amphi$loo))) |>
+looic_table = fits$loo |>
+  set_names(paste0("model", seq_along(fits$loo))) |>
   loo_compare()
 
-fits_amphi = fits_amphi |>
+fits = fits |>
   mutate(model = paste0("model", row_number()))
 
-map2_dfr(fits_amphi$fit, fits_amphi$model, \(.fit, .name) {
+map2_dfr(fits$fit, fits$model, \(.fit, .name) {
   tibble(par = .fit |>
            as_draws_df() |>
            select(contains("b_")) |>
            colnames()) |>
-    mutate(par = str_remove(par, "b_")) |>
+    mutate(par = str_remove(par, "b_") |>
+             str_replace("curve_type", "curvetype")) |>
     separate_wider_delim(par,
                          delim = "_",
                          names = c("response", "explanatory")) |>
@@ -65,4 +66,4 @@ map2_dfr(fits_amphi$fit, fits_amphi$model, \(.fit, .name) {
 
 
 # Write best model
-write_rds(fits_amphi$fit[[as.numeric(str_extract(rownames(looic_table)[1], "\\d+"))]], "objects/best_amphi_model.rds")
+write_rds(fits$fit[[as.numeric(str_extract(rownames(looic_table)[1], "\\d+"))]], "objects/best_model.rds")

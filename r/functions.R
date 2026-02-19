@@ -330,3 +330,18 @@ make_precision_phy <- function(draws_df) {
   # dimnames(Sigma) <- list(NULL, vars, vars)
   Omega
 }
+
+# Function from ChatGPT to plot ellipses
+ellipse_points <- function(mu, Sigma, level = 0.95, n = 200) {
+  stopifnot(length(mu) == 2, all(dim(Sigma) == c(2, 2)))
+  r <- sqrt(qchisq(level, df = 2))           # radius for chosen level
+  theta <- seq(0, 2*pi, length.out = n)
+  
+  # unit circle
+  circle <- rbind(cos(theta), sin(theta))
+  
+  # transform circle -> ellipse: mu + A %*% circle, where A A^T = Sigma
+  A <- chol(Sigma)                           # upper-triangular
+  pts <- t(circle) %*% A                     # (n x 2)
+  data.frame(x = mu[1] + pts[,1], y = mu[2] + pts[,2])
+}

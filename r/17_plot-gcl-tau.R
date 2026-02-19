@@ -1,58 +1,71 @@
 # Plot accession-level gcl against tau (a bit messy, but getting close)
 source("r/header.R")
 
-fit_amphi = read_rds("objects/best_amphi_model.rds")
+fit = read_rds("objects/best_model.rds")
 
 df_new = crossing(
-  phy = unique(fit_amphi$data$phy),
-  lightintensity = unique(fit_amphi$data$lightintensity),
-  lighttreatment = unique(fit_amphi$data$lighttreatment),
+  phy = unique(fit$data$phy),
+  curve_type = unique(fit$data$curve_type),
+  lightintensity = unique(fit$data$lightintensity),
+  lighttreatment = unique(fit$data$lighttreatment),
   logtausd = 0
 ) |>
   mutate(accession = phy,
          variable = paste0("...", row_number())) |> full_join(
-           fit_amphi$data |>
+           fit$data |>
              summarize(
                logfgmax = median(logfgmax),
-               .by = c(lightintensity, lighttreatment)
+               .by = c(curve_type, lightintensity, lighttreatment)
              ),
-           by = join_by(lightintensity, lighttreatment)
+           by = join_by(curve_type, lightintensity, lighttreatment)
          )
 
-df_pred_loggcl = posterior_epred(fit_amphi, newdata = df_new, re_formula = ~ phy, resp = "loggcl") |>
+df_pred_loggcl = posterior_epred(fit, newdata = df_new, re_formula = ~ phy, resp = "loggcl") |>
   as_draws_df() |>
   summarize_draws() |>
   full_join(df_new, by = "variable") |>
-  select(accession, lightintensity, lighttreatment, loggcl = median)
+  select(accession, curve_type, lightintensity, lighttreatment, loggcl = median)
 
-df_pred_logtau = posterior_epred(fit_amphi, newdata = df_new, resp = "logtaumean") |>
+df_pred_logtau = posterior_epred(fit, newdata = df_new, re_formula = ~ phy, resp = "logtaumean") |>
   as_draws_df() |>
   summarize_draws() |>
   full_join(df_new, by = "variable") |>
-  select(accession, lightintensity, lighttreatment, logtau = median)
+  select(accession, curve_type, lightintensity, lighttreatment, logtau = median)
 
-Sigma_median = fit_amphi |>
+Sigma_median = fit |>
   as_draws_df() |>
-  select(starts_with("."), sd_phy__loggcl_Intercept, sd_phy__logtaumean_Intercept, cor_phy__logtaumean_Intercept__loggcl_Intercept) |>
-transmute(vx = sd_phy__loggcl_Intercept^2,
-            vy = sd_phy__logtaumean_Intercept^2,
-            cxy = cor_phy__logtaumean_Intercept__loggcl_Intercept * sd_phy__loggcl_Intercept * sd_phy__logtaumean_Intercept) %>%
+  select(
+    starts_with("."),
+    sd_phy__loggcl_Intercept,
+    sd_phy__logtaumean_Intercept,
+    cor_phy__logtaumean_Intercept__loggcl_Intercept
+  ) |>
+  transmute(
+    vx = sd_phy__loggcl_Intercept^2,
+    vy = sd_phy__logtaumean_Intercept^2,
+    cxy = cor_phy__logtaumean_Intercept__loggcl_Intercept * sd_phy__loggcl_Intercept * sd_phy__logtaumean_Intercept
+  ) %>%
   summarise(across(everything(), median)) %>%
-  { matrix(c(.$vx, .$cxy, .$cxy, .$vy),
-           nrow = 2, byrow = TRUE,
-           dimnames = list(c("X","Y"), c("X","Y"))) }
+  {
+    matrix(
+      c(.$vx, .$cxy, .$cxy, .$vy),
+      nrow = 2,
+      byrow = TRUE,
+      dimnames = list(c("X", "Y"), c("X", "Y"))
+    )
+  }
 
-df_acc = fit_amphi$data |>
+df_acc = fit$data |>
   summarize(
     loggcl = median(loggcl),
     logtaumean = median(logtaumean), 
-    .by = c(phy, lightintensity, lighttreatment)) 
+    .by = c(phy, curve_type, lightintensity, lighttreatment)) 
 
 df_mu = df_acc |>
   summarize(
     loggcl = mean(loggcl),
     logtaumean = mean(logtaumean), 
-    .by = c(lightintensity, lighttreatment))
+    .by = c(curve_type, lightintensity, lighttreatment))
 
 df_ellipse = df_mu |>
   mutate(ell = map2(loggcl, logtaumean, \(.x, .y) {
@@ -62,34 +75,32 @@ df_ellipse = df_mu |>
   select(-loggcl, -logtaumean) |>
   rename(loggcl = x, logtaumean = y)
 
-
-ggplot(df_acc, aes(loggcl, logtaumean)) +
-  geom_path(data = df_ellipse, aes(loggcl, logtaumean), inherit.aes = FALSE) +
+p = ggplot(df_acc, aes(exp(loggcl), exp(logtaumean), color = curve_type)) +
+  geom_polygon(
+    data = df_ellipse,
+    aes(exp(loggcl), exp(logtaumean), fill = curve_type),
+    color = "black",
+    alpha = 0.25,
+    inherit.aes = FALSE
+  ) +
   geom_point() +
-  facet_grid(lightintensity ~ lighttreatment)
+  facet_grid(lightintensity ~ lighttreatment) +
+  scale_x_log10() +
+  scale_y_log10(breaks = c(100, 200, 400)) +
+  scale_fill_manual(values = c("steelblue", "tomato")) +
+  scale_color_manual(values = c("steelblue", "tomato")) +
+  labs(
+    x = expression(Guard ~ cell ~ length ~ (paste(mu, "m"))),
+    y = expression(tau ~ (s)),
+    color = "Curve type",
+    fill = "Curve type"
+  ) +
+  theme(legend.position = "bottom")
 
+ggpubr::annotate_figure(
+  p,
+  top = ggpubr::text_grob("        Growth light intensity"),
+  right = ggpubr::text_grob("Measurement light intensity        ", rot = -90)
+)
 
-# stuff from chatgpt on plotting ellipse below
-ellipse_points <- function(mu, Sigma, level = 0.95, n = 200) {
-  stopifnot(length(mu) == 2, all(dim(Sigma) == c(2, 2)))
-  r <- sqrt(qchisq(level, df = 2))           # radius for chosen level
-  theta <- seq(0, 2*pi, length.out = n)
-  
-  # unit circle
-  circle <- rbind(cos(theta), sin(theta))
-  
-  # transform circle -> ellipse: mu + A %*% circle, where A A^T = Sigma
-  A <- chol(Sigma)                           # upper-triangular
-  pts <- t(circle) %*% A                     # (n x 2)
-  tibble(x = mu[1] + pts[,1], y = mu[2] + pts[,2])
-}
-
-mu <- c(0, 0)
-Sigma <- matrix(c(4, 1.5,
-                  1.5, 2), nrow = 2, byrow = TRUE)
-
-ell <- ellipse_points(mu, Sigma, level = 0.95)
-
-ggplot(df, aes(x, y)) +
-  geom_point() +
-  geom_path(data = ell, aes(x, y), inherit.aes = FALSE)
+ggsave("figures/gcl-tau.pdf", width = 5, height = 5)

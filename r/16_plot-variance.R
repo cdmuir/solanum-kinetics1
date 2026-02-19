@@ -1,10 +1,10 @@
 # Decompose variance in response variables to phylogenetic, population, and residual components
 source("r/header.R")
 
-fit_amphi = read_rds("objects/best_amphi_model.rds")
+fit = read_rds("objects/best_model.rds")
 
 # Variance decomposition
-df_var = fit_amphi |>
+df_var = fit |>
   as_draws_df() |>
   select(starts_with("."), starts_with("sd_"), starts_with("sigma")) |>
   rename_with(.fn = \(.x) {
@@ -72,7 +72,7 @@ gp1 = df_var |>
 
 
 # Alternate - point range
-gp2 =  df_var |>
+gp2 = df_var |>
   ggplot(aes(
     trait1,
     median,
@@ -81,7 +81,7 @@ gp2 =  df_var |>
     ymax = q95
   )) +
   geom_pointrange(position = position_dodge2(width = 0.5)) +
-  scale_x_discrete(labels = label_parse()) +
+  scale_x_discrete() +
   scale_y_continuous(limits = c(0, 1)) +
   scale_color_viridis_d() +
   labs(y = "proportion of variance", color = "variance component") +

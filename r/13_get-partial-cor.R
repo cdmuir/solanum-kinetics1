@@ -1,9 +1,9 @@
 # Estimate phylogenetic partial correlations
 source("r/header.R")
 
-fit_amphi = read_rds("objects/best_amphi_model.rds")
+fit = read_rds("objects/best_model.rds")
 
-draws_df = fit_amphi |>
+draws_df = fit |>
   as_draws_df() |>
   select(starts_with("."),
          starts_with("sd_phy__"),
