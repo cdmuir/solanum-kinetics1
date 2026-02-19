@@ -1,5 +1,4 @@
 % Options for packages loaded elsewhere
-% Options for packages loaded elsewhere
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
 \PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
@@ -8,22 +7,21 @@
   letterpaper,
   DIV=11,
   numbers=noendperiod]{scrartcl}
-\usepackage{xcolor}
+
 \usepackage{amsmath,amssymb}
-\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
 \usepackage{iftex}
 \ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
 \else % if luatex or xetex
-  \usepackage{unicode-math} % this also loads fontspec
+  \usepackage{unicode-math}
   \defaultfontfeatures{Scale=MatchLowercase}
   \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
 \fi
 \usepackage{lmodern}
-\ifPDFTeX\else
-  % xetex/luatex font selection
+\ifPDFTeX\else  
+    % xetex/luatex font selection
   \setmainfont[]{Times New Roman}
 \fi
 % Use upquote if available, for straight quotes in verbatim environments
@@ -42,32 +40,22 @@
 }{% if KOMA class
   \KOMAoptions{parskip=half}}
 \makeatother
+\usepackage{xcolor}
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
 % Make \paragraph and \subparagraph free-standing
-\makeatletter
 \ifx\paragraph\undefined\else
   \let\oldparagraph\paragraph
-  \renewcommand{\paragraph}{
-    \@ifstar
-      \xxxParagraphStar
-      \xxxParagraphNoStar
-  }
-  \newcommand{\xxxParagraphStar}[1]{\oldparagraph*{#1}\mbox{}}
-  \newcommand{\xxxParagraphNoStar}[1]{\oldparagraph{#1}\mbox{}}
+  \renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
 \fi
 \ifx\subparagraph\undefined\else
   \let\oldsubparagraph\subparagraph
-  \renewcommand{\subparagraph}{
-    \@ifstar
-      \xxxSubParagraphStar
-      \xxxSubParagraphNoStar
-  }
-  \newcommand{\xxxSubParagraphStar}[1]{\oldsubparagraph*{#1}\mbox{}}
-  \newcommand{\xxxSubParagraphNoStar}[1]{\oldsubparagraph{#1}\mbox{}}
+  \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
 \fi
-\makeatother
 
 
-\usepackage{longtable,booktabs,array}
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}\usepackage{longtable,booktabs,array}
 \usepackage{calc} % for calculating minipage widths
 % Correct order of tables after \paragraph or \subparagraph
 \usepackage{etoolbox}
@@ -79,21 +67,17 @@
 \makesavenoteenv{longtable}
 \usepackage{graphicx}
 \makeatletter
-\newsavebox\pandoc@box
-\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
-  \sbox\pandoc@box{#1}%
-  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
-  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
-  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
-  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
-  \else\usebox{\pandoc@box}%
-  \fi%
-}
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
 % Set default figure placement to htbp
+\makeatletter
 \def\fps@figure{htbp}
 \makeatother
-
-
 % definitions for citeproc citations
 \NewDocumentCommand\citeproctext{}{}
 \NewDocumentCommand\citeproc{mm}{%
@@ -127,18 +111,6 @@
 \newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{\strut#1\strut}}
 \newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{\strut#1\strut}}
 \newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
-
-
-
-\setlength{\emergencystretch}{3em} % prevent overfull lines
-
-\providecommand{\tightlist}{%
-  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
-
-
-
- 
-
 
 \usepackage{booktabs}
 \usepackage{longtable}
@@ -225,9 +197,13 @@
 \@ifpackageloaded{caption}{}{\usepackage{caption}}
 \@ifpackageloaded{subcaption}{}{\usepackage{subcaption}}
 \makeatother
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
 \usepackage{bookmark}
+
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
-\urlstyle{same}
+\urlstyle{same} % disable monospaced font for URLs
 \hypersetup{
   pdftitle={Guard cell size and pore aperture influence stomatal closure kinetics},
   pdfauthor={Christopher D. Muir\^{}\{1,2*\}; Wei Shen Lim\^{}\{1\}},
@@ -238,14 +214,13 @@
   urlcolor={Blue},
   pdfcreator={LaTeX via pandoc}}
 
-
 \title{Guard cell size and pore aperture influence stomatal closure
 kinetics}
 \author{Christopher D. Muir\(^{1,2*}\) \and Wei Shen Lim\(^{1}\)}
 \date{}
+
 \begin{document}
 \maketitle
-
 
 \begin{center}
 $^1$School of Life Sciences, University of Hawaiʻi; Mānoa, Hawaiʻi, USA\\
@@ -488,10 +463,87 @@ g\_s = g\_f + (g\_i - g\_f) * exp(-(t/tau)\^{}lambda)
 
 \subsection{Methods}\label{methods}
 
+\subsubsection{Populations}\label{populations}
+
+We analyzed stomatal responses to changing humidity among 29
+ecologically diverse populations of wild tomato, including
+representatives of all described species of \emph{Solanum} sect.
+\emph{Lycopersicon} and sect. \emph{Lycopersicoides} (10) and the
+cultivated tomato \emph{S. lycopersicum} var. \emph{lycopersicum}
+(Table~\ref{tbl-populations}), as described in (11). These populations
+were selected because they encompass the breadth of climatic variation
+in the wild tomato clade (12). In one case, we substituted a congeneric
+population of the species (\emph{S. galapagense}) because of difficulty
+growing the focal population and we also added a population of \emph{S.
+pennellii}. Due to constraints on growth space and time, we spread out
+measurements over 61.1 weeks from August 29, 2022 to October 31, 2023.
+Replicates within population were evenly spread out over this period to
+prevent confounding of temporal variation in growth conditions with
+variation among populations.
+
+\begin{longtable}{>{\raggedright\arraybackslash}p{3.25cm}lrrr}
+
+\caption{\label{tbl-populations}Accession information of \emph{Solanum}
+populations used in this study. The species name, accession number,
+collection latitude, longitude, and elevation. TGRC: Tomato Genetics
+Resource Center.}
+
+\tabularnewline
+
+\toprule
+Species & TGRC accession & Latitude & Longitude & Elevation (mas)\\
+\midrule
+\endfirsthead
+\multicolumn{5}{@{}l}{\textit{(continued)}}\\
+\toprule
+Species & TGRC accession & Latitude & Longitude & Elevation (mas)\\
+\midrule
+\endhead
+
+\endfoot
+\bottomrule
+\endlastfoot
+\em{\cellcolor{gray!10}{S. arcanum}} & \cellcolor{gray!10}{LA2172} & \cellcolor{gray!10}{-6.008} & \cellcolor{gray!10}{-78.858} & \cellcolor{gray!10}{662}\\
+\em{S. cheesmaniae} & LA0429 & -0.644 & -90.329 & 800\\
+\em{\cellcolor{gray!10}{S. cheesmaniae}} & \cellcolor{gray!10}{LA3124} & \cellcolor{gray!10}{-0.804} & \cellcolor{gray!10}{-90.042} & \cellcolor{gray!10}{1}\\
+\em{S. chilense} & LA1782 & -15.267 & -74.633 & 1000\\
+\em{\cellcolor{gray!10}{S. chilense}} & \cellcolor{gray!10}{LA4117A} & \cellcolor{gray!10}{-22.907} & \cellcolor{gray!10}{-67.941} & \cellcolor{gray!10}{3540}\\
+\addlinespace
+\em{S. chmielewskii} & LA1028 & -13.883 & -73.017 & 3000\\
+\em{\cellcolor{gray!10}{S. chmielewskii}} & \cellcolor{gray!10}{LA1316} & \cellcolor{gray!10}{-13.400} & \cellcolor{gray!10}{-73.906} & \cellcolor{gray!10}{2920}\\
+\em{S. corneliomulleri} & LA0107 & -13.117 & -76.383 & 60\\
+\em{\cellcolor{gray!10}{S. corneliomulleri}} & \cellcolor{gray!10}{LA0444} & \cellcolor{gray!10}{-13.433} & \cellcolor{gray!10}{-76.133} & \cellcolor{gray!10}{100}\\
+\em{S. galapagense} & LA0436 & -0.953 & -90.978 & 40\\
+\addlinespace
+\em{\cellcolor{gray!10}{S. galapagense}} & \cellcolor{gray!10}{LA1044} & \cellcolor{gray!10}{-0.284} & \cellcolor{gray!10}{-90.548} & \cellcolor{gray!10}{0}\\
+\em{S. habrochaites} & LA0407 & -2.181 & -79.884 & 70\\
+\em{\cellcolor{gray!10}{S. habrochaites}} & \cellcolor{gray!10}{LA1777} & \cellcolor{gray!10}{-9.550} & \cellcolor{gray!10}{-77.700} & \cellcolor{gray!10}{3216}\\
+\em{S. huaylasense} & LA1358 & -9.533 & -77.967 & 750\\
+\em{\cellcolor{gray!10}{S. huaylasense}} & \cellcolor{gray!10}{LA1360} & \cellcolor{gray!10}{-9.546} & \cellcolor{gray!10}{-77.929} & \cellcolor{gray!10}{1490}\\
+\addlinespace
+\em{S. huaylasense} & LA1364 & -10.133 & -77.383 & 2920\\
+\em{\cellcolor{gray!10}{S. lycopersicoides}} & \cellcolor{gray!10}{LA2951} & \cellcolor{gray!10}{-19.317} & \cellcolor{gray!10}{-69.450} & \cellcolor{gray!10}{2200}\\
+\em{S. lycopersicoides} & LA4126 & -19.287 & -69.396 & 3120\\
+\em{\cellcolor{gray!10}{S. neorickii}} & \cellcolor{gray!10}{LA1322} & \cellcolor{gray!10}{-13.483} & \cellcolor{gray!10}{-72.442} & \cellcolor{gray!10}{2380}\\
+\em{S. neorickii} & LA2133 & -3.400 & -79.183 & 1980\\
+\addlinespace
+\em{\cellcolor{gray!10}{S. pennellii}} & \cellcolor{gray!10}{LA0716} & \cellcolor{gray!10}{-16.225} & \cellcolor{gray!10}{-73.617} & \cellcolor{gray!10}{50}\\
+\em{S. pennellii} & LA0750 & -14.775 & -75.034 & 550\\
+\em{\cellcolor{gray!10}{S. pennellii}} & \cellcolor{gray!10}{LA3778} & \cellcolor{gray!10}{-14.775} & \cellcolor{gray!10}{-75.034} & \cellcolor{gray!10}{616}\\
+\em{S. peruvianum} & LA2744 & -18.550 & -70.150 & 400\\
+\em{\cellcolor{gray!10}{S. peruvianum}} & \cellcolor{gray!10}{LA2964} & \cellcolor{gray!10}{-18.028} & \cellcolor{gray!10}{-70.835} & \cellcolor{gray!10}{75}\\
+\addlinespace
+\em{S. pimpinellifolium} & LA1269 & -11.483 & -77.075 & 400\\
+\em{\cellcolor{gray!10}{S. pimpinellifolium}} & \cellcolor{gray!10}{LA1589} & \cellcolor{gray!10}{-8.433} & \cellcolor{gray!10}{-78.817} & \cellcolor{gray!10}{30}\\
+\em{S. pimpinellifolium} & LA2933 & -1.442 & -80.562 & 375\\
+\em{\cellcolor{gray!10}{S. sitiens}} & \cellcolor{gray!10}{LA4116} & \cellcolor{gray!10}{-22.159} & \cellcolor{gray!10}{-68.782} & \cellcolor{gray!10}{2960}\\*
+
+\end{longtable}
+
 \subsubsection{Hypothesis generation}\label{hypothesis-generation}
 
 The primary aims and \emph{a priori} hypotheses of this study are
-described in (10). The idea to use \gsw response curve to test
+described in (11). The idea to use \gsw response curve to test
 hypotheses about which traits influence stomatal kinetics came after the
 data had been collected, but not yet analyzed. We started with an
 \emph{a priori} hypothesis that guard cell size would influence \(\tau\)
@@ -506,6 +558,38 @@ studies (cite). Therefore, our conclusions about the effect of fgmax on
 stomatal kinetics should be interpreted with caution until they are
 replicated.
 
+\subsubsection{Plant growth conditions and light
+treatments}\label{plant-growth-conditions-and-light-treatments}
+
+A thorough description of plant growth conditions can be found (11),
+therefore we summarize the most important information here. Seeds
+provided by the Tomato Genetics Resource Center germinated on moist
+paper in plastic boxes after soaking for 30-60 minutes in a 50\% (volume
+per volume) solution of household bleach and water, followed by a
+thorough rinse. We transferred seedlings to cell-pack flats containing
+Pro-Mix BX potting mix (Premier Tech, Rivière-du-Loup, Quebec, Canada)
+once cotyledons fully emerged, typically within 1-2 weeks of sowing. We
+grew seeds and seedlings for both sun and shade treatments under the
+same environmental conditions (12:12 h,
+24.3:\(\SI{21.7}{\degreeCelsius}\), 49.6:58.4 RH day:night cycle). LED
+light provided
+\(\mathrm{PPFD} = \SI{267}{\micro\mole\per\meter\squared\per\second}\)
+(Fluence RAZRx, Austin, Texas, USA) during the germination and seedling
+stages.
+
+Immediately prior to starting growth light intensity treatments (sun and
+shade), we transplanted seedlings to 3.78 L plastic pots containing 60\%
+Pro-Mix BX potting mix, 20\% coral sand (Pro-Pak, Honolulu, Hawaiʻi,
+USA), and 20\% cinders (Niu Nursery, Honolulu, Hawaiʻi, USA) withslow
+release NPK fertilizer following manufacturer instructions (Osmocote
+Smart-Release Plant Food Flower \& Vegetable, The Scotts Company,
+Marysville, Ohio, USA). Percentage composition is on a volume basis. We
+watered to field capacity three times per week to prevent drought
+stress. Seedlings were randomly assigned in alternating order within
+population to the sun or shade treatment during transplanting. The
+average daytime \ppfd{} was \ppfdqty{761} and \ppfdqty{115} for sun and
+shade treatments, respectively.
+
 \subsubsection{Stomatal kinetics}\label{stomatal-kinetics}
 
 Equation from (2). Point out that tau matters most.
@@ -515,27 +599,37 @@ effects??}\label{inferring-different-levels-of-effects}
 
 We analyzed three nonmutually exclusive paths through which \fgmax and
 \gcl could influence stomatal kinetic parameters \(\lambda\) and
-\(\tau\): phylogenetic covariance individual effect mediating treatment
-effects (plasticity)
+\(\tau\). First, we inferred phylogenetic effects by estimating the
+phylogenetic correlation among populations between anatomical
+(\fgmax and \gcl) and kinetic (\(\lambda\) and \(\tau\)) variables. To
+test for causation, we used the phylogenetic covariance matrix to
+estimate partial correlations between anatomical and kinetic variables
+(9). We interpret a significant partial correlation between variables as
+a plausible causal hypothesis. Second, we inferred individual-level
+effects of \fgmax and \gcl on kinetic parameters using linear multiple
+regression that simultaneously accounts for phylogenetic and treatment
+effects. We used the leave-one-out cross-validation information
+criterion (LOOIC) to compare the fit of models using the \emph{R}
+package \textbf{loo} version 2.8.0 (13) to calculate LOOIC values. We
+compared models with all permutations of \fgmax and \gcl influencing
+\(\lambda\) and \(\tau\). We selected the model with the lowest LOOIC
+value (\textbf{?@tbl-comparison}) to generate posterior predictions for
+hypothesis testing. If an effect was included in the best model (lowest
+LOOIC), then we considered whether the 95\% confidence interval
+overlapped zero to ascertain a significant effect.
 
-For individual effect of \gcl and \fgmax on \(\tau\) and \(\lambda\): We
-used the leave-one-out cross-validation information criterion (LOOIC) to
-compare the fit of models using the \emph{R} package \textbf{loo}
-version 2.9.0 (\textbf{vehtari\_practical\_2017?}) to calculate LOOIC
-values. We selected the model with the lowest LOOIC value
-(\textbf{?@tbl-comparison}) to generate posterior predictions for
-hypothesis testing.
+THIRD: mediating treatment effects (plasticity)
 
 \subsubsection{Variance decomposition and heritability
 (somewhere)}\label{variance-decomposition-and-heritability-somewhere}
 
 We decomposed the variance in log-transformed response variables
-(\(\lambda\), \(tau\), fgmax, gcl) into phylogenetic, population,
+(\(\lambda\), \(tau\), \fgmax, \gcl) into phylogenetic, population,
 between-individual, and within-individual levels. The phylogenetic
 variance component quantifies trait evolution between populations
 congruent with the phylogenetic relationships, whereas the population
 component quantifies variance among populations independent of
-phylogenetic relationships (11, 12). The between- and within-individual
+phylogenetic relationships (14, 15). The between- and within-individual
 variance components quantify variance among individuals within the same
 population and treatment. The within-individual component was estimated
 from repeated measures of the same leaf at different light intensities.
@@ -544,7 +638,7 @@ length with our study design because we only measured average guard cell
 length once per leaf. We estimated the between-individual variance from
 the residual variance, which also includes measurement error. The
 phylogenetic heritability is equivalent to the phylogenetic variance
-component and is estimated following (11); (12) as:
+component and is estimated following (14); (15) as:
 
 \[h^2_{\mathrm{phy}} = \frac{\sigma^2_\mathrm{phy}}{\sigma^2_\mathrm{phy} + \sigma^2_\mathrm{pop} + \sigma^2_\mathrm{between} + \sigma^2_\mathrm{within}},\]
 
@@ -575,17 +669,18 @@ increased \(t_{50}\) by 129 s
 
 Growth light intensity did not significantly affect \(\tau\)
 Figure~\ref{fig-accession-kinetics}. In sun plants, \(\tau\) was on
-average -4.64\% {[}95\% CI: -15.3 to 7.93\%{]} lower than in shade
-plants after accounting for other explanatory variables. Within the same
-leaf, increasing the measurement light intensity prior to the VPD step
-change from \ppfdqty{150} to \ppfdqty{2000} significantly increased
-\(\tau\) by 19\% {[}95\% CI: 11.1 to 27.8\%{]}
+average 6.46\% {[}95\% CI: 1.64 to 11.6\%{]} lower than in shade plants
+after accounting for other explanatory variables. Within the same leaf,
+increasing the measurement light intensity prior to the VPD step change
+from \ppfdqty{150} to \ppfdqty{2000} significantly increased \(\tau\) by
+14.9\% {[}95\% CI: 8.91 to 21.8\%{]}
 Figure~\ref{fig-accession-kinetics}. The time lag \(\lambda\) responded
 to growth, but not measurement light intensity after accounting for
 other explanatory variables Figure~\ref{fig-accession-kinetics}. In sun
-plants, \(\tau\) was on average 12.6\% {[}95\% CI: 10.4 to 14.8\%{]}
+plants, \(\tau\) was on average 11\% {[}95\% CI: 6.31 to 15.6\%{]}
 greater than in shade plants. Higher measurement light decreased
-increased \(\lambda\) slightly by -1.4\% {[}95\% CI: -4.67 to 1.64\%{]}.
+increased \(\lambda\) slightly by 0.255\% {[}95\% CI: -2.18 to
+2.89\%{]}.
 
 \begin{itemize}
 \tightlist
@@ -599,7 +694,7 @@ increased \(\lambda\) slightly by -1.4\% {[}95\% CI: -4.67 to 1.64\%{]}.
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/accession-kinetics.pdf}}
+\includegraphics{../figures/accession-kinetics.pdf}
 
 }
 
@@ -640,7 +735,7 @@ measurement error, so should be interpreted with caution.
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/variance.pdf}}
+\includegraphics{../figures/variance.pdf}
 
 }
 
@@ -678,39 +773,41 @@ component & \% variance & 95\% CI\\
 \endlastfoot
 \addlinespace[0.3em]
 \multicolumn{3}{l}{\textbf{$\log(f_\mathrm{gmax})$}}\\
-\hspace{1em}phylogenetic & 18.4 & {}[4.4, 36.6]\\
-\hspace{1em}population & 5.6 & {}[0.9, 14.4]\\
-\hspace{1em}between-individual & 33.0 & {}[25.2, 39.2]\\
-\hspace{1em}within-individual & 42.1 & {}[33.3, 50.1]\\
+\hspace{1em}phylogenetic & 13.9 & {}[3.2, 30.2]\\
+\hspace{1em}population & 5.4 & {}[1.3, 13.0]\\
+\hspace{1em}between-individual & 40.2 & {}[33.5, 45.5]\\
+\hspace{1em}within-individual & 39.4 & {}[31.6, 45.2]\\
 \addlinespace[0.3em]
 \multicolumn{3}{l}{\textbf{$\log(l_\mathrm{gc})$}}\\
-\hspace{1em}\hspace{1em}phylogenetic & 56.5 & {}[23.6, 76.0]\\
-\hspace{1em}\hspace{1em}population & 5.4 & {}[0.3, 24.2]\\
-\hspace{1em}\hspace{1em}between-individual & 37.5 & {}[22.6, 56.3]\\
+\hspace{1em}\hspace{1em}phylogenetic & 57.0 & {}[26.9, 76.0]\\
+\hspace{1em}\hspace{1em}population & 5.3 & {}[0.4, 22.9]\\
+\hspace{1em}\hspace{1em}between-individual & 37.3 & {}[22.6, 54.1]\\
 \addlinespace[0.3em]
 \multicolumn{3}{l}{\textbf{$\log(\lambda)$}}\\
-\hspace{1em}phylogenetic & 17.8 & {}[6.0, 32.7]\\
-\hspace{1em}population & 0.8 & {}[0.0, 5.8]\\
-\hspace{1em}between-individual & 69.1 & {}[55.7, 79.7]\\
-\hspace{1em}within-individual & 11.1 & {}[4.9, 18.0]\\
+\hspace{1em}phylogenetic & 15.5 & {}[3.9, 30.3]\\
+\hspace{1em}population & 1.6 & {}[0.0, 7.7]\\
+\hspace{1em}between-individual & 61.3 & {}[50.9, 68.7]\\
+\hspace{1em}within-individual & 20.6 & {}[16.1, 25.1]\\
 \addlinespace[0.3em]
 \multicolumn{3}{l}{\textbf{$\log(\tau)$}}\\
-\hspace{1em}phylogenetic & 22.6 & {}[8.2, 42.6]\\
-\hspace{1em}population & 1.3 & {}[0.0, 7.3]\\
-\hspace{1em}between-individual & 53.1 & {}[37.7, 65.8]\\
-\hspace{1em}within-individual & 21.5 & {}[15.3, 28.1]\\*
+\hspace{1em}phylogenetic & 34.6 & {}[17.2, 51.3]\\
+\hspace{1em}population & 1.0 & {}[0.0, 7.4]\\
+\hspace{1em}between-individual & 40.1 & {}[30.3, 49.4]\\
+\hspace{1em}within-individual & 23.5 & {}[17.2, 29.8]\\*
 
 \end{longtable}
 
 Guard cell size and \fgmax affected stomatal kinetics, but at different
 levels of biological organization. In the model with the lowest LOOIC
-(see \textbf{?@tbl-comparison} for model comparison results), there was
-a significant phylogenetic correlation between \gcl and \(\tau\)
-(\textbf{fig?}-?). PARTIAL CORRELATION RESULT. Variation in \gcl within
-populations did not explain within-population variation in \(\tau\)
-Table~\ref{tbl-fit_amphi}. NOTE THAT BEST MODEL RETAINED INDIVIDUAL
-LEVEL EFFECT OF GCL, BUT COEFFICIENT WAS NOT SIGNIFICANT. OTHER BEST
-MODELS DID NOT RETAIN THIS. DID GCL MEDIATE AFFECT OF TREATMENTS?
+(see \textbf{?@tbl-comparison} for model comparison results), the only
+significant partial correlation was between \gcl and \(\tau\)
+(\(\rho = 0.77\) {[}95\% CI: -0.1 to 0.98\$) was a significant
+phylogenetic correlation between \gcl and \(\tau\) (\textbf{fig?}-?).
+PARTIAL CORRELATION RESULT. Variation in \gcl within populations did not
+explain within-population variation in \(\tau\) Table~\ref{tbl-fit}.
+NOTE THAT BEST MODEL RETAINED INDIVIDUAL LEVEL EFFECT OF GCL, BUT
+COEFFICIENT WAS NOT SIGNIFICANT. OTHER BEST MODELS DID NOT RETAIN THIS.
+DID GCL MEDIATE AFFECT OF TREATMENTS?
 
 Need to show (this is a growing, incomplete list): - model comparison
 results table - figure of tau versus gcl per accession - phylogenetic
@@ -719,8 +816,8 @@ partial correlation - partial correlation showing that gcl and tau are
 
 \begin{longtable}[t]{>{\raggedright\arraybackslash}p{4in}>{\raggedright\arraybackslash}p{2in}}
 
-\caption{\label{tbl-fit_amphi}Fixed effects (posterior mean, SE, and
-95\% confidence intervals).}
+\caption{\label{tbl-fit}Fixed effects (posterior mean, SE, and 95\%
+confidence intervals).}
 
 \tabularnewline
 
@@ -740,26 +837,30 @@ partial correlation - partial correlation showing that gcl and tau are
 \endlastfoot
 \addlinespace[0.3em]
 \multicolumn{2}{l}{\textbf{$\log(\lambda)$}}\\
-\hspace{1em}effect of $\log(f_g)$ on $\log(\lambda)$ & 0.12 [0.09, 0.15]\\
-\hspace{1em}effect of high measurement light intensity on $\log(\lambda)$ & -0.01 [-0.05, 0.02]\\
-\hspace{1em}intercept (shade, low light) & 0.44 [0.32, 0.56]\\
-\hspace{1em}effect of sun growth treatment on $\log(\lambda)$ & 0.12 [0.10, 0.14]\\
+\hspace{1em}effect of $\log(f_g)$ on $\log(\lambda)$ & 0.12 [0.09, 0.14]\\
+\hspace{1em}effect of $\log(l_\mathrm{gc})$ on $\log(\lambda)$ & 0.13 [-0.20, 0.47]\\
+\hspace{1em}effect of curvetypepseudohypo on $\log(\lambda)$ & 0.05 [0.02, 0.07]\\
+\hspace{1em}effect of high measurement light intensity on $\log(\lambda)$ & 0.00 [-0.02, 0.03]\\
+\hspace{1em}intercept (shade, low light) & 0.06 [-0.96, 1.00]\\
+\hspace{1em}effect of sun growth treatment on $\log(\lambda)$ & 0.10 [0.06, 0.14]\\
 \addlinespace[0.3em]
 \multicolumn{2}{l}{\textbf{$\log(\tau)$}}\\
-\hspace{1em}effect of $\log(f_g)$ on $\log(\tau)$ & 0.21 [0.13, 0.28]\\
-\hspace{1em}effect of $\log(l_\mathrm{gc})$ on $\log(\tau)$ & 0.94 [-0.17, 1.94]\\
-\hspace{1em}effect of high measurement light intensity on $\log(\tau)$ & 0.17 [0.10, 0.25]\\
-\hspace{1em}intercept (shade, low light) & 2.84 [-0.23, 6.01]\\
-\hspace{1em}effect of sun growth treatment on $\log(\tau)$ & -0.05 [-0.17, 0.08]\\
+\hspace{1em}effect of $\log(f_g)$ on $\log(\tau)$ & 0.22 [0.15, 0.28]\\
+\hspace{1em}effect of curvetypepseudohypo on $\log(\tau)$ & 0.16 [0.11, 0.21]\\
+\hspace{1em}effect of high measurement light intensity on $\log(\tau)$ & 0.14 [0.09, 0.20]\\
+\hspace{1em}intercept (shade, low light) & 5.60 [5.22, 5.92]\\
+\hspace{1em}effect of sun growth treatment on $\log(\tau)$ & 0.06 [0.02, 0.11]\\
 \addlinespace[0.3em]
 \multicolumn{2}{l}{\textbf{$\log(f_g)$}}\\
-\hspace{1em}effect of high measurement light intensity on $\log(f_g)$ & 0.80 [0.76, 0.84]\\
-\hspace{1em}intercept (shade, low light) & -2.63 [-2.94, -2.31]\\
-\hspace{1em}effect of sun growth treatment on $\log(f_g)$ & -0.16 [-0.24, -0.08]\\
+\hspace{1em}effect of curvetypepseudohypo on $\log(f_g)$ & -0.62 [-0.65, -0.58]\\
+\hspace{1em}effect of high measurement light intensity on $\log(f_g)$ & 0.78 [0.75, 0.81]\\
+\hspace{1em}intercept (shade, low light) & -2.58 [-2.83, -2.29]\\
+\hspace{1em}effect of sun growth treatment on $\log(f_g)$ & -0.26 [-0.33, -0.20]\\
 \addlinespace[0.3em]
 \multicolumn{2}{l}{\textbf{$\log(l_\mathrm{gc})$}}\\
-\hspace{1em}intercept (shade, low light) & 2.92 [2.74, 3.08]\\
-\hspace{1em}effect of sun growth treatment on $\log(l_\mathrm{gc})$ & 0.10 [0.09, 0.12]\\*
+\hspace{1em}effect of curvetypepseudohypo on $\log(l_\mathrm{gc})$ & 0.06 [0.05, 0.07]\\
+\hspace{1em}intercept (shade, low light) & 2.90 [2.74, 3.07]\\
+\hspace{1em}effect of sun growth treatment on $\log(l_\mathrm{gc})$ & 0.12 [0.11, 0.13]\\*
 
 \end{longtable}
 
@@ -769,6 +870,9 @@ partial correlation - partial correlation showing that gcl and tau are
 
 \centering{
 
+\captionsetup{labelsep=none}
+
+[!h]
 \centering
 \begin{tabular}[t]{lcccc}
 \toprule
@@ -776,25 +880,25 @@ partial correlation - partial correlation showing that gcl and tau are
 \cmidrule(l{3pt}r{3pt}){2-3} \cmidrule(l{3pt}r{3pt}){4-5}
 $\Delta \text{LOOIC}$ & \fgmax & \gcl & \fgmax & \gcl\\
 \midrule
-\cellcolor{gray!10}{0.00} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark}\\
-0.49 & \cmark & \cmark & \cmark & \\
-\cellcolor{gray!10}{0.61} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{}\\
-11.34 & \cmark & \cmark & \cmark & \cmark\\
-\cellcolor{gray!10}{39.06} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{}\\
+\cellcolor{gray!10}{0.00} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{}\\
+4.34 & \cmark &  & \cmark & \cmark\\
+\cellcolor{gray!10}{5.63} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{}\\
+6.69 & \cmark & \cmark & \cmark & \cmark\\
+\cellcolor{gray!10}{20.89} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark}\\
 \addlinespace
-41.37 & \cmark &  &  & \\
-\cellcolor{gray!10}{43.46} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark}\\
-45.92 & \cmark & \cmark &  & \cmark\\
-\cellcolor{gray!10}{66.95} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{}\\
-83.83 &  &  & \cmark & \cmark\\
+21.65 & \cmark & \cmark &  & \cmark\\
+\cellcolor{gray!10}{26.14} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{}\\
+30.03 & \cmark &  &  & \\
+\cellcolor{gray!10}{44.71} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{}\\
+48.42 &  &  & \cmark & \\
 \addlinespace
-\cellcolor{gray!10}{85.30} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark}\\
-86.39 &  &  & \cmark & \\
-\cellcolor{gray!10}{96.02} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark}\\
-99.92 &  &  &  & \\
-\cellcolor{gray!10}{101.00} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark}\\
+\cellcolor{gray!10}{49.58} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark}\\
+54.02 &  & \cmark & \cmark & \cmark\\
+\cellcolor{gray!10}{69.10} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark}\\
+77.31 &  &  &  & \\
+\cellcolor{gray!10}{78.42} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark}\\
 \addlinespace
-103.59 &  & \cmark &  & \\
+88.14 &  & \cmark &  & \\
 \bottomrule
 \end{tabular}
 
@@ -901,22 +1005,43 @@ Naturalist} \textbf{201}, 794--812 (2023).}
 mixed models: Concepts and application}. \emph{Biological Reviews}
 \textbf{100}, 1294--1316 (2025).}
 
-\bibitem[\citeproctext]{ref-muir_plasticity_2025}
+\bibitem[\citeproctext]{ref-peralta_taxonomy_2008}
 \CSLLeftMargin{10. }%
+\CSLRightInline{I. E. Peralta, D. M. Spooner, S. Knapp, Taxonomy of wild
+tomatoes and their relatives (\emph{solanum} sect.
+\emph{Lycopersicoides}, sect. \emph{Juglandifolia}, sect.
+\emph{Lycopersicon}; {Solanaceae}). \textbf{84} (2008).}
+
+\bibitem[\citeproctext]{ref-muir_plasticity_2025}
+\CSLLeftMargin{11. }%
 \CSLRightInline{C. D. Muir, W. S. Lim, D. Wang,
 \href{https://doi.org/10.1101/2025.08.19.671015}{Plasticity and
 adaptation to high light intensity amplify the advantage of
 amphistomatous leaves}. (2025).}
 
+\bibitem[\citeproctext]{ref-pease_phylogenomics_2016}
+\CSLLeftMargin{12. }%
+\CSLRightInline{J. B. Pease, D. C. Haak, M. W. Hahn, L. C. Moyle,
+\href{https://doi.org/10.1371/journal.pbio.1002379}{Phylogenomics
+reveals three sources of adaptive variation during a rapid radiation}.
+\emph{PLOS Biology} \textbf{14}, e1002379 (2016).}
+
+\bibitem[\citeproctext]{ref-vehtari_practical_2017}
+\CSLLeftMargin{13. }%
+\CSLRightInline{A. Vehtari, A. Gelman, J. Gabry,
+\href{https://doi.org/10.1007/s11222-016-9696-4}{Practical {Bayesian}
+model evaluation using leave-one-out cross-validation and {WAIC}}.
+\emph{Statistics and Computing} \textbf{27}, 1413--1432 (2017).}
+
 \bibitem[\citeproctext]{ref-lynch_methods_1991}
-\CSLLeftMargin{11. }%
+\CSLLeftMargin{14. }%
 \CSLRightInline{M. Lynch,
 \href{https://doi.org/10.1111/j.1558-5646.1991.tb04375.x}{Methods for
 the analysis of comparative data in evolutionary biology}.
 \emph{Evolution} \textbf{45}, 1065--1080 (1991).}
 
 \bibitem[\citeproctext]{ref-garamszegi_general_2014}
-\CSLLeftMargin{12. }%
+\CSLLeftMargin{15. }%
 \CSLRightInline{P. De Villemereuil, S. Nakagawa,
 {``\href{https://doi.org/10.1007/978-3-662-43550-2_11}{General
 {Quantitative} {Genetic} {Methods} for {Comparative} {Biology}}''} in
@@ -925,7 +1050,6 @@ the analysis of comparative data in evolutionary biology}.
 (Springer Berlin Heidelberg, 2014), pp. 287--303.}
 
 \end{CSLReferences}
-
 
 
 

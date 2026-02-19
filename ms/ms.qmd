@@ -80,6 +80,12 @@ theme_set(theme_cowplot())
 
 source("../r/functions.R")
 
+plant_info = read_rds("../data/plant_info.rds")
+
+accession_info = read_rds("../data/accession_info.rds")
+
+rh_curves = read_rds("../data/rh_curves.rds")
+
 response_vars = tibble(
   definition = c(
     fgmax = "stomatal conductance as a fraction of anatomical maximum stomatal conductance",
@@ -95,13 +101,80 @@ response_vars = tibble(
   )
 )
 
-# Results
-fit_amphi = read_rds("../objects/best_amphi_model.rds")
+# Methods
 
-n_acc = length(unique(fit_amphi$data$accession))
+licor_date_range = plant_info |>
+  filter(acc_id %in% unique(rh_curves$acc_id)) |>
+  dplyr::select(`1s_rh_response_date`, `2s_rh_response_date`) |>
+  pivot_longer(cols = everything()) |>
+  pull(value) |>
+  ymd() |>
+  range(na.rm = TRUE) 
+n_weeks = prettyNum(as.numeric(difftime(licor_date_range[2], licor_date_range[1], units = "days")) / 7, digits = 3)
+ # number of weeks for LICOR measurements
+start_licor_date = format(licor_date_range[1], "%B %d, %Y")
+end_licor_date = format(licor_date_range[2], "%B %d, %Y")
+
+# Environmental data
+df_germ_summary = read_rds("../data/df_germ_summary.rds") |>
+  ungroup() |>
+  summarize(value = median(value), .by = c("period", "variable", "parameter"))
+
+df_growth_summary = read_rds("../data/df_growth_summary.rds") |>
+  ungroup() |>
+  filter(!is.na(value)) 
+
+# environmental condition in germination room
+
+germ_temp_day = df_germ_summary |>
+  filter(period == "day", variable == "degC", parameter == "mu") |>
+  pull(value) |>
+  prettyNum(digits = 3)
+  
+germ_temp_night = df_germ_summary |>
+  filter(period == "night", variable == "degC", parameter == "mu") |>
+  pull(value) |>
+  prettyNum(digits = 3)
+
+germ_rh_day = df_germ_summary |>
+  filter(period == "day", variable == "RH", parameter == "mu") |>
+  pull(value) |>
+  prettyNum(digits = 3)
+
+germ_rh_night = df_germ_summary |>
+  filter(period == "night", variable == "RH", parameter == "mu") |>
+  pull(value) |>
+  prettyNum(digits = 3)
+
+germ_ppfd = df_germ_summary |>
+  filter(period == "day", variable == "PAR", parameter == "mu") |>
+  pull(value) |>
+  prettyNum(digits = 3)
+
+# environmental conditions in growth room
+
+d1 = df_growth_summary |>
+  summarize(value = median(value),
+            .by = c("period", "rack", "variable", "parameter"))
+
+ppfd_sun = d1 |>
+  filter(period == "day", rack == "lower", variable == "PAR", parameter == "mu") |>
+  pull(value) |>
+  prettyNum(digits = 3)
+
+ppfd_shade = d1 |>
+  filter(period == "day", rack == "upper", variable == "PAR", parameter == "mu") |>
+  pull(value) |>
+  prettyNum(digits = 3)
+
+
+# Results
+fit = read_rds("../objects/best_model.rds")
+
+n_acc = length(unique(fit$data$accession))
 
 # Effect of growth light treatment on log(tau)
-post_summary = posterior_summary(fit_amphi)
+post_summary = posterior_summary(fit)
 post_tau_sun = post_summary["b_logtaumean_lighttreatmentsun", ]
 post_tau_high = post_summary["b_logtaumean_lightintensityhigh", ]
 post_lambda_sun = post_summary["b_loglambdamean_lighttreatmentsun", ]
@@ -221,11 +294,68 @@ g_s = g_f + (g_i - g_f) * exp(-(t/tau)^lambda)
 
 ## Methods
 
-### Hypothesis generation
+### Populations
 
-The primary aims and *a priori* hypotheses of this study are described in @muir_plasticity_2025. The idea to use \gsw response curve to test hypotheses about which traits influence stomatal kinetics came after the data had been collected, but not yet analyzed. We started with an *a priori* hypothesis that guard cell size would influence $\tau$ based on a recent metaanalysis of stomatal responses to light [@woning_revisiting_2026] and we planned to compare relationships within and among species, as described in this paper. We made the decision to test for an association between fgmax and $\tau$ after exploratory analyses revealed a potential association. Adding hypotheses after some results have been analyzed, also known as "Hypothesizing After Results Known" (HARKing), can lead to reports of spurious associations that are not repeatable in later studies (cite). Therefore, our conclusions about the effect of fgmax on stomatal kinetics should be interpreted with caution until they are replicated.
+We analyzed stomatal responses to changing humidity among `r n_acc` ecologically diverse populations of wild tomato, including representatives of all described species of *Solanum* sect. *Lycopersicon* and sect. *Lycopersicoides* [@peralta_taxonomy_2008] and the cultivated tomato *S. lycopersicum* var. *lycopersicum* (@tbl-populations), as described in @muir_plasticity_2025. These populations were selected because they encompass the breadth of climatic variation in the wild tomato clade [@pease_phylogenomics_2016]. In one case, we substituted a congeneric population of the species (*S. galapagense*) because of difficulty growing the focal population and we also added a population of *S. pennellii*. Due to constraints on growth space and time, we spread out measurements over `r n_weeks` weeks from `r start_licor_date` to `r end_licor_date`. Replicates within population were evenly spread out over this period to prevent confounding of temporal variation in growth conditions with variation among populations. 
+
+```{r, populations, eval=TRUE,echo=FALSE,message=FALSE,warning=FALSE}
+#| label: tbl-populations
+#| tbl-cap: "Accession information of *Solanum* populations used in this study. The species name, accession number, collection latitude, longitude, and elevation. TGRC: Tomato Genetics Resource Center."
+
+# Copied from solanum-aq project
+
+accession_info |>
+  filter(accession %in% rh_curves$acc) |>
+  arrange(species, accession) |>
+  select(
+    Species = species,
+    `TGRC accession` = accession,
+    `Latitude` = lat,
+    `Longitude` = lon,
+    `Elevation (mas)` = elev
+  ) |>
+  knitr::kable(
+    format = "latex",
+    digits = c(rep(0, 2), 3, 3, 0),
+    booktabs = TRUE,
+    longtable = TRUE,
+    escape = FALSE
+  ) |>
+  kableExtra::kable_styling(latex_options = c("striped", "no_vertical_lines", "repeat_header")) |>
+  kableExtra::column_spec(1, width = "3.25cm", italic = TRUE)
+
+```
+
+### Hypothesis generation and testing
+
+The primary aims and *a priori* hypotheses of this study are described in @muir_plasticity_2025. The idea to use \gsw response curves to test hypotheses about which traits influence stomatal kinetics came after the data had been collected, but not yet analyzed. We started with two *a priori* hypotheses based on a recent metaanalysis of stomatal responses to light [@woning_revisiting_2026]. We hypothesized that 1) guard cell size would influence $\tau$ and 2) that $\tau$ would be greater on the abaxial-only leaves. We planned to compare relationships within and among populations using phylogenetic comparative methods. We made the decision to test for an association between \fgmax and $\tau$ after exploratory analyses revealed a potential association. Adding hypotheses after some results have been analyzed, also known as "Hypothesizing After Results Known" (HARKing), can lead to reports of spurious associations that are not repeatable in later studies [@kerr_harking_1998; @smaldino_natural_2016]. Therefore, our conclusions about the effect of \fgmax on stomatal kinetics should be interpreted with caution until they are replicated.
+
+NEED TO MENTION ESTIMATE OF TAU AND LAMBDA PER CURVE
+
+We fit multiresponse Bayesian mixed effects models with phylogenetically structured random effects to answer the following core questions:
+
+1. Are \gcl and \fgmax positively associated with $\tau$?
+2. At what biological levels of organization do \gcl and \fgmax influence $\tau$?
+3. Are abaxial-only stomatal responses slower than whole leaf stomatal responses?
+
+SCRAPS THAT I NEED TO WEAVE INTO MS
+
+We used a combination of model selection and parameter estimation to evaluate these hypotheses. All statistical models included fixed effects of manipulative treatments: growth light intensity (sun and shade); measurement light intensity (high and low); and curve type (amphistomatous and pseudohypostomatous). All models also included population as a phylogenetically structured random effect. 
+
+We accounted for uncertainty in $\tau$ and $\lambda$ using the standard deviation of the posterior distribution of each estimate (see above). 
+
+We used the RAxML whole-transcriptome concatenated phylogeny based on 2,745 100-kb genomic windows from @pease_phylogenomics_2016. Two of our populations were not in this tree. We used accession LA1044 in place of LA3909, two populations of *S. galapagense*; LA0750 was added as sister to LA0716, two closely related populations of *S. pennellii*. The node separating LA0750 from LA0716 was placed half-way between the next deepest node. 
+
+### Plant growth conditions and light treatments
+
+A thorough description of plant growth conditions can be found @muir_plasticity_2025, therefore we summarize the most important information here. Seeds provided by the Tomato Genetics Resource Center germinated on moist paper in plastic boxes after soaking for 30-60 minutes in a 50% (volume per volume) solution of household bleach and water, followed by a thorough rinse. We transferred seedlings to cell-pack flats containing Pro-Mix BX potting mix (Premier Tech, Rivière-du-Loup, Quebec, Canada) once cotyledons fully emerged, typically within 1-2 weeks of sowing. We grew seeds and seedlings for both sun and shade treatments under the same environmental conditions (12:12 h, `r germ_temp_day`:$\SI{`r germ_temp_night`}{\degreeCelsius}$, `r germ_rh_day`:`r germ_rh_night` RH day:night cycle). LED light provided $\mathrm{PPFD} = \SI{`r germ_ppfd`}{\micro\mole\per\meter\squared\per\second}$ (Fluence RAZRx, Austin, Texas, USA) during the germination and seedling stages.
+
+Immediately prior to starting growth light intensity treatments (sun and shade), we transplanted seedlings to 3.78 L plastic pots containing 60% Pro-Mix BX potting mix, 20% coral sand (Pro-Pak, Honolulu, Hawaiʻi, USA), and 20% cinders (Niu Nursery, Honolulu, Hawaiʻi, USA) withslow release NPK fertilizer following manufacturer instructions (Osmocote Smart-Release Plant Food Flower & Vegetable, The Scotts Company, Marysville, Ohio, USA). Percentage composition is on a volume basis. We watered to field capacity three times per week to prevent drought stress. Seedlings were randomly assigned in alternating order within population to the sun or shade treatment during transplanting. The average daytime \ppfd{} was \ppfdqty{`r ppfd_sun`} and \ppfdqty{`r ppfd_shade`} for sun and shade treatments, respectively. 
+
 
 ### Stomatal kinetics
+
+We selected a fully expanded, unshaded leaf at least six leaves above the cotyledons during early vegetative growth. This typically meant that plants had grown in light treatments for $\approx$ 4 weeks, ensuring they had time to sense and respond developmentally to the light intensity of the treatment rather than the seedling conditions [@schoch_dependence_1980]. See @muir_plasticity_2025 for further detail.
 
 Equation from @woning_revisiting_2026. Point out that tau matters most.
 
@@ -348,7 +478,7 @@ tab_variance |>
              escape = FALSE) 
 ```
 
-Guard cell size and \fgmax affected stomatal kinetics, but at different levels of biological organization. In the model with the lowest LOOIC (see @tbl-comparison for model comparison results), the only significant partial correlation was between \gcl and $\tau$ ($\rho = `r signif(rho2, 2)`$ [95% CI: `r signif(rho2_lower, 2)` to `r signif(rho2_upper, 2)`$) was a significant phylogenetic correlation between \gcl and $\tau$ [@fig-?]. PARTIAL CORRELATION RESULT. Variation in \gcl within populations did not explain within-population variation in $\tau$ [@tbl-fit_amphi]. NOTE THAT BEST MODEL RETAINED INDIVIDUAL LEVEL EFFECT OF GCL, BUT COEFFICIENT WAS NOT SIGNIFICANT. OTHER BEST MODELS DID NOT RETAIN THIS. DID GCL MEDIATE AFFECT OF TREATMENTS?
+Guard cell size and \fgmax affected stomatal kinetics, but at different levels of biological organization. In the model with the lowest LOOIC (see @tbl-comparison for model comparison results), the only significant partial correlation was between \gcl and $\tau$ ($\rho = `r signif(rho, 2)`$ [95% CI: `r signif(rho_lower, 2)` to `r signif(rho_upper, 2)`$) was a significant phylogenetic correlation between \gcl and $\tau$ [@fig-?]. PARTIAL CORRELATION RESULT. Variation in \gcl within populations did not explain within-population variation in $\tau$ [@tbl-fit]. NOTE THAT BEST MODEL RETAINED INDIVIDUAL LEVEL EFFECT OF GCL, BUT COEFFICIENT WAS NOT SIGNIFICANT. OTHER BEST MODELS DID NOT RETAIN THIS. DID GCL MEDIATE AFFECT OF TREATMENTS?
 
 
 Need to show (this is a growing, incomplete list):
@@ -357,8 +487,8 @@ Need to show (this is a growing, incomplete list):
 - phylogenetic partial correlation
 - partial correlation showing that gcl and tau are (only?) significant phylogenetic covariates
 
-```{r fit_amphi}
-#| label: tbl-fit_amphi
+```{r fit}
+#| label: tbl-fit
 #| results: asis
 #| echo: false
 #| message: false
@@ -395,12 +525,13 @@ describe_effect = function(explanatory, response) {
   }
 }
 
-fx1 = fixef(fit_amphi, summary = TRUE) |>
+fx1 = fixef(fit, summary = TRUE) |>
   as.data.frame() |>
   tibble::rownames_to_column("par") |>
   mutate(
     across(where(is_double), ~ formatC(., format = "f", digits = 2)),
-    `Estimate [95\\% CI]` = glue("{Estimate} [{Q2.5}, {Q97.5}]")
+    `Estimate [95\\% CI]` = glue("{Estimate} [{Q2.5}, {Q97.5}]"),
+    par = str_replace(par, "curve_type", "curvetype")
   ) |>
   separate_wider_delim(par, delim = "_", names = c("response", "explanatory")) |>
   mutate(

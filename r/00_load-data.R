@@ -18,3 +18,9 @@ read_rds("https://github.com/cdmuir/solanum-aa/raw/refs/heads/main/data/trimmed_
 read_rds("https://github.com/cdmuir/solanum-aa/raw/refs/heads/main/data/stomata.rds") |>
   select(-contains("pavement"), -contains("index")) |>
   write_rds("data/stomata.rds")
+
+read_rds("https://github.com/cdmuir/solanum-aa/raw/refs/heads/main/data/df_germ_summary.rds") |>
+  write_rds("data/df_germ_summary.rds")
+
+read_rds("https://github.com/cdmuir/solanum-aa/raw/refs/heads/main/data/df_growth_summary.rds") |>
+  write_rds("data/df_growth_summary.rds")
