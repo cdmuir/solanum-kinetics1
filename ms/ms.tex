@@ -343,18 +343,19 @@ stomatal conductance will respond more slowly than when initial aperture
 is low. Since we generally do not observe individual stomatal aperture,
 extending this idea to macroscale phenomena requires scaling by stomatal
 density. We will use the term ``fraction of anatomical maximum stomatal
-conductance'', symbolized as fgmax. This value should be proportional to
-the average aperture divided by its maximum aperture for any arbitrary
-stomatal density {[}could a figure show how this interacts with stomatal
-density?{]}. Leaves operating at fgmax closer to unity will, all else
-being equal, will be slower to respond than leaves operating with a
-fgmax close to zero, independent of stomatal density. (4) hypothesized
-that selection on stomatal density would maintain typical operational
-stomatal conductance (gop) relative to gmax at a sufficiently low value
-that stomatal conductance would be sensitive to relatively small changes
-in guard cell turgor pressure. Consistent will this hypothesis, gop:gmax
-is often near 0.25 (5, 6), well below fgmax = 1, and in a range where
-\gsw would be responsive to small changes in guard cell turgor pressure.
+conductance'', symbolized as \fgmax. This value should be proportional
+to the average aperture divided by its maximum aperture for any
+arbitrary stomatal density {[}could a figure show how this interacts
+with stomatal density?{]}. Leaves operating at fgmax closer to unity
+will, all else being equal, will be slower to respond than leaves
+operating with a \fgmax close to zero, independent of stomatal density.
+(4) hypothesized that selection on stomatal density would maintain
+typical operational stomatal conductance (gop) relative to gmax at a
+sufficiently low value that stomatal conductance would be sensitive to
+relatively small changes in guard cell turgor pressure. Consistent will
+this hypothesis, gop:gmax is often near 0.25 (5, 6), well below
+\(f_\text{gmax} = 1\), and in a range where \gsw would be responsive to
+small changes in guard cell turgor pressure.
 
 Putting these two hypotheses together, we predict that both guard cell
 size and fgmax will influence stomatal kinetics, but possibly at
@@ -367,20 +368,20 @@ developmentally plastic varies less genetically within species (cites).
 If there is relatively little plastic or genetic variation among
 individuals within a species, then most of the variance in stomatal
 kinetics within species cannot be explained by variation in stomatal
-size. In contrast, fgmax varies immensely within and among individuals
+size. In contrast, \fgmax varies immensely within and among individuals
 because stomatal aperture responds dynamically over the day and in
-response to environmental variation. Within a single leaf, fgmax will
+response to environmental variation. Within a single leaf, \fgmax will
 change over the course of a day in response to light signalling, change
 in VPD, and starch accumulation (or sink strength? cite). During the
-life a leaf, fgmax will change in response to long-term stresses such as
-drought. Because guard cell size and aperture typically vary at
+life a leaf, \fgmax will change in response to long-term stresses such
+as drought. Because guard cell size and aperture typically vary at
 different levels of biological organization, we predict that guard cell
 size likely explains more variation in stomatal kinetics among species,
-whereas fgmax will explain more variation within species. Within species
-variation can arise from either genetic or environmental differences
-between individuals. Neither of these traits along will determine all or
-even most of the variance in stomatal kinetics, which is a complex
-response to many internal and external signals (cites).
+whereas \fgmax will explain more variation within species. Within
+species variation can arise from either genetic or environmental
+differences between individuals. Neither of these traits along will
+determine all or even most of the variance in stomatal kinetics, which
+is a complex response to many internal and external signals (cites).
 
 Here we extend recent advances in phylogenetic comparative methods
 (7--9) to test these predictions using data on stomatal closure kinetics
@@ -393,7 +394,7 @@ intensity caused developmental plasticity in stomatal density that, when
 crossed factorially with measurement light intensity, resulted in
 variation in fgmax. By measuring multiple individuals from multiple
 treatments across multiple species enabled us to estimate the effect of
-guard cell size and fsmax on stomatal kinetics and partition their
+guard cell size and \fgmax on stomatal kinetics and partition their
 significance within and among species.
 
 {[}not sure where this goes{]} many, large - slow because of large size,
@@ -457,9 +458,29 @@ wrong-way response?
   test if adaxial+abaxial is faster than abaxial alone
 \end{enumerate}
 
-CD WEibull in Woning et al
+Phenomenologically, the following equation describes how stomatal
+conductance responds to step changes in light intensity across dozens of
+plant species (2):
 
-g\_s = g\_f + (g\_i - g\_f) * exp(-(t/tau)\^{}lambda)
+\begin{equation}\phantomsection\label{eq-weibull}{
+  g_\text{sw} = g_\text{f} + (g_\text{i} - g_\text{f}) e^{-\left(\frac{t}{\tau}\right)^\lambda}.
+}\end{equation}
+
+In this equation, \gsw is stomatal conductance at time \(t\),
+\(g_\text{i}\) is the initial \gsw before the step change,
+\(g_\text{f}\) is the final \gsw after the step change, \(\tau\) is a
+time constant that describes how quickly stomata respond to the step
+change, and \(\lambda\) is a shape parameter that describes how the
+response rate changes over time. When \(\lambda = 1\), the response rate
+is constant over time and \(\tau\) represents the time required for
+\gsw to reach 36.8\% of the way between initial and final values. When
+\(\lambda > 1\), the response rate increases over time, and when
+\(\lambda < 1\), the response rate decreases over time. (2) refer to
+\(\lambda\) as a lag-time parameter because empirically \(\lambda > 1\).
+We find the same pattern for responses to a step change in VPD (see
+results) and therefore adopt their terminology. We refer to stomatal
+kinetic parameters \(\tau\) (time-constant) and \(\lambda\) (lag-time)
+henceforth.
 
 \subsection{Methods}\label{methods}
 
@@ -540,24 +561,6 @@ Species & TGRC accession & Latitude & Longitude & Elevation (mas)\\
 
 \end{longtable}
 
-\subsubsection{Hypothesis generation}\label{hypothesis-generation}
-
-The primary aims and \emph{a priori} hypotheses of this study are
-described in (11). The idea to use \gsw response curve to test
-hypotheses about which traits influence stomatal kinetics came after the
-data had been collected, but not yet analyzed. We started with an
-\emph{a priori} hypothesis that guard cell size would influence \(\tau\)
-based on a recent metaanalysis of stomatal responses to light (2) and we
-planned to compare relationships within and among species, as described
-in this paper. We made the decision to test for an association between
-fgmax and \(\tau\) after exploratory analyses revealed a potential
-association. Adding hypotheses after some results have been analyzed,
-also known as ``Hypothesizing After Results Known'' (HARKing), can lead
-to reports of spurious associations that are not repeatable in later
-studies (cite). Therefore, our conclusions about the effect of fgmax on
-stomatal kinetics should be interpreted with caution until they are
-replicated.
-
 \subsubsection{Plant growth conditions and light
 treatments}\label{plant-growth-conditions-and-light-treatments}
 
@@ -590,9 +593,122 @@ population to the sun or shade treatment during transplanting. The
 average daytime \ppfd{} was \ppfdqty{761} and \ppfdqty{115} for sun and
 shade treatments, respectively.
 
-\subsubsection{Stomatal kinetics}\label{stomatal-kinetics}
+\subsubsection{Stomatal responses to changing
+humidity}\label{stomatal-responses-to-changing-humidity}
 
-Equation from (2). Point out that tau matters most.
+We selected a fully expanded, unshaded leaf at least six leaves above
+the cotyledons during early vegetative growth. This typically meant that
+plants had grown in light treatments for \(\approx\) 4 weeks, ensuring
+they had time to sense and respond developmentally to the light
+intensity of the treatment rather than the seedling conditions (13). See
+(11) for further detail.
+
+To measure stomatal responses to a step change in humidity, we first
+acclimated the focal leaf to high humidity, rapidly decreased the
+humidity, and logged \gsw through time. We refer to this as a
+humidity-response curve. We measured humidity-response curves using a
+portable infrared gas analyzer (LI-6800PF, LI-COR Biosciences, Lincoln,
+Nebraska, USA). Light-acclimated plants were placed under LEDs dimmed to
+match their light treatment during gas exchange measurements. We
+estimated \gsw at ambient CO\(_2\) (\caequals{415}) and
+\tleafequals{25.0}.
+
+We collected four humidity-response curves per leaf, an amphi
+(untreated) curve and a pseudohypo (treated) curve at high
+light-intensity (\ppfdequals{2000}; 97.8:2.24 red:blue) and low
+light-intensity (\ppfdequals{150}; 87.0:13.0 red:blue). We always
+measured high light-intensity curves first because photosynthetic
+downregulation is faster than upregulation in these species.
+Pseudohypostomatous leaves are the same as the amphistomatous leaves
+except gas exchange through the upper (adaxial) surface blocked by a
+neutral density plastic (propafilm). Comparing amphi and pseudohypo
+curves on the same leaf enables us to test whether stomatal kinetics are
+different for ab- and adaxial stomata on the same leaf. To compensate
+for reduced transmission, we increased incident \ppfd{} for pseudohypo
+leaves by a factor 1/0.91, the inverse of the measured transmissivity of
+the propafilm. We also set the stomatal conductance ratio, for purposes
+of calculating boundary layer conductance, to 0 for pseudohypo leaves
+following manufacturer directions.
+
+To control for order effects, we alternated between starting with amphi
+or pseudohypo leaf measurements. We made measurements over two days. On
+the first day, we measured high and low light-intensity curves for
+either amphi or pseudohypo leaves; on the second day, we measured high
+and low light-intensity curves on the other leaf type. The irradiance of
+the light source in the pseudohypo leaf was higher because the propafilm
+reduces transmission.
+
+In all cases, we acclimated the focal leaf to high light
+(\ppfdequals{2000}) and high relative humidity (\rhequals{70}) until
+\gsw{} reachws its maximum. After that, we decreased \rh{} to
+\(\approx 10\%\) to induce rapid stomatal closure. All other
+environmental conditions in the leaf chamber remained the same. We
+started logging data after the transient ``wrong-way response''
+(citation) and continued logging data until \gsw{} reached its nadir. We
+then acclimated the leaf to low light (\ppfdequals{150}) and
+\rhequals{70} before inducing stomatal closure with low \rh{} and
+logging data as described above.
+
+\subsubsection{Hypothesis generation and
+testing}\label{hypothesis-generation-and-testing}
+
+The primary aims and \emph{a priori} hypotheses of this study are
+described in (11). The idea to use \gsw response curves to test
+hypotheses about which traits influence stomatal kinetics came after the
+data had been collected, but not yet analyzed. We started with two
+\emph{a priori} hypotheses based on a recent metaanalysis of stomatal
+responses to light (2). We hypothesized that 1) guard cell size would
+influence \(\tau\) and 2) that \(\tau\) would be greater on the
+abaxial-only leaves. We planned to compare relationships within and
+among populations using phylogenetic comparative methods. We made the
+decision to test for an association between \fgmax and \(\tau\) after
+exploratory analyses revealed a potential association. Adding hypotheses
+after some results have been analyzed, also known as ``Hypothesizing
+After Results Known'' (HARKing), can lead to reports of spurious
+associations that are not repeatable in later studies (14, 15).
+Therefore, our conclusions about the effect of \fgmax on stomatal
+kinetics should be interpreted with caution until they are replicated.
+
+We estimated \(\tau\) and \(\lambda\) for each response curve by fitting
+Equation~\ref{eq-weibull} to a time-series of \gsw values using Bayesian
+nonlinear regression. WORKING HERE
+
+We fit multiresponse Bayesian mixed effects models with phylogenetically
+structured random effects to answer the following core questions:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Are \gcl and \fgmax positively associated with \(\tau\)?
+\item
+  At what biological levels of organization do \gcl and \fgmax influence
+  \(\tau\)?
+\item
+  Are abaxial-only stomatal responses slower than whole leaf stomatal
+  responses?
+\end{enumerate}
+
+SCRAPS THAT I NEED TO WEAVE INTO MS
+
+We used a combination of model selection and parameter estimation to
+evaluate these hypotheses. All statistical models included fixed effects
+of manipulative treatments: growth light intensity (sun and shade);
+measurement light intensity (high and low); and curve type
+(amphistomatous and pseudohypostomatous). All models also included
+population as a phylogenetically structured random effect.
+
+We accounted for uncertainty in \(\tau\) and \(\lambda\) using the
+standard deviation of the posterior distribution of each estimate (see
+above).
+
+We used the RAxML whole-transcriptome concatenated phylogeny based on
+2,745 100-kb genomic windows from (12). Two of our populations were not
+in this tree. We used accession LA1044 in place of LA3909, two
+populations of \emph{S. galapagense}; LA0750 was added as sister to
+LA0716, two closely related populations of \emph{S. pennellii}. The node
+separating LA0750 from LA0716 was placed half-way between the next
+deepest node.
 
 \subsubsection{inferring different levels of
 effects??}\label{inferring-different-levels-of-effects}
@@ -610,7 +726,7 @@ effects of \fgmax and \gcl on kinetic parameters using linear multiple
 regression that simultaneously accounts for phylogenetic and treatment
 effects. We used the leave-one-out cross-validation information
 criterion (LOOIC) to compare the fit of models using the \emph{R}
-package \textbf{loo} version 2.8.0 (13) to calculate LOOIC values. We
+package \textbf{loo} version 2.9.0 (16) to calculate LOOIC values. We
 compared models with all permutations of \fgmax and \gcl influencing
 \(\lambda\) and \(\tau\). We selected the model with the lowest LOOIC
 value (\textbf{?@tbl-comparison}) to generate posterior predictions for
@@ -629,7 +745,7 @@ between-individual, and within-individual levels. The phylogenetic
 variance component quantifies trait evolution between populations
 congruent with the phylogenetic relationships, whereas the population
 component quantifies variance among populations independent of
-phylogenetic relationships (14, 15). The between- and within-individual
+phylogenetic relationships (17, 18). The between- and within-individual
 variance components quantify variance among individuals within the same
 population and treatment. The within-individual component was estimated
 from repeated measures of the same leaf at different light intensities.
@@ -638,7 +754,7 @@ length with our study design because we only measured average guard cell
 length once per leaf. We estimated the between-individual variance from
 the residual variance, which also includes measurement error. The
 phylogenetic heritability is equivalent to the phylogenetic variance
-component and is estimated following (14); (15) as:
+component and is estimated following (17); (18) as:
 
 \[h^2_{\mathrm{phy}} = \frac{\sigma^2_\mathrm{phy}}{\sigma^2_\mathrm{phy} + \sigma^2_\mathrm{pop} + \sigma^2_\mathrm{between} + \sigma^2_\mathrm{within}},\]
 
@@ -906,35 +1022,7 @@ $\Delta \text{LOOIC}$ & \fgmax & \gcl & \fgmax & \gcl\\
 
 \end{table}%
 
-\subsection{MANUSCRAPS}\label{manuscraps}
-
-Note: this theory did not really pan out. It did not come up with models
-that really fit better than the CD Weibull model and they included an
-extra parameter. Therefore, I am tabling this for now and trying
-OnGuard3 instead.
-
-\subsubsection{Theory}\label{theory}
-
-Our goal here is derive equations that integrate the effects of guard
-cell size and aperture on stomatal kinetics. A fully mechanistic model
-is beyond the scope of our goals here. Instead, we use phenomenological
-equations that adequately capture empirical patterns. There are three
-main assumptions of our model. First, we assume linear relaxation
-kinetics for guard cell turgor pressure (\(P\)):
-
-\[ \frac{d P}{d t} = \frac{P^* - P}{\tau}.\] In this differential
-equation, \(P^*\) is the equilibrium turgor pressure and \(\tau\) is a
-time constant that determines the speed of relaxation. Solving this
-equation gives:
-
-\[ P(t) = P^* + [P(0) - P^*] e^{-t/\tau}, \] where \(P(0)\) is the
-initial turgor pressure at time \(t=0\).
-
-The rate of relaxation is determined by the surface area to volume
-ratio. Assume constant transport per surface area. Surface area
-determined by geometry.
-
-What is eqn for this?
+\subsection{References}\label{references}
 
 \phantomsection\label{refs}
 \begin{CSLReferences}{0}{1}
@@ -1026,22 +1114,43 @@ amphistomatous leaves}. (2025).}
 reveals three sources of adaptive variation during a rapid radiation}.
 \emph{PLOS Biology} \textbf{14}, e1002379 (2016).}
 
-\bibitem[\citeproctext]{ref-vehtari_practical_2017}
+\bibitem[\citeproctext]{ref-schoch_dependence_1980}
 \CSLLeftMargin{13. }%
+\CSLRightInline{P.-G. Schoch, C. Zinsou, M. Sibi,
+\href{https://doi.org/10.1093/jxb/31.5.1211}{Dependence of the stomatal
+index on environmental factors during stomatal differentiation in leaves
+of \emph{{Vigna} sinensis} {L}.: 1. {Effect} of light intensity}.
+\emph{Journal of Experimental Botany} \textbf{31}, 1211--1216 (1980).}
+
+\bibitem[\citeproctext]{ref-kerr_harking_1998}
+\CSLLeftMargin{14. }%
+\CSLRightInline{N. L. Kerr,
+\href{https://doi.org/10.1207/s15327957pspr0203_4}{{HARKing}:
+{Hypothesizing} {After} the {Results} are {Known}}. \emph{Personality
+and Social Psychology Review} \textbf{2}, 196--217 (1998).}
+
+\bibitem[\citeproctext]{ref-smaldino_natural_2016}
+\CSLLeftMargin{15. }%
+\CSLRightInline{P. E. Smaldino, R. McElreath,
+\href{https://doi.org/10.1098/rsos.160384}{The natural selection of bad
+science}. \emph{Royal Society Open Science} \textbf{3}, 160384 (2016).}
+
+\bibitem[\citeproctext]{ref-vehtari_practical_2017}
+\CSLLeftMargin{16. }%
 \CSLRightInline{A. Vehtari, A. Gelman, J. Gabry,
 \href{https://doi.org/10.1007/s11222-016-9696-4}{Practical {Bayesian}
 model evaluation using leave-one-out cross-validation and {WAIC}}.
 \emph{Statistics and Computing} \textbf{27}, 1413--1432 (2017).}
 
 \bibitem[\citeproctext]{ref-lynch_methods_1991}
-\CSLLeftMargin{14. }%
+\CSLLeftMargin{17. }%
 \CSLRightInline{M. Lynch,
 \href{https://doi.org/10.1111/j.1558-5646.1991.tb04375.x}{Methods for
 the analysis of comparative data in evolutionary biology}.
 \emph{Evolution} \textbf{45}, 1065--1080 (1991).}
 
 \bibitem[\citeproctext]{ref-garamszegi_general_2014}
-\CSLLeftMargin{15. }%
+\CSLLeftMargin{18. }%
 \CSLRightInline{P. De Villemereuil, S. Nakagawa,
 {``\href{https://doi.org/10.1007/978-3-662-43550-2_11}{General
 {Quantitative} {Genetic} {Methods} for {Comparative} {Biology}}''} in
@@ -1050,6 +1159,48 @@ the analysis of comparative data in evolutionary biology}.
 (Springer Berlin Heidelberg, 2014), pp. 287--303.}
 
 \end{CSLReferences}
+
+\newpage{}
+
+\section{Supplementary Materials}\label{supplementary-materials}
+
+\renewcommand{\thefigure}{S\arabic{figure}}
+\renewcommand{\thetable}{S\arabic{table}}
+\renewcommand{\theequation}{S\arabic{equation}}
+\setcounter{figure}{0}
+\setcounter{table}{0}
+\setcounter{equation}{0}
+\setcounter{page}{1}
+
+\subsection{MANUSCRAPS}\label{manuscraps}
+
+Note: this theory did not really pan out. It did not come up with models
+that really fit better than the CD Weibull model and they included an
+extra parameter. Therefore, I am tabling this for now and trying
+OnGuard3 instead.
+
+\subsubsection{Theory}\label{theory}
+
+Our goal here is derive equations that integrate the effects of guard
+cell size and aperture on stomatal kinetics. A fully mechanistic model
+is beyond the scope of our goals here. Instead, we use phenomenological
+equations that adequately capture empirical patterns. There are three
+main assumptions of our model. First, we assume linear relaxation
+kinetics for guard cell turgor pressure (\(P\)):
+
+\[ \frac{d P}{d t} = \frac{P^* - P}{\tau}.\] In this differential
+equation, \(P^*\) is the equilibrium turgor pressure and \(\tau\) is a
+time constant that determines the speed of relaxation. Solving this
+equation gives:
+
+\[ P(t) = P^* + [P(0) - P^*] e^{-t/\tau}, \] where \(P(0)\) is the
+initial turgor pressure at time \(t=0\).
+
+The rate of relaxation is determined by the surface area to volume
+ratio. Assume constant transport per surface area. Surface area
+determined by geometry.
+
+What is eqn for this?
 
 
 

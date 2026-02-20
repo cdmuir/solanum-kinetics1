@@ -167,6 +167,18 @@ ppfd_shade = d1 |>
   pull(value) |>
   prettyNum(digits = 3)
 
+# data on chamber light conditions
+percent_red = rh_curves |>
+  mutate(p_red = Q_red / Q) |>
+  summarize(p_red = mean(p_red, na.rm = TRUE),
+            .by = c(acc_id, light_intensity)) |>
+  summarize(p_red = mean(p_red, na.rm = TRUE), .by = light_intensity) |>
+  pivot_wider(names_from = light_intensity, values_from = p_red)
+
+p_red_high = format(signif(100 * percent_red$`2000`, 3), nsmall = 1)
+p_blue_high = format(signif(100 * (1 - percent_red$`2000`), 3), nsmall = 1)
+p_red_low = format(signif(100 * percent_red$`150`, 3), nsmall = 1)
+p_blue_low = format(signif(100 * (1 - percent_red$`150`), 3), nsmall = 1)
 
 # Results
 fit = read_rds("../objects/best_model.rds")
@@ -215,7 +227,7 @@ Westoby et al (2023) (10.1111/1365-2745.14150) is similar to Halliwell. Maybe an
 
 ## Abstract
 
-Guard cell size and stomatal density vary over X and X orders of magnitude among extant vascular land plants, yet the adaptive significance of much of this variation remains unclear. The evolution of guard cell size in particular is poorly understood and may even be constrained by nonadaptive features like genome size. One hypothesis is that natural selection may favor smaller guard cells to increase the rate at which stomatal conductance responds to fluctuating environmental conditions. A related hypothesis is that operational stomatal conductance (gop) is often $\approx 25\%$ of its theoretical maximum (gmax) because at this stomatal aperture, guard cell volume is poised to change rapidly with changes in turgor pressure. The support for both hypothesis is limited and mixed, in part because they have not been tested together, even though both guard cell size and the ratio of gop to gmax (gop:gmax) should influence stomatal kinetics. We measured stomatal closure kinetics in response to an abrupt increase in vapor pressure deficit (VPD) among 29 diverse wild tomato populations in the genus \textit{Solanum}. Both smaller guard cell size and lower gop:gmax were associated with faster stomatal closure kinetics, but at different levels of biological organization. Guard cell size explained X% of the variance in stomatal kinetics among populations, whereas gop:gmax explained X% of the variance among individuals within populations. [neither result would have been supported if analyzed in isolation - is this true?]. We conclude that guard cell size may respond to selection on stomatal kinetics over evolutionary time, but actual kinetics are modulated by a tradeoff between maximizing gop and minimizing the time required for stomatal closure. Putting these hypotheses together with stabilizing selection on gop may explain why stomatal size and density negatively covary among species.
+Guard cell size and stomatal density vary over X and X orders of magnitude among extant vascular land plants, yet the adaptive significance of much of this variation remains unclear. The evolution of guard cell size in particular is poorly understood and may even be constrained by nonadaptive features like genome size. One hypothesis is that natural selection may favor smaller guard cells to increase the rate at which stomatal conductance responds to fluctuating environmental conditions. A related hypothesis is that operational stomatal conductance (gop) is often $\approx 25\%$ of its theoretical maximum (gmax) because at this stomatal aperture, guard cell volume is poised to change rapidly with changes in turgor pressure. The support for both hypothesis is limited and mixed, in part because they have not been tested together, even though both guard cell size and the ratio of gop to gmax (gop:gmax) should influence stomatal kinetics. We measured stomatal closure kinetics in response to an abrupt increase in vapor pressure deficit (VPD) among `r n_acc` diverse wild tomato populations in the genus \textit{Solanum}. Both smaller guard cell size and lower gop:gmax were associated with faster stomatal closure kinetics, but at different levels of biological organization. Guard cell size explained X% of the variance in stomatal kinetics among populations, whereas gop:gmax explained X% of the variance among individuals within populations. [neither result would have been supported if analyzed in isolation - is this true?]. We conclude that guard cell size may respond to selection on stomatal kinetics over evolutionary time, but actual kinetics are modulated by a tradeoff between maximizing gop and minimizing the time required for stomatal closure. Putting these hypotheses together with stabilizing selection on gop may explain why stomatal size and density negatively covary among species.
 
 ## Introduction
 
@@ -227,11 +239,11 @@ It might seem that natural selection should favor faster stomatal responses to g
 
 What traits respond to selection on stomatal kinetics? We consider two interconnected hypotheses that have thus far been treated in isolation. The first hypothesis is that smaller guard cells open and close faster because of their intrinsically greater surface area to volume ration [@drake_smaller_2013; @woning_revisiting_2026]. For approximately cylindrical cell geometries, like that found in guard cells (citation on guard cell shape?), surface area increases linearly with radius, whereas volume increases in proportion to the radius squared. Consequently, larger guard cells will require more time to pump enough ions (wc?) to achieve a given change in turgor pressure and, hence, stomatal pore aperture. A plant with large guard cells can partially compensate for this geometric constraint by increasing the density of transporters (wc?) in the guard cell membrane [@raven_speedy_2014] (haworth et al 2023 have some cites about this). However, this may be limited by the available membrane area and/or energetic costs of maintaining high transporter densities. Empirical support for the hypothesis that smaller guard cells are faster is mixed. Some studies have found negative correlations between guard cell size and stomatal response rate [@drake_smaller_2013] (cites), whereas others have found no relationship (cites). (apparently hetherington and woodward 2003 mention size-speed relationship too - check that. Lawson and Blatt 2014 throw shade on size being deterministic)
 
-One factor that might complicate the relationship between size and speed is aperture. Stomatal aperture can vary from near 0 when guard cell turgor pressure is low and asymptotically approach gmax as guard cell turgor pressure approaches $\infty$ (Figure 1X). The nonlinear relationship between guard cell turgor and pore aperture implies that if rate of change in turgor change is constant ($\dv{P}{t} = C$), the rate of change in aperture, and hence stomatal conductance, will vary depending on the initial aperture. When initial aperture is high, stomatal conductance will respond more slowly than when initial aperture is low. Since we generally do not observe individual stomatal aperture, extending this idea to macroscale phenomena requires scaling by stomatal density. We will use the term "fraction of anatomical maximum stomatal conductance", symbolized as fgmax. This value should be proportional to the average aperture divided by its maximum aperture for any arbitrary stomatal density [could a figure show how this interacts with stomatal density?]. Leaves operating at fgmax closer to unity will, all else being equal, will be slower to respond than leaves operating with a fgmax close to zero, independent of stomatal density. @franks_physiological_2012 hypothesized that selection on stomatal density would maintain typical operational stomatal conductance (gop) relative to gmax at a sufficiently low value that stomatal conductance would be sensitive to relatively small changes in guard cell turgor pressure. Consistent will this hypothesis, gop:gmax is often near 0.25 [@mcelwain_using_2016; @murray_consistent_2020], well below fgmax = 1, and in a range where \gsw would be responsive to small changes in guard cell turgor pressure.
+One factor that might complicate the relationship between size and speed is aperture. Stomatal aperture can vary from near 0 when guard cell turgor pressure is low and asymptotically approach gmax as guard cell turgor pressure approaches $\infty$ (Figure 1X). The nonlinear relationship between guard cell turgor and pore aperture implies that if rate of change in turgor change is constant ($\dv{P}{t} = C$), the rate of change in aperture, and hence stomatal conductance, will vary depending on the initial aperture. When initial aperture is high, stomatal conductance will respond more slowly than when initial aperture is low. Since we generally do not observe individual stomatal aperture, extending this idea to macroscale phenomena requires scaling by stomatal density. We will use the term "fraction of anatomical maximum stomatal conductance", symbolized as \fgmax. This value should be proportional to the average aperture divided by its maximum aperture for any arbitrary stomatal density [could a figure show how this interacts with stomatal density?]. Leaves operating at fgmax closer to unity will, all else being equal, will be slower to respond than leaves operating with a \fgmax close to zero, independent of stomatal density. @franks_physiological_2012 hypothesized that selection on stomatal density would maintain typical operational stomatal conductance (gop) relative to gmax at a sufficiently low value that stomatal conductance would be sensitive to relatively small changes in guard cell turgor pressure. Consistent will this hypothesis, gop:gmax is often near 0.25 [@mcelwain_using_2016; @murray_consistent_2020], well below $f_\text{gmax} = 1$, and in a range where \gsw would be responsive to small changes in guard cell turgor pressure.
 
-Putting these two hypotheses together, we predict that both guard cell size and fgmax will influence stomatal kinetics, but possibly at different scales of biological organization. Guard cell size tends to vary less than stomatal density or aperture at many biological scales. For example, on a mature leaf, guard cell size is essentially fixed other than small changes in volume caused by turgor pressure (cite). Compared to stomatal density, guard cell size is also less developmentally plastic varies less genetically within species (cites). If there is relatively little plastic or genetic variation among individuals within a species, then most of the variance in stomatal kinetics within species cannot be explained by variation in stomatal size. In contrast, fgmax varies immensely within and among individuals because stomatal aperture responds dynamically over the day and in response to environmental variation. Within a single leaf, fgmax will change over the course of a day in response to light signalling, change in VPD, and starch accumulation (or sink strength? cite). During the life a leaf, fgmax will change in response to long-term stresses such as drought. Because guard cell size and aperture typically vary at different levels of biological organization, we predict that guard cell size likely explains more variation in stomatal kinetics among species, whereas fgmax will explain more variation within species. Within species variation can arise from either genetic or environmental differences between individuals. Neither of these traits along will determine all or even most of the variance in stomatal kinetics, which is a complex response to many internal and external signals (cites).
+Putting these two hypotheses together, we predict that both guard cell size and fgmax will influence stomatal kinetics, but possibly at different scales of biological organization. Guard cell size tends to vary less than stomatal density or aperture at many biological scales. For example, on a mature leaf, guard cell size is essentially fixed other than small changes in volume caused by turgor pressure (cite). Compared to stomatal density, guard cell size is also less developmentally plastic varies less genetically within species (cites). If there is relatively little plastic or genetic variation among individuals within a species, then most of the variance in stomatal kinetics within species cannot be explained by variation in stomatal size. In contrast, \fgmax varies immensely within and among individuals because stomatal aperture responds dynamically over the day and in response to environmental variation. Within a single leaf, \fgmax will change over the course of a day in response to light signalling, change in VPD, and starch accumulation (or sink strength? cite). During the life a leaf, \fgmax will change in response to long-term stresses such as drought. Because guard cell size and aperture typically vary at different levels of biological organization, we predict that guard cell size likely explains more variation in stomatal kinetics among species, whereas \fgmax will explain more variation within species. Within species variation can arise from either genetic or environmental differences between individuals. Neither of these traits along will determine all or even most of the variance in stomatal kinetics, which is a complex response to many internal and external signals (cites).
 
-Here we extend recent advances in phylogenetic comparative methods [@westoby_phylogenetically_2023; @muir_how_2023; @halliwell_multiresponse_2025] to test these predictions using data on stomatal closure kinetics in response to an abrupt increase in VPD among `r n_acc` diverse wild tomato populations in the genus *Solanum*. We leveraged natural variation in guard cell size among and within species to test whether leaves with smaller guard cells close faster. We induced variation in fgmax through a combination of growth and measurement light intensity. Growth light intensity caused developmental plasticity in stomatal density that, when crossed factorially with measurement light intensity, resulted in variation in fgmax. By measuring multiple individuals from multiple treatments across multiple species enabled us to estimate the effect of guard cell size and fsmax on stomatal kinetics and partition their significance within and among species.
+Here we extend recent advances in phylogenetic comparative methods [@westoby_phylogenetically_2023; @muir_how_2023; @halliwell_multiresponse_2025] to test these predictions using data on stomatal closure kinetics in response to an abrupt increase in VPD among `r n_acc` diverse wild tomato populations in the genus *Solanum*. We leveraged natural variation in guard cell size among and within species to test whether leaves with smaller guard cells close faster. We induced variation in fgmax through a combination of growth and measurement light intensity. Growth light intensity caused developmental plasticity in stomatal density that, when crossed factorially with measurement light intensity, resulted in variation in fgmax. By measuring multiple individuals from multiple treatments across multiple species enabled us to estimate the effect of guard cell size and \fgmax on stomatal kinetics and partition their significance within and among species.
 
 
 
@@ -288,9 +300,13 @@ What we did:\
 3.  test for effect of size
 4.  test if adaxial+abaxial is faster than abaxial alone
 
-CD WEibull in Woning et al
+Phenomenologically, the following equation describes how stomatal conductance responds to step changes in light intensity across dozens of plant species [@woning_revisiting_2026]:
 
-g_s = g_f + (g_i - g_f) * exp(-(t/tau)^lambda)
+$$
+  g_\text{sw} = g_\text{f} + (g_\text{i} - g_\text{f}) e^{-\left(\frac{t}{\tau}\right)^\lambda}.
+$$ {#eq-weibull}
+
+In this equation, \gsw is stomatal conductance at time $t$, $g_\text{i}$ is the initial \gsw before the step change, $g_\text{f}$ is the final \gsw after the step change, $\tau$ is a time constant that describes how quickly stomata respond to the step change, and $\lambda$ is a shape parameter that describes how the response rate changes over time. When $\lambda = 1$, the response rate is constant over time and $\tau$ represents the time required for \gsw to reach `r formatC(100 * exp(-1), 3)`% of the way between initial and final values. When $\lambda > 1$, the response rate increases over time, and when $\lambda < 1$, the response rate decreases over time. @woning_revisiting_2026 refer to $\lambda$ as a lag-time parameter because empirically $\lambda > 1$. We find the same pattern for responses to a step change in VPD (see results) and therefore adopt their terminology. We refer to stomatal kinetic parameters $\tau$ (time-constant) and $\lambda$ (lag-time) henceforth.
 
 ## Methods
 
@@ -326,11 +342,29 @@ accession_info |>
 
 ```
 
+### Plant growth conditions and light treatments
+
+A thorough description of plant growth conditions can be found @muir_plasticity_2025, therefore we summarize the most important information here. Seeds provided by the Tomato Genetics Resource Center germinated on moist paper in plastic boxes after soaking for 30-60 minutes in a 50% (volume per volume) solution of household bleach and water, followed by a thorough rinse. We transferred seedlings to cell-pack flats containing Pro-Mix BX potting mix (Premier Tech, Rivière-du-Loup, Quebec, Canada) once cotyledons fully emerged, typically within 1-2 weeks of sowing. We grew seeds and seedlings for both sun and shade treatments under the same environmental conditions (12:12 h, `r germ_temp_day`:$\SI{`r germ_temp_night`}{\degreeCelsius}$, `r germ_rh_day`:`r germ_rh_night` RH day:night cycle). LED light provided $\mathrm{PPFD} = \SI{`r germ_ppfd`}{\micro\mole\per\meter\squared\per\second}$ (Fluence RAZRx, Austin, Texas, USA) during the germination and seedling stages.
+
+Immediately prior to starting growth light intensity treatments (sun and shade), we transplanted seedlings to 3.78 L plastic pots containing 60% Pro-Mix BX potting mix, 20% coral sand (Pro-Pak, Honolulu, Hawaiʻi, USA), and 20% cinders (Niu Nursery, Honolulu, Hawaiʻi, USA) withslow release NPK fertilizer following manufacturer instructions (Osmocote Smart-Release Plant Food Flower & Vegetable, The Scotts Company, Marysville, Ohio, USA). Percentage composition is on a volume basis. We watered to field capacity three times per week to prevent drought stress. Seedlings were randomly assigned in alternating order within population to the sun or shade treatment during transplanting. The average daytime \ppfd{} was \ppfdqty{`r ppfd_sun`} and \ppfdqty{`r ppfd_shade`} for sun and shade treatments, respectively. 
+
+### Humidity response curves
+
+We selected a fully expanded, unshaded leaf at least six leaves above the cotyledons during early vegetative growth. This typically meant that plants had grown in light treatments for $\approx$ 4 weeks, ensuring they had time to sense and respond developmentally to the light intensity of the treatment rather than the seedling conditions [@schoch_dependence_1980]. See @muir_plasticity_2025 for further detail.
+
+To measure stomatal responses to a step change in humidity, we first acclimated the focal leaf to high humidity, rapidly decreased the humidity, and logged \gsw through time. We refer to this as a humidity-response curve. We measured humidity-response curves using a portable infrared gas analyzer (LI-6800PF, LI-COR Biosciences, Lincoln, Nebraska, USA). Light-acclimated plants were placed under LEDs dimmed to match their light treatment during gas exchange measurements. We estimated \gsw at ambient CO$_2$ (\caequals{415}) and \tleafequals{25.0}. 
+
+We collected four humidity-response curves per leaf, an amphi (untreated) curve and a pseudohypo (treated) curve at high light-intensity (\ppfdequals{2000}; `r p_red_high`:`r p_blue_high` red:blue) and low light-intensity (\ppfdequals{150}; `r p_red_low`:`r p_blue_low` red:blue). We always measured high light-intensity curves first because photosynthetic downregulation is faster than upregulation in these species. Pseudohypostomatous leaves are the same as the amphistomatous leaves except gas exchange through the upper (adaxial) surface blocked by a neutral density plastic (propafilm). Comparing amphi and pseudohypo curves on the same leaf enables us to test whether stomatal kinetics are different for ab- and adaxial stomata on the same leaf. To compensate for reduced transmission, we increased incident \ppfd{} for pseudohypo leaves by a factor 1/0.91, the inverse of the measured transmissivity of the propafilm. We also set the stomatal conductance ratio, for purposes of calculating boundary layer conductance, to 0 for pseudohypo leaves following manufacturer directions.
+
+To control for order effects, we alternated between starting with amphi or pseudohypo leaf measurements. We made measurements over two days. On the first day, we measured high and low light-intensity curves for either amphi or pseudohypo leaves; on the second day, we measured high and low light-intensity curves on the other leaf type.  The irradiance of the light source in the pseudohypo leaf was higher because the propafilm reduces transmission. 
+
+In all cases, we acclimated the focal leaf to high light (\ppfdequals{2000}) and high relative humidity (\rhequals{70}) until \gsw{} reachws its maximum. After that, we decreased \rh{} to $\approx 10\%$ to induce rapid stomatal closure. All other environmental conditions in the leaf chamber remained the same. We started logging data after the transient "wrong-way response" (citation) and continued logging data until \gsw{} reached its nadir. We then acclimated the leaf to low light (\ppfdequals{150}) and \rhequals{70} before inducing stomatal closure with low \rh{} and logging data as described above.
+
 ### Hypothesis generation and testing
 
 The primary aims and *a priori* hypotheses of this study are described in @muir_plasticity_2025. The idea to use \gsw response curves to test hypotheses about which traits influence stomatal kinetics came after the data had been collected, but not yet analyzed. We started with two *a priori* hypotheses based on a recent metaanalysis of stomatal responses to light [@woning_revisiting_2026]. We hypothesized that 1) guard cell size would influence $\tau$ and 2) that $\tau$ would be greater on the abaxial-only leaves. We planned to compare relationships within and among populations using phylogenetic comparative methods. We made the decision to test for an association between \fgmax and $\tau$ after exploratory analyses revealed a potential association. Adding hypotheses after some results have been analyzed, also known as "Hypothesizing After Results Known" (HARKing), can lead to reports of spurious associations that are not repeatable in later studies [@kerr_harking_1998; @smaldino_natural_2016]. Therefore, our conclusions about the effect of \fgmax on stomatal kinetics should be interpreted with caution until they are replicated.
 
-NEED TO MENTION ESTIMATE OF TAU AND LAMBDA PER CURVE
+We estimated $\tau$ and $\lambda$ for each response curve by fitting @eq-weibull to a time-series of \gsw values using Bayesian nonlinear regression. WORKING HERE
 
 We fit multiresponse Bayesian mixed effects models with phylogenetically structured random effects to answer the following core questions:
 
@@ -345,19 +379,6 @@ We used a combination of model selection and parameter estimation to evaluate th
 We accounted for uncertainty in $\tau$ and $\lambda$ using the standard deviation of the posterior distribution of each estimate (see above). 
 
 We used the RAxML whole-transcriptome concatenated phylogeny based on 2,745 100-kb genomic windows from @pease_phylogenomics_2016. Two of our populations were not in this tree. We used accession LA1044 in place of LA3909, two populations of *S. galapagense*; LA0750 was added as sister to LA0716, two closely related populations of *S. pennellii*. The node separating LA0750 from LA0716 was placed half-way between the next deepest node. 
-
-### Plant growth conditions and light treatments
-
-A thorough description of plant growth conditions can be found @muir_plasticity_2025, therefore we summarize the most important information here. Seeds provided by the Tomato Genetics Resource Center germinated on moist paper in plastic boxes after soaking for 30-60 minutes in a 50% (volume per volume) solution of household bleach and water, followed by a thorough rinse. We transferred seedlings to cell-pack flats containing Pro-Mix BX potting mix (Premier Tech, Rivière-du-Loup, Quebec, Canada) once cotyledons fully emerged, typically within 1-2 weeks of sowing. We grew seeds and seedlings for both sun and shade treatments under the same environmental conditions (12:12 h, `r germ_temp_day`:$\SI{`r germ_temp_night`}{\degreeCelsius}$, `r germ_rh_day`:`r germ_rh_night` RH day:night cycle). LED light provided $\mathrm{PPFD} = \SI{`r germ_ppfd`}{\micro\mole\per\meter\squared\per\second}$ (Fluence RAZRx, Austin, Texas, USA) during the germination and seedling stages.
-
-Immediately prior to starting growth light intensity treatments (sun and shade), we transplanted seedlings to 3.78 L plastic pots containing 60% Pro-Mix BX potting mix, 20% coral sand (Pro-Pak, Honolulu, Hawaiʻi, USA), and 20% cinders (Niu Nursery, Honolulu, Hawaiʻi, USA) withslow release NPK fertilizer following manufacturer instructions (Osmocote Smart-Release Plant Food Flower & Vegetable, The Scotts Company, Marysville, Ohio, USA). Percentage composition is on a volume basis. We watered to field capacity three times per week to prevent drought stress. Seedlings were randomly assigned in alternating order within population to the sun or shade treatment during transplanting. The average daytime \ppfd{} was \ppfdqty{`r ppfd_sun`} and \ppfdqty{`r ppfd_shade`} for sun and shade treatments, respectively. 
-
-
-### Stomatal kinetics
-
-We selected a fully expanded, unshaded leaf at least six leaves above the cotyledons during early vegetative growth. This typically meant that plants had grown in light treatments for $\approx$ 4 weeks, ensuring they had time to sense and respond developmentally to the light intensity of the treatment rather than the seedling conditions [@schoch_dependence_1980]. See @muir_plasticity_2025 for further detail.
-
-Equation from @woning_revisiting_2026. Point out that tau matters most.
 
 ### inferring different levels of effects??
 
@@ -604,6 +625,25 @@ kbl(
 ) |>
   add_header_above(c(" " = 1, "$\\\\lambda$" = 2, "$\\\\tau$" = 2), escape = FALSE) |>
   kable_styling(latex_options = c("hold_position", "striped"))
+```
+
+## References
+
+::: {#refs}
+:::
+
+{{< pagebreak >}}
+
+# Supplementary Materials
+
+```{=latex}
+\renewcommand{\thefigure}{S\arabic{figure}}
+\renewcommand{\thetable}{S\arabic{table}}
+\renewcommand{\theequation}{S\arabic{equation}}
+\setcounter{figure}{0}
+\setcounter{table}{0}
+\setcounter{equation}{0}
+\setcounter{page}{1}
 ```
 
 ## MANUSCRAPS
