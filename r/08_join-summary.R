@@ -3,12 +3,13 @@ source("r/header.R")
 
 pars_summary = read_rds("objects/pars-summary.rds") |>
   filter(
-    variable %in% c("ginit", "b_logtau_Intercept", "b_loglambda_Intercept"),
+    variable %in% c("ginit", "gfinal", "b_logtau_Intercept", "b_loglambda_Intercept"),
     rhat < convergence_criteria$rhat_max,
     ess_bulk > convergence_criteria$ess_min
   ) |>
   mutate(
     variable = case_when(
+      variable == "gfinal" ~ "gfinal",
       variable == "ginit" ~ "ginit",
       variable == "b_logtau_Intercept" ~ "logtau",
       variable == "b_loglambda_Intercept" ~ "loglambda"

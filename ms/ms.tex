@@ -1,4 +1,5 @@
 % Options for packages loaded elsewhere
+% Options for packages loaded elsewhere
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
 \PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
@@ -7,21 +8,22 @@
   letterpaper,
   DIV=11,
   numbers=noendperiod]{scrartcl}
-
+\usepackage{xcolor}
 \usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
 \usepackage{iftex}
 \ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
 \else % if luatex or xetex
-  \usepackage{unicode-math}
+  \usepackage{unicode-math} % this also loads fontspec
   \defaultfontfeatures{Scale=MatchLowercase}
   \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
 \fi
 \usepackage{lmodern}
-\ifPDFTeX\else  
-    % xetex/luatex font selection
+\ifPDFTeX\else
+  % xetex/luatex font selection
   \setmainfont[]{Times New Roman}
 \fi
 % Use upquote if available, for straight quotes in verbatim environments
@@ -40,22 +42,32 @@
 }{% if KOMA class
   \KOMAoptions{parskip=half}}
 \makeatother
-\usepackage{xcolor}
-\setlength{\emergencystretch}{3em} % prevent overfull lines
-\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
 % Make \paragraph and \subparagraph free-standing
+\makeatletter
 \ifx\paragraph\undefined\else
   \let\oldparagraph\paragraph
-  \renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+  \renewcommand{\paragraph}{
+    \@ifstar
+      \xxxParagraphStar
+      \xxxParagraphNoStar
+  }
+  \newcommand{\xxxParagraphStar}[1]{\oldparagraph*{#1}\mbox{}}
+  \newcommand{\xxxParagraphNoStar}[1]{\oldparagraph{#1}\mbox{}}
 \fi
 \ifx\subparagraph\undefined\else
   \let\oldsubparagraph\subparagraph
-  \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+  \renewcommand{\subparagraph}{
+    \@ifstar
+      \xxxSubParagraphStar
+      \xxxSubParagraphNoStar
+  }
+  \newcommand{\xxxSubParagraphStar}[1]{\oldsubparagraph*{#1}\mbox{}}
+  \newcommand{\xxxSubParagraphNoStar}[1]{\oldsubparagraph{#1}\mbox{}}
 \fi
+\makeatother
 
 
-\providecommand{\tightlist}{%
-  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}\usepackage{longtable,booktabs,array}
+\usepackage{longtable,booktabs,array}
 \usepackage{calc} % for calculating minipage widths
 % Correct order of tables after \paragraph or \subparagraph
 \usepackage{etoolbox}
@@ -67,17 +79,21 @@
 \makesavenoteenv{longtable}
 \usepackage{graphicx}
 \makeatletter
-\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
-\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
-\makeatother
-% Scale images if necessary, so that they will not overflow the page
-% margins by default, and it is still possible to overwrite the defaults
-% using explicit options in \includegraphics[width, height, ...]{}
-\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
 % Set default figure placement to htbp
-\makeatletter
 \def\fps@figure{htbp}
 \makeatother
+
+
 % definitions for citeproc citations
 \NewDocumentCommand\citeproctext{}{}
 \NewDocumentCommand\citeproc{mm}{%
@@ -111,6 +127,18 @@
 \newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{\strut#1\strut}}
 \newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{\strut#1\strut}}
 \newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
+
+
+
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+
+
+ 
+
 
 \usepackage{booktabs}
 \usepackage{longtable}
@@ -197,13 +225,9 @@
 \@ifpackageloaded{caption}{}{\usepackage{caption}}
 \@ifpackageloaded{subcaption}{}{\usepackage{subcaption}}
 \makeatother
-\ifLuaTeX
-  \usepackage{selnolig}  % disable illegal ligatures
-\fi
 \usepackage{bookmark}
-
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
-\urlstyle{same} % disable monospaced font for URLs
+\urlstyle{same}
 \hypersetup{
   pdftitle={Guard cell size and pore aperture influence stomatal closure kinetics},
   pdfauthor={Christopher D. Muir\^{}\{1,2*\}; Wei Shen Lim\^{}\{1\}},
@@ -214,13 +238,14 @@
   urlcolor={Blue},
   pdfcreator={LaTeX via pandoc}}
 
+
 \title{Guard cell size and pore aperture influence stomatal closure
 kinetics}
 \author{Christopher D. Muir\(^{1,2*}\) \and Wei Shen Lim\(^{1}\)}
 \date{}
-
 \begin{document}
 \maketitle
+
 
 \begin{center}
 $^1$School of Life Sciences, University of Hawaiʻi; Mānoa, Hawaiʻi, USA\\
@@ -400,7 +425,7 @@ significance within and among species.
 {[}not sure where this goes{]} many, large - slow because of large size,
 but fast because of low gop few, small - slow because of high gop, but
 fast because of small size some, moderate - best of both worlds? IDEA
-FOR FIGURE - use empircal estimates to predict tau (z-axis) for a given
+FOR FIGURE - use empirical estimates to predict tau (z-axis) for a given
 optimal gs as a function of
 
 Is there a connection here to size-density scaling? It's an empirical
@@ -497,10 +522,10 @@ in the wild tomato clade (12). In one case, we substituted a congeneric
 population of the species (\emph{S. galapagense}) because of difficulty
 growing the focal population and we also added a population of \emph{S.
 pennellii}. Due to constraints on growth space and time, we spread out
-measurements over 61.1 weeks from August 29, 2022 to October 31, 2023.
-Replicates within population were evenly spread out over this period to
-prevent confounding of temporal variation in growth conditions with
-variation among populations.
+measurements over -Inf weeks from Inf to -Inf. Replicates within
+population were evenly spread out over this period to prevent
+confounding of temporal variation in growth conditions with variation
+among populations.
 
 \begin{longtable}{>{\raggedright\arraybackslash}p{3.25cm}lrrr}
 
@@ -593,8 +618,7 @@ population to the sun or shade treatment during transplanting. The
 average daytime \ppfd{} was \ppfdqty{761} and \ppfdqty{115} for sun and
 shade treatments, respectively.
 
-\subsubsection{Stomatal responses to changing
-humidity}\label{stomatal-responses-to-changing-humidity}
+\subsubsection{Humidity response curves}\label{humidity-response-curves}
 
 We selected a fully expanded, unshaded leaf at least six leaves above
 the cotyledons during early vegetative growth. This typically meant that
@@ -640,14 +664,16 @@ reduces transmission.
 
 In all cases, we acclimated the focal leaf to high light
 (\ppfdequals{2000}) and high relative humidity (\rhequals{70}) until
-\gsw{} reachws its maximum. After that, we decreased \rh{} to
-\(\approx 10\%\) to induce rapid stomatal closure. All other
-environmental conditions in the leaf chamber remained the same. We
-started logging data after the transient ``wrong-way response''
-(citation) and continued logging data until \gsw{} reached its nadir. We
-then acclimated the leaf to low light (\ppfdequals{150}) and
-\rhequals{70} before inducing stomatal closure with low \rh{} and
-logging data as described above.
+\gsw{} reached its maximum. After that, we decreased the water vapor
+concentration in the incoming air to \(\SI{0.36}{\milli\mol\per\mol}\)
+to induce rapid stomatal closure. Note that this procedure did not
+standardize chamber air humidity because water vapor was introduced by
+leaf transpiration. All other environmental conditions in the leaf
+chamber remained the same. We started logging data after the transient
+``wrong-way response'' (citation) and continued logging data until
+\gsw{} reached its nadir. We then acclimated the leaf to low light
+(\ppfdequals{150}) and \rhequals{70} before inducing stomatal closure
+with low \rh{} and logging data as described above.
 
 \subsubsection{Hypothesis generation and
 testing}\label{hypothesis-generation-and-testing}
@@ -810,7 +836,7 @@ increased \(\lambda\) slightly by 0.255\% {[}95\% CI: -2.18 to
 
 \centering{
 
-\includegraphics{../figures/accession-kinetics.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{../figures/accession-kinetics.pdf}}
 
 }
 
@@ -851,7 +877,7 @@ measurement error, so should be interpreted with caution.
 
 \centering{
 
-\includegraphics{../figures/variance.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{../figures/variance.pdf}}
 
 }
 
@@ -986,9 +1012,6 @@ confidence intervals).}
 
 \centering{
 
-\captionsetup{labelsep=none}
-
-[!h]
 \centering
 \begin{tabular}[t]{lcccc}
 \toprule
@@ -1201,6 +1224,7 @@ ratio. Assume constant transport per surface area. Surface area
 determined by geometry.
 
 What is eqn for this?
+
 
 
 

@@ -345,3 +345,6 @@ ellipse_points <- function(mu, Sigma, level = 0.95, n = 200) {
   pts <- t(circle) %*% A                     # (n x 2)
   data.frame(x = mu[1] + pts[,1], y = mu[2] + pts[,2])
 }
+
+# Saturated vapor pressure
+svp = function(T_leaf, Pa) (0.61365 * exp(17.502 * T_leaf / (240.97 + T_leaf) / Pa))

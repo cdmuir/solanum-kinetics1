@@ -1,10 +1,22 @@
-# NOTE, I am in process of rejiggering data analysis so I can test model using gs scaled to gmax. This script is different than 07_join-data because that joins the brms summary to stomata anatomy.
-#
 # Join stomatal kinetic data with stomatal anatomical data
 source("r/header.R")
 
-rh_curves = read_rds("data/rh_curves.rds") |>
-  select(acc, id, curve_type, t_sec, gsw, A, curve)
+rh_curves = read_rds("data/rh_curves.rds")  |>
+  mutate(svp = svp(Tair, Pa), rh_air = H2O_r / svp)
+
+rhair = rh_curves |>
+  summarize(H2O_r = mean(H2O_r),
+            rh_air = mean(rh_air),
+            .by = curve)
+
+# Exclude samples where RH_air > 5%
+rh_over5 = rhair |>
+  filter(rh_air > 5) |>
+  pull(curve)
+
+rh_curves = rh_curves |>
+  filter(!(curve %in% rh_over5)) |>
+  select(acc, id, curve_type, t_sec, gsw, H2O_r, rh_air, curve)
 
 plant_info = read_rds("data/plant_info.rds") |>
   filter(!is.na(`1s_rh_response_date`)) |>

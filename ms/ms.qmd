@@ -85,6 +85,7 @@ plant_info = read_rds("../data/plant_info.rds")
 accession_info = read_rds("../data/accession_info.rds")
 
 rh_curves = read_rds("../data/rh_curves.rds")
+joined_data = read_rds("../data/joined-data.rds")
 
 response_vars = tibble(
   definition = c(
@@ -104,7 +105,7 @@ response_vars = tibble(
 # Methods
 
 licor_date_range = plant_info |>
-  filter(acc_id %in% unique(rh_curves$acc_id)) |>
+  filter(acc_id %in% unique(joined_data$acc_id)) |>
   dplyr::select(`1s_rh_response_date`, `2s_rh_response_date`) |>
   pivot_longer(cols = everything()) |>
   pull(value) |>
@@ -179,6 +180,12 @@ p_red_high = format(signif(100 * percent_red$`2000`, 3), nsmall = 1)
 p_blue_high = format(signif(100 * (1 - percent_red$`2000`), 3), nsmall = 1)
 p_red_low = format(signif(100 * percent_red$`150`, 3), nsmall = 1)
 p_blue_low = format(signif(100 * (1 - percent_red$`150`), 3), nsmall = 1)
+
+# H2O_r in chambers
+mean_h2or = joined_data |>
+  summarize(H2O_r = mean(H2O_r), .by = curve) |>
+  summarize(H2O_r = median(H2O_r, na.rm = TRUE)) |>
+  pull(H2O_r)
 
 # Results
 fit = read_rds("../objects/best_model.rds")
@@ -259,7 +266,7 @@ Here we extend recent advances in phylogenetic comparative methods [@westoby_phy
 many, large - slow because of large size, but fast because of low gop
 few, small - slow because of high gop, but fast because of small size
 some, moderate - best of both worlds?
-IDEA FOR FIGURE - use empircal estimates to predict tau (z-axis) for a given optimal gs as a function of 
+IDEA FOR FIGURE - use empirical estimates to predict tau (z-axis) for a given optimal gs as a function of 
 
 
 
@@ -321,7 +328,7 @@ We analyzed stomatal responses to changing humidity among `r n_acc` ecologically
 # Copied from solanum-aq project
 
 accession_info |>
-  filter(accession %in% rh_curves$acc) |>
+  filter(accession %in% joined_data$acc) |>
   arrange(species, accession) |>
   select(
     Species = species,
@@ -358,7 +365,7 @@ We collected four humidity-response curves per leaf, an amphi (untreated) curve 
 
 To control for order effects, we alternated between starting with amphi or pseudohypo leaf measurements. We made measurements over two days. On the first day, we measured high and low light-intensity curves for either amphi or pseudohypo leaves; on the second day, we measured high and low light-intensity curves on the other leaf type.  The irradiance of the light source in the pseudohypo leaf was higher because the propafilm reduces transmission. 
 
-In all cases, we acclimated the focal leaf to high light (\ppfdequals{2000}) and high relative humidity (\rhequals{70}) until \gsw{} reachws its maximum. After that, we decreased \rh{} to $\approx 10\%$ to induce rapid stomatal closure. All other environmental conditions in the leaf chamber remained the same. We started logging data after the transient "wrong-way response" (citation) and continued logging data until \gsw{} reached its nadir. We then acclimated the leaf to low light (\ppfdequals{150}) and \rhequals{70} before inducing stomatal closure with low \rh{} and logging data as described above.
+In all cases, we acclimated the focal leaf to high light (\ppfdequals{2000}) and high relative humidity (\rhequals{70}) until \gsw{} reached its maximum. After that, we scrubbed water vapor from the incoming air using silica desiccant as quickly as possible, resulting in a water vapor concentration in the incoming air to be on average $\SI{`r formatC(mean_h2or, 3)`}{\milli\mol\per\mol}$. This treatment induced rapid stomatal closure, but note that it did not standardize chamber air humidity because water vapor was introduced by leaf transpiration. HOWEVER - NO RELATIONSHIP BETWEEN FINAL GSW AND TAU (fill in details). All other environmental conditions in the leaf chamber remained the same. We started logging data after the transient "wrong-way response" (citation) and continued logging data until \gsw{} reached its nadir. We then acclimated the leaf to low light (\ppfdequals{150}) and \rhequals{70} before inducing stomatal closure with low \rh{} and logging data as described above.
 
 ### Hypothesis generation and testing
 

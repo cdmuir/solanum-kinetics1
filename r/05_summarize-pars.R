@@ -3,7 +3,7 @@ source("r/header.R")
 
 sk_dir1 = "objects/weibull"
 
-plan(multisession, workers = 19)
+plan(multisession, workers = 9)
 
 pars_summary = list.files(sk_dir1) |>
   future_map_dfr(\(.x) {
@@ -11,8 +11,9 @@ pars_summary = list.files(sk_dir1) |>
     
     fit_weibull |>
       as_draws_df() |>
-      mutate(ginit =
-               exp(b_loggf_Intercept) + exp(b_logdg_Intercept)) |>
+      mutate(gfinal = exp(b_loggf_Intercept),
+             ginit =
+               gfinal + exp(b_logdg_Intercept)) |>
       summarize_draws() |>
       mutate(id = str_remove(.x, "\\.rds$"))
     
