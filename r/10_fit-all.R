@@ -12,7 +12,7 @@ write_rds(list(logtau_threshold = logtau_threshold, n_removed = attr(joined_summ
 
 phy = read_rds("data/phylogeny.rds")
 A = vcv(phy, corr = TRUE)
-thin = 9
+thin = 10
 
 # Define formula
 bf_lambda0 = bf(loglambdamean | se(loglambdasd, sigma = TRUE) ~ 
@@ -20,27 +20,27 @@ bf_lambda0 = bf(loglambdamean | se(loglambdasd, sigma = TRUE) ~
                   lightintensity +
                   curve_type +
                   loggcl + 
-                  logfgmax + 
+                  logitfgmax + 
                   (1|accid) +
                   (1|a|accession) +
                   (1|b|gr(phy, cov = A)))
 bf_lambda1 = update(bf_lambda0, . ~ . - loggcl)
-bf_lambda2 = update(bf_lambda0, . ~ . - logfgmax)
-bf_lambda3 = update(bf_lambda0, . ~ . - loggcl - logfgmax)
+bf_lambda2 = update(bf_lambda0, . ~ . - logitfgmax)
+bf_lambda3 = update(bf_lambda0, . ~ . - loggcl - logitfgmax)
 
 bf_tau0 = bf(logtaumean | se(logtausd, sigma = TRUE) ~ 
                lighttreatment + 
                lightintensity +
                curve_type +
                loggcl + 
-               logfgmax + 
+               logitfgmax + 
                (1|accid) +
                (1|a|accession) +
                (1|b|gr(phy, cov = A)))
 
 bf_tau1 = update(bf_tau0, . ~ . - loggcl)
-bf_tau2 = update(bf_tau0, . ~ . - logfgmax)
-bf_tau3 = update(bf_tau0, . ~ . - loggcl - logfgmax)
+bf_tau2 = update(bf_tau0, . ~ . - logitfgmax)
+bf_tau3 = update(bf_tau0, . ~ . - loggcl - logitfgmax)
 
 bf_gcl = bf(loggcl ~ 
               lighttreatment + 
@@ -48,7 +48,7 @@ bf_gcl = bf(loggcl ~
               (1|a|accession) + 
               (1|b|gr(phy, cov = A)))
 
-bf_fgmax = bf(logfgmax ~ 
+bf_fgmax = bf(logitfgmax ~ 
                 lighttreatment + 
                 lightintensity + 
                 curve_type +
