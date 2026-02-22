@@ -31,14 +31,16 @@ theme_set(theme_cowplot())
 
 form_cdweibull = gsw ~ gf + dg * exp(-(t_sec / tau) ^ lambda)
 
+# start convergence_criteria
 convergence_criteria = list(
   rhat_max = 1.05,
   ess_min = 400,
   n_divergent = 10
 )
-
+# end convergence_criteria
+# 
 # There was a pretty clear break in the distribution of logtau_mean around 7.
-# The four curves above that showed unusual patterns of stomatal closure based
-# on visual inspection.
+# Four curves above showed unusual patterns of stomatal closure based on visual
+# inspection.
 
 logtau_threshold = 7

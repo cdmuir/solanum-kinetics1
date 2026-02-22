@@ -186,7 +186,8 @@ get_interia_prior = function(.dat) {
 # Helper function to prepare data for estimating effects of guard cell size and
 # f_gmax on tau
 prepare_tau_anatomy_data = function(joined_summary, logtau_threshold) {
-  joined_summary |>
+  n_remove = sum(joined_summary$logtau_mean >= logtau_threshold, na.rm = TRUE)
+  out = joined_summary |>
     filter(logtau_mean < logtau_threshold) |>
     mutate(loggcl = log(guard_cell_length_um),
            logfgmax = log(f_gmax)) |>
@@ -198,8 +199,10 @@ prepare_tau_anatomy_data = function(joined_summary, logtau_threshold) {
       accid = acc_id,
       lightintensity = light_intensity,
       lighttreatment = light_treatment
-    )
+    ) |>
+    set_attr("n_removed", n_remove)
   
+  out
 }
 
 # Helpers for writing data dictionaries. From ChatGPT5.2
@@ -332,7 +335,7 @@ make_precision_phy <- function(draws_df) {
 }
 
 # Function from ChatGPT to plot ellipses
-ellipse_points <- function(mu, Sigma, level = 0.95, n = 200) {
+ellipse_points = function(mu, Sigma, level = 0.95, n = 200) {
   stopifnot(length(mu) == 2, all(dim(Sigma) == c(2, 2)))
   r <- sqrt(qchisq(level, df = 2))           # radius for chosen level
   theta <- seq(0, 2*pi, length.out = n)

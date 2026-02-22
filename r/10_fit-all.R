@@ -8,6 +8,8 @@ plan(multisession, workers = 16)
 joined_summary = read_rds("data/joined-summary.rds") |>
   prepare_tau_anatomy_data(logtau_threshold)
 
+write_rds(list(logtau_threshold = logtau_threshold, n_removed = attr(joined_summary, "n_removed")), "objects/n_removed.rds")
+
 phy = read_rds("data/phylogeny.rds")
 A = vcv(phy, corr = TRUE)
 thin = 9

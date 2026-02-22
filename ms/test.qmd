@@ -80,12 +80,12 @@ theme_set(theme_cowplot())
 source("../r/functions.R")
 
 # Results
-fit_amphi = read_rds("../objects/best_amphi_model.rds")
+fit = read_rds("../objects/best_model.rds")
 
-n_acc = length(unique(fit_amphi$data$accession))
+n_acc = length(unique(fit$data$accession))
 
 # Effect of growth light treatment on log(tau)
-post_summary = posterior_summary(fit_amphi)
+post_summary = posterior_summary(fit)
 post_tau_sun = post_summary["b_logtaumean_lighttreatmentsun", ]
 post_tau_high = post_summary["b_logtaumean_lightintensityhigh", ]
 post_lambda_sun = post_summary["b_loglambdamean_lighttreatmentsun", ]
@@ -124,17 +124,61 @@ blah [@tbl-foo]
 #| message: false
 #| warning: false
 
-df_comparison = read_rds("../objects/tbl-comparison.rds") |>
-  select(`$\\Delta \\text{LOOIC}$`, `$\\lambda$__\\fgmax`, `$\\lambda$__\\gcl`, `$\\tau$__\\fgmax`, `$\\tau$__\\gcl`)
+library(dplyr)
+library(knitr)
+library(kableExtra)
 
-kbl(
-  df_comparison,
+
+fit = read_rds("../objects/best_model.rds")
+  
+df1 = fit$data |>
+  summarize(
+    n = n(),
+    .by = c(lightintensity, lighttreatment, curve_type)
+  ) |>
+  pivot_wider(
+    names_from = c(lightintensity, curve_type),
+    values_from = n
+  ) |>
+  # add row totals
+  mutate(Total = rowSums(across(where(is.numeric)))) 
+
+df2 = df1 |>
+  bind_rows(
+    df1 |>
+      summarise(
+        lighttreatment = "Total",
+        across(where(is.numeric), \(.x) sum(.x, na.rm = TRUE))
+      )
+  ) |>
+  mutate(across(where(is.numeric), \(.x) prettyNum(.x, big.mark = ","))) |>
+  select(lighttreatment, low_amphi, low_pseudohypo, high_amphi, high_pseudohypo, Total)
+
+kable(
+  df2,
   format = "latex",
   booktabs = TRUE,
+  align = "lccccc",
   escape = FALSE,
-  col.names = str_remove(colnames(df_comparison), "^.*__"),
-  align = c("l", rep("c", 4))
-) |>
-  add_header_above(c(" " = 1, "$\\\\lambda$" = 2, "$\\\\tau$" = 2), escape = FALSE) |>
-  kable_styling(latex_options = c("hold_position", "striped"))
+  col.names = c(
+    "Growth light intensity",
+    "amphi",
+    "pseudohypo",
+    "amphi",
+    "pseudohypo",
+    "Total"
+  )) |>
+  add_header_above(c(
+    " " = 1,
+    "Low" = 2,
+    "High" = 2,
+    " " = 1
+  )) |>
+  add_header_above(c(
+    " " = 1,
+    "Measurement light intensity" = 4,
+    " " = 1
+  )) |>
+  row_spec(2, hline_after = TRUE)
+
 ```

@@ -67,9 +67,10 @@ rh_curves = list.files(sk_dir1) |>
     )
     
     sub = glue(
-      "growth: {x}; meas: {y}",
+      "growth: {x}; meas: {y}; curve type: {z}",
       x = pix$light_treatment,
-      y = pix$light_intensity
+      y = pix$light_intensity,
+      z = pix$curve_type
     )
     
     ggplot(fit_weibull$data, aes(t_sec, gsw)) +
