@@ -10,7 +10,7 @@ joined_summary = read_rds("data/joined-summary.rds") |>
 
 phy = read_rds("data/phylogeny.rds")
 A = vcv(phy, corr = TRUE)
-thin = 9
+thin = 10
 
 # Define formula
 bf_lambda0 = bf(loglambdamean | se(loglambdasd, sigma = TRUE) ~ 
