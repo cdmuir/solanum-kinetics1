@@ -187,10 +187,29 @@ mean_h2or = joined_data |>
   summarize(H2O_r = median(H2O_r, na.rm = TRUE)) |>
   pull(H2O_r)
 
+# Example RH curve to extract information on fitting
+example_rh_fit = read_rds(list.files("../objects/weibull", full.names = TRUE)[1])
+n_draw1 = example_rh_fit$fit@sim$n_save
+
+# Convergence criteria
+header = read_lines("../r/header.R")
+header[(which(str_detect(header, "start convergence_criteria")) + 1):(which(str_detect(header, "end convergence_criteria")) - 1)] |>
+  str_c(collapse = "") %>%
+  parse(text = .) |>
+  eval()
+
+
 # Results
 fit = read_rds("../objects/best_model.rds")
 
 n_acc = length(unique(fit$data$accession))
+
+# rh curves
+r2 = read_rds("../objects/r2.rds") |>
+  pull(Estimate)
+
+mean_r2 = mean(r2)
+min_r2 = min(r2)
 
 # Effect of growth light treatment on log(tau)
 post_summary = posterior_summary(fit)
@@ -315,7 +334,7 @@ $$ {#eq-weibull}
 
 In this equation, \gsw is stomatal conductance at time $t$, $g_\text{i}$ is the initial \gsw before the step change, $g_\text{f}$ is the final \gsw after the step change, $\tau$ is a time constant that describes how quickly stomata respond to the step change, and $\lambda$ is a shape parameter that describes how the response rate changes over time. When $\lambda = 1$, the response rate is constant over time and $\tau$ represents the time required for \gsw to reach `r formatC(100 * exp(-1), 3)`% of the way between initial and final values. When $\lambda > 1$, the response rate increases over time, and when $\lambda < 1$, the response rate decreases over time. @woning_revisiting_2026 refer to $\lambda$ as a lag-time parameter because empirically $\lambda > 1$. We find the same pattern for responses to a step change in VPD (see results) and therefore adopt their terminology. We refer to stomatal kinetic parameters $\tau$ (time-constant) and $\lambda$ (lag-time) henceforth.
 
-## Methods
+## Materials and Methods {#sec-methods}
 
 ### Populations
 
@@ -367,11 +386,74 @@ To control for order effects, we alternated between starting with amphi or pseud
 
 In all cases, we acclimated the focal leaf to high light (\ppfdequals{2000}) and high relative humidity (\rhequals{70}) until \gsw{} reached its maximum. After that, we scrubbed water vapor from the incoming air using silica desiccant as quickly as possible, resulting in a water vapor concentration in the incoming air to be on average $\SI{`r formatC(mean_h2or, 3)`}{\milli\mol\per\mol}$. This treatment induced rapid stomatal closure, but note that it did not standardize chamber air humidity because water vapor was introduced by leaf transpiration. HOWEVER - NO RELATIONSHIP BETWEEN FINAL GSW AND TAU (fill in details). All other environmental conditions in the leaf chamber remained the same. We started logging data after the transient "wrong-way response" (citation) and continued logging data until \gsw{} reached its nadir. We then acclimated the leaf to low light (\ppfdequals{150}) and \rhequals{70} before inducing stomatal closure with low \rh{} and logging data as described above.
 
+Prior to analysis, we removed unreliable and unusable data points, removed points not at instrument steady state, removed hysteretic portion of each curves at low \gsw{}, removed outliers within each curve, remove replicates with no overlap between amphi and pseudohypo curves from the same leaf, and thinned redundant data points within each curve. The rationale and procedure for each cleaning step is described in @muir-plasticity_2025. [@tbl-sample-size]
+
+```{r, sample-size}
+#| label: tbl-sample-size
+#| results: asis
+#| echo: false
+#| message: false
+#| warning: false
+
+df1 = fit$data |>
+  summarize(
+    n = n(),
+    .by = c(lightintensity, lighttreatment, curve_type)
+  ) |>
+  pivot_wider(
+    names_from = c(lightintensity, curve_type),
+    values_from = n
+  ) |>
+  # add row totals
+  mutate(Total = rowSums(across(where(is.numeric)))) 
+
+df2 = df1 |>
+  bind_rows(
+    df1 |>
+      summarise(
+        lighttreatment = "Total",
+        across(where(is.numeric), \(.x) sum(.x, na.rm = TRUE))
+      )
+  ) |>
+  mutate(across(where(is.numeric), \(.x) prettyNum(.x, big.mark = ","))) |>
+  select(lighttreatment, low_amphi, low_pseudohypo, high_amphi, high_pseudohypo, Total)
+
+kable(
+  df2,
+  format = "latex",
+  booktabs = TRUE,
+  align = "lccccc",
+  escape = FALSE,
+  col.names = c(
+    "Growth light intensity",
+    "amphi",
+    "pseudohypo",
+    "amphi",
+    "pseudohypo",
+    "Total"
+  )) |>
+  add_header_above(c(
+    " " = 1,
+    "Low" = 2,
+    "High" = 2,
+    " " = 1
+  )) |>
+  add_header_above(c(
+    " " = 1,
+    "Measurement light intensity" = 4,
+    " " = 1
+  )) |>
+  row_spec(2, hline_after = TRUE)
+
+```
+
 ### Hypothesis generation and testing
 
-The primary aims and *a priori* hypotheses of this study are described in @muir_plasticity_2025. The idea to use \gsw response curves to test hypotheses about which traits influence stomatal kinetics came after the data had been collected, but not yet analyzed. We started with two *a priori* hypotheses based on a recent metaanalysis of stomatal responses to light [@woning_revisiting_2026]. We hypothesized that 1) guard cell size would influence $\tau$ and 2) that $\tau$ would be greater on the abaxial-only leaves. We planned to compare relationships within and among populations using phylogenetic comparative methods. We made the decision to test for an association between \fgmax and $\tau$ after exploratory analyses revealed a potential association. Adding hypotheses after some results have been analyzed, also known as "Hypothesizing After Results Known" (HARKing), can lead to reports of spurious associations that are not repeatable in later studies [@kerr_harking_1998; @smaldino_natural_2016]. Therefore, our conclusions about the effect of \fgmax on stomatal kinetics should be interpreted with caution until they are replicated.
+The primary aims and *a priori* hypotheses of this study were not to study stomatal kinetic parameters and are described in @muir_plasticity_2025. The idea to use \gsw response curves generated during this study to test hypotheses about which traits influence stomatal kinetics came after the data had been collected, but not yet analyzed for this purpose. Before analyzing the data, we planned to test two hypotheses based on a recent metaanalysis of stomatal responses to light [@woning_revisiting_2026]. We hypothesized that 1) guard cell size would influence $\tau$ and 2) that $\tau$ would be greater on the abaxial-only leaves. We planned to compare relationships within and among populations using phylogenetic comparative methods. We made the decision to test for an association between \fgmax and $\tau$ after exploratory analyses revealed a potential association. Adding hypotheses after some results have been analyzed, also known as "Hypothesizing After Results Known" (HARKing), can lead to reports of spurious associations that are not repeatable in later studies [@kerr_harking_1998; @smaldino_natural_2016]. Therefore, our conclusions about the effect of \fgmax on stomatal kinetics should be interpreted with caution until they are replicated.
 
-We estimated $\tau$ and $\lambda$ for each response curve by fitting @eq-weibull to a time-series of \gsw values using Bayesian nonlinear regression. WORKING HERE
+We estimated $\tau$ and $\lambda$ for each response curve by fitting @eq-weibull to a time-series of \gsw{} values using Bayesian nonlinear regression. All models were fit using a Bayesian HMC sampling in the probabilistic programming language *Stan* [@stan_development_team_stan_2026] using the *R* package **brms** version `r example_rh_fit$version$brms` [@burkner_brms_2017]. We used *CmdStan* version `r example_rh_fit$version$cmdstan` and **cmdstanr** version `r example_rh_fit$version$cmdstanr` [@gabry_cmdstanr_2025] to interface with *R* version `r getRversion()` [@r_core_team_r:_2025]. We sampled `r n_draw1` post-warmup draws from the posterior distribution on a single chain. We adjusted the number sampling iterations and thinning interval for each curve so that the Gelman-Rubin convergence statistic ($\hat{R}$) [@gelman_inference_1992] was less than `r convergence_criteria[["rhat_max"]]` and the bulk effective sample size (ESS) was greater than `r convergence_criteria[["ess_min"]]` for all model parameters, and there were fewer than `r convergence_criteria[["n_divergent"]]` divergent transitions. We assessed model fit using Bayesian $R^2$ [@gelman_r-squared_2019] implemented in **brms**.
+
+TRANSITION TO PHYLO MODEL
 
 We fit multiresponse Bayesian mixed effects models with phylogenetically structured random effects to answer the following core questions:
 
@@ -421,7 +503,9 @@ add info
 # tau * log(2) ^ (1 / lambda) = t_sec
 ```
 
-Stomatal conductance (\gsw) decrease rapidly in response to a step increase in VPD. Consider a typical leaf in the experiment possessing the median time constant ($\tau$) and lag time ($\lambda$) among wild tomato accessions in all treatments. After VPD increased the transient wrong way response elapsed, it took `r prettyNum(round(median_tau * log(2) ^ (1 / median_lambda)))` s for \gsw to decrease half-way ($t_{50}$) from its initial to final steady state value. In terms of the kinetic model parameters, most variation among leaves was due to difference in the time constant rather than the lag time. In the previous example, increasing $\lambda$ from its median to its maximum estimated value among accessions increased the $t_{50}$ by only `r prettyNum(round(median_tau * log(2) ^ (1 / max_lambda) - median_tau * log(2) ^ (1 / median_lambda), 1))` s. In contrast, increasing $\tau$ from its median to maximum value increased $t_{50}$ by `r prettyNum(round(max_tau * log(2) ^ (1 / median_lambda) - median_tau * log(2) ^ (1 / median_lambda)))` s
+Stomatal conductance (\gsw) decreased rapidly in response to a step change in humidity. The model in @eq-weibull fit the data extremely well ([@fig-rh-curves]). The mean and minimum Bayesian $R^2$ across all curves was `r formatC(mean_r2, format = "f", digits = 4)` and `r formatC(min_r2, format = "f", digits = 4)`, respectively. 
+## MARKER
+Consider a typical leaf in the experiment possessing the median time constant ($\tau$) and lag time ($\lambda$) among wild tomato accessions in all treatments. After VPD increased the transient wrong way response elapsed, it took `r prettyNum(round(median_tau * log(2) ^ (1 / median_lambda)))` s for \gsw to decrease half-way ($t_{50}$) from its initial to final steady state value. In terms of the kinetic model parameters, most variation among leaves was due to difference in the time constant rather than the lag time. In the previous example, increasing $\lambda$ from its median to its maximum estimated value among accessions increased the $t_{50}$ by only `r prettyNum(round(median_tau * log(2) ^ (1 / max_lambda) - median_tau * log(2) ^ (1 / median_lambda), 1))` s. In contrast, increasing $\tau$ from its median to maximum value increased $t_{50}$ by `r prettyNum(round(max_tau * log(2) ^ (1 / median_lambda) - median_tau * log(2) ^ (1 / median_lambda)))` s
 
 Growth light intensity did not significantly affect $\tau$ [@fig-accession-kinetics; @tab-fit-amphi]. In sun plants, $\tau$ was on average `r signif(100 * (exp(post_tau_sun["Estimate"]) - 1), 3)`% [95% CI: `r signif(100 * (exp(post_tau_sun["Q2.5"]) - 1), 3)` to `r signif(100 * (exp(post_tau_sun["Q97.5"]) - 1), 3)`%] lower than in shade plants after accounting for other explanatory variables. Within the same leaf, increasing the measurement light intensity prior to the VPD step change from \ppfdqty{150} to \ppfdqty{2000} significantly increased $\tau$ by `r signif(100 * (exp(post_tau_high["Estimate"]) - 1), 3)`% [95% CI: `r signif(100 * (exp(post_tau_high["Q2.5"]) - 1), 3)` to `r signif(100 * (exp(post_tau_high["Q97.5"]) - 1), 3)`%] [@fig-accession-kinetics; @tab-fit-amphi]. The time lag $\lambda$ responded to growth, but not measurement light intensity after accounting for other explanatory variables [@fig-accession-kinetics; @tab-fit-amphi]. In sun plants, $\tau$ was on average `r signif(100 * (exp(post_lambda_sun["Estimate"]) - 1), 3)`% [95% CI: `r signif(100 * (exp(post_lambda_sun["Q2.5"]) - 1), 3)` to `r signif(100 * (exp(post_lambda_sun["Q97.5"]) - 1), 3)`%] greater than in shade plants. Higher measurement light decreased increased $\lambda$ slightly by `r signif(100 * (exp(post_lambda_high["Estimate"]) - 1), 3)`% [95% CI: `r signif(100 * (exp(post_lambda_high["Q2.5"]) - 1), 3)` to `r signif(100 * (exp(post_lambda_high["Q97.5"]) - 1), 3)`%]. 
 
@@ -652,6 +736,18 @@ kbl(
 \setcounter{equation}{0}
 \setcounter{page}{1}
 ```
+
+## Supporting figures
+
+::: {#fig-rh-curves}
+**Figure file:**  
+Download from: \url{https://github.com/cdmuir/solanum-kinetics/raw/refs/heads/main/figures/rh-curves.pdf}
+
+: Humidity-response curves and fitted lines. The title provides the Tomato Genetics Resource Center accession number, replicate letter, and species names. The subtitle indicates the growth light intensity (sun or shade), measurement light intensity (low or high), and curve type (amphi or pseudohypo). Points are raw data and lines are fitted curves. The Bayesian correlation coefficient, $\text{Bayes}~R^2$, is shown to the right of each curve.
+:::
+
+
+
 
 ## MANUSCRAPS
 
