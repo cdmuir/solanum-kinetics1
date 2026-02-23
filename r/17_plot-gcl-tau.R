@@ -14,7 +14,7 @@ df_new = crossing(
          variable = paste0("...", row_number())) |> full_join(
            fit$data |>
              summarize(
-               logfgmax = median(logfgmax),
+               logitfgmax = median(logitfgmax),
                .by = c(curve_type, lightintensity, lighttreatment)
              ),
            by = join_by(curve_type, lightintensity, lighttreatment)

@@ -1,7 +1,7 @@
 # Plot kinetic parameters for each accession in each treatment
 source("r/header.R")
 
-dat = read_rds("objects/best_amphi_model.rds")$data |>
+dat = read_rds("objects/best_model.rds")$data |>
   summarize(
     logtau = mean(logtaumean),
     loglambda = mean(loglambdamean),

@@ -276,6 +276,9 @@ minimizing the time required for stomatal closure. Putting these
 hypotheses together with stabilizing selection on gop may explain why
 stomatal size and density negatively covary among species.
 
+Maybe add something like: we esimated time-constant and lag-time for
+2000+ curves\ldots{}
+
 \subsection{Introduction}\label{introduction}
 
 NOTE: I need to develop a consistent terminology - stomatal response
@@ -484,7 +487,8 @@ henceforth.
 
 \subsection{Materials and Methods}\label{sec-methods}
 
-\subsubsection{Populations}\label{populations}
+\subsubsection{Populations and
+phylogeny}\label{populations-and-phylogeny}
 
 We analyzed stomatal responses to changing humidity among 29
 ecologically diverse populations of wild tomato, including
@@ -500,7 +504,13 @@ pennellii}. Due to constraints on growth space and time, we spread out
 measurements over -Inf weeks from Inf to -Inf. Replicates within
 population were evenly spread out over this period to prevent
 confounding of temporal variation in growth conditions with variation
-among populations.
+among populations. To estimate phylogenetic effects, we used the RAxML
+whole-transcriptome concatenated phylogeny based on 2,745 100-kb genomic
+windows from (12). Two of our populations were not in this tree. We used
+accession LA1044 in place of LA3909, two populations of \emph{S.
+galapagense}; LA0750 was added as sister to LA0716, two closely related
+populations of \emph{S. pennellii}. The node separating LA0750 from
+LA0716 was placed half-way between the next deepest node.
 
 \begin{longtable}{>{\raggedright\arraybackslash}p{3.25cm}lrrr}
 
@@ -666,6 +676,9 @@ greatly exceeding the typical estimates (see Results). After these
 steps, the total number of humidity response curves analyzed is given in
 Table~\ref{tbl-sample-size}. The median number of curves per population
 per treatment was 10 and the median number of points per curve was 26.
+We extracted the the posterior distribution for \(\tau\) and \(\lambda\)
+from each fitted curve to calculate the parameter estimate (median) and
+uncertainty (standard deviation) for subsequent analyses.
 
 \begin{table}
 
@@ -683,10 +696,10 @@ per treatment was 10 and the median number of points per curve was 26.
 \cmidrule(l{3pt}r{3pt}){2-3} \cmidrule(l{3pt}r{3pt}){4-5}
 Growth light intensity & amphi & pseudohypo & amphi & pseudohypo & Total\\
 \midrule
-shade & 276 & 276 & 271 & 268 & 1,091\\
-sun & 248 & 247 & 278 & 277 & 1,050\\
+shade & 275 & 275 & 270 & 266 & 1,086\\
+sun & 245 & 244 & 275 & 274 & 1,038\\
 \midrule\\
-Total & 524 & 523 & 549 & 545 & 2,141\\
+Total & 520 & 519 & 545 & 540 & 2,124\\
 \bottomrule
 \end{tabular}
 
@@ -730,68 +743,69 @@ than 400 for all model parameters, and there were fewer than 10
 divergent transitions. We assessed model fit using Bayesian \(R^2\) (21)
 implemented in \textbf{brms}.
 
-TRANSITION TO PHYLO MODEL
-
-We fit multiresponse Bayesian mixed effects models with phylogenetically
-structured random effects to answer the following core questions:
+We next used estimates of \(\tau\) from each curve in multiresponse
+Bayesian mixed effects models with phylogenetically structured random
+effects to answer the following core questions:
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
-  Are \gcl and \fgmax positively associated with \(\tau\)?
+  Are \gcl{} and \fgmax{} positively associated with \(\tau\)?
 \item
-  At what biological levels of organization do \gcl and \fgmax influence
-  \(\tau\)?
+  At what biological levels of organization do \gcl{} and \fgmax{}
+  influence \(\tau\)?
 \item
   Are abaxial-only stomatal responses slower than whole leaf stomatal
   responses?
 \end{enumerate}
-
-SCRAPS THAT I NEED TO WEAVE INTO MS
 
 We used a combination of model selection and parameter estimation to
 evaluate these hypotheses. All statistical models included fixed effects
 of manipulative treatments: growth light intensity (sun and shade);
 measurement light intensity (high and low); and curve type
 (amphistomatous and pseudohypostomatous). All models also included
-population as a phylogenetically structured random effect.
+population as both a phylogenetically structured random effect and a
+non-phylogenetic random effect following
+(\textbf{halliwell\_multi-response\_2025?}). Prior to fitting, the
+phylogenetic (co)variance matrix was rescaled as a correlation matrix
+(22). For traits measured multiple times within the same leaf (\fgmax,
+\(\lambda\), \(\tau\)) we included a random effect of individual to
+account for repeated measures. We accounted for uncertainty in \(\tau\)
+and \(\lambda\) using the standard deviation of the posterior
+distribution of each estimate (see `Humidity response curves' for
+details). We modeled residual (co)variance, a combination
+among-individual (co)variance and measurement error, as a multivariate
+Student \(t\)-distribution, which is more robust to extreme values than
+the multivariate normal distribution (\textbf{gelman\_bayesian\_2014?}).
+To account for heteroskedasticity, bounded measurements, and linearize
+relationships, \gcl, \(\lambda\), and \(\tau\) were log-transformed
+prior to analysis whereas \fgmax{} was logit-transformed. All models
+were fit with \emph{Stan} following the same methods described above for
+fitting Equation~\ref{eq-weibull} to the humidity response curves.
 
-We accounted for uncertainty in \(\tau\) and \(\lambda\) using the
-standard deviation of the posterior distribution of each estimate (see
-above).
-
-We used the RAxML whole-transcriptome concatenated phylogeny based on
-2,745 100-kb genomic windows from (12). Two of our populations were not
-in this tree. We used accession LA1044 in place of LA3909, two
-populations of \emph{S. galapagense}; LA0750 was added as sister to
-LA0716, two closely related populations of \emph{S. pennellii}. The node
-separating LA0750 from LA0716 was placed half-way between the next
-deepest node.
-
-\subsubsection{inferring different levels of
-effects??}\label{inferring-different-levels-of-effects}
-
-We analyzed three nonmutually exclusive paths through which \fgmax and
-\gcl could influence stomatal kinetic parameters \(\lambda\) and
-\(\tau\). First, we inferred phylogenetic effects by estimating the
-phylogenetic correlation among populations between anatomical
-(\fgmax and \gcl) and kinetic (\(\lambda\) and \(\tau\)) variables. To
-test for causation, we used the phylogenetic covariance matrix to
-estimate partial correlations between anatomical and kinetic variables
-(9). We interpret a significant partial correlation between variables as
-a plausible causal hypothesis. Second, we inferred individual-level
-effects of \fgmax and \gcl on kinetic parameters using linear multiple
-regression that simultaneously accounts for phylogenetic and treatment
-effects. We used the leave-one-out cross-validation information
-criterion (LOOIC) to compare the fit of models using the \emph{R}
-package \textbf{loo} version 2.8.0 (22) to calculate LOOIC values. We
-compared models with all permutations of \fgmax and \gcl influencing
-\(\lambda\) and \(\tau\). We selected the model with the lowest LOOIC
-value (\textbf{?@tbl-comparison}) to generate posterior predictions for
-hypothesis testing. If an effect was included in the best model (lowest
-LOOIC), then we considered whether the 95\% confidence interval
-overlapped zero to ascertain a significant effect.
+To answer questions 1 and 2 above, we analyzed three nonmutually
+exclusive paths through which \fgmax{} and \gcl{} could influence
+stomatal kinetic parameters \(\lambda\) and \(\tau\). First, we inferred
+phylogenetic effects by estimating the phylogenetic correlation among
+populations between anatomical (\fgmax{} and \gcl{}) and kinetic
+(\(\lambda\) and \(\tau\)) variables. To test for possible causation, we
+used the inferred phylogenetic trait covariance matrix to estimate
+partial correlations between anatomical and kinetic variables (9). We
+interpret a significant partial correlation between variables as a
+plausible causal hypothesis. Second, we inferred individual-level
+effects of \fgmax{} and \gcl{} on kinetic parameters using linear
+multiple regression that simultaneously accounts for phylogenetic and
+treatment effects. We used the leave-one-out cross-validation
+information criterion (LOOIC) to compare the fit of models using the
+\emph{R} package \textbf{loo} version 2.9.0 (23) to calculate LOOIC
+values. We compared models with all permutations of \fgmax{} and \gcl{}
+influencing \(\lambda\) and \(\tau\). We selected the model with the
+lowest LOOIC value (\textbf{?@tbl-comparison}) to generate posterior
+predictions for hypothesis testing. If an effect was included in the
+best model (lowest LOOIC), then we considered whether the 95\%
+confidence interval overlapped zero to ascertain a significant effect of
+\fgmax{} and \gcl{} on kinetic parameters.
 
 THIRD: mediating treatment effects (plasticity)
 
@@ -804,7 +818,7 @@ between-individual, and within-individual levels. The phylogenetic
 variance component quantifies trait evolution between populations
 congruent with the phylogenetic relationships, whereas the population
 component quantifies variance among populations independent of
-phylogenetic relationships (23, 24). The between- and within-individual
+phylogenetic relationships (22, 24). The between- and within-individual
 variance components quantify variance among individuals within the same
 population and treatment. The within-individual component was estimated
 from repeated measures of the same leaf at different light intensities.
@@ -813,7 +827,7 @@ length with our study design because we only measured average guard cell
 length once per leaf. We estimated the between-individual variance from
 the residual variance, which also includes measurement error. The
 phylogenetic heritability is equivalent to the phylogenetic variance
-component and is estimated following (23); (24) as:
+component and is estimated following (24); (22) as:
 
 \[h^2_{\mathrm{phy}} = \frac{\sigma^2_\mathrm{phy}}{\sigma^2_\mathrm{phy} + \sigma^2_\mathrm{pop} + \sigma^2_\mathrm{between} + \sigma^2_\mathrm{within}},\]
 
@@ -829,41 +843,47 @@ add info
 
 \subsection{Results}\label{results}
 
+\subsubsection{\texorpdfstring{The time-constant \(\tau\) characterizes
+stomatal
+kinetics}{The time-constant \textbackslash tau characterizes stomatal kinetics}}\label{the-time-constant-tau-characterizes-stomatal-kinetics}
+
 Stomatal conductance (\gsw) decreased rapidly in response to a step
 change in humidity. The model in Equation~\ref{eq-weibull} fit the data
 extremely well (Figure~\ref{fig-rh-curves}). The mean and minimum
 Bayesian \(R^2\) across all curves was 0.9994 and 0.9802, respectively.
-\#\# MARKER Consider a typical leaf in the experiment possessing the
-median time constant (\(\tau\)) and lag time (\(\lambda\)) among wild
-tomato accessions in all treatments. After VPD increased the transient
+Consider a typical leaf in the experiment characterized by the median
+time constant (\(\tau\)) and lag time (\(\lambda\)) among wild tomato
+accessions in all treatments. After humidity decreased and the transient
 wrong way response elapsed, it took 121 s for \gsw to decrease half-way
-(\(t_{50}\)) from its initial to final steady state value. In terms of
-the kinetic model parameters, most variation among leaves was due to
-difference in the time constant rather than the lag time. In the
-previous example, increasing \(\lambda\) from its median to its maximum
-estimated value among accessions increased the \(t_{50}\) by only 8.2 s.
-In contrast, increasing \(\tau\) from its median to maximum value
-increased \(t_{50}\) by 129 s
+(\(t_{50}\)) from its initial (\(g_\text{i}\)) to final
+((\(g_\text{f}\)) steady state value. In terms of the kinetic model
+parameters, most variation among leaves was due to difference in the
+time constant rather than the lag time. In the previous example,
+increasing \(\lambda\) from its median to its maximum estimated value
+among accessions increased the \(t_{50}\) by only 8.2 s. In contrast,
+increasing \(\tau\) from its median to maximum value increased
+\(t_{50}\) by 129 s. Hence, we primarily focus on treatments and
+anatomical parameters affect \(\tau\).
+
+\subsubsection{\texorpdfstring{Effects of light intensity treatments on
+\(\tau\)}{Effects of light intensity treatments on \textbackslash tau}}\label{effects-of-light-intensity-treatments-on-tau}
 
 Growth light intensity did not significantly affect \(\tau\)
 Figure~\ref{fig-accession-kinetics}. In sun plants, \(\tau\) was on
-average 6.46\% {[}95\% CI: 1.64 to 11.6\%{]} lower than in shade plants
+average 5.73\% {[}95\% CI: 1.36 to 11\%{]} lower than in shade plants
 after accounting for other explanatory variables. Within the same leaf,
-increasing the measurement light intensity prior to the VPD step change
-from \ppfdqty{150} to \ppfdqty{2000} significantly increased \(\tau\) by
-14.9\% {[}95\% CI: 8.91 to 21.8\%{]}
+increasing the measurement light intensity prior to the humidity step
+change from \ppfdqty{150} to \ppfdqty{2000} significantly increased
+\(\tau\) by 18.5\% {[}95\% CI: 12 to 25.4\%{]}
 Figure~\ref{fig-accession-kinetics}. The time lag \(\lambda\) responded
 to growth, but not measurement light intensity after accounting for
 other explanatory variables Figure~\ref{fig-accession-kinetics}. In sun
-plants, \(\tau\) was on average 11\% {[}95\% CI: 6.31 to 15.6\%{]}
+plants, \(\tau\) was on average 10.2\% {[}95\% CI: 5.42 to 15\%{]}
 greater than in shade plants. Higher measurement light decreased
-increased \(\lambda\) slightly by 0.255\% {[}95\% CI: -2.18 to
-2.89\%{]}.
+increased \(\lambda\) slightly by 1.36\% {[}95\% CI: -0.936 to 3.8\%{]}.
 
 \begin{itemize}
 \tightlist
-\item
-  table of symbols?
 \item
   table of model estimates for tau and lambda
 \end{itemize}
@@ -898,6 +918,9 @@ virginica & 6.588 & 0.6358796\\
 \bottomrule
 \end{longtable*}
 
+\subsubsection{Variance decomposition and phylogenetic
+heritability}\label{variance-decomposition-and-phylogenetic-heritability}
+
 Among the four traits in our model (\fgmax, \gcl, \(\lambda\), and
 \(\tau\)), the preponderance of the variance was typically within or
 between individuals after accounting for treatment effects
@@ -925,7 +948,7 @@ measurement error, so should be interpreted with caution.
 
 \caption{\label{tbl-variance}Variance components of stomatal kinetic
 traits. The phylogenetic component is equivalent to the phylogenetic
-heritability. The population component is the nonphylogenetic variance
+heritability. The population component is the non-phylogenetic variance
 among populations. Between- and within-individual variance components
 are among individuals within a population after accounting for treatment
 effect. Estimates and 95\% confidence intervals (CI) are estimated as
@@ -1015,30 +1038,30 @@ confidence intervals).}
 \endlastfoot
 \addlinespace[0.3em]
 \multicolumn{2}{l}{\textbf{$\log(\lambda)$}}\\
-\hspace{1em}effect of $\log(f_g)$ on $\log(\lambda)$ & 0.12 [0.09, 0.14]\\
-\hspace{1em}effect of $\log(l_\mathrm{gc})$ on $\log(\lambda)$ & 0.13 [-0.20, 0.47]\\
-\hspace{1em}effect of curvetypepseudohypo on $\log(\lambda)$ & 0.05 [0.02, 0.07]\\
-\hspace{1em}effect of high measurement light intensity on $\log(\lambda)$ & 0.00 [-0.02, 0.03]\\
-\hspace{1em}intercept (shade, low light) & 0.06 [-0.96, 1.00]\\
-\hspace{1em}effect of sun growth treatment on $\log(\lambda)$ & 0.10 [0.06, 0.14]\\
+\hspace{1em}effect of $\log(l_\mathrm{gc})$ on $\log(\lambda)$ & 0.15 [-0.19, 0.50]\\
+\hspace{1em}effect of curvetypepseudohypo on $\log(\lambda)$ & 0.04 [0.01, 0.07]\\
+\hspace{1em}effect of high measurement light intensity on $\log(\lambda)$ & 0.01 [-0.01, 0.04]\\
+\hspace{1em}intercept (shade, low light) & -0.05 [-1.07, 0.95]\\
+\hspace{1em}effect of logitfgmax on $\log(\lambda)$ & 0.10 [0.08, 0.13]\\
+\hspace{1em}effect of sun growth treatment on $\log(\lambda)$ & 0.10 [0.05, 0.14]\\
 \addlinespace[0.3em]
 \multicolumn{2}{l}{\textbf{$\log(\tau)$}}\\
-\hspace{1em}effect of $\log(f_g)$ on $\log(\tau)$ & 0.22 [0.15, 0.28]\\
-\hspace{1em}effect of curvetypepseudohypo on $\log(\tau)$ & 0.16 [0.11, 0.21]\\
-\hspace{1em}effect of high measurement light intensity on $\log(\tau)$ & 0.14 [0.09, 0.20]\\
-\hspace{1em}intercept (shade, low light) & 5.60 [5.22, 5.92]\\
-\hspace{1em}effect of sun growth treatment on $\log(\tau)$ & 0.06 [0.02, 0.11]\\
-\addlinespace[0.3em]
-\multicolumn{2}{l}{\textbf{$\log(f_g)$}}\\
-\hspace{1em}effect of curvetypepseudohypo on $\log(f_g)$ & -0.62 [-0.65, -0.58]\\
-\hspace{1em}effect of high measurement light intensity on $\log(f_g)$ & 0.78 [0.75, 0.81]\\
-\hspace{1em}intercept (shade, low light) & -2.58 [-2.83, -2.29]\\
-\hspace{1em}effect of sun growth treatment on $\log(f_g)$ & -0.26 [-0.33, -0.20]\\
+\hspace{1em}effect of curvetypepseudohypo on $\log(\tau)$ & 0.14 [0.09, 0.19]\\
+\hspace{1em}effect of high measurement light intensity on $\log(\tau)$ & 0.17 [0.11, 0.23]\\
+\hspace{1em}intercept (shade, low light) & 5.49 [5.12, 5.87]\\
+\hspace{1em}effect of logitfgmax on $\log(\tau)$ & 0.19 [0.12, 0.25]\\
+\hspace{1em}effect of sun growth treatment on $\log(\tau)$ & 0.06 [0.01, 0.10]\\
 \addlinespace[0.3em]
 \multicolumn{2}{l}{\textbf{$\log(l_\mathrm{gc})$}}\\
 \hspace{1em}effect of curvetypepseudohypo on $\log(l_\mathrm{gc})$ & 0.06 [0.05, 0.07]\\
 \hspace{1em}intercept (shade, low light) & 2.90 [2.74, 3.07]\\
-\hspace{1em}effect of sun growth treatment on $\log(l_\mathrm{gc})$ & 0.12 [0.11, 0.13]\\*
+\hspace{1em}effect of sun growth treatment on $\log(l_\mathrm{gc})$ & 0.12 [0.11, 0.12]\\
+\addlinespace[0.3em]
+\multicolumn{2}{l}{\textbf{logitfgmax}}\\
+\hspace{1em}effect of curvetypepseudohypo on logitfgmax & -0.68 [-0.72, -0.65]\\
+\hspace{1em}effect of high measurement light intensity on logitfgmax & 0.82 [0.79, 0.86]\\
+\hspace{1em}intercept (shade, low light) & -2.45 [-2.72, -2.15]\\
+\hspace{1em}effect of sun growth treatment on logitfgmax & -0.27 [-0.34, -0.20]\\*
 
 \end{longtable}
 
@@ -1059,24 +1082,24 @@ confidence intervals).}
 $\Delta \text{LOOIC}$ & \fgmax & \gcl & \fgmax & \gcl\\
 \midrule
 \cellcolor{gray!10}{0.00} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{}\\
-4.34 & \cmark &  & \cmark & \cmark\\
-\cellcolor{gray!10}{5.63} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{}\\
-6.69 & \cmark & \cmark & \cmark & \cmark\\
-\cellcolor{gray!10}{20.89} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark}\\
+0.67 & \cmark &  & \cmark & \\
+\cellcolor{gray!10}{0.90} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark}\\
+6.71 & \cmark & \cmark & \cmark & \cmark\\
+\cellcolor{gray!10}{17.40} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark}\\
 \addlinespace
-21.65 & \cmark & \cmark &  & \cmark\\
-\cellcolor{gray!10}{26.14} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{}\\
-30.03 & \cmark &  &  & \\
-\cellcolor{gray!10}{44.71} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{}\\
-48.42 &  &  & \cmark & \\
+18.34 & \cmark & \cmark &  & \\
+\cellcolor{gray!10}{18.82} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{}\\
+29.19 & \cmark & \cmark &  & \cmark\\
+\cellcolor{gray!10}{42.42} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{}\\
+48.11 &  & \cmark & \cmark & \cmark\\
 \addlinespace
-\cellcolor{gray!10}{49.58} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark}\\
-54.02 &  & \cmark & \cmark & \cmark\\
-\cellcolor{gray!10}{69.10} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark}\\
-77.31 &  &  &  & \\
-\cellcolor{gray!10}{78.42} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark}\\
+\cellcolor{gray!10}{48.97} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark}\\
+50.09 &  & \cmark & \cmark & \\
+\cellcolor{gray!10}{65.91} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{}\\
+66.76 &  &  &  & \\
+\cellcolor{gray!10}{68.96} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark}\\
 \addlinespace
-88.14 &  & \cmark &  & \\
+69.52 &  &  &  & \cmark\\
 \bottomrule
 \end{tabular}
 
@@ -1236,28 +1259,28 @@ simulation using multiple sequences. \emph{Statistical Science}
 {Bayesian} {Regression} {Models}}. \emph{The American Statistician}
 \textbf{73}, 307--309 (2019).}
 
-\bibitem[\citeproctext]{ref-vehtari_practical_2017}
-\CSLLeftMargin{22. }%
-\CSLRightInline{A. Vehtari, A. Gelman, J. Gabry,
-\href{https://doi.org/10.1007/s11222-016-9696-4}{Practical {Bayesian}
-model evaluation using leave-one-out cross-validation and {WAIC}}.
-\emph{Statistics and Computing} \textbf{27}, 1413--1432 (2017).}
-
-\bibitem[\citeproctext]{ref-lynch_methods_1991}
-\CSLLeftMargin{23. }%
-\CSLRightInline{M. Lynch,
-\href{https://doi.org/10.1111/j.1558-5646.1991.tb04375.x}{Methods for
-the analysis of comparative data in evolutionary biology}.
-\emph{Evolution} \textbf{45}, 1065--1080 (1991).}
-
 \bibitem[\citeproctext]{ref-garamszegi_general_2014}
-\CSLLeftMargin{24. }%
+\CSLLeftMargin{22. }%
 \CSLRightInline{P. De Villemereuil, S. Nakagawa,
 {``\href{https://doi.org/10.1007/978-3-662-43550-2_11}{General
 {Quantitative} {Genetic} {Methods} for {Comparative} {Biology}}''} in
 \emph{Modern {Phylogenetic} {Comparative} {Methods} and {Their}
 {Application} in {Evolutionary} {Biology}}, L. Z. Garamszegi, Ed.
 (Springer Berlin Heidelberg, 2014), pp. 287--303.}
+
+\bibitem[\citeproctext]{ref-vehtari_practical_2017}
+\CSLLeftMargin{23. }%
+\CSLRightInline{A. Vehtari, A. Gelman, J. Gabry,
+\href{https://doi.org/10.1007/s11222-016-9696-4}{Practical {Bayesian}
+model evaluation using leave-one-out cross-validation and {WAIC}}.
+\emph{Statistics and Computing} \textbf{27}, 1413--1432 (2017).}
+
+\bibitem[\citeproctext]{ref-lynch_methods_1991}
+\CSLLeftMargin{24. }%
+\CSLRightInline{M. Lynch,
+\href{https://doi.org/10.1111/j.1558-5646.1991.tb04375.x}{Methods for
+the analysis of comparative data in evolutionary biology}.
+\emph{Evolution} \textbf{45}, 1065--1080 (1991).}
 
 \end{CSLReferences}
 
