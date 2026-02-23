@@ -87,4 +87,10 @@ left_join(
 ) |>
   # Remove those without stomatal anatomy data
   filter(!is.na(gmax)) |>
+  # Remove guard cell length outliers (see r/scratch - gcl outliers.R)
+  filter(
+    !((acc == "LA0407" & id == "P") | 
+      (acc == "LA4116" & id == "I") |
+      (acc == "LA0429" & id == "F"))
+    ) |>
   write_rds("data/joined-data.rds")

@@ -12,7 +12,7 @@ write_rds(list(logtau_threshold = logtau_threshold, n_removed = attr(joined_summ
 
 phy = read_rds("data/phylogeny.rds")
 A = vcv(phy, corr = TRUE)
-thin = 10
+thin = 11
 
 # Define formula
 bf_lambda0 = bf(loglambdamean | se(loglambdasd, sigma = TRUE) ~ 
@@ -75,6 +75,7 @@ fits = crossing(
         refresh = thin * 1e2,
         control = list(adapt_delta = 0.9),
         backend = "cmdstanr",
+        family = student(),
         seed = 613135062 + i
       ) |> add_criterion("loo")
     }, .options = furrr_options(seed = TRUE), .progress = TRUE)
