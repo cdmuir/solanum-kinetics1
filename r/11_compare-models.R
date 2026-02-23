@@ -1,7 +1,7 @@
 # Compare models using LOOIC
 source("r/header.R")
 
-plan(multisession, workers = 9)
+plan(multisession, workers = 19)
 
 fits = read_rds("objects/fits.rds") |>
   mutate(loo = map(fit, \(.x) .x$criteria$loo))
@@ -30,11 +30,11 @@ map2_dfr(fits$fit, fits$model, \(.fit, .name) {
                          names = c("response", "explanatory")) |>
     filter(
       str_detect(response, "^log(lambda|tau)mean$"),
-      explanatory %in% c("logfgmax", "loggcl")
+      explanatory %in% c("logitfgmax", "loggcl")
     ) |>
     mutate(
       response = fct_recode(response, `$\\lambda$` = "loglambdamean", `$\\tau$` = "logtaumean"),
-      explanatory = fct_recode(explanatory, `\\gcl` = "loggcl", `\\fgmax` = "logfgmax"),
+      explanatory = fct_recode(explanatory, `\\gcl` = "loggcl", `\\fgmax` = "logitfgmax"),
       model = .name
     )
   

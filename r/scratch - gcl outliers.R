@@ -9,6 +9,7 @@ hist(fit$data$loggcl)
 fit1 = lm(loggcl ~ lighttreatment + curve_type + phy, data = fit$data)
 anova(fit1)
 qqnorm(resid(fit1))
+qqline(resid(fit1))
 fit$data$resid = resid(fit1)
 
 fit$data |>
