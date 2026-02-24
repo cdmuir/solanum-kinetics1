@@ -12,7 +12,7 @@ write_rds(list(logtau_threshold = logtau_threshold, n_removed = attr(joined_summ
 
 phy = read_rds("data/phylogeny.rds")
 A = vcv(phy, corr = TRUE)
-thin = 11
+thin = 12
 
 # Define formula
 bf_lambda0 = bf(loglambdamean | se(loglambdasd, sigma = TRUE) ~ 
