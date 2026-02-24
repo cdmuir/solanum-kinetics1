@@ -463,6 +463,10 @@ kable(
 
 ```
 
+### Stomatal anatomy
+
+size, density, gmax, fgmax
+
 ### Hypothesis generation and testing
 
 The primary aims and *a priori* hypotheses of this study were not to study stomatal kinetic parameters and are described in @muir_plasticity_2025. The idea to use \gsw response curves generated during this study to test hypotheses about which traits influence stomatal kinetics came after the data had been collected, but not yet analyzed for this purpose. Before analyzing the data, we planned to test two hypotheses based on a recent metaanalysis of stomatal responses to light [@woning_revisiting_2026]. We hypothesized that 1) guard cell size would influence $\tau$ and 2) that $\tau$ would be greater on the abaxial-only leaves. We planned to compare relationships within and among populations using phylogenetic comparative methods. We made the decision to test for an association between \fgmax and $\tau$ after exploratory analyses revealed a potential association. Adding hypotheses after some results have been analyzed, also known as "Hypothesizing After Results Known" (HARKing), can lead to reports of spurious associations that are not repeatable in later studies [@kerr_harking_1998; @smaldino_natural_2016]. Therefore, our conclusions about the effect of \fgmax on stomatal kinetics should be interpreted with caution until they are replicated.
