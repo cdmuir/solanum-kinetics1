@@ -1,4 +1,5 @@
 % Options for packages loaded elsewhere
+% Options for packages loaded elsewhere
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
 \PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
@@ -7,21 +8,22 @@
   letterpaper,
   DIV=11,
   numbers=noendperiod]{scrartcl}
-
+\usepackage{xcolor}
 \usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
 \usepackage{iftex}
 \ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
 \else % if luatex or xetex
-  \usepackage{unicode-math}
+  \usepackage{unicode-math} % this also loads fontspec
   \defaultfontfeatures{Scale=MatchLowercase}
   \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
 \fi
 \usepackage{lmodern}
-\ifPDFTeX\else  
-    % xetex/luatex font selection
+\ifPDFTeX\else
+  % xetex/luatex font selection
   \setmainfont[]{Times New Roman}
 \fi
 % Use upquote if available, for straight quotes in verbatim environments
@@ -40,22 +42,32 @@
 }{% if KOMA class
   \KOMAoptions{parskip=half}}
 \makeatother
-\usepackage{xcolor}
-\setlength{\emergencystretch}{3em} % prevent overfull lines
-\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
 % Make \paragraph and \subparagraph free-standing
+\makeatletter
 \ifx\paragraph\undefined\else
   \let\oldparagraph\paragraph
-  \renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+  \renewcommand{\paragraph}{
+    \@ifstar
+      \xxxParagraphStar
+      \xxxParagraphNoStar
+  }
+  \newcommand{\xxxParagraphStar}[1]{\oldparagraph*{#1}\mbox{}}
+  \newcommand{\xxxParagraphNoStar}[1]{\oldparagraph{#1}\mbox{}}
 \fi
 \ifx\subparagraph\undefined\else
   \let\oldsubparagraph\subparagraph
-  \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+  \renewcommand{\subparagraph}{
+    \@ifstar
+      \xxxSubParagraphStar
+      \xxxSubParagraphNoStar
+  }
+  \newcommand{\xxxSubParagraphStar}[1]{\oldsubparagraph*{#1}\mbox{}}
+  \newcommand{\xxxSubParagraphNoStar}[1]{\oldsubparagraph{#1}\mbox{}}
 \fi
+\makeatother
 
 
-\providecommand{\tightlist}{%
-  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}\usepackage{longtable,booktabs,array}
+\usepackage{longtable,booktabs,array}
 \usepackage{calc} % for calculating minipage widths
 % Correct order of tables after \paragraph or \subparagraph
 \usepackage{etoolbox}
@@ -67,17 +79,21 @@
 \makesavenoteenv{longtable}
 \usepackage{graphicx}
 \makeatletter
-\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
-\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
-\makeatother
-% Scale images if necessary, so that they will not overflow the page
-% margins by default, and it is still possible to overwrite the defaults
-% using explicit options in \includegraphics[width, height, ...]{}
-\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
 % Set default figure placement to htbp
-\makeatletter
 \def\fps@figure{htbp}
 \makeatother
+
+
 % definitions for citeproc citations
 \NewDocumentCommand\citeproctext{}{}
 \NewDocumentCommand\citeproc{mm}{%
@@ -111,6 +127,18 @@
 \newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{\strut#1\strut}}
 \newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{\strut#1\strut}}
 \newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
+
+
+
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+
+
+ 
+
 
 \usepackage{booktabs}
 \usepackage{longtable}
@@ -156,6 +184,7 @@
 \usepackage{physics}
 \usepackage{pifont}
 \newcommand{\cmark}{\ding{51}}
+\DeclareMathOperator{\logit}{logit}
 \makeatletter
 \@ifpackageloaded{caption}{}{\usepackage{caption}}
 \AtBeginDocument{%
@@ -197,13 +226,9 @@
 \@ifpackageloaded{caption}{}{\usepackage{caption}}
 \@ifpackageloaded{subcaption}{}{\usepackage{subcaption}}
 \makeatother
-\ifLuaTeX
-  \usepackage{selnolig}  % disable illegal ligatures
-\fi
 \usepackage{bookmark}
-
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
-\urlstyle{same} % disable monospaced font for URLs
+\urlstyle{same}
 \hypersetup{
   pdftitle={Guard cell size and pore aperture influence stomatal closure kinetics},
   pdfauthor={Christopher D. Muir\^{}\{1,2*\}; Wei Shen Lim\^{}\{1\}},
@@ -214,13 +239,14 @@
   urlcolor={Blue},
   pdfcreator={LaTeX via pandoc}}
 
+
 \title{Guard cell size and pore aperture influence stomatal closure
 kinetics}
 \author{Christopher D. Muir\(^{1,2*}\) \and Wei Shen Lim\(^{1}\)}
 \date{}
-
 \begin{document}
 \maketitle
+
 
 \begin{center}
 $^1$School of Life Sciences, University of Hawaiʻi; Mānoa, Hawaiʻi, USA\\
@@ -686,8 +712,6 @@ uncertainty (standard deviation) for subsequent analyses.
 
 \centering{
 
-\captionsetup{labelsep=none}
-
 \begin{tabular}{lccccc}
 \toprule
 \multicolumn{1}{c}{ } & \multicolumn{4}{c}{Measurement light intensity} & \multicolumn{1}{c}{ } \\
@@ -706,6 +730,10 @@ Total & 520 & 519 & 545 & 540 & 2,124\\
 }
 
 \end{table}%
+
+\subsubsection{Stomatal anatomy}\label{stomatal-anatomy}
+
+size, density, gmax, fgmax
 
 \subsubsection{Hypothesis generation and
 testing}\label{hypothesis-generation-and-testing}
@@ -865,22 +893,65 @@ increasing \(\tau\) from its median to maximum value increased
 \(t_{50}\) by 129 s. Hence, we primarily focus on treatments and
 anatomical parameters affect \(\tau\).
 
+\subsubsection{Effects of light intensity treatments on guard cell
+length and
+aperture}\label{effects-of-light-intensity-treatments-on-guard-cell-length-and-aperture}
+
+On average, guard cell length increased by \(12.2\)\% {[}95\% CI:
+\(11.3\) to \(13.3\)\%{]} in the sun treatment
+(Figure~\ref{fig-accession-anatomy}a; Table~\ref{tbl-fit}). The average
+\gcl{} of pseudohypo leaves was \(6.2\)\% {[}95\% CI: \(5.2\) to
+\(7.1\)\%{]} greater than amphi leaves
+(Figure~\ref{fig-accession-anatomy}a; Table~\ref{tbl-fit}). This was not
+because of plasticity because we amphi and pseudohypo curves on the same
+leaf. Rather, this was a compositione ffect. Adaxial stomata tended to
+be slightly smaller than abaxial stomata, so the average \gcl{} in
+pseudohypo leaves was slightly higher than in amphi leaves because the
+former only included abaxial stomata.
+
+EFFECT OF LIGHT TREATMENTS ON FGMAX
+
+\begin{figure}
+
+\centering{
+
+\pandocbounded{\includegraphics[keepaspectratio]{../figures/accession-anatomy.pdf}}
+
+}
+
+\caption{\label{fig-accession-anatomy}\textbf{Guard cell length (\gcl) and stomatal conductance as a fraction  a maximum conductance (\fgmax) vary among populations and treatments.}
+In both panels, black points are mean trait value per population within
+a particular treatment. Gray lines connect values within populations
+across treatments. (a) Most of the variation in \gcl{} is among
+populations, but developmental plasticity to growth light intensity
+tends to increase \gcl in sun (left facet) compared to shade (right
+facet) grown plants. There is no plasticity to curve type (amphi
+vs.~pseudohypo), but the average \gcl{} is slightly high in pseudohypo
+leaves because abaxial stomata tended to be larger than adaxial stomata
+on the same leaf. (b) Measurement light intensity has the most direct
+effect on \fgmax{} because stomatal aperture increases under high light
+intensity. To a lesser extent, \fgmax varies among populations and is
+slightly lower in sun-grown plants. ADD RESULTS ON EFFECT OF CURVE
+TYPE.}
+
+\end{figure}%
+
 \subsubsection{\texorpdfstring{Effects of light intensity treatments on
 \(\tau\)}{Effects of light intensity treatments on \textbackslash tau}}\label{effects-of-light-intensity-treatments-on-tau}
 
 Growth light intensity did not significantly affect \(\tau\)
 Figure~\ref{fig-accession-kinetics}. In sun plants, \(\tau\) was on
-average 5.73\% {[}95\% CI: 1.36 to 11\%{]} lower than in shade plants
+average 5.54\% {[}95\% CI: 0.96 to 10.3\%{]} lower than in shade plants
 after accounting for other explanatory variables. Within the same leaf,
 increasing the measurement light intensity prior to the humidity step
 change from \ppfdqty{150} to \ppfdqty{2000} significantly increased
-\(\tau\) by 18.5\% {[}95\% CI: 12 to 25.4\%{]}
+\(\tau\) by 18.6\% {[}95\% CI: 12.1 to 25.1\%{]}
 Figure~\ref{fig-accession-kinetics}. The time lag \(\lambda\) responded
 to growth, but not measurement light intensity after accounting for
 other explanatory variables Figure~\ref{fig-accession-kinetics}. In sun
-plants, \(\tau\) was on average 10.2\% {[}95\% CI: 5.42 to 15\%{]}
+plants, \(\tau\) was on average 10.3\% {[}95\% CI: 5.93 to 15.5\%{]}
 greater than in shade plants. Higher measurement light decreased
-increased \(\lambda\) slightly by 1.36\% {[}95\% CI: -0.936 to 3.8\%{]}.
+increased \(\lambda\) slightly by 1.31\% {[}95\% CI: -1.07 to 3.82\%{]}.
 
 \begin{itemize}
 \tightlist
@@ -892,7 +963,7 @@ increased \(\lambda\) slightly by 1.36\% {[}95\% CI: -0.936 to 3.8\%{]}.
 
 \centering{
 
-\includegraphics{../figures/accession-kinetics.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{../figures/accession-kinetics.pdf}}
 
 }
 
@@ -936,7 +1007,7 @@ measurement error, so should be interpreted with caution.
 
 \centering{
 
-\includegraphics{../figures/variance.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{../figures/variance.pdf}}
 
 }
 
@@ -1038,30 +1109,30 @@ confidence intervals).}
 \endlastfoot
 \addlinespace[0.3em]
 \multicolumn{2}{l}{\textbf{$\log(\lambda)$}}\\
-\hspace{1em}effect of $\log(l_\mathrm{gc})$ on $\log(\lambda)$ & 0.15 [-0.19, 0.50]\\
-\hspace{1em}effect of curvetypepseudohypo on $\log(\lambda)$ & 0.04 [0.01, 0.07]\\
+\hspace{1em}effect of $\log(l_\mathrm{gc})$ on $\log(\lambda)$ & 0.14 [-0.20, 0.48]\\
+\hspace{1em}effect of $\logit(f_g)$ on $\log(\lambda)$ & 0.10 [0.08, 0.13]\\
 \hspace{1em}effect of high measurement light intensity on $\log(\lambda)$ & 0.01 [-0.01, 0.04]\\
-\hspace{1em}intercept (shade, low light) & -0.05 [-1.07, 0.95]\\
-\hspace{1em}effect of logitfgmax on $\log(\lambda)$ & 0.10 [0.08, 0.13]\\
-\hspace{1em}effect of sun growth treatment on $\log(\lambda)$ & 0.10 [0.05, 0.14]\\
+\hspace{1em}intercept (shade, low light) & -0.03 [-1.01, 0.99]\\
+\hspace{1em}effect of pseudohypostomatous curve type on $\log(\lambda)$ & 0.04 [0.01, 0.07]\\
+\hspace{1em}effect of sun growth treatment on $\log(\lambda)$ & 0.10 [0.06, 0.14]\\
 \addlinespace[0.3em]
 \multicolumn{2}{l}{\textbf{$\log(\tau)$}}\\
-\hspace{1em}effect of curvetypepseudohypo on $\log(\tau)$ & 0.14 [0.09, 0.19]\\
-\hspace{1em}effect of high measurement light intensity on $\log(\tau)$ & 0.17 [0.11, 0.23]\\
-\hspace{1em}intercept (shade, low light) & 5.49 [5.12, 5.87]\\
-\hspace{1em}effect of logitfgmax on $\log(\tau)$ & 0.19 [0.12, 0.25]\\
-\hspace{1em}effect of sun growth treatment on $\log(\tau)$ & 0.06 [0.01, 0.10]\\
+\hspace{1em}effect of $\logit(f_g)$ on $\log(\tau)$ & 0.19 [0.13, 0.25]\\
+\hspace{1em}effect of high measurement light intensity on $\log(\tau)$ & 0.17 [0.11, 0.22]\\
+\hspace{1em}intercept (shade, low light) & 5.47 [5.10, 5.82]\\
+\hspace{1em}effect of pseudohypostomatous curve type on $\log(\tau)$ & 0.14 [0.09, 0.19]\\
+\hspace{1em}effect of sun growth treatment on $\log(\tau)$ & 0.05 [0.01, 0.10]\\
 \addlinespace[0.3em]
 \multicolumn{2}{l}{\textbf{$\log(l_\mathrm{gc})$}}\\
-\hspace{1em}effect of curvetypepseudohypo on $\log(l_\mathrm{gc})$ & 0.06 [0.05, 0.07]\\
-\hspace{1em}intercept (shade, low light) & 2.90 [2.74, 3.07]\\
+\hspace{1em}intercept (shade, low light) & 2.89 [2.73, 3.04]\\
+\hspace{1em}effect of pseudohypostomatous curve type on $\log(l_\mathrm{gc})$ & 0.06 [0.05, 0.07]\\
 \hspace{1em}effect of sun growth treatment on $\log(l_\mathrm{gc})$ & 0.12 [0.11, 0.12]\\
 \addlinespace[0.3em]
-\multicolumn{2}{l}{\textbf{logitfgmax}}\\
-\hspace{1em}effect of curvetypepseudohypo on logitfgmax & -0.68 [-0.72, -0.65]\\
-\hspace{1em}effect of high measurement light intensity on logitfgmax & 0.82 [0.79, 0.86]\\
-\hspace{1em}intercept (shade, low light) & -2.45 [-2.72, -2.15]\\
-\hspace{1em}effect of sun growth treatment on logitfgmax & -0.27 [-0.34, -0.20]\\*
+\multicolumn{2}{l}{\textbf{$\logit(f_g)$}}\\
+\hspace{1em}effect of high measurement light intensity on $\logit(f_g)$ & 0.82 [0.80, 0.85]\\
+\hspace{1em}intercept (shade, low light) & -2.46 [-2.73, -2.19]\\
+\hspace{1em}effect of pseudohypostomatous curve type on $\logit(f_g)$ & -0.68 [-0.71, -0.65]\\
+\hspace{1em}effect of sun growth treatment on $\logit(f_g)$ & -0.27 [-0.34, -0.21]\\*
 
 \end{longtable}
 
@@ -1071,9 +1142,6 @@ confidence intervals).}
 
 \centering{
 
-\captionsetup{labelsep=none}
-
-[!h]
 \centering
 \begin{tabular}[t]{lcccc}
 \toprule
@@ -1082,30 +1150,40 @@ confidence intervals).}
 $\Delta \text{LOOIC}$ & \fgmax & \gcl & \fgmax & \gcl\\
 \midrule
 \cellcolor{gray!10}{0.00} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{}\\
-0.67 & \cmark &  & \cmark & \\
-\cellcolor{gray!10}{0.90} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark}\\
-6.71 & \cmark & \cmark & \cmark & \cmark\\
-\cellcolor{gray!10}{17.40} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark}\\
+1.75 & \cmark & \cmark & \cmark & \cmark\\
+\cellcolor{gray!10}{4.79} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark}\\
+8.47 & \cmark &  & \cmark & \\
+\cellcolor{gray!10}{16.78} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark}\\
 \addlinespace
-18.34 & \cmark & \cmark &  & \\
-\cellcolor{gray!10}{18.82} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{}\\
-29.19 & \cmark & \cmark &  & \cmark\\
-\cellcolor{gray!10}{42.42} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{}\\
-48.11 &  & \cmark & \cmark & \cmark\\
+17.55 & \cmark & \cmark &  & \\
+\cellcolor{gray!10}{18.64} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{}\\
+24.36 & \cmark & \cmark &  & \cmark\\
+\cellcolor{gray!10}{45.05} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark}\\
+45.35 &  &  & \cmark & \cmark\\
 \addlinespace
-\cellcolor{gray!10}{48.97} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark}\\
-50.09 &  & \cmark & \cmark & \\
-\cellcolor{gray!10}{65.91} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{}\\
-66.76 &  &  &  & \\
-\cellcolor{gray!10}{68.96} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark}\\
+\cellcolor{gray!10}{49.00} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{}\\
+52.07 &  &  & \cmark & \\
+\cellcolor{gray!10}{64.96} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{}\\
+65.26 &  &  &  & \\
+\cellcolor{gray!10}{68.78} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark}\\
 \addlinespace
-69.52 &  &  &  & \cmark\\
+71.41 &  &  &  & \cmark\\
 \bottomrule
 \end{tabular}
 
 }
 
 \end{table}%
+
+\subsection{Discussion}\label{discussion}
+
+effect of fgmax is not simply because high light intensity increased
+fgmax and tau. Causal inference dissects different causal paths and
+shows direct effect of fgmax on tau within populations and treatments
+
+caveat: this treatment is a hammer than exposes maximum rate of stomatal
+closure. The factors which influence this may not explain variance in
+kinetics in more natural conditions.
 
 \subsection{References}\label{references}
 
@@ -1347,6 +1425,7 @@ ratio. Assume constant transport per surface area. Surface area
 determined by geometry.
 
 What is eqn for this?
+
 
 
 
