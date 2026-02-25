@@ -1,4 +1,4 @@
-# Plot accession-level gcl against tau (a bit messy, but getting close)
+# Plot accession-level gcl against tau
 source("r/header.R")
 
 fit = read_rds("objects/best_model.rds")
@@ -14,7 +14,7 @@ df_new = crossing(
          variable = paste0("...", row_number())) |> full_join(
            fit$data |>
              summarize(
-               logfgmax = median(logfgmax),
+               logitfgmax = median(logitfgmax),
                .by = c(curve_type, lightintensity, lighttreatment)
              ),
            by = join_by(curve_type, lightintensity, lighttreatment)
@@ -92,8 +92,8 @@ p = ggplot(df_acc, aes(exp(loggcl), exp(logtaumean), color = curve_type)) +
   labs(
     x = expression(Guard ~ cell ~ length ~ (paste(mu, "m"))),
     y = expression(tau ~ (s)),
-    color = "Curve type",
-    fill = "Curve type"
+    color = "Curve type:",
+    fill = "Curve type:"
   ) +
   theme(legend.position = "bottom")
 

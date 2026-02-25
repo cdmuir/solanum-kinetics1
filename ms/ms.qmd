@@ -40,6 +40,7 @@ header-includes: |
   \usepackage{physics}
   \usepackage{pifont}
   \newcommand{\cmark}{\ding{51}}
+  \DeclareMathOperator{\logit}{logit}
 mainfont: Times New Roman
 bibliography: solanum-kinetics.bib
 csl: https://www.zotero.org/styles/pnas
@@ -70,6 +71,7 @@ library(kableExtra)
 library(knitr)
 library(lubridate)
 library(magrittr)
+library(posterior)
 library(purrr)
 library(readr)
 library(stringr)
@@ -253,6 +255,19 @@ max_lambda = tab_estimates |>
   pull(estimate) |>
   max()
 
+# Effect of light treatments and curve type on gcl and fgmax
+post_gcl_sun = fit |>
+  as_draws_df() |>
+  select(b_loggcl_lighttreatmentsun) |>
+  summarize_draws(estimate = median, quantile2, .args= list(probs = c(0.025, 0.975))) |>
+  mutate(across(where(is.numeric), log_to_percent))
+
+post_gcl_curvetype = fit |>
+  as_draws_df() |>
+  select(b_loggcl_curve_typepseudohypo) |>
+  summarize_draws(estimate = median, quantile2, .args= list(probs = c(0.025, 0.975))) |>
+  mutate(across(where(is.numeric), log_to_percent))
+
 partial_cor = read_rds("../objects/partial-cor.rds") |>
   filter(name == "logtaumean_Intercept__loggcl_Intercept")
 rho = partial_cor$median
@@ -351,9 +366,10 @@ In this equation, \gsw is stomatal conductance at time $t$, $g_\text{i}$ is the 
 
 ## Materials and Methods {#sec-methods}
 
-### Populations
+### Populations and phylogeny
 
-We analyzed stomatal responses to changing humidity among `r n_acc` ecologically diverse populations of wild tomato, including representatives of all described species of *Solanum* sect. *Lycopersicon* and sect. *Lycopersicoides* [@peralta_taxonomy_2008] and the cultivated tomato *S. lycopersicum* var. *lycopersicum* (@tbl-populations), as described in @muir_plasticity_2025. These populations were selected because they encompass the breadth of climatic variation in the wild tomato clade [@pease_phylogenomics_2016]. In one case, we substituted a congeneric population of the species (*S. galapagense*) because of difficulty growing the focal population and we also added a population of *S. pennellii*. Due to constraints on growth space and time, we spread out measurements over `r n_weeks` weeks from `r start_licor_date` to `r end_licor_date`. Replicates within population were evenly spread out over this period to prevent confounding of temporal variation in growth conditions with variation among populations. 
+We analyzed stomatal responses to changing humidity among `r n_acc` ecologically diverse populations of wild tomato, including representatives of all described species of *Solanum* sect. *Lycopersicon* and sect. *Lycopersicoides* [@peralta_taxonomy_2008] and the cultivated tomato *S. lycopersicum* var. *lycopersicum* (@tbl-populations), as described in @muir_plasticity_2025. These populations were selected because they encompass the breadth of climatic variation in the wild tomato clade [@pease_phylogenomics_2016]. In one case, we substituted a congeneric population of the species (*S. galapagense*) because of difficulty growing the focal population and we also added a population of *S. pennellii*. Due to constraints on growth space and time, we spread out measurements over `r n_weeks` weeks from `r start_licor_date` to `r end_licor_date`. Replicates within population were evenly spread out over this period to prevent confounding of temporal variation in growth conditions with variation among populations. To estimate phylogenetic effects, we used the RAxML whole-transcriptome concatenated phylogeny based on 2,745 100-kb genomic windows from @pease_phylogenomics_2016. Two of our populations were not in this tree. We used accession LA1044 in place of LA3909, two populations of *S. galapagense*; LA0750 was added as sister to LA0716, two closely related populations of *S. pennellii*. The node separating LA0750 from LA0716 was placed half-way between the next deepest node. 
+
 
 ```{r, populations, eval=TRUE,echo=FALSE,message=FALSE,warning=FALSE}
 #| label: tbl-populations
@@ -462,6 +478,10 @@ kable(
 
 ```
 
+### Stomatal anatomy
+
+size, density, gmax, fgmax
+
 ### Hypothesis generation and testing
 
 The primary aims and *a priori* hypotheses of this study were not to study stomatal kinetic parameters and are described in @muir_plasticity_2025. The idea to use \gsw response curves generated during this study to test hypotheses about which traits influence stomatal kinetics came after the data had been collected, but not yet analyzed for this purpose. Before analyzing the data, we planned to test two hypotheses based on a recent metaanalysis of stomatal responses to light [@woning_revisiting_2026]. We hypothesized that 1) guard cell size would influence $\tau$ and 2) that $\tau$ would be greater on the abaxial-only leaves. We planned to compare relationships within and among populations using phylogenetic comparative methods. We made the decision to test for an association between \fgmax and $\tau$ after exploratory analyses revealed a potential association. Adding hypotheses after some results have been analyzed, also known as "Hypothesizing After Results Known" (HARKing), can lead to reports of spurious associations that are not repeatable in later studies [@kerr_harking_1998; @smaldino_natural_2016]. Therefore, our conclusions about the effect of \fgmax on stomatal kinetics should be interpreted with caution until they are replicated.
@@ -470,21 +490,13 @@ We estimated $\tau$ and $\lambda$ for each response curve by fitting @eq-weibull
 
 We next used estimates of $\tau$ from each curve in multiresponse Bayesian mixed effects models with phylogenetically structured random effects to answer the following core questions:
 
-1. Are \gcl and \fgmax positively associated with $\tau$?
-2. At what biological levels of organization do \gcl and \fgmax influence $\tau$?
+1. Are \gcl{} and \fgmax{} positively associated with $\tau$?
+2. At what biological levels of organization do \gcl{} and \fgmax{} influence $\tau$?
 3. Are abaxial-only stomatal responses slower than whole leaf stomatal responses?
 
-SCRAPS THAT I NEED TO WEAVE INTO MS
+We used a combination of model selection and parameter estimation to evaluate these hypotheses. All statistical models included fixed effects of manipulative treatments: growth light intensity (sun and shade); measurement light intensity (high and low); and curve type (amphistomatous and pseudohypostomatous). All models also included population as both a phylogenetically structured random effect and a non-phylogenetic random effect following @halliwell_multi-response_2025. Prior to fitting, the phylogenetic (co)variance matrix was rescaled as a correlation matrix [@garamszegi_general_2014]. For traits measured multiple times within the same leaf (\fgmax, $\lambda$, $\tau$) we included a random effect of individual to account for repeated measures. We accounted for uncertainty in $\tau$ and $\lambda$ using the standard deviation of the posterior distribution of each estimate (see 'Humidity response curves' for details). We modeled residual (co)variance, a combination among-individual (co)variance and measurement error, as a multivariate Student $t$-distribution, which is more robust to extreme values than the multivariate normal distribution [@gelman_bayesian_2014]. To account for heteroskedasticity, bounded measurements, and linearize relationships, \gcl, $\lambda$, and $\tau$ were log-transformed prior to analysis whereas \fgmax{} was logit-transformed. All models were fit with *Stan* following the same methods described above for fitting @eq-weibull to the humidity response curves. 
 
-We used a combination of model selection and parameter estimation to evaluate these hypotheses. All statistical models included fixed effects of manipulative treatments: growth light intensity (sun and shade); measurement light intensity (high and low); and curve type (amphistomatous and pseudohypostomatous). All models also included population as a phylogenetically structured random effect. 
-
-We accounted for uncertainty in $\tau$ and $\lambda$ using the standard deviation of the posterior distribution of each estimate (see above). 
-
-We used the RAxML whole-transcriptome concatenated phylogeny based on 2,745 100-kb genomic windows from @pease_phylogenomics_2016. Two of our populations were not in this tree. We used accession LA1044 in place of LA3909, two populations of *S. galapagense*; LA0750 was added as sister to LA0716, two closely related populations of *S. pennellii*. The node separating LA0750 from LA0716 was placed half-way between the next deepest node. 
-
-### inferring different levels of effects??
-
-We analyzed three nonmutually exclusive paths through which \fgmax and \gcl could influence stomatal kinetic parameters $\lambda$ and $\tau$. First, we inferred phylogenetic effects by estimating the phylogenetic correlation among populations between anatomical (\fgmax and \gcl) and kinetic ($\lambda$ and $\tau$) variables. To test for causation, we used the phylogenetic covariance matrix to estimate partial correlations between anatomical and kinetic variables [@halliwell_multiresponse_2025]. We interpret a significant partial correlation between variables as a plausible causal hypothesis. Second, we inferred individual-level effects of \fgmax and \gcl on kinetic parameters using linear multiple regression that simultaneously accounts for phylogenetic and treatment effects. We used the leave-one-out cross-validation information criterion (LOOIC) to compare the fit of models using the *R* package **loo** version `r packageVersion("loo")` [@vehtari_practical_2017] to calculate LOOIC values. We compared models with all permutations of \fgmax and \gcl influencing $\lambda$ and $\tau$. We selected the model with the lowest LOOIC value (@tbl-comparison) to generate posterior predictions for hypothesis testing. If an effect was included in the best model (lowest LOOIC), then we considered whether the 95% confidence interval overlapped zero to ascertain a significant effect. 
+To answer questions 1 and 2 above, we analyzed three nonmutually exclusive paths through which \fgmax{} and \gcl{} could influence stomatal kinetic parameters $\lambda$ and $\tau$. First, we inferred phylogenetic effects by estimating the phylogenetic correlation among populations between anatomical (\fgmax{} and \gcl{}) and kinetic ($\lambda$ and $\tau$) variables. To test for possible causation, we used the inferred phylogenetic trait covariance matrix to estimate partial correlations between anatomical and kinetic variables [@halliwell_multiresponse_2025]. We interpret a significant partial correlation between variables as a plausible causal hypothesis. Second, we inferred individual-level effects of \fgmax{} and \gcl{} on kinetic parameters using linear multiple regression that simultaneously accounts for phylogenetic and treatment effects. We used the leave-one-out cross-validation information criterion (LOOIC) to compare the fit of models using the *R* package **loo** version `r packageVersion("loo")` [@vehtari_practical_2017] to calculate LOOIC values. We compared models with all permutations of \fgmax{} and \gcl{} influencing $\lambda$ and $\tau$. We selected the model with the lowest LOOIC value (@tbl-comparison) to generate posterior predictions for hypothesis testing. If an effect was included in the best model (lowest LOOIC), then we considered whether the 95% confidence interval overlapped zero to ascertain a significant effect of \fgmax{} and \gcl{} on kinetic parameters. 
 
 THIRD: mediating treatment effects (plasticity)
 
@@ -519,6 +531,19 @@ add info
 ### The time-constant $\tau$ characterizes stomatal kinetics
 
 Stomatal conductance (\gsw) decreased rapidly in response to a step change in humidity. The model in @eq-weibull fit the data extremely well ([@fig-rh-curves]). The mean and minimum Bayesian $R^2$ across all curves was `r formatC(mean_r2, format = "f", digits = 4)` and `r formatC(min_r2, format = "f", digits = 4)`, respectively. Consider a typical leaf in the experiment characterized by the median time constant ($\tau$) and lag time ($\lambda$) among wild tomato accessions in all treatments. After humidity decreased and the transient wrong way response elapsed, it took `r prettyNum(round(median_tau * log(2) ^ (1 / median_lambda)))` s for \gsw to decrease half-way ($t_{50}$) from its initial ($g_\text{i}$) to final (($g_\text{f}$) steady state value. In terms of the kinetic model parameters, most variation among leaves was due to difference in the time constant rather than the lag time. In the previous example, increasing $\lambda$ from its median to its maximum estimated value among accessions increased the $t_{50}$ by only `r prettyNum(round(median_tau * log(2) ^ (1 / max_lambda) - median_tau * log(2) ^ (1 / median_lambda), 1))` s. In contrast, increasing $\tau$ from its median to maximum value increased $t_{50}$ by `r prettyNum(round(max_tau * log(2) ^ (1 / median_lambda) - median_tau * log(2) ^ (1 / median_lambda)))` s. Hence, we primarily focus on treatments and anatomical parameters affect $\tau$.
+
+### Effects of light intensity treatments on guard cell length and aperture
+
+On average, guard cell length increased by $`r formatC(post_gcl_sun[['estimate']], format = 'f', digits = 1)`$% [95% CI: $`r formatC(post_gcl_sun[['q2.5']], format = 'f', digits = 1)`$ to $`r formatC(post_gcl_sun[['q97.5']], format = 'f', digits = 1)`$%] in the sun treatment ([@fig-accession-anatomy]a; [@tbl-fit]). The average \gcl{} of pseudohypo leaves was $`r formatC(post_gcl_curvetype[['estimate']], format = 'f', digits = 1)`$% [95% CI: $`r formatC(post_gcl_curvetype[['q2.5']], format = 'f', digits = 1)`$ to $`r formatC(post_gcl_curvetype[['q97.5']], format = 'f', digits = 1)`$%] greater than amphi leaves ([@fig-accession-anatomy]a; [@tbl-fit]). This was not because of plasticity because we amphi and pseudohypo curves on the same leaf. Rather, this was a composition effect. Adaxial stomata tended to be slightly smaller than abaxial stomata, so the average \gcl{} in pseudohypo leaves was slightly higher than in amphi leaves because the former only included abaxial stomata. 
+
+EFFECT OF LIGHT TREATMENTS ON FGMAX
+
+```{r, fig-accession-anatomy, echo = FALSE}
+#| label: fig-accession-anatomy
+#| fig-align: center
+#| fig-cap: "\\textbf{Guard cell length (\\gcl) and stomatal conductance as a fraction  a maximum conductance (\\fgmax) vary among populations and treatments.} In both panels, black points are mean trait value per population within a particular treatment. Gray lines connect values within populations across treatments. (a) Most of the variation in \\gcl{} is among populations, but developmental plasticity to growth light intensity tends to increase \\gcl in sun (left facet) compared to shade (right facet) grown plants. There is no plasticity to curve type (amphi vs. pseudohypo), but the average \\gcl{} is slightly high in pseudohypo leaves because abaxial stomata tended to be larger than adaxial stomata on the same leaf. (b) Measurement light intensity has the most direct effect on \\fgmax{} because stomatal aperture increases under high light intensity. To a lesser extent, \\fgmax varies among populations and is slightly lower in sun-grown plants. ADD RESULTS ON EFFECT OF CURVE TYPE. "
+knitr::include_graphics("../figures/accession-anatomy.pdf")
+```
 
 ### Effects of light intensity treatments on $\tau$
 
@@ -560,7 +585,7 @@ knitr::include_graphics("../figures/variance.pdf")
 ```{r, variance-cap, echo = FALSE}
 symbol_definitions = glue("{symbol}: {definition}", .envir = as.environment(response_vars)) |>
   str_c(collapse = "; ")
-cap_text = glue("Variance components of stomatal kinetic traits. The phylogenetic component is equivalent to the phylogenetic heritability. The population component is the nonphylogenetic variance among populations. Between- and within-individual variance components are among individuals within a population after accounting for treatment effect. Estimates and 95% confidence intervals (CI) are estimated as the median and quantile intervals of the posterior distribution. {symbol_definitions}.")
+cap_text = glue("Variance components of stomatal kinetic traits. The phylogenetic component is equivalent to the phylogenetic heritability. The population component is the non-phylogenetic variance among populations. Between- and within-individual variance components are among individuals within a population after accounting for treatment effect. Estimates and 95% confidence intervals (CI) are estimated as the median and quantile intervals of the posterior distribution. {symbol_definitions}.")
 ```
 
 ```{r, variance}
@@ -624,7 +649,7 @@ Need to show (this is a growing, incomplete list):
 
 clean_repsonse_var = function(.x) {
   case_when(
-    .x == "logfgmax" ~ "$\\log(f_g)$",
+    .x == "logitfgmax" ~ "$\\logit(f_g)$",
     .x == "loggcl" ~ "$\\log(l_\\mathrm{gc})$",
     .x == "loglambdamean" ~ "$\\log(\\lambda)$",
     .x == "logtaumean" ~ "$\\log(\\tau)$",
@@ -637,7 +662,8 @@ clean_explanatory_var = function(.x) {
     .x == "Intercept" ~ "intercept (shade, low light)",
     .x == "lighttreatmentsun" ~ "sun growth treatment",
     .x == "lightintensityhigh" ~ "high measurement light intensity",
-    .x == "logfgmax" ~ "$\\log(f_g)$",
+    .x == "curvetypepseudohypo" ~ "pseudohypostomatous curve type",
+    .x == "logitfgmax" ~ "$\\logit(f_g)$",
     .x == "loggcl" ~ "$\\log(l_\\mathrm{gc})$",
     .x == "loglambdamean" ~ "$\\log(\\lambda)$",
     .x == "logtaumean" ~ "$\\log(\\tau)$",
@@ -733,6 +759,13 @@ kbl(
   add_header_above(c(" " = 1, "$\\\\lambda$" = 2, "$\\\\tau$" = 2), escape = FALSE) |>
   kable_styling(latex_options = c("hold_position", "striped"))
 ```
+
+## Discussion
+
+effect of fgmax is not simply because high light intensity increased fgmax and tau. Causal inference dissects different causal paths and shows direct effect of fgmax on tau within populations and treatments
+
+caveat: this treatment is a hammer than exposes maximum rate of stomatal closure. The factors which influence this may not explain variance in kinetics in more natural conditions.
+
 
 ## References
 

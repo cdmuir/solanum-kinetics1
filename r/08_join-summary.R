@@ -37,8 +37,8 @@ joined_data = read_rds("data/joined-data.rds") |>
   rename(accession = acc, replicate = id) |>
   mutate(
     curve_type = case_when(
-      curve_type == "1-sided RH" ~ "amphi",
-      curve_type == "2-sided RH" ~ "pseudohypo"
+      curve_type == "2-sided RH" ~ "amphi",
+      curve_type == "1-sided RH" ~ "pseudohypo"
     )
   )
 

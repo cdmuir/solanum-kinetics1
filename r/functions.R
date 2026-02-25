@@ -351,3 +351,8 @@ ellipse_points = function(mu, Sigma, level = 0.95, n = 200) {
 
 # Saturated vapor pressure
 svp = function(T_leaf, Pa) (0.61365 * exp(17.502 * T_leaf / (240.97 + T_leaf) / Pa))
+
+# Convert log-change to %-change
+log_to_percent = function(.x) {
+  100 * (exp(.x) - 1)
+}

@@ -4,8 +4,7 @@ source("r/header.R")
 phy = read_rds("data/phylogeny.rds")
 A = vcv(phy, corr = TRUE)
 
-fit_amphi = read_rds("objects/best_amphi_model.rds")
-# fit_pseudohypo = read_rds("objects/best_pseudohypo_model.rds")
+fit = read_rds("objects/best_model.rds")
 
 # THIS NEEDS TO BE UPDATED
 tab_estimates = crossing(
