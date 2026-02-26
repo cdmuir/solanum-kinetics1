@@ -69,7 +69,7 @@ fits = crossing(
           mutate(phy = accession),
         data2 = list(A = A),
         cores = 1,
-        chains = 3,
+        chains = 4,
         iter = thin * 2e3,
         thin = thin,
         refresh = thin * 1e2,
