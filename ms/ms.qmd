@@ -268,6 +268,16 @@ post_gcl_curvetype = fit |>
   summarize_draws(estimate = median, quantile2, .args= list(probs = c(0.025, 0.975))) |>
   mutate(across(where(is.numeric), log_to_percent))
 
+post_fgmax_high = fit |>
+  as_draws_df() |>
+  select(b_logitfgmax_lightintensityhigh) |>
+  summarize_draws(estimate = median, quantile2, .args= list(probs = c(0.025, 0.975)))
+
+post_fgmax_sun = fit |>
+  as_draws_df() |>
+  select(b_logitfgmax_lighttreatmentsun) |>
+  summarize_draws(estimate = median, quantile2, .args= list(probs = c(0.025, 0.975)))
+
 partial_cor = read_rds("../objects/partial-cor.rds") |>
   filter(name == "logtaumean_Intercept__loggcl_Intercept")
 rho = partial_cor$median
@@ -496,7 +506,7 @@ We next used estimates of $\tau$ from each curve in multiresponse Bayesian mixed
 
 We used a combination of model selection and parameter estimation to evaluate these hypotheses. All statistical models included fixed effects of manipulative treatments: growth light intensity (sun and shade); measurement light intensity (high and low); and curve type (amphistomatous and pseudohypostomatous). All models also included population as both a phylogenetically structured random effect and a non-phylogenetic random effect following @halliwell_multi-response_2025. Prior to fitting, the phylogenetic (co)variance matrix was rescaled as a correlation matrix [@garamszegi_general_2014]. For traits measured multiple times within the same leaf (\fgmax, $\lambda$, $\tau$) we included a random effect of individual to account for repeated measures. We accounted for uncertainty in $\tau$ and $\lambda$ using the standard deviation of the posterior distribution of each estimate (see 'Humidity response curves' for details). We modeled residual (co)variance, a combination among-individual (co)variance and measurement error, as a multivariate Student $t$-distribution, which is more robust to extreme values than the multivariate normal distribution [@gelman_bayesian_2014]. To account for heteroskedasticity, bounded measurements, and linearize relationships, \gcl, $\lambda$, and $\tau$ were log-transformed prior to analysis whereas \fgmax{} was logit-transformed. All models were fit with *Stan* following the same methods described above for fitting @eq-weibull to the humidity response curves. 
 
-To answer questions 1 and 2 above, we analyzed three nonmutually exclusive paths through which \fgmax{} and \gcl{} could influence stomatal kinetic parameters $\lambda$ and $\tau$. First, we inferred phylogenetic effects by estimating the phylogenetic correlation among populations between anatomical (\fgmax{} and \gcl{}) and kinetic ($\lambda$ and $\tau$) variables. To test for possible causation, we used the inferred phylogenetic trait covariance matrix to estimate partial correlations between anatomical and kinetic variables [@halliwell_multiresponse_2025]. We interpret a significant partial correlation between variables as a plausible causal hypothesis. Second, we inferred individual-level effects of \fgmax{} and \gcl{} on kinetic parameters using linear multiple regression that simultaneously accounts for phylogenetic and treatment effects. We used the leave-one-out cross-validation information criterion (LOOIC) to compare the fit of models using the *R* package **loo** version `r packageVersion("loo")` [@vehtari_practical_2017] to calculate LOOIC values. We compared models with all permutations of \fgmax{} and \gcl{} influencing $\lambda$ and $\tau$. We selected the model with the lowest LOOIC value (@tbl-comparison) to generate posterior predictions for hypothesis testing. If an effect was included in the best model (lowest LOOIC), then we considered whether the 95% confidence interval overlapped zero to ascertain a significant effect of \fgmax{} and \gcl{} on kinetic parameters. 
+To answer questions 1 and 2 above, we analyzed three nonmutually exclusive paths through which \fgmax{} and \gcl{} could influence stomatal kinetic parameters $\lambda$ and $\tau$. First, we inferred phylogenetic effects by estimating the phylogenetic correlation among populations between anatomical (\fgmax{} and \gcl{}) and kinetic ($\lambda$ and $\tau$) variables. To test for possible causation, we used the inferred phylogenetic trait covariance matrix to estimate partial correlations between anatomical and kinetic variables [@halliwell_multiresponse_2025]. We interpret a significant partial correlation between variables as a plausible causal hypothesis. Second, we inferred individual-level effects of \fgmax{} and \gcl{} on kinetic parameters using linear multiple regression that simultaneously accounts for phylogenetic and treatment effects. We used the leave-one-out cross-validation information criterion (LOOIC) to compare the fit of models using the *R* package **loo** version `r packageVersion("loo")` [@vehtari_practical_2017] to calculate LOOIC values. We compared models with all permutations of \fgmax{} and \gcl{} influencing $\lambda$ and $\tau$. We considered all models within two $\Delta$LOOIC standard errors of the minimum LOOIC (@tbl-comparison) to be in the set of plausible models to generate posterior predictions for hypothesis testing. Within each plausible model, we assessed whether an effect was significantly different from zero based on the 95% confidence intervals.
 
 THIRD: mediating treatment effects (plasticity)
 
@@ -534,9 +544,9 @@ Stomatal conductance (\gsw) decreased rapidly in response to a step change in hu
 
 ### Effects of light intensity treatments on guard cell length and aperture
 
-On average, guard cell length increased by $`r formatC(post_gcl_sun[['estimate']], format = 'f', digits = 1)`$% [95% CI: $`r formatC(post_gcl_sun[['q2.5']], format = 'f', digits = 1)`$ to $`r formatC(post_gcl_sun[['q97.5']], format = 'f', digits = 1)`$%] in the sun treatment ([@fig-accession-anatomy]a; [@tbl-fit]). The average \gcl{} of pseudohypo leaves was $`r formatC(post_gcl_curvetype[['estimate']], format = 'f', digits = 1)`$% [95% CI: $`r formatC(post_gcl_curvetype[['q2.5']], format = 'f', digits = 1)`$ to $`r formatC(post_gcl_curvetype[['q97.5']], format = 'f', digits = 1)`$%] greater than amphi leaves ([@fig-accession-anatomy]a; [@tbl-fit]). This was not because of plasticity because we amphi and pseudohypo curves on the same leaf. Rather, this was a composition effect. Adaxial stomata tended to be slightly smaller than abaxial stomata, so the average \gcl{} in pseudohypo leaves was slightly higher than in amphi leaves because the former only included abaxial stomata. 
+On average, guard cell length increased by $`r formatC(post_gcl_sun[['estimate']], format = 'f', digits = 1)`$% [95% CI: $`r formatC(post_gcl_sun[['q2.5']], format = 'f', digits = 1)`$ to $`r formatC(post_gcl_sun[['q97.5']], format = 'f', digits = 1)`$%] in the sun treatment ([@fig-accession-anatomy]a; [@tbl-fit]). The average \gcl{} of pseudohypo leaves was $`r formatC(post_gcl_curvetype[['estimate']], format = 'f', digits = 1)`$% [95% CI: $`r formatC(post_gcl_curvetype[['q2.5']], format = 'f', digits = 1)`$ to $`r formatC(post_gcl_curvetype[['q97.5']], format = 'f', digits = 1)`$%] greater than amphi leaves ([@fig-accession-anatomy]a; [@tbl-fit]). This was not because of plasticity because we amphi and pseudohypo curves on the same leaf. Rather, this was a composition effect. Adaxial stomata tended to be slightly smaller than abaxial stomata, so the average \gcl{} in pseudohypo leaves was slightly higher than in amphi leaves because the former only included abaxial stomata. High measurement light intensity increased \fgmax by an average of $`r formatC(post_fgmax_high[['estimate']], format = 'f', digits = 2)`$ logit units [95% CI: $`r formatC(post_fgmax_high[['q2.5']], format = 'f', digits = 2)`$ to $`r formatC(post_fgmax_high[['q97.5']], format = 'f', digits = 2)`$] ([@fig-accession-anatomy]b; [@tbl-fit]). For example, if $f_\text{gmax} = 0.1$ in low light, the typical \fgmax{} for the same leaf acclimated to high light was `r formatC(plogis(qlogis(0.1) + post_fgmax_high[['estimate']]), format = 'f', digits = 2)`. Sun leaves had on average $`r formatC(post_fgmax_sun[['estimate']], format = 'f', digits = 2)`$ logit units [95% CI: $`r formatC(post_fgmax_sun[['q2.5']], format = 'f', digits = 2)`$ to $`r formatC(post_fgmax_sun[['q97.5']], format = 'f', digits = 2)`$] lower \fgmax{} than shade-grown plants ([@fig-accession-anatomy]b; [@tbl-fit]).
 
-EFFECT OF LIGHT TREATMENTS ON FGMAX
+STILL NEED TO ADD WHETHER FGMAX DIFFERED IN PSEUDO LEAVES ONCE MODEL IS UPDATED
 
 ```{r, fig-accession-anatomy, echo = FALSE}
 #| label: fig-accession-anatomy
@@ -738,15 +748,16 @@ fx1 |>
 
 ```
 
-```{r, foo}
-#| label: tbl-foo
+```{r, tbl-comparison}
+#| label: tbl-comparison
+#| tbl-cap: "Model comparison results. Models with a $\\Delta$LOOIC less than two standard errors (SE) from the minimum LOOIC are considered to have substantial support and are used for posterior predictions to test hypotheses about the effects of guard cell length (\\gcl) and the stomatal conductance as a fraction of anatomical maximum stomatal conductance (\\fgmax) on stomatal kinetic parameter $\\lambda$ (time lag) and $\\tau$ (time constant). LOOIC stands for leave-one-out cross-validation information criterion."
 #| results: asis
 #| echo: false
 #| message: false
 #| warning: false
 
 df_comparison = read_rds("../objects/tbl-comparison.rds") |>
-  select(`$\\Delta \\text{LOOIC}$`, `$\\lambda$__\\fgmax`, `$\\lambda$__\\gcl`, `$\\tau$__\\fgmax`, `$\\tau$__\\gcl`)
+  select(`$\\Delta \\text{LOOIC}$`, SE, `$\\lambda$__\\fgmax`, `$\\lambda$__\\gcl`, `$\\tau$__\\fgmax`, `$\\tau$__\\gcl`)
 
 kbl(
   df_comparison,
@@ -754,9 +765,9 @@ kbl(
   booktabs = TRUE,
   escape = FALSE,
   col.names = str_remove(colnames(df_comparison), "^.*__"),
-  align = c("l", rep("c", 4))
+  align = c(rep("l", 2), rep("c", 4))
 ) |>
-  add_header_above(c(" " = 1, "$\\\\lambda$" = 2, "$\\\\tau$" = 2), escape = FALSE) |>
+  add_header_above(c(" " = 2, "$\\\\lambda$" = 2, "$\\\\tau$" = 2), escape = FALSE) |>
   kable_styling(latex_options = c("hold_position", "striped"))
 ```
 

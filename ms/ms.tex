@@ -721,9 +721,9 @@ uncertainty (standard deviation) for subsequent analyses.
 Growth light intensity & amphi & pseudohypo & amphi & pseudohypo & Total\\
 \midrule
 shade & 275 & 275 & 270 & 266 & 1,086\\
-sun & 245 & 244 & 275 & 274 & 1,038\\
+sun & 245 & 245 & 275 & 275 & 1,040\\
 \midrule\\
-Total & 520 & 519 & 545 & 540 & 2,124\\
+Total & 520 & 520 & 545 & 541 & 2,126\\
 \bottomrule
 \end{tabular}
 
@@ -828,12 +828,12 @@ treatment effects. We used the leave-one-out cross-validation
 information criterion (LOOIC) to compare the fit of models using the
 \emph{R} package \textbf{loo} version 2.9.0 (23) to calculate LOOIC
 values. We compared models with all permutations of \fgmax{} and \gcl{}
-influencing \(\lambda\) and \(\tau\). We selected the model with the
-lowest LOOIC value (\textbf{?@tbl-comparison}) to generate posterior
-predictions for hypothesis testing. If an effect was included in the
-best model (lowest LOOIC), then we considered whether the 95\%
-confidence interval overlapped zero to ascertain a significant effect of
-\fgmax{} and \gcl{} on kinetic parameters.
+influencing \(\lambda\) and \(\tau\). We considered all models within
+two \(\Delta\)LOOIC standard errors of the minimum LOOIC
+(Table~\ref{tbl-comparison}) to be in the set of plausible models to
+generate posterior predictions for hypothesis testing. Within each
+plausible model, we assessed whether an effect was significantly
+different from zero based on the 95\% confidence intervals.
 
 THIRD: mediating treatment effects (plasticity)
 
@@ -897,19 +897,27 @@ anatomical parameters affect \(\tau\).
 length and
 aperture}\label{effects-of-light-intensity-treatments-on-guard-cell-length-and-aperture}
 
-On average, guard cell length increased by \(12.2\)\% {[}95\% CI:
-\(11.3\) to \(13.3\)\%{]} in the sun treatment
+On average, guard cell length increased by \(12.1\)\% {[}95\% CI:
+\(11.1\) to \(13.0\)\%{]} in the sun treatment
 (Figure~\ref{fig-accession-anatomy}a; Table~\ref{tbl-fit}). The average
-\gcl{} of pseudohypo leaves was \(6.2\)\% {[}95\% CI: \(5.2\) to
-\(7.1\)\%{]} greater than amphi leaves
+\gcl{} of pseudohypo leaves was \(-5.9\)\% {[}95\% CI: \(-6.7\) to
+\(-5.1\)\%{]} greater than amphi leaves
 (Figure~\ref{fig-accession-anatomy}a; Table~\ref{tbl-fit}). This was not
 because of plasticity because we amphi and pseudohypo curves on the same
-leaf. Rather, this was a compositione ffect. Adaxial stomata tended to
+leaf. Rather, this was a composition effect. Adaxial stomata tended to
 be slightly smaller than abaxial stomata, so the average \gcl{} in
 pseudohypo leaves was slightly higher than in amphi leaves because the
-former only included abaxial stomata.
+former only included abaxial stomata. High measurement light intensity
+increased \fgmax by an average of \(0.81\) logit units {[}95\% CI:
+\(0.78\) to \(0.84\){]} (Figure~\ref{fig-accession-anatomy}b;
+Table~\ref{tbl-fit}). For example, if \(f_\text{gmax} = 0.1\) in low
+light, the typical \fgmax{} for the same leaf acclimated to high light
+was 0.20. Sun leaves had on average \(-0.27\) logit units {[}95\% CI:
+\(-0.34\) to \(-0.20\){]} lower \fgmax{} than shade-grown plants
+(Figure~\ref{fig-accession-anatomy}b; Table~\ref{tbl-fit}).
 
-EFFECT OF LIGHT TREATMENTS ON FGMAX
+STILL NEED TO ADD WHETHER FGMAX DIFFERED IN PSEUDO LEAVES ONCE MODEL IS
+UPDATED
 
 \begin{figure}
 
@@ -941,17 +949,17 @@ TYPE.}
 
 Growth light intensity did not significantly affect \(\tau\)
 Figure~\ref{fig-accession-kinetics}. In sun plants, \(\tau\) was on
-average 5.54\% {[}95\% CI: 0.96 to 10.3\%{]} lower than in shade plants
+average 5.69\% {[}95\% CI: 0.951 to 10.6\%{]} lower than in shade plants
 after accounting for other explanatory variables. Within the same leaf,
 increasing the measurement light intensity prior to the humidity step
 change from \ppfdqty{150} to \ppfdqty{2000} significantly increased
-\(\tau\) by 18.6\% {[}95\% CI: 12.1 to 25.1\%{]}
+\(\tau\) by 18\% {[}95\% CI: 11.7 to 24.6\%{]}
 Figure~\ref{fig-accession-kinetics}. The time lag \(\lambda\) responded
 to growth, but not measurement light intensity after accounting for
 other explanatory variables Figure~\ref{fig-accession-kinetics}. In sun
-plants, \(\tau\) was on average 10.3\% {[}95\% CI: 5.93 to 15.5\%{]}
+plants, \(\tau\) was on average 12.2\% {[}95\% CI: 10.2 to 14.3\%{]}
 greater than in shade plants. Higher measurement light decreased
-increased \(\lambda\) slightly by 1.31\% {[}95\% CI: -1.07 to 3.82\%{]}.
+increased \(\lambda\) slightly by 1.15\% {[}95\% CI: -1.17 to 3.59\%{]}.
 
 \begin{itemize}
 \tightlist
@@ -1044,36 +1052,36 @@ component & \% variance & 95\% CI\\
 \bottomrule
 \endlastfoot
 \addlinespace[0.3em]
-\multicolumn{3}{l}{\textbf{$\log(f_\mathrm{gmax})$}}\\
-\hspace{1em}phylogenetic & 13.9 & {}[3.2, 30.2]\\
-\hspace{1em}population & 5.4 & {}[1.3, 13.0]\\
-\hspace{1em}between-individual & 40.2 & {}[33.5, 45.5]\\
-\hspace{1em}within-individual & 39.4 & {}[31.6, 45.2]\\
-\addlinespace[0.3em]
 \multicolumn{3}{l}{\textbf{$\log(l_\mathrm{gc})$}}\\
-\hspace{1em}\hspace{1em}phylogenetic & 57.0 & {}[26.9, 76.0]\\
-\hspace{1em}\hspace{1em}population & 5.3 & {}[0.4, 22.9]\\
-\hspace{1em}\hspace{1em}between-individual & 37.3 & {}[22.6, 54.1]\\
+\hspace{1em}phylogenetic & 64.7 & {}[32.4, 81.1]\\
+\hspace{1em}population & 6.2 & {}[0.7, 25.6]\\
+\hspace{1em}between-individual & 28.8 & {}[16.9, 44.2]\\
+\addlinespace[0.3em]
+\multicolumn{3}{l}{\textbf{$\mathrm{logit}(f_\mathrm{gmax})$}}\\
+\hspace{1em}\hspace{1em}phylogenetic & 16.8 & {}[3.6, 34.7]\\
+\hspace{1em}\hspace{1em}population & 6.7 & {}[1.9, 16.7]\\
+\hspace{1em}\hspace{1em}between-individual & 29.1 & {}[22.9, 33.9]\\
+\hspace{1em}\hspace{1em}within-individual & 46.4 & {}[36.4, 53.6]\\
 \addlinespace[0.3em]
 \multicolumn{3}{l}{\textbf{$\log(\lambda)$}}\\
-\hspace{1em}phylogenetic & 15.5 & {}[3.9, 30.3]\\
-\hspace{1em}population & 1.6 & {}[0.0, 7.7]\\
-\hspace{1em}between-individual & 61.3 & {}[50.9, 68.7]\\
-\hspace{1em}within-individual & 20.6 & {}[16.1, 25.1]\\
+\hspace{1em}phylogenetic & 18.9 & {}[5.2, 36.1]\\
+\hspace{1em}population & 2.3 & {}[0.1, 9.1]\\
+\hspace{1em}between-individual & 53.6 & {}[42.5, 61.6]\\
+\hspace{1em}within-individual & 24.4 & {}[18.8, 29.8]\\
 \addlinespace[0.3em]
 \multicolumn{3}{l}{\textbf{$\log(\tau)$}}\\
-\hspace{1em}phylogenetic & 34.6 & {}[17.2, 51.3]\\
-\hspace{1em}population & 1.0 & {}[0.0, 7.4]\\
-\hspace{1em}between-individual & 40.1 & {}[30.3, 49.4]\\
-\hspace{1em}within-individual & 23.5 & {}[17.2, 29.8]\\*
+\hspace{1em}phylogenetic & 42.7 & {}[23.3, 59.4]\\
+\hspace{1em}population & 0.9 & {}[0.0, 8.3]\\
+\hspace{1em}between-individual & 29.4 & {}[20.8, 38.0]\\
+\hspace{1em}within-individual & 26.1 & {}[18.2, 34.1]\\*
 
 \end{longtable}
 
 Guard cell size and \fgmax affected stomatal kinetics, but at different
 levels of biological organization. In the model with the lowest LOOIC
-(see \textbf{?@tbl-comparison} for model comparison results), the only
+(see Table~\ref{tbl-comparison} for model comparison results), the only
 significant partial correlation was between \gcl and \(\tau\)
-(\(\rho = 0.77\) {[}95\% CI: -0.1 to 0.98\$) was a significant
+(\(\rho = 0.74\) {[}95\% CI: -0.12 to 0.98\$) was a significant
 phylogenetic correlation between \gcl and \(\tau\) (\textbf{fig?}-?).
 PARTIAL CORRELATION RESULT. Variation in \gcl within populations did not
 explain within-population variation in \(\tau\) Table~\ref{tbl-fit}.
@@ -1109,65 +1117,71 @@ confidence intervals).}
 \endlastfoot
 \addlinespace[0.3em]
 \multicolumn{2}{l}{\textbf{$\log(\lambda)$}}\\
-\hspace{1em}effect of $\log(l_\mathrm{gc})$ on $\log(\lambda)$ & 0.14 [-0.20, 0.48]\\
-\hspace{1em}effect of $\logit(f_g)$ on $\log(\lambda)$ & 0.10 [0.08, 0.13]\\
+\hspace{1em}effect of $\logit(f_g)$ on $\log(\lambda)$ & 0.11 [0.08, 0.13]\\
 \hspace{1em}effect of high measurement light intensity on $\log(\lambda)$ & 0.01 [-0.01, 0.04]\\
-\hspace{1em}intercept (shade, low light) & -0.03 [-1.01, 0.99]\\
-\hspace{1em}effect of pseudohypostomatous curve type on $\log(\lambda)$ & 0.04 [0.01, 0.07]\\
-\hspace{1em}effect of sun growth treatment on $\log(\lambda)$ & 0.10 [0.06, 0.14]\\
+\hspace{1em}intercept (shade, low light) & 0.44 [0.33, 0.55]\\
+\hspace{1em}effect of pseudohypostomatous curve type on $\log(\lambda)$ & -0.04 [-0.06, -0.03]\\
+\hspace{1em}effect of sun growth treatment on $\log(\lambda)$ & 0.12 [0.10, 0.13]\\
 \addlinespace[0.3em]
 \multicolumn{2}{l}{\textbf{$\log(\tau)$}}\\
-\hspace{1em}effect of $\logit(f_g)$ on $\log(\tau)$ & 0.19 [0.13, 0.25]\\
+\hspace{1em}effect of $\logit(f_g)$ on $\log(\tau)$ & 0.20 [0.13, 0.26]\\
 \hspace{1em}effect of high measurement light intensity on $\log(\tau)$ & 0.17 [0.11, 0.22]\\
-\hspace{1em}intercept (shade, low light) & 5.47 [5.10, 5.82]\\
-\hspace{1em}effect of pseudohypostomatous curve type on $\log(\tau)$ & 0.14 [0.09, 0.19]\\
-\hspace{1em}effect of sun growth treatment on $\log(\tau)$ & 0.05 [0.01, 0.10]\\
+\hspace{1em}intercept (shade, low light) & 5.59 [5.22, 5.95]\\
+\hspace{1em}effect of pseudohypostomatous curve type on $\log(\tau)$ & -0.03 [-0.05, -0.00]\\
+\hspace{1em}effect of sun growth treatment on $\log(\tau)$ & 0.06 [0.01, 0.10]\\
 \addlinespace[0.3em]
 \multicolumn{2}{l}{\textbf{$\log(l_\mathrm{gc})$}}\\
-\hspace{1em}intercept (shade, low light) & 2.89 [2.73, 3.04]\\
-\hspace{1em}effect of pseudohypostomatous curve type on $\log(l_\mathrm{gc})$ & 0.06 [0.05, 0.07]\\
-\hspace{1em}effect of sun growth treatment on $\log(l_\mathrm{gc})$ & 0.12 [0.11, 0.12]\\
+\hspace{1em}intercept (shade, low light) & 2.96 [2.79, 3.13]\\
+\hspace{1em}effect of pseudohypostomatous curve type on $\log(l_\mathrm{gc})$ & -0.06 [-0.07, -0.05]\\
+\hspace{1em}effect of sun growth treatment on $\log(l_\mathrm{gc})$ & 0.11 [0.11, 0.12]\\
 \addlinespace[0.3em]
 \multicolumn{2}{l}{\textbf{$\logit(f_g)$}}\\
-\hspace{1em}effect of high measurement light intensity on $\logit(f_g)$ & 0.82 [0.80, 0.85]\\
-\hspace{1em}intercept (shade, low light) & -2.46 [-2.73, -2.19]\\
-\hspace{1em}effect of pseudohypostomatous curve type on $\logit(f_g)$ & -0.68 [-0.71, -0.65]\\
-\hspace{1em}effect of sun growth treatment on $\logit(f_g)$ & -0.27 [-0.34, -0.21]\\*
+\hspace{1em}effect of high measurement light intensity on $\logit(f_g)$ & 0.81 [0.78, 0.84]\\
+\hspace{1em}intercept (shade, low light) & -2.89 [-3.17, -2.60]\\
+\hspace{1em}effect of pseudohypostomatous curve type on $\logit(f_g)$ & 0.20 [0.17, 0.23]\\
+\hspace{1em}effect of sun growth treatment on $\logit(f_g)$ & -0.27 [-0.34, -0.20]\\*
 
 \end{longtable}
 
 \begin{table}
 
-\caption{\label{tbl-foo}}
+\caption{\label{tbl-comparison}Model comparison results. Models with a
+\(\Delta\)LOOIC less than two standard errors (SE) from the minimum
+LOOIC are considered to have substantial support and are used for
+posterior predictions to test hypotheses about the effects of guard cell
+length (\gcl) and the stomatal conductance as a fraction of anatomical
+maximum stomatal conductance (\fgmax) on stomatal kinetic parameter
+\(\lambda\) (time lag) and \(\tau\) (time constant). LOOIC stands for
+leave-one-out cross-validation information criterion.}
 
 \centering{
 
 \centering
-\begin{tabular}[t]{lcccc}
+\begin{tabular}[t]{llcccc}
 \toprule
-\multicolumn{1}{c}{ } & \multicolumn{2}{c}{$\lambda$} & \multicolumn{2}{c}{$\tau$} \\
-\cmidrule(l{3pt}r{3pt}){2-3} \cmidrule(l{3pt}r{3pt}){4-5}
-$\Delta \text{LOOIC}$ & \fgmax & \gcl & \fgmax & \gcl\\
+\multicolumn{2}{c}{ } & \multicolumn{2}{c}{$\lambda$} & \multicolumn{2}{c}{$\tau$} \\
+\cmidrule(l{3pt}r{3pt}){3-4} \cmidrule(l{3pt}r{3pt}){5-6}
+$\Delta \text{LOOIC}$ & SE & \fgmax & \gcl & \fgmax & \gcl\\
 \midrule
-\cellcolor{gray!10}{0.00} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{}\\
-1.75 & \cmark & \cmark & \cmark & \cmark\\
-\cellcolor{gray!10}{4.79} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark}\\
-8.47 & \cmark &  & \cmark & \\
-\cellcolor{gray!10}{16.78} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark}\\
+\cellcolor{gray!10}{0.00} & \cellcolor{gray!10}{0.00} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{}\\
+2.39 & 2.64 & \cmark & \cmark & \cmark & \cmark\\
+\cellcolor{gray!10}{4.03} & \cellcolor{gray!10}{2.54} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{}\\
+8.80 & 2.70 & \cmark &  & \cmark & \cmark\\
+\cellcolor{gray!10}{17.69} & \cellcolor{gray!10}{10.71} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark}\\
 \addlinespace
-17.55 & \cmark & \cmark &  & \\
-\cellcolor{gray!10}{18.64} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{}\\
-24.36 & \cmark & \cmark &  & \cmark\\
-\cellcolor{gray!10}{45.05} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark}\\
-45.35 &  &  & \cmark & \cmark\\
+17.69 & 10.71 & \cmark &  &  & \\
+\cellcolor{gray!10}{18.01} & \cellcolor{gray!10}{10.68} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark}\\
+20.91 & 10.82 & \cmark & \cmark &  & \\
+\cellcolor{gray!10}{40.70} & \cellcolor{gray!10}{14.07} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark}\\
+42.34 & 14.02 &  & \cmark & \cmark & \\
 \addlinespace
-\cellcolor{gray!10}{49.00} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{}\\
-52.07 &  &  & \cmark & \\
-\cellcolor{gray!10}{64.96} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{}\\
-65.26 &  &  &  & \\
-\cellcolor{gray!10}{68.78} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark}\\
+\cellcolor{gray!10}{44.04} & \cellcolor{gray!10}{14.06} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{}\\
+47.83 & 14.15 &  & \cmark & \cmark & \cmark\\
+\cellcolor{gray!10}{65.68} & \cellcolor{gray!10}{18.07} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{}\\
+66.34 & 18.11 &  &  &  & \\
+\cellcolor{gray!10}{67.15} & \cellcolor{gray!10}{17.96} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark}\\
 \addlinespace
-71.41 &  &  &  & \cmark\\
+68.17 & 18.00 &  &  &  & \cmark\\
 \bottomrule
 \end{tabular}
 

@@ -49,7 +49,8 @@ map2_dfr(fits$fit, fits$model, \(.fit, .name) {
   ) |>
   full_join(tibble(
     model = rownames(looic_table),
-    `$\\Delta \\text{LOOIC}$` = -2 * looic_table[, "elpd_diff"]
+    `$\\Delta \\text{LOOIC}$` = -2 * looic_table[, "elpd_diff"],
+    SE = 2 * looic_table[, "se_diff"]
   ),
   by = "model") |>
   mutate(across(where(is_logical), \(.x) ifelse(.x, "\\cmark", ""))) |>
@@ -60,6 +61,7 @@ map2_dfr(fits$fit, fits$model, \(.fit, .name) {
       format = "f",
       digits = 2
     ),
+    SE = formatC(SE, format = "f", digits = 2),
     mutate(across(everything(), \(.x) replace_na(.x, "")))
   ) |>
   write_rds("objects/tbl-comparison.rds")

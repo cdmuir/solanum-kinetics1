@@ -32,7 +32,7 @@ ggplot(dat, aes(lightintensity, value)) +
     y = "kinetic trait value (log-scale)") +
   facetted_pos_scales(
     y = list(
-      par1 == "tau~(s)" ~ scale_y_log10(breaks = c(100, 200, 400)),
+      par1 == "tau~(s)" ~ scale_y_log10(breaks = c(100, 200, 400), limits = c(100, 400)),
       par1 == "lambda~(unitless)" ~ scale_y_log10(breaks = seq(1, 1.75, by = 0.25), limits = c(0.95, 1.75))
     )
   )

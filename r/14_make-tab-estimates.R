@@ -54,13 +54,13 @@ tab_estimates = crossing(
       ) |>
       select(variable, starts_with("gcl_"))
     
-    df_pred_fgmax = posterior_epred(fit, newdata = df_new, resp = "logfgmax") |>
+    df_pred_fgmax = posterior_epred(fit, newdata = df_new, resp = "logitfgmax") |>
       as_draws_df() |>
       summarise_draws() |>
       mutate(
-        fgmax_estimate = exp(median),
-        fgmax_lowerCI = exp(q5),
-        fgmax_upperCI = exp(q95),
+        fgmax_estimate = plogis(median),
+        fgmax_lowerCI = plogis(q5),
+        fgmax_upperCI = plogis(q95),
       ) |>
       select(variable, starts_with("fgmax_"))
     
