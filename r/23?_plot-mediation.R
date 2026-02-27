@@ -65,28 +65,34 @@ df_edges = post |>
     sig = as.factor(ifelse(`q2.5` > 0 | `q97.5` < 0, "sig.", "n.s.")),
     sign = ifelse(estimate >= 0, "positive", "negative"),
     label = sprintf("%.2f (%.2f,%.2f)", estimate, `q2.5`, `q97.5`)
-  )
+  ) |>
+  mutate(across(c(from, to), \(.x) recode(.x, 
+    logtaumean = "$\\tau$",
+    logitfgmax = "$f_\\text{gmax}$",
+    loggcl = "$l_\\text{gc}$",
+    lighttreatmentsun = "sun treatment"
+  )))
 
 df_nodes = tribble(
   ~name, ~x, ~y,
   "sun treatment", 0.1, 0.5,
   "$f_\\text{gmax}$", 0.4, 0.75,
   "$l_\\text{gc}$", 0.4, 0.25,
-  "$\tau$", 0.8, 0.5
+  "$\\tau$", 0.8, 0.5
 )
 
 # join node coordinates to edges for plotting
-edge_plot <- edges %>%
-  left_join(nodes, by = c("from" = "name")) %>%
-  rename(xstart = x, ystart = y) %>%
-  left_join(nodes, by = c("to" = "name")) %>%
+edge_plot = df_edges |>
+  left_join(df_nodes, by = c("from" = "name")) |>
+  rename(xstart = x, ystart = y) |>
+  left_join(df_nodes, by = c("to" = "name")) |>
   rename(xend = x, yend = y)
 
 # Plot
 p <- ggplot() +
   # arrows (use geom_curve for curved mediated paths)
   geom_curve(
-    data = edge_plot %>% filter(!(from == "X" & to == "Y")), # mediated edges curved
+    data = edge_plot |> filter(!(from == "sun treatment" & to == "$\\tau$")), # mediated edges curved
     aes(x = xstart, y = ystart, xend = xend, yend = yend,
         color = sign, size = abs_est, linetype = sig),
     curvature = 0.25,
@@ -96,15 +102,15 @@ p <- ggplot() +
   ) +
   # direct path as a straight line
   geom_segment(
-    data = edge_plot %>% filter(from == "X" & to == "Y"),
+    data = edge_plot |> filter(from == "sun treatment" & to == "$\\tau$"),
     aes(x = xstart, y = ystart, xend = xend, yend = yend,
         color = sign, size = abs_est, linetype = sig),
     arrow = arrow(length = unit(0.18, "inches"), type = "closed"),
     lineend = "round"
   ) +
   # node points
-  geom_point(data = nodes, aes(x = x, y = y), size = 8, shape = 21, fill = "white") +
-  geom_text(data = nodes, aes(x = x, y = y, label = name), size = 4, fontface = "bold") +
+  geom_point(data = df_nodes, aes(x = x, y = y), size = 8, shape = 21, fill = "white") +
+  geom_text(data = df_nodes, aes(x = x, y = y, label = name), size = 4, fontface = "bold") +
   # effect labels halfway along each edge
   geom_label_repel(
     data = edge_plot,
@@ -115,8 +121,8 @@ p <- ggplot() +
   ) +
   # scales
   scale_size_continuous(range = c(0.5, 2.5), guide = "none") +
-  scale_color_manual(values = c(pos = "steelblue", neg = "firebrick")) +
-  scale_linetype_manual(values = c(sig = "solid", ns = "dashed"), guide = guide_legend("significance")) +
+  scale_color_manual(values = c(positive = "steelblue", negative = "firebrick")) +
+  scale_linetype_manual(values = c(`sig.` = "solid", `n.s.` = "dashed"), guide = guide_legend("significance")) +
   theme_minimal() +
   theme(
     axis.title = element_blank(),
