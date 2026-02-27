@@ -490,6 +490,16 @@ kable(
 
 ### Stomatal anatomy
 
+We estimated the stomatal density and \gcl{} on ab- and adaxial surfaces from all leaves used for humidity response curves. We used standard methods describe fully in @muir_plasticity_2025. For each surface we calculated the anatomical maximum stomatal conductance (\gmax) at a reference leaf temperature of $\SI{25}{\degreeCelsius}$ following @sack_developmental_2016 as:
+
+$$g_\mathrm{max} = b m d s ^ {0.5}.$$ HOW DOES GCL RELATE TO AS?
+
+s = l_\mathrm{gc} w_\mathrm{gc} = l_\mathrm{gc} ^ 2 /2The biophysical and morphological constants $b$ and $m$ are: 
+
+$$b = \frac{D_\mathrm{wv}}{v},~\text{and}$$	
+$$m = \frac{\pi c ^ 2}{j^{0.5} (4 h j + \pi c)},$$
+
+where $D_\mathrm{wv}$ is the diffusion coefficient of water vapor in air and $v$ is by the kinematic viscosity of dry air. We assumed $D_\mathrm{wv} = \qty{2.49e-5}{\meter\squared\per\second}$ and $v = \qty{2.24e-2}{\raiseto{3}\meter\per\mol}$ [@monteith_principles_2013]. For kidney-shaped guard cells like those in wild tomatoes, $c = h = j = 0.5$. The \gmaxratio{} is the \gmax{} of the adaxial surface divided by the sum total \gmax{} of both surfaces.
 size, density, gmax, fgmax
 
 ### Hypothesis generation and testing
