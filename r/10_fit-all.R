@@ -3,7 +3,7 @@
 # of light_intensity, light_treatment, log_gcl, or log_fgmax
 source("r/header.R")
 
-plan(multisession, workers = 18)
+plan(multisession, workers = 16)
 
 joined_summary = read_rds("data/joined-summary.rds") |>
   prepare_tau_anatomy_data(logtau_threshold)
