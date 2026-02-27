@@ -57,7 +57,7 @@ df_var = fit |>
       `$\\log(\\lambda)$` = "loglambdamean",
       `$\\log(\\tau)$` = "logtaumean",
       `$\\log(l_\\mathrm{gc})$` = "loggcl",
-      `$\\log(f_\\mathrm{gmax})$` = "logfgmax"
+      `$\\mathrm{logit}(f_\\mathrm{gmax})$` = "logitfgmax"
     )
   )
 

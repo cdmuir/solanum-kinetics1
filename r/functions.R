@@ -283,7 +283,7 @@ make_precision_phy <- function(draws_df) {
     "loglambdamean_Intercept",
     "logtaumean_Intercept",
     "loggcl_Intercept",
-    "logfgmax_Intercept"
+    "logitfgmax_Intercept"
   )
   
   # SD columns
