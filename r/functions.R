@@ -356,3 +356,37 @@ svp = function(T_leaf, Pa) (0.61365 * exp(17.502 * T_leaf / (240.97 + T_leaf) / 
 log_to_percent = function(.x) {
   100 * (exp(.x) - 1)
 }
+
+# Function to prepare edge nodes for mediation plots
+prepare_edges = function(.x) {
+  .x |>
+    mutate(
+      abs_est = abs(estimate),
+      effect_size = abs_est / se,
+      sig = as.factor(ifelse(`q2.5` > 0 |
+                               `q97.5` < 0, "sig.", "n.s.")),
+      sign = ifelse(estimate >= 0, "positive", "negative"),
+      label = sprintf("%.2f (%.2f,~%.2f)", estimate, `q2.5`, `q97.5`)
+    ) |>
+    mutate(across(
+      c(from, to),
+      \(.x) recode(
+        .x,
+        logtaumean = "$\\tau$",
+        logitfgmax = "$f_\\mathrm{gmax}$",
+        loggcl = "$l_\\mathrm{gc}$",
+        lighttreatmentsun = "sun treatment",
+        lightintensityhigh = "high light",
+        curvetypepseudohypo = "pseudohypo"
+      )
+    ))
+}
+
+# Function to join nodes and edges for mediation plots
+join_nodes_edges = function(df_edges, df_nodes) {
+  df_edges |>
+    left_join(df_nodes, by = c("from" = "name")) |>
+    rename(xstart = x, ystart = y) |>
+    left_join(df_nodes, by = c("to" = "name")) |>
+    rename(xend = x, yend = y) 
+}

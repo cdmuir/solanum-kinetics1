@@ -1,7 +1,7 @@
 # Compare models using LOOIC
 source("r/header.R")
 
-plan(multisession, workers = 19)
+plan(multisession, workers = 9)
 
 fits = read_rds("objects/fits.rds") |>
   mutate(loo = map(fit, \(.x) .x$criteria$loo))

@@ -261,6 +261,8 @@ Classification: Biological Sciences, Ecology\\
 Keywords: amphistomy, leaf gas exchange, \textit{Solanum}, stomatal kinetics, stomatal size
 \end{center}
 
+\section{notes}\label{notes}
+
 Reminder: Halliwell et al.~2025 paper has useful info on multiresponse
 models. I might use Van de Pol and Wright (2009) method for within
 versus between slope estimation. This is in the phylogenetic comparative
@@ -861,9 +863,17 @@ two \(\Delta\)LOOIC standard errors of the minimum LOOIC
 (Table~\ref{tbl-comparison}) to be in the set of plausible models to
 generate posterior predictions for hypothesis testing. Within each
 plausible model, we assessed whether an effect was significantly
-different from zero based on the 95\% confidence intervals.
-
-THIRD: mediating treatment effects (plasticity)
+different from zero based on the 95\% confidence intervals. Third, we
+used causal mediation analysis (\textbf{pearl\_causality\_2022?}) to
+test whether plasticity in \(\tau\) was mediated by plasticity in
+\fgmax{} or \gcl{} in response to measurement light intensity, growth
+light intensity, and curve-type treatments. We inferred the direct
+effect of treatments on \(\tau\) from model coefficients. We estimated
+the mediated effect of treatments using the product of the effect of
+treatment on mediator (\fgmax{} or \gcl) and the effect of the mediator
+on \(\tau\). We determibed significant direct and mediator effects based
+on whether the 95\% confidence intervals of the effects were different
+from zero.
 
 \subsubsection{Variance decomposition and heritability
 (somewhere)}\label{variance-decomposition-and-heritability-somewhere}
@@ -926,7 +936,7 @@ length and
 aperture}\label{effects-of-light-intensity-treatments-on-guard-cell-length-and-aperture}
 
 On average, guard cell length increased by \(12.1\)\% {[}95\% CI:
-\(11.1\) to \(13.0\)\%{]} in the sun treatment
+\(11.2\) to \(13.1\)\%{]} in the sun treatment
 (Figure~\ref{fig-accession-anatomy}a; Table~\ref{tbl-fit}). The average
 \gcl{} of pseudohypo leaves was \(-5.9\)\% {[}95\% CI: \(-6.7\) to
 \(-5.1\)\%{]} greater than amphi leaves
@@ -936,15 +946,15 @@ leaf. Rather, this was a composition effect. Adaxial stomata tended to
 be slightly smaller than abaxial stomata, so the average \gcl{} in
 pseudohypo leaves was slightly higher than in amphi leaves because the
 former only included abaxial stomata. High measurement light intensity
-increased \fgmax by an average of \(0.81\) logit units {[}95\% CI:
-\(0.78\) to \(0.84\){]} (Figure~\ref{fig-accession-anatomy}b;
+increased \fgmax by an average of \(0.84\) logit units {[}95\% CI:
+\(0.82\) to \(0.87\){]} (Figure~\ref{fig-accession-anatomy}b;
 Table~\ref{tbl-fit}). For example, if \(f_\text{gmax} = 0.1\) in low
 light, the typical \fgmax{} for the same leaf acclimated to high light
-was 0.20. Sun leaves had on average \(-0.27\) logit units {[}95\% CI:
-\(-0.34\) to \(-0.20\){]} lower \fgmax{} than shade-grown plants
+was 0.21. Sun leaves had on average \(-0.28\) logit units {[}95\% CI:
+\(-0.35\) to \(-0.21\){]} lower \fgmax{} than shade-grown plants
 (Figure~\ref{fig-accession-anatomy}b; Table~\ref{tbl-fit}). Treated
-pseudohypo leaves had on average \(0.20\) logit units {[}95\% CI:
-\(0.17\) to \(0.23\){]} higher \fgmax{} than untreated, amphistomatous
+pseudohypo leaves had on average \(0.21\) logit units {[}95\% CI:
+\(0.18\) to \(0.24\){]} higher \fgmax{} than untreated, amphistomatous
 leaves (Figure~\ref{fig-accession-anatomy}b; Table~\ref{tbl-fit}). This
 indicates that stomatal aperture was more open in leaves where gas
 exchange through adaxial stomata was blocked.
@@ -979,17 +989,17 @@ TYPE.}
 
 Growth light intensity did not significantly affect \(\tau\)
 Figure~\ref{fig-accession-kinetics}. In sun plants, \(\tau\) was on
-average 5.69\% {[}95\% CI: 0.951 to 10.6\%{]} lower than in shade plants
+average 5.64\% {[}95\% CI: 1.03 to 10.6\%{]} lower than in shade plants
 after accounting for other explanatory variables. Within the same leaf,
 increasing the measurement light intensity prior to the humidity step
 change from \ppfdqty{150} to \ppfdqty{2000} significantly increased
-\(\tau\) by 18\% {[}95\% CI: 11.7 to 24.6\%{]}
+\(\tau\) by 18.3\% {[}95\% CI: 11.8 to 25\%{]}
 Figure~\ref{fig-accession-kinetics}. The time lag \(\lambda\) responded
 to growth, but not measurement light intensity after accounting for
 other explanatory variables Figure~\ref{fig-accession-kinetics}. In sun
-plants, \(\tau\) was on average 12.2\% {[}95\% CI: 10.2 to 14.3\%{]}
+plants, \(\tau\) was on average 12.2\% {[}95\% CI: 10.2 to 14.2\%{]}
 greater than in shade plants. Higher measurement light decreased
-increased \(\lambda\) slightly by 1.15\% {[}95\% CI: -1.17 to 3.59\%{]}.
+increased \(\lambda\) slightly by 1.2\% {[}95\% CI: -1.07 to 3.56\%{]}.
 
 \begin{itemize}
 \tightlist
@@ -1119,8 +1129,7 @@ NOTE THAT BEST MODEL RETAINED INDIVIDUAL LEVEL EFFECT OF GCL, BUT
 COEFFICIENT WAS NOT SIGNIFICANT. OTHER BEST MODELS DID NOT RETAIN THIS.
 DID GCL MEDIATE AFFECT OF TREATMENTS?
 
-Need to show (this is a growing, incomplete list): - model comparison
-results table - figure of tau versus gcl per accession - phylogenetic
+Need to show (this is a growing, incomplete list): - phylogenetic
 partial correlation - partial correlation showing that gcl and tau are
 (only?) significant phylogenetic covariates
 
@@ -1147,29 +1156,29 @@ confidence intervals).}
 \endlastfoot
 \addlinespace[0.3em]
 \multicolumn{2}{l}{\textbf{$\log(\lambda)$}}\\
-\hspace{1em}effect of $\logit(f_g)$ on $\log(\lambda)$ & 0.11 [0.08, 0.13]\\
-\hspace{1em}effect of high measurement light intensity on $\log(\lambda)$ & 0.01 [-0.01, 0.04]\\
-\hspace{1em}intercept (shade, low light) & 0.44 [0.33, 0.55]\\
+\hspace{1em}effect of $\logit(f_g)$ on $\log(\lambda)$ & 0.10 [0.08, 0.13]\\
+\hspace{1em}effect of high measurement light intensity on $\log(\lambda)$ & 0.01 [-0.01, 0.03]\\
+\hspace{1em}intercept (shade, low light) & 0.39 [0.28, 0.49]\\
 \hspace{1em}effect of pseudohypostomatous curve type on $\log(\lambda)$ & -0.04 [-0.06, -0.03]\\
 \hspace{1em}effect of sun growth treatment on $\log(\lambda)$ & 0.12 [0.10, 0.13]\\
 \addlinespace[0.3em]
 \multicolumn{2}{l}{\textbf{$\log(\tau)$}}\\
-\hspace{1em}effect of $\logit(f_g)$ on $\log(\tau)$ & 0.20 [0.13, 0.26]\\
+\hspace{1em}effect of $\logit(f_g)$ on $\log(\tau)$ & 0.19 [0.13, 0.25]\\
 \hspace{1em}effect of high measurement light intensity on $\log(\tau)$ & 0.17 [0.11, 0.22]\\
-\hspace{1em}intercept (shade, low light) & 5.59 [5.22, 5.95]\\
+\hspace{1em}intercept (shade, low light) & 5.49 [5.13, 5.84]\\
 \hspace{1em}effect of pseudohypostomatous curve type on $\log(\tau)$ & -0.03 [-0.05, -0.00]\\
-\hspace{1em}effect of sun growth treatment on $\log(\tau)$ & 0.06 [0.01, 0.10]\\
+\hspace{1em}effect of sun growth treatment on $\log(\tau)$ & 0.05 [0.01, 0.10]\\
 \addlinespace[0.3em]
 \multicolumn{2}{l}{\textbf{$\log(l_\mathrm{gc})$}}\\
-\hspace{1em}intercept (shade, low light) & 2.96 [2.79, 3.13]\\
+\hspace{1em}intercept (shade, low light) & 2.96 [2.79, 3.12]\\
 \hspace{1em}effect of pseudohypostomatous curve type on $\log(l_\mathrm{gc})$ & -0.06 [-0.07, -0.05]\\
 \hspace{1em}effect of sun growth treatment on $\log(l_\mathrm{gc})$ & 0.11 [0.11, 0.12]\\
 \addlinespace[0.3em]
 \multicolumn{2}{l}{\textbf{$\logit(f_g)$}}\\
-\hspace{1em}effect of high measurement light intensity on $\logit(f_g)$ & 0.81 [0.78, 0.84]\\
-\hspace{1em}intercept (shade, low light) & -2.89 [-3.17, -2.60]\\
-\hspace{1em}effect of pseudohypostomatous curve type on $\logit(f_g)$ & 0.20 [0.17, 0.23]\\
-\hspace{1em}effect of sun growth treatment on $\logit(f_g)$ & -0.27 [-0.34, -0.20]\\*
+\hspace{1em}effect of high measurement light intensity on $\logit(f_g)$ & 0.84 [0.82, 0.87]\\
+\hspace{1em}intercept (shade, low light) & -2.52 [-2.81, -2.21]\\
+\hspace{1em}effect of pseudohypostomatous curve type on $\logit(f_g)$ & 0.21 [0.18, 0.24]\\
+\hspace{1em}effect of sun growth treatment on $\logit(f_g)$ & -0.28 [-0.35, -0.21]\\*
 
 \end{longtable}
 
@@ -1194,30 +1203,63 @@ leave-one-out cross-validation information criterion.}
 $\Delta \text{LOOIC}$ & SE & \fgmax & \gcl & \fgmax & \gcl\\
 \midrule
 \cellcolor{gray!10}{0.00} & \cellcolor{gray!10}{0.00} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{}\\
-2.39 & 2.64 & \cmark & \cmark & \cmark & \cmark\\
-\cellcolor{gray!10}{4.03} & \cellcolor{gray!10}{2.54} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{}\\
-8.80 & 2.70 & \cmark &  & \cmark & \cmark\\
-\cellcolor{gray!10}{17.69} & \cellcolor{gray!10}{10.71} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark}\\
+2.60 & 2.55 & \cmark & \cmark & \cmark & \\
+\cellcolor{gray!10}{3.22} & \cellcolor{gray!10}{2.62} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark}\\
+3.55 & 2.71 & \cmark & \cmark & \cmark & \cmark\\
+\cellcolor{gray!10}{17.15} & \cellcolor{gray!10}{10.63} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark}\\
 \addlinespace
-17.69 & 10.71 & \cmark &  &  & \\
-\cellcolor{gray!10}{18.01} & \cellcolor{gray!10}{10.68} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark}\\
-20.91 & 10.82 & \cmark & \cmark &  & \\
-\cellcolor{gray!10}{40.70} & \cellcolor{gray!10}{14.07} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark}\\
-42.34 & 14.02 &  & \cmark & \cmark & \\
+18.30 & 10.51 & \cmark &  &  & \cmark\\
+\cellcolor{gray!10}{20.75} & \cellcolor{gray!10}{10.47} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{}\\
+23.97 & 10.56 & \cmark &  &  & \\
+\cellcolor{gray!10}{46.10} & \cellcolor{gray!10}{14.17} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark}\\
+46.41 & 14.14 &  &  & \cmark & \\
 \addlinespace
-\cellcolor{gray!10}{44.04} & \cellcolor{gray!10}{14.06} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{}\\
-47.83 & 14.15 &  & \cmark & \cmark & \cmark\\
-\cellcolor{gray!10}{65.68} & \cellcolor{gray!10}{18.07} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{}\\
-66.34 & 18.11 &  &  &  & \\
-\cellcolor{gray!10}{67.15} & \cellcolor{gray!10}{17.96} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark}\\
+\cellcolor{gray!10}{49.51} & \cellcolor{gray!10}{14.17} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{}\\
+49.95 & 14.16 &  &  & \cmark & \cmark\\
+\cellcolor{gray!10}{68.29} & \cellcolor{gray!10}{17.98} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark}\\
+68.83 & 18.00 &  & \cmark &  & \\
+\cellcolor{gray!10}{69.85} & \cellcolor{gray!10}{18.00} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark}\\
 \addlinespace
-68.17 & 18.00 &  &  &  & \cmark\\
+71.45 & 17.94 &  &  &  & \\
 \bottomrule
 \end{tabular}
 
 }
 
 \end{table}%
+
+\subsubsection{\texorpdfstring{Stomatal aperture mediates plasticity in
+\(\tau\)}{Stomatal aperture mediates plasticity in \textbackslash tau}}\label{stomatal-aperture-mediates-plasticity-in-tau}
+
+We imposed three treatments that influenced stomatal kinetics: growth
+light intensity, measurement light intensity, and curve type. We found
+that the effect of measurement light intensity on \(\tau\) was mediated
+by \fgmax. (Figure~\ref{fig-mediation}).
+
+\begin{figure}
+
+\centering{
+
+\pandocbounded{\includegraphics[keepaspectratio]{../figures/mediation.pdf}}
+
+}
+
+\caption{\label{fig-mediation}\textbf{Stomatal aperture as a fraction of anatomical maximum stomatal conductance (\fgmax) mediates plasticity in the time constant $\tau$.}
+The three treatments are curve type (top facet; amphi vs.~pseudohypo),
+growth light intensity (middle facet; shade vs.~sun), and measurement
+light intensity (bottom facet; low vs.~high). Horizontal arrows at the
+bottom of each graph indicate the direct effect of the treatment level
+on \(\tau\); slanted arrows leading to or from \fgmax{} indicate
+mediated effects of the treatment on \(\tau\). Line thickness is
+proportional to the effect size and line color indicates whether the
+effects are negative (red) positive (blue). Parameter estimates of the
+effect and 95\% confidence intervals are above each line. Note that are
+not consistent because \fgmax is on a logit scale whereas \(\tau\) is on
+a log-seconds scale. The selected model did not retain direct effeects
+of \gcl{} on \(\tau\) and hence this variable could not be considered as
+a mediator.}
+
+\end{figure}%
 
 \subsection{Discussion}\label{discussion}
 
