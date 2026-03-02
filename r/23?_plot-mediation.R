@@ -5,6 +5,8 @@
 # because effects of lighttreatment and lightintensity are not varying at those
 # levels.
 
+# This produces same results as bayestestR::mediation()
+
 source("r/header.R")
 
 # Posterior samples of model parameters

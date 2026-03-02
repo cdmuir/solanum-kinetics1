@@ -804,7 +804,7 @@ effect of fgmax is not simply because high light intensity increased fgmax and t
 
 caveat: this treatment is a hammer than exposes maximum rate of stomatal closure. The factors which influence this may not explain variance in kinetics in more natural conditions.
 
-
+Traditional view is that smaller stomata are selected for speed and because there is higher gmax for same fs (Franks). Our results suggest an alternative hypothesis. Smaller stomata may increase rate of stomatal closure (we haven't tested opening), but only if fgmax is low or moderate. Therefore if leaves with smaller stomata maintain a similar gop, then stomatal density must increase to prevent fgmax from increasing. This may explain the association between the association between small stomata and high density, and relatedly the dearth of leaves with sparse, small stomata.
 ## References
 
 ::: {#refs}
