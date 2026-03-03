@@ -7,12 +7,16 @@
 
 # This produces same results as bayestestR::mediation()
 
+# NOTE: Standardizing coefficients by the standard deviations of the traits does
+# not change results because both direct and mediated effects are divided by the
+# standard deviation of tau, so the standard deviations of the traits cancel out
+
 source("r/header.R")
 
-# Posterior samples of model parameters
 post = read_rds("objects/best_model.rds") |>
   as_draws_df() |>
-  select(starts_with("."), starts_with("b_"))
+  select(starts_with("."), starts_with("b_")) |>
+  bind_cols(df_sigma) 
 
 # List of tables of direct and indirect effects for text output
 mediation = list(

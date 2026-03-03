@@ -286,6 +286,15 @@ post_fgmax_pseudohypo = fit |>
 # Mediation results
 mediation = read_rds("../objects/mediation.rds")
 
+de_sun = filter(mediation$lighttreatment, variable == "direct_effect")
+me_sun = filter(mediation$lighttreatment, variable == "mediated_effect_fgmax")
+
+de_high = filter(mediation$lightintensity, variable == "direct_effect")
+me_high = filter(mediation$lightintensity, variable == "mediated_effect_fgmax")
+
+de_pseudo = filter(mediation$curvetype, variable == "direct_effect")
+me_pseudo = filter(mediation$curvetype, variable == "mediated_effect_fgmax")
+
 # Partial correlation
 partial_cor = read_rds("../objects/partial-cor.rds") |>
   filter(name == "logtaumean_Intercept__loggcl_Intercept")
@@ -789,6 +798,31 @@ kbl(
 ### Stomatal aperture mediates plasticity in $\tau$
 
 We imposed three treatments that influenced stomatal kinetics: growth light intensity, measurement light intensity, and curve type. All three treatments directly effect $\tau$ and had indirect effects mediated by \fgmax{} (@fig-mediation). We did not estimate effects mediated by \gcl{} because the selected model did not retain direct effects of \gcl{} on $\tau$ (@tbl-comparison).
+
+put these results in text:
+
+formatC(log_to_percent(de_sun$estimate), format = "f", digits = 2)
+formatC(log_to_percent(de_sun$q2.5), format = "f", digits = 2)
+formatC(log_to_percent(de_sun$q97.5), format = "f", digits = 2)
+
+formatC(log_to_percent(me_sun$estimate), format = "f", digits = 2)
+formatC(log_to_percent(me_sun$q2.5), format = "f", digits = 2)
+formatC(log_to_percent(me_sun$q97.5), format = "f", digits = 2)
+
+formatC(log_to_percent(de_high$estimate), format = "f", digits = 2)
+formatC(log_to_percent(de_high$q2.5), format = "f", digits = 2)
+formatC(log_to_percent(de_high$q97.5), format = "f", digits = 2)
+formatC(log_to_percent(me_high$estimate), format = "f", digits = 2)
+formatC(log_to_percent(me_high$q2.5), format = "f", digits = 2)
+formatC(log_to_percent(me_high$q97.5), format = "f", digits = 2)
+
+formatC(log_to_percent(de_pseudo$estimate), format = "f", digits = 2)
+formatC(log_to_percent(de_pseudo$q2.5), format = "f", digits = 2)
+formatC(log_to_percent(de_pseudo$q97.5), format = "f", digits = 2)
+formatC(log_to_percent(me_pseudo$estimate), format = "f", digits = 2)
+formatC(log_to_percent(me_pseudo$q2.5), format = "f", digits = 2)
+formatC(log_to_percent(me_pseudo$q97.5), format = "f", digits = 2)
+
 
 ```{r, mediation, echo = FALSE}
 #| label: fig-mediation
