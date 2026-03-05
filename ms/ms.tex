@@ -868,12 +868,18 @@ used causal mediation analysis (\textbf{pearl\_causality\_2022?}) to
 test whether plasticity in \(\tau\) was mediated by plasticity in
 \fgmax{} or \gcl{} in response to measurement light intensity, growth
 light intensity, and curve-type treatments. We inferred the direct
-effect of treatments on \(\tau\) from model coefficients. We estimated
-the mediated effect of treatments using the product of the effect of
-treatment on mediator (\fgmax{} or \gcl) and the effect of the mediator
-on \(\tau\). We determibed significant direct and mediator effects based
-on whether the 95\% confidence intervals of the effects were different
-from zero.
+effect of treatments on \(\tau\) from model coefficients.
+
+NOT CORRECT: We estimated the mediated effect of treatments using the
+product of the effect of treatment on mediator (\fgmax{} or \gcl) and
+the effect of the mediator on \(\tau\). We determined significant direct
+and mediator effects based on whether the 95\% confidence intervals of
+the effects were different from zero.
+
+ADD TO THIS PARAPGRAPH, To compare the strength and statistical
+significance of explanatory variables, we estimated the effect size as
+the point estimate (median of the posterior) divided the standard error
+(standard deviation of the posterior) for each effect.
 
 \subsubsection{Variance decomposition and heritability
 (somewhere)}\label{variance-decomposition-and-heritability-somewhere}
@@ -1121,7 +1127,7 @@ Guard cell size and \fgmax affected stomatal kinetics, but at different
 levels of biological organization. In the model with the lowest LOOIC
 (see Table~\ref{tbl-comparison} for model comparison results), the only
 significant partial correlation was between \gcl and \(\tau\)
-(\(\rho = 0.74\) {[}95\% CI: -0.12 to 0.98\$) was a significant
+(\(\rho = 0.74\) {[}95\% CI: \(-0.12 to 0.98\)){]} was a significant
 phylogenetic correlation between \gcl and \(\tau\) (\textbf{fig?}-?).
 PARTIAL CORRELATION RESULT. Variation in \gcl within populations did not
 explain within-population variation in \(\tau\) Table~\ref{tbl-fit}.
@@ -1232,9 +1238,23 @@ $\Delta \text{LOOIC}$ & SE & \fgmax & \gcl & \fgmax & \gcl\\
 \(\tau\)}{Stomatal aperture mediates plasticity in \textbackslash tau}}\label{stomatal-aperture-mediates-plasticity-in-tau}
 
 We imposed three treatments that influenced stomatal kinetics: growth
-light intensity, measurement light intensity, and curve type. We found
-that the effect of measurement light intensity on \(\tau\) was mediated
-by \fgmax. (Figure~\ref{fig-mediation}).
+light intensity, measurement light intensity, and curve type. All three
+treatments directly effect \(\tau\) and had indirect effects mediated by
+\fgmax{} (Figure~\ref{fig-mediation}). We did not estimate effects
+mediated by \gcl{} because the selected model did not retain direct
+effects of \gcl{} on \(\tau\) (Table~\ref{tbl-comparison}). The direct
+effect of the high light intensity (sun) growth treatment increased
+\(\tau\) by \(5.64\)\% {[}95\% CI: \(1.03\) to \(10.55\)\%{]}, but the
+indirect of lower \fgmax{} counteracted by \(-5.01\)\% {[}95\% CI:
+\(-7.14\) to \(-3.12\)\%{]}. In contrast, direct and indirect effects of
+high measurement light intensity increased \(\tau\). The direct effect
+increased \(\tau\) by \(18.28\)\% {[}95\% CI: \(11.85\) to
+\(24.98\)\%{]} and the indirect effect mediated by \fgmax{} increased
+\(\tau\) by \(16.83\)\% {[}95\% CI: \(11.04\) to \(23.14\)\%{]}. The
+direct effect of the pseudohypo treatment decreased \(\tau\) slightly by
+\(-2.60\)\% {[}95\% CI: \(-4.93\) to \(-0.18\)\%{]}, but the indirect
+effect mediated by greater \fgmax{} increased \(\tau\) by \(3.98\)\%
+{[}95\% CI: \(2.60\) to \(5.50\)\%{]}.
 
 \begin{figure}
 
@@ -1271,7 +1291,15 @@ caveat: this treatment is a hammer than exposes maximum rate of stomatal
 closure. The factors which influence this may not explain variance in
 kinetics in more natural conditions.
 
-\subsection{References}\label{references}
+Traditional view is that smaller stomata are selected for speed and
+because there is higher gmax for same fs (Franks). Our results suggest
+an alternative hypothesis. Smaller stomata may increase rate of stomatal
+closure (we haven't tested opening), but only if fgmax is low or
+moderate. Therefore if leaves with smaller stomata maintain a similar
+gop, then stomatal density must increase to prevent fgmax from
+increasing. This may explain the association between the association
+between small stomata and high density, and relatedly the dearth of
+leaves with sparse, small stomata. \#\# References
 
 \phantomsection\label{refs}
 \begin{CSLReferences}{0}{1}

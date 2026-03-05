@@ -308,6 +308,23 @@ Reminder: Halliwell et al. 2025 paper has useful info on multiresponse models. I
 
 Westoby et al (2023) (10.1111/1365-2745.14150) is similar to Halliwell. Maybe another way to think about it using the mutliresponse approach.
 
+Humidity responses often dominate over other environmental signals (Aasamaa & Sõber 2011) but not always (Merilo et al 2014 New Phyt - this paper decreased RH to 30-40%)
+
+There are two Aasamaa & Sõber 2011 papers:
+- multiple environmental changes, humidity/water potential dominate in 6 tree species (10.1093/treephys/tpr078). This paper also decreased humidity to 10% at 25 C
+- single environmental change, humidity/water dominate others
+
+Some older references: 
+
+Morison J.I.L. Gifford R.M. 1983. Stomatal sensitivity to carbon dioxide and humidity. A comparison of two C3 and C4 grass species. Plant Physiol. 71:789–796.
+
+Talbott L.D. Rahveh E. Zeiger E. 2003. Relative humidity is a key factor in the acclimation of the stomatal response to CO2. J. Exp. Bot. 54:2141–2147.
+
+
+
+
+Need to check out these references "Although the plant hormone abscisic acid (ABA) is involved in stomatal closure in response to drought stress and reduced air humidity (Bunce, 1997; Roelfsema & Hedrich, 2005; Bauer et al., 2013), the existence of an ABA-independent pathway participating in low humidity-induced stomatal response has been suggested (Xie et al., 2006). Furthermore, stomata may also directly respond to leaf water status without relying on ABA production and signalling (see Buckley, 2005; Damour et al., 2010; Peak & Mott, 2011). However, both the metabolically mediated hydro-active feedback response of guard cell osmotic pressure to the water status of epidermal evaporative site (Buckley, 2005) and the stomatal response mechanism based on a near-equilibrium in water potential between the guard cells and the air in the stomatal pore (Peak & Mott, 2011) still embed the potential for ABA to be involved in air humidity-related stomatal behaviour."
+
 ## Abstract
 
 Guard cell size and stomatal density vary over X and X orders of magnitude among extant vascular land plants, yet the adaptive significance of much of this variation remains unclear. The evolution of guard cell size in particular is poorly understood and may even be constrained by nonadaptive features like genome size. One hypothesis is that natural selection may favor smaller guard cells to increase the rate at which stomatal conductance responds to fluctuating environmental conditions. A related hypothesis is that operational stomatal conductance (gop) is often $\approx 25\%$ of its theoretical maximum (gmax) because at this stomatal aperture, guard cell volume is poised to change rapidly with changes in turgor pressure. The support for both hypothesis is limited and mixed, in part because they have not been tested together, even though both guard cell size and the ratio of gop to gmax (gop:gmax) should influence stomatal kinetics. We measured stomatal closure kinetics in response to an abrupt increase in vapor pressure deficit (VPD) among `r n_acc` diverse wild tomato populations in the genus \textit{Solanum}. Both smaller guard cell size and lower gop:gmax were associated with faster stomatal closure kinetics, but at different levels of biological organization. Guard cell size explained X% of the variance in stomatal kinetics among populations, whereas gop:gmax explained X% of the variance among individuals within populations. [neither result would have been supported if analyzed in isolation - is this true?]. We conclude that guard cell size may respond to selection on stomatal kinetics over evolutionary time, but actual kinetics are modulated by a tradeoff between maximizing gop and minimizing the time required for stomatal closure. Putting these hypotheses together with stabilizing selection on gop may explain why stomatal size and density negatively covary among species.
@@ -667,7 +684,7 @@ tab_variance |>
              escape = FALSE) 
 ```
 
-Guard cell size and \fgmax affected stomatal kinetics, but at different levels of biological organization. In the model with the lowest LOOIC (see @tbl-comparison for model comparison results), the only significant partial correlation was between \gcl and $\tau$ ($\rho = `r signif(rho, 2)`$ [95% CI: `r signif(rho_lower, 2)` to `r signif(rho_upper, 2)`$) was a significant phylogenetic correlation between \gcl and $\tau$ [@fig-?]. PARTIAL CORRELATION RESULT. Variation in \gcl within populations did not explain within-population variation in $\tau$ [@tbl-fit]. NOTE THAT BEST MODEL RETAINED INDIVIDUAL LEVEL EFFECT OF GCL, BUT COEFFICIENT WAS NOT SIGNIFICANT. OTHER BEST MODELS DID NOT RETAIN THIS. DID GCL MEDIATE AFFECT OF TREATMENTS?
+Guard cell size and \fgmax affected stomatal kinetics, but at different levels of biological organization. In the model with the lowest LOOIC (see @tbl-comparison for model comparison results), the only significant partial correlation was between \gcl and $\tau$ ($\rho = `r signif(rho, 2)`$ [95% CI: $`r signif(rho_lower, 2)` to `r signif(rho_upper, 2)`$)] was a significant phylogenetic correlation between \gcl and $\tau$ [@fig-?]. PARTIAL CORRELATION RESULT. Variation in \gcl within populations did not explain within-population variation in $\tau$ [@tbl-fit]. NOTE THAT BEST MODEL RETAINED INDIVIDUAL LEVEL EFFECT OF GCL, BUT COEFFICIENT WAS NOT SIGNIFICANT. OTHER BEST MODELS DID NOT RETAIN THIS. DID GCL MEDIATE AFFECT OF TREATMENTS?
 
 
 Need to show (this is a growing, incomplete list):
@@ -797,32 +814,7 @@ kbl(
 
 ### Stomatal aperture mediates plasticity in $\tau$
 
-We imposed three treatments that influenced stomatal kinetics: growth light intensity, measurement light intensity, and curve type. All three treatments directly effect $\tau$ and had indirect effects mediated by \fgmax{} (@fig-mediation). We did not estimate effects mediated by \gcl{} because the selected model did not retain direct effects of \gcl{} on $\tau$ (@tbl-comparison).
-
-put these results in text:
-
-formatC(log_to_percent(de_sun$estimate), format = "f", digits = 2)
-formatC(log_to_percent(de_sun$q2.5), format = "f", digits = 2)
-formatC(log_to_percent(de_sun$q97.5), format = "f", digits = 2)
-
-formatC(log_to_percent(me_sun$estimate), format = "f", digits = 2)
-formatC(log_to_percent(me_sun$q2.5), format = "f", digits = 2)
-formatC(log_to_percent(me_sun$q97.5), format = "f", digits = 2)
-
-formatC(log_to_percent(de_high$estimate), format = "f", digits = 2)
-formatC(log_to_percent(de_high$q2.5), format = "f", digits = 2)
-formatC(log_to_percent(de_high$q97.5), format = "f", digits = 2)
-formatC(log_to_percent(me_high$estimate), format = "f", digits = 2)
-formatC(log_to_percent(me_high$q2.5), format = "f", digits = 2)
-formatC(log_to_percent(me_high$q97.5), format = "f", digits = 2)
-
-formatC(log_to_percent(de_pseudo$estimate), format = "f", digits = 2)
-formatC(log_to_percent(de_pseudo$q2.5), format = "f", digits = 2)
-formatC(log_to_percent(de_pseudo$q97.5), format = "f", digits = 2)
-formatC(log_to_percent(me_pseudo$estimate), format = "f", digits = 2)
-formatC(log_to_percent(me_pseudo$q2.5), format = "f", digits = 2)
-formatC(log_to_percent(me_pseudo$q97.5), format = "f", digits = 2)
-
+We imposed three treatments that influenced stomatal kinetics: growth light intensity, measurement light intensity, and curve type. All three treatments directly effect $\tau$ and had indirect effects mediated by \fgmax{} (@fig-mediation). We did not estimate effects mediated by \gcl{} because the selected model did not retain direct effects of \gcl{} on $\tau$ (@tbl-comparison). The direct effect of the high light intensity (sun) growth treatment increased $\tau$ by $`r formatC(log_to_percent(de_sun[['estimate']]), format = 'f', digits = 2)`$% [95% CI: $`r formatC(log_to_percent(de_sun[['q2.5']]), format = 'f', digits = 2)`$ to $`r formatC(log_to_percent(de_sun[['q97.5']]), format = 'f', digits = 2)`$%], but the indirect of lower \fgmax{} counteracted by $`r formatC(log_to_percent(me_sun[['estimate']]), format = 'f', digits = 2)`$% [95% CI: $`r formatC(log_to_percent(me_sun[['q2.5']]), format = 'f', digits = 2)`$ to $`r formatC(log_to_percent(me_sun[['q97.5']]), format = 'f', digits = 2)`$%]. In contrast, direct and indirect effects of high measurement light intensity increased $\tau$. The direct effect increased $\tau$ by $`r formatC(log_to_percent(de_high[['estimate']]), format = 'f', digits = 2)`$% [95% CI: $`r formatC(log_to_percent(de_high[['q2.5']]), format = 'f', digits = 2)`$ to $`r formatC(log_to_percent(de_high[['q97.5']]), format = 'f', digits = 2)`$%] and the indirect effect mediated by \fgmax{} increased $\tau$ by $`r formatC(log_to_percent(me_high[['estimate']]), format = 'f', digits = 2)`$% [95% CI: $`r formatC(log_to_percent(me_high[['q2.5']]), format = 'f', digits = 2)`$ to $`r formatC(log_to_percent(me_high[['q97.5']]), format = 'f', digits = 2)`$%]. The direct effect of the pseudohypo treatment decreased $\tau$ slightly by $`r formatC(log_to_percent(de_pseudo[['estimate']]), format = 'f', digits = 2)`$% [95% CI: $`r formatC(log_to_percent(de_pseudo[['q2.5']]), format = 'f', digits = 2)`$ to $`r formatC(log_to_percent(de_pseudo[['q97.5']]), format = 'f', digits = 2)`$%], but the indirect effect mediated by greater \fgmax{} increased $\tau$ by $`r formatC(log_to_percent(me_pseudo[['estimate']]), format = 'f', digits = 2)`$% [95% CI: $`r formatC(log_to_percent(me_pseudo[['q2.5']]), format = 'f', digits = 2)`$ to $`r formatC(log_to_percent(me_pseudo[['q97.5']]), format = 'f', digits = 2)`$%].
 
 ```{r, mediation, echo = FALSE}
 #| label: fig-mediation
