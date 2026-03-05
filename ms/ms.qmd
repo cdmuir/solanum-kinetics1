@@ -316,12 +316,13 @@ There are two Aasamaa & Sõber 2011 papers:
 
 Some older references: 
 
-Morison J.I.L. Gifford R.M. 1983. Stomatal sensitivity to carbon dioxide and humidity. A comparison of two C3 and C4 grass species. Plant Physiol. 71:789–796.
+(this measured steady state responses, not kinetics) Morison J.I.L. Gifford R.M. 1983. Stomatal sensitivity to carbon dioxide and humidity. A comparison of two C3 and C4 grass species. Plant Physiol. 71:789–796.
 
-Talbott L.D. Rahveh E. Zeiger E. 2003. Relative humidity is a key factor in the acclimation of the stomatal response to CO2. J. Exp. Bot. 54:2141–2147.
+(not really relevant) Talbott L.D. Rahveh E. Zeiger E. 2003. Relative humidity is a key factor in the acclimation of the stomatal response to CO2. J. Exp. Bot. 54:2141–2147.
 
+Bunce (1997) - not very relevant
 
-
+Buckley 2016 (10.1111/pce.12651) provides useful background on why hydroactive response takes time (ABA synthesis). Need to read McAdams and Brodribb 2015 for more on this. (10.1111/pce.12633)
 
 Need to check out these references "Although the plant hormone abscisic acid (ABA) is involved in stomatal closure in response to drought stress and reduced air humidity (Bunce, 1997; Roelfsema & Hedrich, 2005; Bauer et al., 2013), the existence of an ABA-independent pathway participating in low humidity-induced stomatal response has been suggested (Xie et al., 2006). Furthermore, stomata may also directly respond to leaf water status without relying on ABA production and signalling (see Buckley, 2005; Damour et al., 2010; Peak & Mott, 2011). However, both the metabolically mediated hydro-active feedback response of guard cell osmotic pressure to the water status of epidermal evaporative site (Buckley, 2005) and the stomatal response mechanism based on a near-equilibrium in water potential between the guard cells and the air in the stomatal pore (Peak & Mott, 2011) still embed the potential for ABA to be involved in air humidity-related stomatal behaviour."
 
