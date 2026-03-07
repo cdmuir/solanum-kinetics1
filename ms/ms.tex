@@ -261,6 +261,8 @@ Classification: Biological Sciences, Ecology\\
 Keywords: amphistomy, leaf gas exchange, \textit{Solanum}, stomatal kinetics, stomatal size
 \end{center}
 
+\section{notes}\label{notes}
+
 Reminder: Halliwell et al.~2025 paper has useful info on multiresponse
 models. I might use Van de Pol and Wright (2009) method for within
 versus between slope estimation. This is in the phylogenetic comparative
@@ -731,9 +733,38 @@ Total & 520 & 520 & 545 & 541 & 2,126\\
 
 \end{table}%
 
-\subsubsection{Stomatal anatomy}\label{stomatal-anatomy}
+\subsubsection{\texorpdfstring{Stomatal anatomical traits \gcl and
+\fgmax}{Stomatal anatomical traits and }}\label{stomatal-anatomical-traits-and}
 
-size, density, gmax, fgmax
+We estimated the stomatal density and \gcl{} on ab- and adaxial surfaces
+from all leaves used for humidity response curves. We used standard
+methods describe fully in (11). For each surface we calculated the
+anatomical maximum stomatal conductance (\gmax) at a reference leaf
+temperature of \(\SI{25}{\degreeCelsius}\) following (14) as:
+
+\[g_\mathrm{max} = b m d l_\mathrm{gc} / \sqrt{2}.\] The biophysical and
+morphological constants \(b\) and \(m\) are:
+
+\[b = \frac{D_\mathrm{wv}}{v},~\text{and}\]
+\[m = \frac{\pi c ^ 2}{j^{0.5} (4 h j + \pi c)},\]
+
+where \(D_\mathrm{wv}\) is the diffusion coefficient of water vapor in
+air and \(v\) is by the kinematic viscosity of dry air. We assumed
+\(D_\mathrm{wv} = \SI{2.49e-5}{\meter\squared\per\second}\) and
+\(v = \SI{2.24e-2}{\raiseto{3}\meter\per\mol}\) (15). For kidney-shaped
+guard cells like those in wild tomatoes, \(c = h = j = 0.5\). The
+\gmaxratio{} is the \gmax{} of the adaxial surface divided by the sum
+total \gmax{} of both surfaces. To estimate \fgmax, we divided the
+initial \gsw{} estimated from the parameter \(g_\text{i}\) in
+Equation~\ref{eq-weibull} from each humidity response curve the
+anatomical \gmax{} for that leaf. The estimated \(g_\text{i}\) was very
+close to the maximum \gsw{} observed near the beginning of each curve
+(Figure~\ref{fig-compare-gsw}), suggesting that the initial \gsw{} was a
+good proxy for operational stomatal conductance at the time of the step
+change in humidity. We used the anatomical \gmax{} for the surface(s)
+measured in each curve to calculate \fgmax. For amphi curves, we used
+the sum of adaxial and abaxial \gmax{}; for pseudohypo curves, we used
+only the abaxial \gmax{}.
 
 \subsubsection{Hypothesis generation and
 testing}\label{hypothesis-generation-and-testing}
@@ -752,23 +783,23 @@ made the decision to test for an association between \fgmax and \(\tau\)
 after exploratory analyses revealed a potential association. Adding
 hypotheses after some results have been analyzed, also known as
 ``Hypothesizing After Results Known'' (HARKing), can lead to reports of
-spurious associations that are not repeatable in later studies (14, 15).
+spurious associations that are not repeatable in later studies (16, 17).
 Therefore, our conclusions about the effect of \fgmax on stomatal
 kinetics should be interpreted with caution until they are replicated.
 
 We estimated \(\tau\) and \(\lambda\) for each response curve by fitting
 Equation~\ref{eq-weibull} to a time-series of \gsw{} values using
 Bayesian nonlinear regression. All models were fit using a Bayesian HMC
-sampling in the probabilistic programming language \emph{Stan} (16)
-using the \emph{R} package \textbf{brms} version 2.23.0 (17). We used
-\emph{CmdStan} version 2.38.0 and \textbf{cmdstanr} version 0.9.0 (18)
-to interface with \emph{R} version 4.5.2 (19). We sampled 1000
+sampling in the probabilistic programming language \emph{Stan} (18)
+using the \emph{R} package \textbf{brms} version 2.23.0 (19). We used
+\emph{CmdStan} version 2.38.0 and \textbf{cmdstanr} version 0.9.0 (20)
+to interface with \emph{R} version 4.5.2 (21). We sampled 1000
 post-warmup draws from the posterior distribution on a single chain. We
 adjusted the number sampling iterations and thinning interval for each
-curve so that the Gelman-Rubin convergence statistic (\(\hat{R}\)) (20)
+curve so that the Gelman-Rubin convergence statistic (\(\hat{R}\)) (22)
 was less than 1.05 and the bulk effective sample size (ESS) was greater
 than 400 for all model parameters, and there were fewer than 10
-divergent transitions. We assessed model fit using Bayesian \(R^2\) (21)
+divergent transitions. We assessed model fit using Bayesian \(R^2\) (23)
 implemented in \textbf{brms}.
 
 We next used estimates of \(\tau\) from each curve in multiresponse
@@ -794,10 +825,9 @@ of manipulative treatments: growth light intensity (sun and shade);
 measurement light intensity (high and low); and curve type
 (amphistomatous and pseudohypostomatous). All models also included
 population as both a phylogenetically structured random effect and a
-non-phylogenetic random effect following
-(\textbf{halliwell\_multi-response\_2025?}). Prior to fitting, the
+non-phylogenetic random effect following (9). Prior to fitting, the
 phylogenetic (co)variance matrix was rescaled as a correlation matrix
-(22). For traits measured multiple times within the same leaf (\fgmax,
+(24). For traits measured multiple times within the same leaf (\fgmax,
 \(\lambda\), \(\tau\)) we included a random effect of individual to
 account for repeated measures. We accounted for uncertainty in \(\tau\)
 and \(\lambda\) using the standard deviation of the posterior
@@ -805,12 +835,12 @@ distribution of each estimate (see `Humidity response curves' for
 details). We modeled residual (co)variance, a combination
 among-individual (co)variance and measurement error, as a multivariate
 Student \(t\)-distribution, which is more robust to extreme values than
-the multivariate normal distribution (\textbf{gelman\_bayesian\_2014?}).
-To account for heteroskedasticity, bounded measurements, and linearize
-relationships, \gcl, \(\lambda\), and \(\tau\) were log-transformed
-prior to analysis whereas \fgmax{} was logit-transformed. All models
-were fit with \emph{Stan} following the same methods described above for
-fitting Equation~\ref{eq-weibull} to the humidity response curves.
+the multivariate normal distribution (25). To account for
+heteroskedasticity, bounded measurements, and linearize relationships,
+\gcl, \(\lambda\), and \(\tau\) were log-transformed prior to analysis
+whereas \fgmax{} was logit-transformed. All models were fit with
+\emph{Stan} following the same methods described above for fitting
+Equation~\ref{eq-weibull} to the humidity response curves.
 
 To answer questions 1 and 2 above, we analyzed three nonmutually
 exclusive paths through which \fgmax{} and \gcl{} could influence
@@ -826,16 +856,30 @@ effects of \fgmax{} and \gcl{} on kinetic parameters using linear
 multiple regression that simultaneously accounts for phylogenetic and
 treatment effects. We used the leave-one-out cross-validation
 information criterion (LOOIC) to compare the fit of models using the
-\emph{R} package \textbf{loo} version 2.9.0 (23) to calculate LOOIC
+\emph{R} package \textbf{loo} version 2.9.0 (26) to calculate LOOIC
 values. We compared models with all permutations of \fgmax{} and \gcl{}
 influencing \(\lambda\) and \(\tau\). We considered all models within
 two \(\Delta\)LOOIC standard errors of the minimum LOOIC
 (Table~\ref{tbl-comparison}) to be in the set of plausible models to
 generate posterior predictions for hypothesis testing. Within each
 plausible model, we assessed whether an effect was significantly
-different from zero based on the 95\% confidence intervals.
+different from zero based on the 95\% confidence intervals. Third, we
+used causal mediation analysis (\textbf{pearl\_causality\_2022?}) to
+test whether plasticity in \(\tau\) was mediated by plasticity in
+\fgmax{} or \gcl{} in response to measurement light intensity, growth
+light intensity, and curve-type treatments. We inferred the direct
+effect of treatments on \(\tau\) from model coefficients.
 
-THIRD: mediating treatment effects (plasticity)
+NOT CORRECT: We estimated the mediated effect of treatments using the
+product of the effect of treatment on mediator (\fgmax{} or \gcl) and
+the effect of the mediator on \(\tau\). We determined significant direct
+and mediator effects based on whether the 95\% confidence intervals of
+the effects were different from zero.
+
+ADD TO THIS PARAPGRAPH, To compare the strength and statistical
+significance of explanatory variables, we estimated the effect size as
+the point estimate (median of the posterior) divided the standard error
+(standard deviation of the posterior) for each effect.
 
 \subsubsection{Variance decomposition and heritability
 (somewhere)}\label{variance-decomposition-and-heritability-somewhere}
@@ -846,7 +890,7 @@ between-individual, and within-individual levels. The phylogenetic
 variance component quantifies trait evolution between populations
 congruent with the phylogenetic relationships, whereas the population
 component quantifies variance among populations independent of
-phylogenetic relationships (22, 24). The between- and within-individual
+phylogenetic relationships (24, 27). The between- and within-individual
 variance components quantify variance among individuals within the same
 population and treatment. The within-individual component was estimated
 from repeated measures of the same leaf at different light intensities.
@@ -855,7 +899,7 @@ length with our study design because we only measured average guard cell
 length once per leaf. We estimated the between-individual variance from
 the residual variance, which also includes measurement error. The
 phylogenetic heritability is equivalent to the phylogenetic variance
-component and is estimated following (24); (22) as:
+component and is estimated following (27); (24) as:
 
 \[h^2_{\mathrm{phy}} = \frac{\sigma^2_\mathrm{phy}}{\sigma^2_\mathrm{phy} + \sigma^2_\mathrm{pop} + \sigma^2_\mathrm{between} + \sigma^2_\mathrm{within}},\]
 
@@ -898,7 +942,7 @@ length and
 aperture}\label{effects-of-light-intensity-treatments-on-guard-cell-length-and-aperture}
 
 On average, guard cell length increased by \(12.1\)\% {[}95\% CI:
-\(11.1\) to \(13.0\)\%{]} in the sun treatment
+\(11.2\) to \(13.1\)\%{]} in the sun treatment
 (Figure~\ref{fig-accession-anatomy}a; Table~\ref{tbl-fit}). The average
 \gcl{} of pseudohypo leaves was \(-5.9\)\% {[}95\% CI: \(-6.7\) to
 \(-5.1\)\%{]} greater than amphi leaves
@@ -908,16 +952,18 @@ leaf. Rather, this was a composition effect. Adaxial stomata tended to
 be slightly smaller than abaxial stomata, so the average \gcl{} in
 pseudohypo leaves was slightly higher than in amphi leaves because the
 former only included abaxial stomata. High measurement light intensity
-increased \fgmax by an average of \(0.81\) logit units {[}95\% CI:
-\(0.78\) to \(0.84\){]} (Figure~\ref{fig-accession-anatomy}b;
+increased \fgmax by an average of \(0.84\) logit units {[}95\% CI:
+\(0.82\) to \(0.87\){]} (Figure~\ref{fig-accession-anatomy}b;
 Table~\ref{tbl-fit}). For example, if \(f_\text{gmax} = 0.1\) in low
 light, the typical \fgmax{} for the same leaf acclimated to high light
-was 0.20. Sun leaves had on average \(-0.27\) logit units {[}95\% CI:
-\(-0.34\) to \(-0.20\){]} lower \fgmax{} than shade-grown plants
-(Figure~\ref{fig-accession-anatomy}b; Table~\ref{tbl-fit}).
-
-STILL NEED TO ADD WHETHER FGMAX DIFFERED IN PSEUDO LEAVES ONCE MODEL IS
-UPDATED
+was 0.21. Sun leaves had on average \(-0.28\) logit units {[}95\% CI:
+\(-0.35\) to \(-0.21\){]} lower \fgmax{} than shade-grown plants
+(Figure~\ref{fig-accession-anatomy}b; Table~\ref{tbl-fit}). Treated
+pseudohypo leaves had on average \(0.21\) logit units {[}95\% CI:
+\(0.18\) to \(0.24\){]} higher \fgmax{} than untreated, amphistomatous
+leaves (Figure~\ref{fig-accession-anatomy}b; Table~\ref{tbl-fit}). This
+indicates that stomatal aperture was more open in leaves where gas
+exchange through adaxial stomata was blocked.
 
 \begin{figure}
 
@@ -949,17 +995,17 @@ TYPE.}
 
 Growth light intensity did not significantly affect \(\tau\)
 Figure~\ref{fig-accession-kinetics}. In sun plants, \(\tau\) was on
-average 5.69\% {[}95\% CI: 0.951 to 10.6\%{]} lower than in shade plants
+average 5.64\% {[}95\% CI: 1.03 to 10.6\%{]} lower than in shade plants
 after accounting for other explanatory variables. Within the same leaf,
 increasing the measurement light intensity prior to the humidity step
 change from \ppfdqty{150} to \ppfdqty{2000} significantly increased
-\(\tau\) by 18\% {[}95\% CI: 11.7 to 24.6\%{]}
+\(\tau\) by 18.3\% {[}95\% CI: 11.8 to 25\%{]}
 Figure~\ref{fig-accession-kinetics}. The time lag \(\lambda\) responded
 to growth, but not measurement light intensity after accounting for
 other explanatory variables Figure~\ref{fig-accession-kinetics}. In sun
-plants, \(\tau\) was on average 12.2\% {[}95\% CI: 10.2 to 14.3\%{]}
+plants, \(\tau\) was on average 12.2\% {[}95\% CI: 10.2 to 14.2\%{]}
 greater than in shade plants. Higher measurement light decreased
-increased \(\lambda\) slightly by 1.15\% {[}95\% CI: -1.17 to 3.59\%{]}.
+increased \(\lambda\) slightly by 1.2\% {[}95\% CI: -1.07 to 3.56\%{]}.
 
 \begin{itemize}
 \tightlist
@@ -1081,7 +1127,7 @@ Guard cell size and \fgmax affected stomatal kinetics, but at different
 levels of biological organization. In the model with the lowest LOOIC
 (see Table~\ref{tbl-comparison} for model comparison results), the only
 significant partial correlation was between \gcl and \(\tau\)
-(\(\rho = 0.74\) {[}95\% CI: -0.12 to 0.98\$) was a significant
+(\(\rho = 0.74\) {[}95\% CI: \(-0.12 to 0.98\)){]} was a significant
 phylogenetic correlation between \gcl and \(\tau\) (\textbf{fig?}-?).
 PARTIAL CORRELATION RESULT. Variation in \gcl within populations did not
 explain within-population variation in \(\tau\) Table~\ref{tbl-fit}.
@@ -1089,8 +1135,7 @@ NOTE THAT BEST MODEL RETAINED INDIVIDUAL LEVEL EFFECT OF GCL, BUT
 COEFFICIENT WAS NOT SIGNIFICANT. OTHER BEST MODELS DID NOT RETAIN THIS.
 DID GCL MEDIATE AFFECT OF TREATMENTS?
 
-Need to show (this is a growing, incomplete list): - model comparison
-results table - figure of tau versus gcl per accession - phylogenetic
+Need to show (this is a growing, incomplete list): - phylogenetic
 partial correlation - partial correlation showing that gcl and tau are
 (only?) significant phylogenetic covariates
 
@@ -1117,29 +1162,29 @@ confidence intervals).}
 \endlastfoot
 \addlinespace[0.3em]
 \multicolumn{2}{l}{\textbf{$\log(\lambda)$}}\\
-\hspace{1em}effect of $\logit(f_g)$ on $\log(\lambda)$ & 0.11 [0.08, 0.13]\\
-\hspace{1em}effect of high measurement light intensity on $\log(\lambda)$ & 0.01 [-0.01, 0.04]\\
-\hspace{1em}intercept (shade, low light) & 0.44 [0.33, 0.55]\\
+\hspace{1em}effect of $\logit(f_g)$ on $\log(\lambda)$ & 0.10 [0.08, 0.13]\\
+\hspace{1em}effect of high measurement light intensity on $\log(\lambda)$ & 0.01 [-0.01, 0.03]\\
+\hspace{1em}intercept (shade, low light) & 0.39 [0.28, 0.49]\\
 \hspace{1em}effect of pseudohypostomatous curve type on $\log(\lambda)$ & -0.04 [-0.06, -0.03]\\
 \hspace{1em}effect of sun growth treatment on $\log(\lambda)$ & 0.12 [0.10, 0.13]\\
 \addlinespace[0.3em]
 \multicolumn{2}{l}{\textbf{$\log(\tau)$}}\\
-\hspace{1em}effect of $\logit(f_g)$ on $\log(\tau)$ & 0.20 [0.13, 0.26]\\
+\hspace{1em}effect of $\logit(f_g)$ on $\log(\tau)$ & 0.19 [0.13, 0.25]\\
 \hspace{1em}effect of high measurement light intensity on $\log(\tau)$ & 0.17 [0.11, 0.22]\\
-\hspace{1em}intercept (shade, low light) & 5.59 [5.22, 5.95]\\
+\hspace{1em}intercept (shade, low light) & 5.49 [5.13, 5.84]\\
 \hspace{1em}effect of pseudohypostomatous curve type on $\log(\tau)$ & -0.03 [-0.05, -0.00]\\
-\hspace{1em}effect of sun growth treatment on $\log(\tau)$ & 0.06 [0.01, 0.10]\\
+\hspace{1em}effect of sun growth treatment on $\log(\tau)$ & 0.05 [0.01, 0.10]\\
 \addlinespace[0.3em]
 \multicolumn{2}{l}{\textbf{$\log(l_\mathrm{gc})$}}\\
-\hspace{1em}intercept (shade, low light) & 2.96 [2.79, 3.13]\\
+\hspace{1em}intercept (shade, low light) & 2.96 [2.79, 3.12]\\
 \hspace{1em}effect of pseudohypostomatous curve type on $\log(l_\mathrm{gc})$ & -0.06 [-0.07, -0.05]\\
 \hspace{1em}effect of sun growth treatment on $\log(l_\mathrm{gc})$ & 0.11 [0.11, 0.12]\\
 \addlinespace[0.3em]
 \multicolumn{2}{l}{\textbf{$\logit(f_g)$}}\\
-\hspace{1em}effect of high measurement light intensity on $\logit(f_g)$ & 0.81 [0.78, 0.84]\\
-\hspace{1em}intercept (shade, low light) & -2.89 [-3.17, -2.60]\\
-\hspace{1em}effect of pseudohypostomatous curve type on $\logit(f_g)$ & 0.20 [0.17, 0.23]\\
-\hspace{1em}effect of sun growth treatment on $\logit(f_g)$ & -0.27 [-0.34, -0.20]\\*
+\hspace{1em}effect of high measurement light intensity on $\logit(f_g)$ & 0.84 [0.82, 0.87]\\
+\hspace{1em}intercept (shade, low light) & -2.52 [-2.81, -2.21]\\
+\hspace{1em}effect of pseudohypostomatous curve type on $\logit(f_g)$ & 0.21 [0.18, 0.24]\\
+\hspace{1em}effect of sun growth treatment on $\logit(f_g)$ & -0.28 [-0.35, -0.21]\\*
 
 \end{longtable}
 
@@ -1164,30 +1209,77 @@ leave-one-out cross-validation information criterion.}
 $\Delta \text{LOOIC}$ & SE & \fgmax & \gcl & \fgmax & \gcl\\
 \midrule
 \cellcolor{gray!10}{0.00} & \cellcolor{gray!10}{0.00} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{}\\
-2.39 & 2.64 & \cmark & \cmark & \cmark & \cmark\\
-\cellcolor{gray!10}{4.03} & \cellcolor{gray!10}{2.54} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{}\\
-8.80 & 2.70 & \cmark &  & \cmark & \cmark\\
-\cellcolor{gray!10}{17.69} & \cellcolor{gray!10}{10.71} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark}\\
+2.60 & 2.55 & \cmark & \cmark & \cmark & \\
+\cellcolor{gray!10}{3.22} & \cellcolor{gray!10}{2.62} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark}\\
+3.55 & 2.71 & \cmark & \cmark & \cmark & \cmark\\
+\cellcolor{gray!10}{17.15} & \cellcolor{gray!10}{10.63} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark}\\
 \addlinespace
-17.69 & 10.71 & \cmark &  &  & \\
-\cellcolor{gray!10}{18.01} & \cellcolor{gray!10}{10.68} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark}\\
-20.91 & 10.82 & \cmark & \cmark &  & \\
-\cellcolor{gray!10}{40.70} & \cellcolor{gray!10}{14.07} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark}\\
-42.34 & 14.02 &  & \cmark & \cmark & \\
+18.30 & 10.51 & \cmark &  &  & \cmark\\
+\cellcolor{gray!10}{20.75} & \cellcolor{gray!10}{10.47} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{}\\
+23.97 & 10.56 & \cmark &  &  & \\
+\cellcolor{gray!10}{46.10} & \cellcolor{gray!10}{14.17} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark}\\
+46.41 & 14.14 &  &  & \cmark & \\
 \addlinespace
-\cellcolor{gray!10}{44.04} & \cellcolor{gray!10}{14.06} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{}\\
-47.83 & 14.15 &  & \cmark & \cmark & \cmark\\
-\cellcolor{gray!10}{65.68} & \cellcolor{gray!10}{18.07} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{}\\
-66.34 & 18.11 &  &  &  & \\
-\cellcolor{gray!10}{67.15} & \cellcolor{gray!10}{17.96} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark}\\
+\cellcolor{gray!10}{49.51} & \cellcolor{gray!10}{14.17} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{}\\
+49.95 & 14.16 &  &  & \cmark & \cmark\\
+\cellcolor{gray!10}{68.29} & \cellcolor{gray!10}{17.98} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark}\\
+68.83 & 18.00 &  & \cmark &  & \\
+\cellcolor{gray!10}{69.85} & \cellcolor{gray!10}{18.00} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark}\\
 \addlinespace
-68.17 & 18.00 &  &  &  & \cmark\\
+71.45 & 17.94 &  &  &  & \\
 \bottomrule
 \end{tabular}
 
 }
 
 \end{table}%
+
+\subsubsection{\texorpdfstring{Stomatal aperture mediates plasticity in
+\(\tau\)}{Stomatal aperture mediates plasticity in \textbackslash tau}}\label{stomatal-aperture-mediates-plasticity-in-tau}
+
+We imposed three treatments that influenced stomatal kinetics: growth
+light intensity, measurement light intensity, and curve type. All three
+treatments directly effect \(\tau\) and had indirect effects mediated by
+\fgmax{} (Figure~\ref{fig-mediation}). We did not estimate effects
+mediated by \gcl{} because the selected model did not retain direct
+effects of \gcl{} on \(\tau\) (Table~\ref{tbl-comparison}). The direct
+effect of the high light intensity (sun) growth treatment increased
+\(\tau\) by \(5.64\)\% {[}95\% CI: \(1.03\) to \(10.55\)\%{]}, but the
+indirect of lower \fgmax{} counteracted by \(-5.01\)\% {[}95\% CI:
+\(-7.14\) to \(-3.12\)\%{]}. In contrast, direct and indirect effects of
+high measurement light intensity increased \(\tau\). The direct effect
+increased \(\tau\) by \(18.28\)\% {[}95\% CI: \(11.85\) to
+\(24.98\)\%{]} and the indirect effect mediated by \fgmax{} increased
+\(\tau\) by \(16.83\)\% {[}95\% CI: \(11.04\) to \(23.14\)\%{]}. The
+direct effect of the pseudohypo treatment decreased \(\tau\) slightly by
+\(-2.60\)\% {[}95\% CI: \(-4.93\) to \(-0.18\)\%{]}, but the indirect
+effect mediated by greater \fgmax{} increased \(\tau\) by \(3.98\)\%
+{[}95\% CI: \(2.60\) to \(5.50\)\%{]}.
+
+\begin{figure}
+
+\centering{
+
+\pandocbounded{\includegraphics[keepaspectratio]{../figures/mediation.pdf}}
+
+}
+
+\caption{\label{fig-mediation}\textbf{Stomatal aperture as a fraction of anatomical maximum stomatal conductance (\fgmax) mediates plasticity in the time constant $\tau$.}
+The three treatments are curve type (top facet; amphi vs.~pseudohypo),
+growth light intensity (middle facet; shade vs.~sun), and measurement
+light intensity (bottom facet; low vs.~high). Horizontal arrows at the
+bottom of each graph indicate the direct effect of the treatment level
+on \(\tau\); slanted arrows leading to or from \fgmax{} indicate
+mediated effects of the treatment on \(\tau\). Line thickness is
+proportional to the effect size and line color indicates whether the
+effects are negative (red) positive (blue). Parameter estimates of the
+effect and 95\% confidence intervals are above each line. Note that are
+not consistent because \fgmax is on a logit scale whereas \(\tau\) is on
+a log-seconds scale. The selected model did not retain direct effeects
+of \gcl{} on \(\tau\) and hence this variable could not be considered as
+a mediator.}
+
+\end{figure}%
 
 \subsection{Discussion}\label{discussion}
 
@@ -1199,7 +1291,15 @@ caveat: this treatment is a hammer than exposes maximum rate of stomatal
 closure. The factors which influence this may not explain variance in
 kinetics in more natural conditions.
 
-\subsection{References}\label{references}
+Traditional view is that smaller stomata are selected for speed and
+because there is higher gmax for same fs (Franks). Our results suggest
+an alternative hypothesis. Smaller stomata may increase rate of stomatal
+closure (we haven't tested opening), but only if fgmax is low or
+moderate. Therefore if leaves with smaller stomata maintain a similar
+gop, then stomatal density must increase to prevent fgmax from
+increasing. This may explain the association between the association
+between small stomata and high density, and relatedly the dearth of
+leaves with sparse, small stomata. \#\# References
 
 \phantomsection\label{refs}
 \begin{CSLReferences}{0}{1}
@@ -1299,27 +1399,40 @@ index on environmental factors during stomatal differentiation in leaves
 of \emph{{Vigna} sinensis} {L}.: 1. {Effect} of light intensity}.
 \emph{Journal of Experimental Botany} \textbf{31}, 1211--1216 (1980).}
 
-\bibitem[\citeproctext]{ref-kerr_harking_1998}
+\bibitem[\citeproctext]{ref-sack_developmental_2016}
 \CSLLeftMargin{14. }%
+\CSLRightInline{L. Sack, T. N. Buckley,
+\href{https://doi.org/10.1104/pp.16.00476}{The developmental basis of
+stomatal density and flux}. \emph{Plant Physiology} \textbf{171},
+2358--2363 (2016).}
+
+\bibitem[\citeproctext]{ref-monteith_principles_2013}
+\CSLLeftMargin{15. }%
+\CSLRightInline{J. L. Monteith, M. H. Unsworth, \emph{Principles of
+environmental physics: Plants, animals, and the atmosphere}, 4th ed
+(Elsevier/Academic Press, 2013).}
+
+\bibitem[\citeproctext]{ref-kerr_harking_1998}
+\CSLLeftMargin{16. }%
 \CSLRightInline{N. L. Kerr,
 \href{https://doi.org/10.1207/s15327957pspr0203_4}{{HARKing}:
 {Hypothesizing} {After} the {Results} are {Known}}. \emph{Personality
 and Social Psychology Review} \textbf{2}, 196--217 (1998).}
 
 \bibitem[\citeproctext]{ref-smaldino_natural_2016}
-\CSLLeftMargin{15. }%
+\CSLLeftMargin{17. }%
 \CSLRightInline{P. E. Smaldino, R. McElreath,
 \href{https://doi.org/10.1098/rsos.160384}{The natural selection of bad
 science}. \emph{Royal Society Open Science} \textbf{3}, 160384 (2016).}
 
 \bibitem[\citeproctext]{ref-stan_development_team_stan_2026}
-\CSLLeftMargin{16. }%
+\CSLLeftMargin{18. }%
 \CSLRightInline{Stan Development Team,
 \emph{\href{https://mc-stan.org}{Stan {Modeling} {Language} {Users}
 {Guide} and {Reference} {Manual}}} (2026).}
 
 \bibitem[\citeproctext]{ref-burkner_brms_2017}
-\CSLLeftMargin{17. }%
+\CSLLeftMargin{19. }%
 \CSLRightInline{P.-C. Bürkner,
 \href{https://doi.org/10.18637/jss.v080.i01}{\textbf{Brms} : {An}
 \emph{r} {Package} for {Bayesian} {Multilevel} {Models} {Using}
@@ -1327,32 +1440,32 @@ science}. \emph{Royal Society Open Science} \textbf{3}, 160384 (2016).}
 (2017).}
 
 \bibitem[\citeproctext]{ref-gabry_cmdstanr_2025}
-\CSLLeftMargin{18. }%
+\CSLLeftMargin{20. }%
 \CSLRightInline{J. Gabry, R. Češnovar, A. Johnson, S. Bronder,
 \emph{\href{https://mc-stan.org/cmdstanr,\%20https://discourse.mc-stan.org}{Cmdstanr:
 {R} {Interface} to '{CmdStan}'}} (2025).}
 
 \bibitem[\citeproctext]{ref-r_core_team_r:_2025}
-\CSLLeftMargin{19. }%
+\CSLLeftMargin{21. }%
 \CSLRightInline{R Core Team, \emph{\href{http://www.R-project.org/}{R:
 {A} {Language} and {Environment} for {Statistical} {Computing}}} (R
 Foundation for Statistical Computing, 2025).}
 
 \bibitem[\citeproctext]{ref-gelman_inference_1992}
-\CSLLeftMargin{20. }%
+\CSLLeftMargin{22. }%
 \CSLRightInline{A. Gelman, D. B. Rubin, Inference from iterative
 simulation using multiple sequences. \emph{Statistical Science}
 \textbf{7}, 457--472 (1992).}
 
 \bibitem[\citeproctext]{ref-gelman_r-squared_2019}
-\CSLLeftMargin{21. }%
+\CSLLeftMargin{23. }%
 \CSLRightInline{A. Gelman, B. Goodrich, J. Gabry, A. Vehtari,
 \href{https://doi.org/10.1080/00031305.2018.1549100}{R-squared for
 {Bayesian} {Regression} {Models}}. \emph{The American Statistician}
 \textbf{73}, 307--309 (2019).}
 
 \bibitem[\citeproctext]{ref-garamszegi_general_2014}
-\CSLLeftMargin{22. }%
+\CSLLeftMargin{24. }%
 \CSLRightInline{P. De Villemereuil, S. Nakagawa,
 {``\href{https://doi.org/10.1007/978-3-662-43550-2_11}{General
 {Quantitative} {Genetic} {Methods} for {Comparative} {Biology}}''} in
@@ -1360,15 +1473,20 @@ simulation using multiple sequences. \emph{Statistical Science}
 {Application} in {Evolutionary} {Biology}}, L. Z. Garamszegi, Ed.
 (Springer Berlin Heidelberg, 2014), pp. 287--303.}
 
+\bibitem[\citeproctext]{ref-gelman_bayesian_2014}
+\CSLLeftMargin{25. }%
+\CSLRightInline{A. Gelman, \emph{et al.}, \emph{Bayesian data analysis},
+Third edition (CRC Press, Taylor \& Francis Group, 2014).}
+
 \bibitem[\citeproctext]{ref-vehtari_practical_2017}
-\CSLLeftMargin{23. }%
+\CSLLeftMargin{26. }%
 \CSLRightInline{A. Vehtari, A. Gelman, J. Gabry,
 \href{https://doi.org/10.1007/s11222-016-9696-4}{Practical {Bayesian}
 model evaluation using leave-one-out cross-validation and {WAIC}}.
 \emph{Statistics and Computing} \textbf{27}, 1413--1432 (2017).}
 
 \bibitem[\citeproctext]{ref-lynch_methods_1991}
-\CSLLeftMargin{24. }%
+\CSLLeftMargin{27. }%
 \CSLRightInline{M. Lynch,
 \href{https://doi.org/10.1111/j.1558-5646.1991.tb04375.x}{Methods for
 the analysis of comparative data in evolutionary biology}.
@@ -1407,6 +1525,18 @@ growth light intensity (sun or shade), measurement light intensity (low
 or high), and curve type (amphi or pseudohypo). Points are raw data and
 lines are fitted curves. The Bayesian correlation coefficient,
 \(\text{Bayes}~R^2\), is shown to the right of each curve.}
+
+\end{figure}%
+
+\begin{figure}
+
+\centering{
+
+\pandocbounded{\includegraphics[keepaspectratio]{../figures/compare-gsw.pdf}}
+
+}
+
+\caption{\label{fig-compare-gsw}\textbf{foo} bar.}
 
 \end{figure}%
 

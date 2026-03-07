@@ -48,6 +48,5 @@ gp2 = ggplot(df2, aes(lightintensity, fgmax)) +
   #   )
   # )
 
-plot_grid(gp1, gp2, nrow = 2, rel_heights = c(0.4, 0.6), align = "hv",
-          labels = "auto")
+plot_grid(gp1, gp2, nrow = 2, rel_heights = c(0.4, 0.6), labels = "auto")
 ggsave("figures/accession-anatomy.pdf", width = 6, height = 8)

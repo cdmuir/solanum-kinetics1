@@ -283,6 +283,19 @@ post_fgmax_pseudohypo = fit |>
   select(b_logitfgmax_curve_typepseudohypo) |>
   summarize_draws(estimate = median, quantile2, .args= list(probs = c(0.025, 0.975)))
 
+# Mediation results
+mediation = read_rds("../objects/mediation.rds")
+
+de_sun = filter(mediation$lighttreatment, variable == "direct_effect")
+me_sun = filter(mediation$lighttreatment, variable == "mediated_effect_fgmax")
+
+de_high = filter(mediation$lightintensity, variable == "direct_effect")
+me_high = filter(mediation$lightintensity, variable == "mediated_effect_fgmax")
+
+de_pseudo = filter(mediation$curvetype, variable == "direct_effect")
+me_pseudo = filter(mediation$curvetype, variable == "mediated_effect_fgmax")
+
+# Partial correlation
 partial_cor = read_rds("../objects/partial-cor.rds") |>
   filter(name == "logtaumean_Intercept__loggcl_Intercept")
 rho = partial_cor$median
@@ -290,13 +303,41 @@ rho_lower = partial_cor$lower
 rho_upper = partial_cor$upper
 ```
 
+# notes
 Reminder: Halliwell et al. 2025 paper has useful info on multiresponse models. I might use Van de Pol and Wright (2009) method for within versus between slope estimation. This is in the phylogenetic comparative example in the brms vignette too. Actually, this is hard to implement because I would have to calculate individual residuals for each light treatment combination and then means of those, etc.
 
 Westoby et al (2023) (10.1111/1365-2745.14150) is similar to Halliwell. Maybe another way to think about it using the mutliresponse approach.
 
+Humidity responses often dominate over other environmental signals (Aasamaa & Sõber 2011) but not always (Merilo et al 2014 New Phyt - this paper decreased RH to 30-40%)
+
+There are two Aasamaa & Sõber 2011 papers:
+- multiple environmental changes, humidity/water potential dominate in 6 tree species (10.1093/treephys/tpr078). This paper also decreased humidity to 10% at 25 C
+- single environmental change, humidity/water dominate others
+
+Some older references: 
+
+(this measured steady state responses, not kinetics) Morison J.I.L. Gifford R.M. 1983. Stomatal sensitivity to carbon dioxide and humidity. A comparison of two C3 and C4 grass species. Plant Physiol. 71:789–796.
+
+(not really relevant) Talbott L.D. Rahveh E. Zeiger E. 2003. Relative humidity is a key factor in the acclimation of the stomatal response to CO2. J. Exp. Bot. 54:2141–2147.
+
+Bunce (1997) - not very relevant
+
+Buckley 2016 (10.1111/pce.12651) provides useful background on why hydroactive response takes time (ABA synthesis). Need to read McAdams and Brodribb 2015 for more on this. (10.1111/pce.12633)
+
+Ivanoff 1928 - original wrong-way response citation? from Jalakas et al 2021 ("promoting a transient passive ‘wrong-way’ stomatal opening (Ivanoff, 1928; Mott & Franks, 2001; Buckley, 2019).")
+
+FYI, t50 = "6.1 ± 0.32 min in Arabidopsis Col-0 wild-type (Merilo et al., 2018)"
+Also read this: https://nph-onlinelibrary-wiley-com.ezproxy.library.wisc.edu/doi/full/10.1111/nph.17592
+
+Need to check out these references "Although the plant hormone abscisic acid (ABA) is involved in stomatal closure in response to drought stress and reduced air humidity (Bunce, 1997; Roelfsema & Hedrich, 2005; Bauer et al., 2013), the existence of an ABA-independent pathway participating in low humidity-induced stomatal response has been suggested (Xie et al., 2006). Furthermore, stomata may also directly respond to leaf water status without relying on ABA production and signalling (see Buckley, 2005; Damour et al., 2010; Peak & Mott, 2011). However, both the metabolically mediated hydro-active feedback response of guard cell osmotic pressure to the water status of epidermal evaporative site (Buckley, 2005) and the stomatal response mechanism based on a near-equilibrium in water potential between the guard cells and the air in the stomatal pore (Peak & Mott, 2011) still embed the potential for ABA to be involved in air humidity-related stomatal behaviour."
+
 ## Abstract
 
 Guard cell size and stomatal density vary over X and X orders of magnitude among extant vascular land plants, yet the adaptive significance of much of this variation remains unclear. The evolution of guard cell size in particular is poorly understood and may even be constrained by nonadaptive features like genome size. One hypothesis is that natural selection may favor smaller guard cells to increase the rate at which stomatal conductance responds to fluctuating environmental conditions. A related hypothesis is that operational stomatal conductance (gop) is often $\approx 25\%$ of its theoretical maximum (gmax) because at this stomatal aperture, guard cell volume is poised to change rapidly with changes in turgor pressure. The support for both hypothesis is limited and mixed, in part because they have not been tested together, even though both guard cell size and the ratio of gop to gmax (gop:gmax) should influence stomatal kinetics. We measured stomatal closure kinetics in response to an abrupt increase in vapor pressure deficit (VPD) among `r n_acc` diverse wild tomato populations in the genus \textit{Solanum}. Both smaller guard cell size and lower gop:gmax were associated with faster stomatal closure kinetics, but at different levels of biological organization. Guard cell size explained X% of the variance in stomatal kinetics among populations, whereas gop:gmax explained X% of the variance among individuals within populations. [neither result would have been supported if analyzed in isolation - is this true?]. We conclude that guard cell size may respond to selection on stomatal kinetics over evolutionary time, but actual kinetics are modulated by a tradeoff between maximizing gop and minimizing the time required for stomatal closure. Putting these hypotheses together with stabilizing selection on gop may explain why stomatal size and density negatively covary among species.
+
+Qie et al (2024) sorta found that mangroves with smaller stoamta close faster. They used similar method, but used 20% RH as their treatment.
+
+Need to read this too: https://doi.org/10.1101/2025.01.31.635895
 
 Maybe add something like: we esimated time-constant and lag-time for 2000+ curves...
 
@@ -304,7 +345,7 @@ Maybe add something like: we esimated time-constant and lag-time for 2000+ curve
 
 NOTE: I need to develop a consistent terminology - stomatal response rate? speed? kinetics?
 
-In nature, change is the only constant. One way that vascular plants (tracheophytes) cope with change is by adjusting stomatal pore aperture to optimize the trade-off between carbon gain and water loss. In the absence of physical limits and energetic tradeoffs, natural selection would favor plants that could instantaneously adjust stomatal conductance (\gsw)  to perfectly track dynamic environmental conditions. In reality, stomatal responses take time, creating a lag between actual and optimal stomatal aperture. X ions must be pumped across ... and active responses depend on multiple feedback loops involving gene expression/ABA synthesis?/etc (Buckley). [illustrative empirical example or real numbers illustrating the problem]. Changes in stomatal aperture could be faster if there were more channels (?) per area, but this would require more energy (ATP?) and space allocated to XX proteins in the guard cell membrane. 
+In nature, change is the only constant. One way that vascular plants (tracheophytes) cope with change is by adjusting stomatal pore aperture to optimize the trade-off between carbon gain and water loss. In the absence of physical limits and energetic tradeoffs, natural selection would favor plants that could instantaneously adjust stomatal conductance (\gsw)  to perfectly track dynamic environmental conditions. In reality, stomatal responses take time, creating a lag between actual and optimal stomatal aperture. X ions must be pumped across ... and active responses depend on multiple feedback loops involving gene expression/ABA synthesis?/etc (Buckley; @jalakas_molecular_2021). [illustrative empirical example or real numbers illustrating the problem]. Changes in stomatal aperture could be faster if there were more channels (?) per area, but this would require more energy (ATP?) and space allocated to XX proteins in the guard cell membrane. 
 
 It might seem that natural selection should favor faster stomatal responses to get closer to the ideal of instantaneous optimization. Under this assumption, variation in stomatal kinetics would depend on how strong directional selection for faster responses is counterbalanced by costs of faster stomata. We discuss multiple, nonmutually exclusive costs below [WHERE?]. However, once models account for inevitable time lags, natural selection can favor slower responses when this prevents overreacting to unpredictable and shortlived changes in the environment. [Review some lit] It is therefore likely that the direction of selection on stomatal response rate varies depending on the predictability and duration of environmental fluctuations, as well as the energetic costs of stomatal movements.
 
@@ -493,9 +534,17 @@ kable(
 
 ```
 
-### Stomatal anatomy
+### Stomatal anatomical traits \gcl and \fgmax
 
-size, density, gmax, fgmax
+We estimated the stomatal density and \gcl{} on ab- and adaxial surfaces from all leaves used for humidity response curves. We used standard methods describe fully in @muir_plasticity_2025. For each surface we calculated the anatomical maximum stomatal conductance (\gmax) at a reference leaf temperature of $\SI{25}{\degreeCelsius}$ following @sack_developmental_2016 as:
+
+$$g_\mathrm{max} = b m d l_\mathrm{gc} / \sqrt{2}.$$
+The biophysical and morphological constants $b$ and $m$ are: 
+
+$$b = \frac{D_\mathrm{wv}}{v},~\text{and}$$	
+$$m = \frac{\pi c ^ 2}{j^{0.5} (4 h j + \pi c)},$$
+
+where $D_\mathrm{wv}$ is the diffusion coefficient of water vapor in air and $v$ is by the kinematic viscosity of dry air. We assumed $D_\mathrm{wv} = \SI{2.49e-5}{\meter\squared\per\second}$ and $v = \SI{2.24e-2}{\raiseto{3}\meter\per\mol}$ [@monteith_principles_2013]. For kidney-shaped guard cells like those in wild tomatoes, $c = h = j = 0.5$. The \gmaxratio{} is the \gmax{} of the adaxial surface divided by the sum total \gmax{} of both surfaces. To estimate \fgmax, we divided the initial \gsw{} estimated from the parameter $g_\text{i}$ in @eq-weibull from each humidity response curve the anatomical \gmax{} for that leaf. The estimated $g_\text{i}$ was very close to the maximum \gsw{} observed near the beginning of each curve (@fig-compare-gsw), suggesting that the initial \gsw{} was a good proxy for operational stomatal conductance at the time of the step change in humidity. We used the anatomical \gmax{} for the surface(s) measured in each curve to calculate \fgmax. For amphi curves, we used the sum of adaxial and abaxial \gmax{}; for pseudohypo curves, we used only the abaxial \gmax{}. 
 
 ### Hypothesis generation and testing
 
@@ -509,12 +558,13 @@ We next used estimates of $\tau$ from each curve in multiresponse Bayesian mixed
 2. At what biological levels of organization do \gcl{} and \fgmax{} influence $\tau$?
 3. Are abaxial-only stomatal responses slower than whole leaf stomatal responses?
 
-We used a combination of model selection and parameter estimation to evaluate these hypotheses. All statistical models included fixed effects of manipulative treatments: growth light intensity (sun and shade); measurement light intensity (high and low); and curve type (amphistomatous and pseudohypostomatous). All models also included population as both a phylogenetically structured random effect and a non-phylogenetic random effect following @halliwell_multi-response_2025. Prior to fitting, the phylogenetic (co)variance matrix was rescaled as a correlation matrix [@garamszegi_general_2014]. For traits measured multiple times within the same leaf (\fgmax, $\lambda$, $\tau$) we included a random effect of individual to account for repeated measures. We accounted for uncertainty in $\tau$ and $\lambda$ using the standard deviation of the posterior distribution of each estimate (see 'Humidity response curves' for details). We modeled residual (co)variance, a combination among-individual (co)variance and measurement error, as a multivariate Student $t$-distribution, which is more robust to extreme values than the multivariate normal distribution [@gelman_bayesian_2014]. To account for heteroskedasticity, bounded measurements, and linearize relationships, \gcl, $\lambda$, and $\tau$ were log-transformed prior to analysis whereas \fgmax{} was logit-transformed. All models were fit with *Stan* following the same methods described above for fitting @eq-weibull to the humidity response curves. 
+We used a combination of model selection and parameter estimation to evaluate these hypotheses. All statistical models included fixed effects of manipulative treatments: growth light intensity (sun and shade); measurement light intensity (high and low); and curve type (amphistomatous and pseudohypostomatous). All models also included population as both a phylogenetically structured random effect and a non-phylogenetic random effect following @halliwell_multiresponse_2025. Prior to fitting, the phylogenetic (co)variance matrix was rescaled as a correlation matrix [@garamszegi_general_2014]. For traits measured multiple times within the same leaf (\fgmax, $\lambda$, $\tau$) we included a random effect of individual to account for repeated measures. We accounted for uncertainty in $\tau$ and $\lambda$ using the standard deviation of the posterior distribution of each estimate (see 'Humidity response curves' for details). We modeled residual (co)variance, a combination among-individual (co)variance and measurement error, as a multivariate Student $t$-distribution, which is more robust to extreme values than the multivariate normal distribution [@gelman_bayesian_2014]. To account for heteroskedasticity, bounded measurements, and linearize relationships, \gcl, $\lambda$, and $\tau$ were log-transformed prior to analysis whereas \fgmax{} was logit-transformed. All models were fit with *Stan* following the same methods described above for fitting @eq-weibull to the humidity response curves. 
 
-To answer questions 1 and 2 above, we analyzed three nonmutually exclusive paths through which \fgmax{} and \gcl{} could influence stomatal kinetic parameters $\lambda$ and $\tau$. First, we inferred phylogenetic effects by estimating the phylogenetic correlation among populations between anatomical (\fgmax{} and \gcl{}) and kinetic ($\lambda$ and $\tau$) variables. To test for possible causation, we used the inferred phylogenetic trait covariance matrix to estimate partial correlations between anatomical and kinetic variables [@halliwell_multiresponse_2025]. We interpret a significant partial correlation between variables as a plausible causal hypothesis. Second, we inferred individual-level effects of \fgmax{} and \gcl{} on kinetic parameters using linear multiple regression that simultaneously accounts for phylogenetic and treatment effects. We used the leave-one-out cross-validation information criterion (LOOIC) to compare the fit of models using the *R* package **loo** version `r packageVersion("loo")` [@vehtari_practical_2017] to calculate LOOIC values. We compared models with all permutations of \fgmax{} and \gcl{} influencing $\lambda$ and $\tau$. We considered all models within two $\Delta$LOOIC standard errors of the minimum LOOIC (@tbl-comparison) to be in the set of plausible models to generate posterior predictions for hypothesis testing. Within each plausible model, we assessed whether an effect was significantly different from zero based on the 95% confidence intervals.
+To answer questions 1 and 2 above, we analyzed three nonmutually exclusive paths through which \fgmax{} and \gcl{} could influence stomatal kinetic parameters $\lambda$ and $\tau$. First, we inferred phylogenetic effects by estimating the phylogenetic correlation among populations between anatomical (\fgmax{} and \gcl{}) and kinetic ($\lambda$ and $\tau$) variables. To test for possible causation, we used the inferred phylogenetic trait covariance matrix to estimate partial correlations between anatomical and kinetic variables [@halliwell_multiresponse_2025]. We interpret a significant partial correlation between variables as a plausible causal hypothesis. Second, we inferred individual-level effects of \fgmax{} and \gcl{} on kinetic parameters using linear multiple regression that simultaneously accounts for phylogenetic and treatment effects. We used the leave-one-out cross-validation information criterion (LOOIC) to compare the fit of models using the *R* package **loo** version `r packageVersion("loo")` [@vehtari_practical_2017] to calculate LOOIC values. We compared models with all permutations of \fgmax{} and \gcl{} influencing $\lambda$ and $\tau$. We considered all models within two $\Delta$LOOIC standard errors of the minimum LOOIC (@tbl-comparison) to be in the set of plausible models to generate posterior predictions for hypothesis testing. Within each plausible model, we assessed whether an effect was significantly different from zero based on the 95% confidence intervals. Third, we used causal mediation analysis [@pearl_causality_2022] to test whether plasticity in $\tau$ was mediated by plasticity in \fgmax{} or \gcl{} in response to measurement light intensity, growth light intensity, and curve-type treatments. We inferred the direct effect of treatments on $\tau$ from model coefficients. 
 
-THIRD: mediating treatment effects (plasticity)
+NOT CORRECT: We estimated the mediated effect of treatments using the product of the effect of treatment on mediator (\fgmax{} or \gcl) and the effect of the mediator on $\tau$. We determined significant direct and mediator effects based on whether the 95% confidence intervals of the effects were different from zero. 
 
+ADD TO THIS PARAPGRAPH, To compare the strength and statistical significance of explanatory variables, we estimated the effect size as the point estimate (median of the posterior) divided the standard error (standard deviation of the posterior) for each effect.
 
 ### Variance decomposition and heritability (somewhere)
 
@@ -549,7 +599,7 @@ Stomatal conductance (\gsw) decreased rapidly in response to a step change in hu
 
 ### Effects of light intensity treatments on guard cell length and aperture
 
-On average, guard cell length increased by $`r formatC(post_gcl_sun[['estimate']], format = 'f', digits = 1)`$% [95% CI: $`r formatC(post_gcl_sun[['q2.5']], format = 'f', digits = 1)`$ to $`r formatC(post_gcl_sun[['q97.5']], format = 'f', digits = 1)`$%] in the sun treatment ([@fig-accession-anatomy]a; [@tbl-fit]). The average \gcl{} of pseudohypo leaves was $`r formatC(post_gcl_curvetype[['estimate']], format = 'f', digits = 1)`$% [95% CI: $`r formatC(post_gcl_curvetype[['q2.5']], format = 'f', digits = 1)`$ to $`r formatC(post_gcl_curvetype[['q97.5']], format = 'f', digits = 1)`$%] greater than amphi leaves ([@fig-accession-anatomy]a; [@tbl-fit]). This was not because of plasticity because we amphi and pseudohypo curves on the same leaf. Rather, this was a composition effect. Adaxial stomata tended to be slightly smaller than abaxial stomata, so the average \gcl{} in pseudohypo leaves was slightly higher than in amphi leaves because the former only included abaxial stomata. High measurement light intensity increased \fgmax by an average of $`r formatC(post_fgmax_high[['estimate']], format = 'f', digits = 2)`$ logit units [95% CI: $`r formatC(post_fgmax_high[['q2.5']], format = 'f', digits = 2)`$ to $`r formatC(post_fgmax_high[['q97.5']], format = 'f', digits = 2)`$] ([@fig-accession-anatomy]b; [@tbl-fit]). For example, if $f_\text{gmax} = 0.1$ in low light, the typical \fgmax{} for the same leaf acclimated to high light was `r formatC(plogis(qlogis(0.1) + post_fgmax_high[['estimate']]), format = 'f', digits = 2)`. Sun leaves had on average $`r formatC(post_fgmax_sun[['estimate']], format = 'f', digits = 2)`$ logit units [95% CI: $`r formatC(post_fgmax_sun[['q2.5']], format = 'f', digits = 2)`$ to $`r formatC(post_fgmax_sun[['q97.5']], format = 'f', digits = 2)`$] lower \fgmax{} than shade-grown plants ([@fig-accession-anatomy]b; [@tbl-fit]). Treated pseudohypostomatous leaves had on average $`r formatC(post_fgmax_pseudohypo[['estimate']], format = 'f', digits = 2)`$ logit units [95% CI: $`r formatC(post_fgmax_pseudohypo[['q2.5']], format = 'f', digits = 2)`$ to $`r formatC(post_fgmax_pseudohypo[['q97.5']], format = 'f', digits = 2)`$] ??? \fgmax{} than untreated, amphistomatous leaves ([@fig-accession-anatomy]b; [@tbl-fit]). THIS INDICATES THAT...STILL NEED TO ADD WHETHER FGMAX DIFFERED IN PSEUDO LEAVES ONCE MODEL IS UPDATED
+On average, guard cell length increased by $`r formatC(post_gcl_sun[['estimate']], format = 'f', digits = 1)`$% [95% CI: $`r formatC(post_gcl_sun[['q2.5']], format = 'f', digits = 1)`$ to $`r formatC(post_gcl_sun[['q97.5']], format = 'f', digits = 1)`$%] in the sun treatment ([@fig-accession-anatomy]a; [@tbl-fit]). The average \gcl{} of pseudohypo leaves was $`r formatC(post_gcl_curvetype[['estimate']], format = 'f', digits = 1)`$% [95% CI: $`r formatC(post_gcl_curvetype[['q2.5']], format = 'f', digits = 1)`$ to $`r formatC(post_gcl_curvetype[['q97.5']], format = 'f', digits = 1)`$%] greater than amphi leaves ([@fig-accession-anatomy]a; [@tbl-fit]). This was not because of plasticity because we amphi and pseudohypo curves on the same leaf. Rather, this was a composition effect. Adaxial stomata tended to be slightly smaller than abaxial stomata, so the average \gcl{} in pseudohypo leaves was slightly higher than in amphi leaves because the former only included abaxial stomata. High measurement light intensity increased \fgmax by an average of $`r formatC(post_fgmax_high[['estimate']], format = 'f', digits = 2)`$ logit units [95% CI: $`r formatC(post_fgmax_high[['q2.5']], format = 'f', digits = 2)`$ to $`r formatC(post_fgmax_high[['q97.5']], format = 'f', digits = 2)`$] ([@fig-accession-anatomy]b; [@tbl-fit]). For example, if $f_\text{gmax} = 0.1$ in low light, the typical \fgmax{} for the same leaf acclimated to high light was `r formatC(plogis(qlogis(0.1) + post_fgmax_high[['estimate']]), format = 'f', digits = 2)`. Sun leaves had on average $`r formatC(post_fgmax_sun[['estimate']], format = 'f', digits = 2)`$ logit units [95% CI: $`r formatC(post_fgmax_sun[['q2.5']], format = 'f', digits = 2)`$ to $`r formatC(post_fgmax_sun[['q97.5']], format = 'f', digits = 2)`$] lower \fgmax{} than shade-grown plants ([@fig-accession-anatomy]b; [@tbl-fit]). Treated pseudohypo leaves had on average $`r formatC(post_fgmax_pseudohypo[['estimate']], format = 'f', digits = 2)`$ logit units [95% CI: $`r formatC(post_fgmax_pseudohypo[['q2.5']], format = 'f', digits = 2)`$ to $`r formatC(post_fgmax_pseudohypo[['q97.5']], format = 'f', digits = 2)`$] higher \fgmax{} than untreated, amphistomatous leaves ([@fig-accession-anatomy]b; [@tbl-fit]). This indicates that stomatal aperture was more open in leaves where gas exchange through adaxial stomata was blocked.
 
 ```{r, fig-accession-anatomy, echo = FALSE}
 #| label: fig-accession-anatomy
@@ -644,12 +694,10 @@ tab_variance |>
              escape = FALSE) 
 ```
 
-Guard cell size and \fgmax affected stomatal kinetics, but at different levels of biological organization. In the model with the lowest LOOIC (see @tbl-comparison for model comparison results), the only significant partial correlation was between \gcl and $\tau$ ($\rho = `r signif(rho, 2)`$ [95% CI: `r signif(rho_lower, 2)` to `r signif(rho_upper, 2)`$) was a significant phylogenetic correlation between \gcl and $\tau$ [@fig-?]. PARTIAL CORRELATION RESULT. Variation in \gcl within populations did not explain within-population variation in $\tau$ [@tbl-fit]. NOTE THAT BEST MODEL RETAINED INDIVIDUAL LEVEL EFFECT OF GCL, BUT COEFFICIENT WAS NOT SIGNIFICANT. OTHER BEST MODELS DID NOT RETAIN THIS. DID GCL MEDIATE AFFECT OF TREATMENTS?
+Guard cell size and \fgmax affected stomatal kinetics, but at different levels of biological organization. In the model with the lowest LOOIC (see @tbl-comparison for model comparison results), the only significant partial correlation was between \gcl and $\tau$ ($\rho = `r signif(rho, 2)`$ [95% CI: $`r signif(rho_lower, 2)` to `r signif(rho_upper, 2)`$)] was a significant phylogenetic correlation between \gcl and $\tau$ [@fig-?]. PARTIAL CORRELATION RESULT. Variation in \gcl within populations did not explain within-population variation in $\tau$ [@tbl-fit]. NOTE THAT BEST MODEL RETAINED INDIVIDUAL LEVEL EFFECT OF GCL, BUT COEFFICIENT WAS NOT SIGNIFICANT. OTHER BEST MODELS DID NOT RETAIN THIS. DID GCL MEDIATE AFFECT OF TREATMENTS?
 
 
 Need to show (this is a growing, incomplete list):
-- model comparison results table
-- figure of tau versus gcl per accession
 - phylogenetic partial correlation
 - partial correlation showing that gcl and tau are (only?) significant phylogenetic covariates
 
@@ -774,13 +822,25 @@ kbl(
   kable_styling(latex_options = c("hold_position", "striped"))
 ```
 
+### Stomatal aperture mediates plasticity in $\tau$
+
+We imposed three treatments that influenced stomatal kinetics: growth light intensity, measurement light intensity, and curve type. All three treatments directly effect $\tau$ and had indirect effects mediated by \fgmax{} (@fig-mediation). We did not estimate effects mediated by \gcl{} because the selected model did not retain direct effects of \gcl{} on $\tau$ (@tbl-comparison). The direct effect of the high light intensity (sun) growth treatment increased $\tau$ by $`r formatC(log_to_percent(de_sun[['estimate']]), format = 'f', digits = 2)`$% [95% CI: $`r formatC(log_to_percent(de_sun[['q2.5']]), format = 'f', digits = 2)`$ to $`r formatC(log_to_percent(de_sun[['q97.5']]), format = 'f', digits = 2)`$%], but the indirect of lower \fgmax{} counteracted by $`r formatC(log_to_percent(me_sun[['estimate']]), format = 'f', digits = 2)`$% [95% CI: $`r formatC(log_to_percent(me_sun[['q2.5']]), format = 'f', digits = 2)`$ to $`r formatC(log_to_percent(me_sun[['q97.5']]), format = 'f', digits = 2)`$%]. In contrast, direct and indirect effects of high measurement light intensity increased $\tau$. The direct effect increased $\tau$ by $`r formatC(log_to_percent(de_high[['estimate']]), format = 'f', digits = 2)`$% [95% CI: $`r formatC(log_to_percent(de_high[['q2.5']]), format = 'f', digits = 2)`$ to $`r formatC(log_to_percent(de_high[['q97.5']]), format = 'f', digits = 2)`$%] and the indirect effect mediated by \fgmax{} increased $\tau$ by $`r formatC(log_to_percent(me_high[['estimate']]), format = 'f', digits = 2)`$% [95% CI: $`r formatC(log_to_percent(me_high[['q2.5']]), format = 'f', digits = 2)`$ to $`r formatC(log_to_percent(me_high[['q97.5']]), format = 'f', digits = 2)`$%]. The direct effect of the pseudohypo treatment decreased $\tau$ slightly by $`r formatC(log_to_percent(de_pseudo[['estimate']]), format = 'f', digits = 2)`$% [95% CI: $`r formatC(log_to_percent(de_pseudo[['q2.5']]), format = 'f', digits = 2)`$ to $`r formatC(log_to_percent(de_pseudo[['q97.5']]), format = 'f', digits = 2)`$%], but the indirect effect mediated by greater \fgmax{} increased $\tau$ by $`r formatC(log_to_percent(me_pseudo[['estimate']]), format = 'f', digits = 2)`$% [95% CI: $`r formatC(log_to_percent(me_pseudo[['q2.5']]), format = 'f', digits = 2)`$ to $`r formatC(log_to_percent(me_pseudo[['q97.5']]), format = 'f', digits = 2)`$%].
+
+```{r, mediation, echo = FALSE}
+#| label: fig-mediation
+#| fig-align: center
+#| fig-cap: "\\textbf{Stomatal aperture as a fraction of anatomical maximum stomatal conductance (\\fgmax) mediates plasticity in the time constant $\\tau$.} The three treatments are curve type (top facet; amphi vs. pseudohypo), growth light intensity (middle facet; shade vs. sun), and measurement light intensity (bottom facet; low vs. high). Horizontal arrows at the bottom of each graph indicate the direct effect of the treatment level on $\\tau$; slanted arrows leading to or from \\fgmax{} indicate mediated effects of the treatment on $\\tau$. Line thickness is proportional to the effect size and line color indicates whether the effects are negative (red) positive (blue). Parameter estimates of the effect and 95\\% confidence intervals are above each line. Note that are not consistent because \\fgmax is on a logit scale whereas $\\tau$ is on a log-seconds scale. The selected model did not retain direct effeects of \\gcl{} on $\\tau$ and hence this variable could not be considered as a mediator."
+
+knitr::include_graphics("../figures/mediation.pdf")
+```
+
 ## Discussion
 
 effect of fgmax is not simply because high light intensity increased fgmax and tau. Causal inference dissects different causal paths and shows direct effect of fgmax on tau within populations and treatments
 
 caveat: this treatment is a hammer than exposes maximum rate of stomatal closure. The factors which influence this may not explain variance in kinetics in more natural conditions.
 
-
+Traditional view is that smaller stomata are selected for speed and because there is higher gmax for same fs (Franks). Our results suggest an alternative hypothesis. Smaller stomata may increase rate of stomatal closure (we haven't tested opening), but only if fgmax is low or moderate. Therefore if leaves with smaller stomata maintain a similar gop, then stomatal density must increase to prevent fgmax from increasing. This may explain the association between the association between small stomata and high density, and relatedly the dearth of leaves with sparse, small stomata.
 ## References
 
 ::: {#refs}
@@ -809,6 +869,13 @@ Download from: \url{https://github.com/cdmuir/solanum-kinetics/raw/refs/heads/ma
 : Humidity-response curves and fitted lines. The title provides the Tomato Genetics Resource Center accession number, replicate letter, and species names. The subtitle indicates the growth light intensity (sun or shade), measurement light intensity (low or high), and curve type (amphi or pseudohypo). Points are raw data and lines are fitted curves. The Bayesian correlation coefficient, $\text{Bayes}~R^2$, is shown to the right of each curve.
 :::
 
+```{r, compare-gsw, echo = FALSE}
+#| label: fig-compare-gsw
+#| fig-align: center
+#| fig-cap: "\\textbf{foo} bar."
+
+knitr::include_graphics("../figures/compare-gsw.pdf")
+```
 
 
 

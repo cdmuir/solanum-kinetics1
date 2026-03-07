@@ -3,7 +3,7 @@
 # of light_intensity, light_treatment, log_gcl, or log_fgmax
 source("r/header.R")
 
-plan(multisession, workers = 18)
+plan(multisession, workers = 16)
 
 joined_summary = read_rds("data/joined-summary.rds") |>
   prepare_tau_anatomy_data(logtau_threshold)
@@ -12,7 +12,7 @@ write_rds(list(logtau_threshold = logtau_threshold, n_removed = attr(joined_summ
 
 phy = read_rds("data/phylogeny.rds")
 A = vcv(phy, corr = TRUE)
-thin = 4 #12
+thin = 6 #12
 
 # Define formula
 bf_lambda0 = bf(loglambdamean | se(loglambdasd, sigma = TRUE) ~ 
