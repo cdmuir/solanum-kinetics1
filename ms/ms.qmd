@@ -322,7 +322,15 @@ Some older references:
 
 Bunce (1997) - not very relevant
 
-Buckley 2016 (10.1111/pce.12651) provides useful background on why hydroactive response takes time (ABA synthesis). Need to read McAdams and Brodribb 2015 for more on this. (10.1111/pce.12633)
+Lange O.L., Lösch R., Schultze E.-D. & Kappen L. (1971) Responses of stomata to changes in humidity. Planta 100, 76–86.
+
+
+Buckley 2016 (10.1111/pce.12651) provides useful background on why hydroactive response takes time (ABA synthesis). 
+
+McAdam and Brodribb (2016) show that de novo biosynthesis of ABA regulates hydroactive response.
+
+Merilo et al. (2018) say "The ABA signaling unit consists of cytosolic PYRABACTIN RESISTANCE1 (PYR1)/PYR1-LIKE (PYL)/ REGULATORY COMPONENTS OF ABA RECEPTORS (RCAR) receptors that, in the presence of ABA sequester type 2 protein phosphatases, lead to the activation of protein kinase OST1, which, in turn, activates the slow-type anion channel SLAC1 and triggers stomatal closure (Geiger et al., 2009; Lee et al., 2009; Ma et al., 2009; Park et al., 2009)" (these are steps after ABA synthesis)
+
 
 Also read this: https://nph-onlinelibrary-wiley-com.ezproxy.library.wisc.edu/doi/full/10.1111/nph.17592
 
