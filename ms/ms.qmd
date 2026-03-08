@@ -304,6 +304,15 @@ rho_upper = partial_cor$upper
 ```
 
 # notes
+
+Ochoa et al. (2024) - another study on correlation between stomatal density and size and gop
+
+Tulva et al. (2025) - not super relevant for this paper.
+
+Ishia et al. (1992) - examples of some rapid increases in VPD in understory shrubs
+
+Hsu et al. (2021) - t50 WT aribodopsis: 5.1 ± 0.4 min. Their VPD method "followed by ∼2.0 kPa VPD (20 to 32% relative air humidity) in most experiments, as indicated in the figures". There was a lot in this paper. Basically, they don't know exactly how VPD is sensed, but show that it's independent of CO2 mechanism.
+
 Reminder: Halliwell et al. 2025 paper has useful info on multiresponse models. I might use Van de Pol and Wright (2009) method for within versus between slope estimation. This is in the phylogenetic comparative example in the brms vignette too. Actually, this is hard to implement because I would have to calculate individual residuals for each light treatment combination and then means of those, etc.
 
 Westoby et al (2023) (10.1111/1365-2745.14150) is similar to Halliwell. Maybe another way to think about it using the mutliresponse approach.
@@ -322,8 +331,9 @@ Some older references:
 
 Bunce (1997) - not very relevant
 
-Lange O.L., Lösch R., Schultze E.-D. & Kappen L. (1971) Responses of stomata to changes in humidity. Planta 100, 76–86.
+Lange O.L., Lösch R., Schultze E.-D. & Kappen L. (1971) Responses of stomata to changes in humidity. Planta 100, 76–86. - Shows that individual stomata respond directly to air humidity.
 
+Blatt et al. (2026) - not sure if this is useful. Shows that guard cell walls stay hydrated even when airspace is subsaturated.
 
 Buckley 2016 (10.1111/pce.12651) provides useful background on why hydroactive response takes time (ABA synthesis). 
 
@@ -334,26 +344,31 @@ Merilo et al. (2018) say "The ABA signaling unit consists of cytosolic PYRABACTI
 
 Ivanoff 1928 - original wrong-way response citation? from Jalakas et al 2021 ("promoting a transient passive ‘wrong-way’ stomatal opening (Ivanoff, 1928; Mott & Franks, 2001; Buckley, 2019).")
 
+Darwin 1898 mentions both RH response and WWR
+
 FYI, t50 = "6.1 ± 0.32 min in Arabidopsis Col-0 wild-type (Merilo et al., 2018)"
-Also read this: https://nph-onlinelibrary-wiley-com.ezproxy.library.wisc.edu/doi/full/10.1111/nph.17592
+I also have read this: https://nph-onlinelibrary-wiley-com.ezproxy.library.wisc.edu/doi/full/10.1111/nph.17592
 
 Need to check out these references "Although the plant hormone abscisic acid (ABA) is involved in stomatal closure in response to drought stress and reduced air humidity (Bunce, 1997; Roelfsema & Hedrich, 2005; Bauer et al., 2013), the existence of an ABA-independent pathway participating in low humidity-induced stomatal response has been suggested (Xie et al., 2006). Furthermore, stomata may also directly respond to leaf water status without relying on ABA production and signalling (see Buckley, 2005; Damour et al., 2010; Peak & Mott, 2011). However, both the metabolically mediated hydro-active feedback response of guard cell osmotic pressure to the water status of epidermal evaporative site (Buckley, 2005) and the stomatal response mechanism based on a near-equilibrium in water potential between the guard cells and the air in the stomatal pore (Peak & Mott, 2011) still embed the potential for ABA to be involved in air humidity-related stomatal behaviour."
+
+Qie et al (2024) sorta found that mangroves with smaller stoamta close faster. They used similar method, but used 20% RH as their treatment.
+
+Another empirical study to cite: Kübarsepp et al. (2019) 10.1111/nph.16159
+
+Review to cite; Lawson T, Vialet-Chabrand S. 2019. Speedy stomata, photosynthesis and plant water use efficiency. New Phytologist 221: 93–98.
+
 
 ## Abstract
 
 Guard cell size and stomatal density vary over X and X orders of magnitude among extant vascular land plants, yet the adaptive significance of much of this variation remains unclear. The evolution of guard cell size in particular is poorly understood and may even be constrained by nonadaptive features like genome size. One hypothesis is that natural selection may favor smaller guard cells to increase the rate at which stomatal conductance responds to fluctuating environmental conditions. A related hypothesis is that operational stomatal conductance (gop) is often $\approx 25\%$ of its theoretical maximum (gmax) because at this stomatal aperture, guard cell volume is poised to change rapidly with changes in turgor pressure. The support for both hypothesis is limited and mixed, in part because they have not been tested together, even though both guard cell size and the ratio of gop to gmax (gop:gmax) should influence stomatal kinetics. We measured stomatal closure kinetics in response to an abrupt increase in vapor pressure deficit (VPD) among `r n_acc` diverse wild tomato populations in the genus \textit{Solanum}. Both smaller guard cell size and lower gop:gmax were associated with faster stomatal closure kinetics, but at different levels of biological organization. Guard cell size explained X% of the variance in stomatal kinetics among populations, whereas gop:gmax explained X% of the variance among individuals within populations. [neither result would have been supported if analyzed in isolation - is this true?]. We conclude that guard cell size may respond to selection on stomatal kinetics over evolutionary time, but actual kinetics are modulated by a tradeoff between maximizing gop and minimizing the time required for stomatal closure. Putting these hypotheses together with stabilizing selection on gop may explain why stomatal size and density negatively covary among species.
 
-Qie et al (2024) sorta found that mangroves with smaller stoamta close faster. They used similar method, but used 20% RH as their treatment.
-
-Need to read this too: https://doi.org/10.1101/2025.01.31.635895
-
 Maybe add something like: we esimated time-constant and lag-time for 2000+ curves...
 
 ## Introduction
 
-NOTE: I need to develop a consistent terminology - stomatal response rate? speed? kinetics?
+NOTE: I need to develop a consistent terminology - stomatal response rate? speed? kinetics? "stomatal response kinetics to VPD" would be fine.
 
-In nature, change is the only constant. One way that vascular plants (tracheophytes) cope with change is by adjusting stomatal pore aperture to optimize the trade-off between carbon gain and water loss. In the absence of physical limits and energetic tradeoffs, natural selection would favor plants that could instantaneously adjust stomatal conductance (\gsw)  to perfectly track dynamic environmental conditions. In reality, stomatal responses take time, creating a lag between actual and optimal stomatal aperture. X ions must be pumped across ... and active responses depend on multiple feedback loops involving gene expression/ABA synthesis?/etc (Buckley; @jalakas_molecular_2021). [illustrative empirical example or real numbers illustrating the problem]. Changes in stomatal aperture could be faster if there were more channels (?) per area, but this would require more energy (ATP?) and space allocated to XX proteins in the guard cell membrane. 
+In nature, change is the only constant. One way that vascular plants (tracheophytes) cope with change is by adjusting stomatal pore aperture to optimize the trade-off between carbon gain and water loss. In the absence of physical limits and energetic tradeoffs, natural selection would favor plants that could instantaneously adjust stomatal conductance (\gsw) to perfectly track dynamic environmental conditions. In reality, stomatal responses take time, creating a lag between actual and optimal stomatal aperture. For example, many species use hydroactive feedback mechanisms to precisely control stomatal responses to changing vapor pressure deficit (VPD), the driving force for evaporation [@buckley_how_2019]. Hydroactive stomatal control requires sensing a change in VPD through as-yet-unknown mechanisms, signal transduction, and efflux of osmotic solutes to alter guard cell turgor more than the surrounding epidermal cells. Abscisic acid (ABA) dependent responses require several minutes to accumulate (cite) or synthesize hormone pools *de novo* [@mcadam_stomatal_2015]; ABA-independent stomatal responses require changes in gene expression and protein synthesis that take time [@jalakas_molecular_2021]. WORKING HERE - I think I want to say that once this signaling cascase has occured, the rate of change in gs will depend on how fast guard cell turgor pressure changes and how fast those changes in turgor pressure result in changing aperture. NOW, I am going to focus on those two steps...
 
 It might seem that natural selection should favor faster stomatal responses to get closer to the ideal of instantaneous optimization. Under this assumption, variation in stomatal kinetics would depend on how strong directional selection for faster responses is counterbalanced by costs of faster stomata. We discuss multiple, nonmutually exclusive costs below [WHERE?]. However, once models account for inevitable time lags, natural selection can favor slower responses when this prevents overreacting to unpredictable and shortlived changes in the environment. [Review some lit] It is therefore likely that the direction of selection on stomatal response rate varies depending on the predictability and duration of environmental fluctuations, as well as the energetic costs of stomatal movements.
 
@@ -847,6 +862,8 @@ knitr::include_graphics("../figures/mediation.pdf")
 effect of fgmax is not simply because high light intensity increased fgmax and tau. Causal inference dissects different causal paths and shows direct effect of fgmax on tau within populations and treatments
 
 caveat: this treatment is a hammer than exposes maximum rate of stomatal closure. The factors which influence this may not explain variance in kinetics in more natural conditions.
+
+Need to mention subsaturation. If airspace is unsaturated, then gs is underestimated. This doesn't necessarily affect kinetic parameter estimates since all measurements were done at high VPD.
 
 Traditional view is that smaller stomata are selected for speed and because there is higher gmax for same fs (Franks). Our results suggest an alternative hypothesis. Smaller stomata may increase rate of stomatal closure (we haven't tested opening), but only if fgmax is low or moderate. Therefore if leaves with smaller stomata maintain a similar gop, then stomatal density must increase to prevent fgmax from increasing. This may explain the association between the association between small stomata and high density, and relatedly the dearth of leaves with sparse, small stomata.
 ## References
