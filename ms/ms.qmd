@@ -26,6 +26,7 @@ header-includes: |
   \newcommand{\gmaxratio}{$g_\text{max,ratio}$}
   \newcommand{\gmaxshade}{$g_\text{max,shade}$}
   \newcommand{\gmaxsun}{$g_\text{max,sun}$}
+  \newcommand{\gop}{$g_\text{op}$}
   \newcommand{\gsw}{$g_\text{sw}$}
   \newcommand{\loggsw}{$\log(g_\text{sw})$}
   \newcommand{\logA}{$\log(A)$}
@@ -309,19 +310,12 @@ Ochoa et al. (2024) - another study on correlation between stomatal density and 
 
 Tulva et al. (2025) - not super relevant for this paper.
 
-Ishia et al. (1992) - examples of some rapid increases in VPD in understory shrubs
-
 Hsu et al. (2021) - t50 WT aribodopsis: 5.1 ± 0.4 min. Their VPD method "followed by ∼2.0 kPa VPD (20 to 32% relative air humidity) in most experiments, as indicated in the figures". There was a lot in this paper. Basically, they don't know exactly how VPD is sensed, but show that it's independent of CO2 mechanism.
 
 Reminder: Halliwell et al. 2025 paper has useful info on multiresponse models. I might use Van de Pol and Wright (2009) method for within versus between slope estimation. This is in the phylogenetic comparative example in the brms vignette too. Actually, this is hard to implement because I would have to calculate individual residuals for each light treatment combination and then means of those, etc.
 
 Westoby et al (2023) (10.1111/1365-2745.14150) is similar to Halliwell. Maybe another way to think about it using the mutliresponse approach.
 
-Humidity responses often dominate over other environmental signals (Aasamaa & Sõber 2011) but not always (Merilo et al 2014 New Phyt - this paper decreased RH to 30-40%)
-
-There are two Aasamaa & Sõber 2011 papers:
-- multiple environmental changes, humidity/water potential dominate in 6 tree species (10.1093/treephys/tpr078). This paper also decreased humidity to 10% at 25 C
-- single environmental change, humidity/water dominate others
 
 Some older references: 
 
@@ -333,20 +327,15 @@ hall_leaf_1976 - shows that gsw responds to VPD per se at constant LWP
 
 Bunce (1997) - not very relevant
 
-Lange O.L., Lösch R., Schultze E.-D. & Kappen L. (1971) Responses of stomata to changes in humidity. Planta 100, 76–86. - Shows that individual stomata respond directly to air humidity.
-
 Blatt et al. (2026) - not sure if this is useful. Shows that guard cell walls stay hydrated even when airspace is subsaturated.
 
 Buckley 2016 (10.1111/pce.12651) provides useful background on why hydroactive response takes time (ABA synthesis). 
-
-McAdam and Brodribb (2016) show that de novo biosynthesis of ABA regulates hydroactive response.
 
 Merilo et al. (2018) say "The ABA signaling unit consists of cytosolic PYRABACTIN RESISTANCE1 (PYR1)/PYR1-LIKE (PYL)/ REGULATORY COMPONENTS OF ABA RECEPTORS (RCAR) receptors that, in the presence of ABA sequester type 2 protein phosphatases, lead to the activation of protein kinase OST1, which, in turn, activates the slow-type anion channel SLAC1 and triggers stomatal closure (Geiger et al., 2009; Lee et al., 2009; Ma et al., 2009; Park et al., 2009)" (these are steps after ABA synthesis)
 
 
 Ivanoff 1928 - original wrong-way response citation? from Jalakas et al 2021 ("promoting a transient passive ‘wrong-way’ stomatal opening (Ivanoff, 1928; Mott & Franks, 2001; Buckley, 2019).")
 
-Darwin 1898 mentions both RH response and WWR
 
 FYI, t50 = "6.1 ± 0.32 min in Arabidopsis Col-0 wild-type (Merilo et al., 2018)"
 I also have read this: https://nph-onlinelibrary-wiley-com.ezproxy.library.wisc.edu/doi/full/10.1111/nph.17592
@@ -365,6 +354,10 @@ Binstock et al. (2024) 10.1093/plphys/kiad560 - see if they have estimates of ta
 
 This paper looked at epidermal cell : guard cell size in domesticated tomato and related to closure kinetics. See if I can do this? 10.1111/ppl.70543 (use Sack and Buckley estimate of epidermal cell size based on stomatal index, density, and guard cell size)
 
+NOT THAT USEFUL - Tinoco-Ojanguren C, Pearcy RW. (1993) Stomatal dynamics and its importance to carbon gain in 2 rain forest Piper species. 1. VPD effects on the transient stomatal response to light flecks. Oecologia 94: 388–394
+
+Merilo et al 2014 New Phyt - this paper decreased RH to 30-40%
+
 ## Abstract
 
 Guard cell size and stomatal density vary over X and X orders of magnitude among extant vascular land plants, yet the adaptive significance of much of this variation remains unclear. The evolution of guard cell size in particular is poorly understood and may even be constrained by nonadaptive features like genome size. One hypothesis is that natural selection may favor smaller guard cells to increase the rate at which stomatal conductance responds to fluctuating environmental conditions. A related hypothesis is that operational stomatal conductance (\gop) is often $\approx 25\%$ of its theoretical maximum (gmax) because at this stomatal aperture, guard cell volume is poised to change rapidly with changes in turgor pressure. The support for both hypothesis is limited and mixed, in part because they have not been tested together, even though both guard cell size and the ratio of \gop{} to \gmax{} (\fgmax) should influence stomatal kinetics. We analyzed `r prettyNum(nrow(fit$data), big.mark = ',')` estimates of stomatal closure kinetics in response to an abrupt increase in vapor pressure deficit (VPD) among `r n_acc` diverse wild tomato populations in the genus \textit{Solanum}. Both smaller guard cell size and lower \fgmax{} were associated with faster stomatal closure kinetics, but at different levels of biological organization. Guard cell size explained X% of the variance in stomatal kinetics among populations, whereas gop:gmax explained X% of the variance among individuals within populations. [neither result would have been supported if analyzed in isolation - is this true?]. We conclude that guard cell size may respond to selection on stomatal kinetics over evolutionary time, but actual kinetics are modulated by a tradeoff between maximizing gop and minimizing the time required for stomatal closure. Putting these hypotheses together with stabilizing selection on gop may explain why stomatal size and density negatively covary among species.
@@ -375,17 +368,14 @@ NOTE: I need to develop a consistent terminology - stomatal response rate? speed
 
 In nature, change is the only constant. One way that vascular plants (tracheophytes) cope with change is by adjusting stomatal pore aperture to optimize the trade-off between carbon gain and water loss [@cowan_stomatal_1977; @hetherington_role_2003]. In the absence of physical limits and energetic tradeoffs, natural selection would favor plants that could instantaneously adjust stomatal conductance (\gsw) to perfectly track dynamic environmental conditions. In reality, stomatal responses take time, creating a lag between actual and optimal stomatal aperture. For example, many species use hydroactive feedback mechanisms to precisely control stomatal responses to changing vapor pressure deficit (VPD), the driving force for evaporation [@buckley_how_2019]. Hydroactive stomatal control requires sensing a change in VPD through as-yet-unknown mechanisms, signal transduction, and efflux of osmotic solutes to alter guard cell turgor more than the surrounding epidermal cells. Abscisic acid (ABA) dependent responses require several minutes to accumulate or synthesize hormone pools *de novo* [@xie_identification_2006; @bauer_stomatal_2013; @mcadam_stomatal_2016; @desai_abscisic_2025]; ABA-independent stomatal responses require changes in gene expression and protein synthesis that take time [@jalakas_molecular_2021]. Once anion channels are activated, the rate of change in stomatal aperture depends on the rate of change in guard cell turgor ($d P_\mathrm{g} / dt$) and the sensitivity of aperture to change in turgor ($d a_\mathrm{S} / d P_\mathrm{g}$). As we discuss below, these two factors ($d P_\mathrm{g} / dt$ and $d a_\mathrm{S} / d P_\mathrm{g}$) may be influenced by guard cell size and the ratio of operational to maximum stomatal conductance (\fgmax), respectively.
 
-<!-- Need to read Cowan (1972) -->
-Over a century ago @darwin_observations_1898 observed that after an initial increase, leaf transpiration decreases in response to decreasing humidity. He correctly attributed changes in transpiration to changes in stomatal aperture and subsequent studies have confirmed that stomatal aperture responds to humidity [@lange_responses_1971] and, more specifically, transpiration rate [@mott_stomatal_1991], which is determined by VPD and \gsw. The VPD is related to RH but also temperature. In angiosperms and some pteridophytes [@cowan_oscillations_1972; @buckley_role_2011; @westbrook_stomatal_2021], a sudden increase in VPD, usually induced by lower RH at a constant temperature, causes a transient increase in \gsw, as Darwin observed. After a period of several  minutes, stomata close until the leaf reaches a new steady-state \gsw. These phases of stomatal response to VPD are often referred to as the "wrong-way response" (WWR) and "right-way response" (RWR), respectively. The normative 'wrong' and 'right' appellations refer to the presumed adaptive significance. At steady state, \gsw{} is negatively correlated with VPD, all else being equal, which is interpreted as an adaptive response to the marginal carbon cost of water [@cowan_stomatal_1977; @buckley_optimal_2017]. Models built around this assumption generally predict steady state \gsw{} well, although the functional form and presumed fitness costs are areas of active research [@damour_overview_2010; @medlyn_reconciling_2011; @sperry_prediting_2017; @potkay_generalized_2025].
+<!-- Need to read Cowan (1972), Monteith 1995 -->
+Over a century ago @darwin_observations_1898 observed that after an initial increase, leaf transpiration decreases in response to decreasing humidity. He correctly attributed changes in transpiration to changes in stomatal aperture and subsequent studies have confirmed that stomatal aperture responds to humidity [@lange_responses_1971] and, more specifically, transpiration rate [@mott_stomatal_1991; @monteith_reinterpretation_1995], which is the product of VPD and \gsw. The VPD is related to RH but also temperature. In angiosperms and some pteridophytes [@cowan_oscillations_1972; @buckley_role_2011; @westbrook_stomatal_2021], a sudden increase in VPD, usually induced by lower RH at a constant temperature, causes a transient increase in \gsw, as Darwin observed. After a period of several  minutes, stomata close until the leaf reaches a new steady-state \gsw. These phases of stomatal response to VPD are often referred to as the "wrong-way response" (WWR) and "right-way response" (RWR), respectively. The normative 'wrong' and 'right' appellations refer to the presumed adaptive significance. At steady state, \gsw{} is negatively correlated with VPD, all else being equal, which is interpreted as an adaptive response to the marginal carbon cost of water [@givnish_sizes_1976; @cowan_stomatal_1977; @buckley_optimal_2017]. Models built around this assumption generally predict steady state \gsw{} well, although the functional form and presumed fitness costs are areas of active research [@damour_overview_2010; @medlyn_reconciling_2011; @prentice_balancing_2014; @sperry_predicting_2017; @potkay_generalized_2025].
 
-Stomatal responses to VPD are as much about the journey (kinetics) as they are about the destination (steady state). If stomatal response kinetics are too slow relative to the temporal grain size of environmental variability, then \gsw{} should not track environmental variation since the leaf constantly lag the environmental, interminably fighting the last war. This may explain why \gsw{} is insensitive to short sunflecks in some species (CITES). If stomatal responses can track environmental variation, then minimizing the lag time can greatly improve resource-use efficiency [lawson?]. For example, optogenetic control of stomatal aperture in response to fluctuating light increases water-use efficiency in *Arabidopsis* [@Papanatsiou_optogenetic_2019].  [@buckley]
+Stomatal responses are as much about the journey (kinetics) as they are about the destination (steady state). If stomatal response kinetics are too slow relative to the temporal grain size of environmental variability, then it would be futile for \gsw{} to track environmental variation since the leaf will constantly lag the environment, perpetually fighting the last war. This may explain why \gsw{} can be insensitive to short sun/shade flecks [@knapp_stomatal_1990] and shaded leaves are likely primed to cope with the hydraulic demands of sudden increases in light, temperature, and VPD [@schymanski_stomatal_2013]. If stomatal responses can track environmental variation, then minimizing the lag time can greatly improve resource-use efficiency [@luttge_photosynthesis_2010]. For example, optogenetic control of stomatal aperture in response to fluctuating light increases water-use efficiency in *Arabidopsis* [@papanatsiou_optogenetic_2019]. Therefore the rate of stomatal opening and closing is predicted to have a major effect on how natural selection optimizes stomatal control in variable environments [@buckley_kinetic_2023].
 
-NEED TO WORK IN: Lawson T, von Caemmerer S, Baroli I. (2010) Photosynthesis and stomatal behaviour. Prog Bot 72: 265–304
+Much of the research on stomatal kinetics focuses on light responses because light intensity is usually the most important, rapidly fluctuating environmental variable affecting photosynthesis. In nature, fluctuating light intensity simulateneously alters leaf temperature and VPD [e.g. @ishida_roles_1992]. We focus on stomatal closure kinetic in response to an abrupt increased in for three reasons. First of all, the primary aims and *a priori* hypotheses of this study were not to study stomatal kinetic parameters and are described in @muir_plasticity_2025. The idea to opportunistically use \gsw{} response curves generated during this study to test hypotheses about which traits influence stomatal kinetics came after the data had been collected, but not yet analyzed for this purpose. Second, VPD responses exhibit a similar functional form as light-responses, suggesting similar underlying mechanisms [@buckley_how_2019]. Factors that affect stomatal response kinetics to VPD likely generalize to other environmental variables. Third, humidity responses tend to dominate over and are faster than other environmental responses [@aasamaa_stomatal_2011; @aasamaa_responses_2011], but there is variation among species [@merilo_open_2014]. Thus, factors that constrain maximum rates of stomatal closure are most likely to be observed in response to VPD. Finally, the ecological salience of VPD responses is increasing as climate change warms the atmosphere [@grossiord_plant_2020].
 
-(maybe) Pearcy RW. (1990) Sunflecks and photosynthesis in plant canopies. Annu Rev Plant Physiol Plant Mol Biol 41: 421–453
-
-Tinoco-Ojanguren C, Pearcy RW. (1993) Stomatal dynamics and its importance to carbon gain in 2 rain forest Piper species. 1. VPD effects on the transient stomatal response to light flecks. Oecologia 94: 388–394
-
+#### MARKER
 
 (maybe this section would be better in discussion - why is there variation in tau if selection favors faster responses?) It might seem that natural selection should favor faster stomatal responses to get closer to the ideal of instantaneous optimization. Under this assumption, variation in stomatal kinetics would depend on how strong directional selection for faster responses is counterbalanced by costs of faster stomata. We discuss multiple, nonmutually exclusive costs below [WHERE?]. However, once models account for inevitable time lags, natural selection can favor slower responses when this prevents overreacting to unpredictable and shortlived changes in the environment. [Review some lit] It is therefore likely that the direction of selection on stomatal response rate varies depending on the predictability and duration of environmental fluctuations, as well as the energetic costs of stomatal movements.
 
@@ -397,14 +387,15 @@ Putting these two hypotheses together, we predict that both guard cell size and 
 
 Here we extend recent advances in phylogenetic comparative methods [@westoby_phylogenetically_2023; @muir_how_2023; @halliwell_multiresponse_2025] to test these predictions using data on stomatal closure kinetics in response to an abrupt increase in VPD among `r n_acc` diverse wild tomato populations in the genus *Solanum*. We leveraged natural variation in guard cell size among and within species to test whether leaves with smaller guard cells close faster. We induced variation in fgmax through a combination of growth and measurement light intensity. Growth light intensity caused developmental plasticity in stomatal density that, when crossed factorially with measurement light intensity, resulted in variation in fgmax. By measuring multiple individuals from multiple treatments across multiple species enabled us to estimate the effect of guard cell size and \fgmax on stomatal kinetics and partition their significance within and among species.
 
-<!-- May need to move or revise -->
-The primary aims and *a priori* hypotheses of this study were not to study stomatal kinetic parameters and are described in @muir_plasticity_2025. The idea to use \gsw{} response curves generated during this study to test hypotheses about which traits influence stomatal kinetics came after the data had been collected, but not yet analyzed for this purpose. Before analyzing the data, we planned to test two hypotheses based on a recent metaanalysis of stomatal responses to light [@woning_revisiting_2026]. We hypothesized that 1) guard cell size would influence $\tau$ and 2) that $\tau$ would be greater on the abaxial-only leaves. We planned to compare relationships within and among populations using phylogenetic comparative methods. We made the decision to test for an association between \fgmax{} and $\tau$ after exploratory analyses revealed a potential association. Adding hypotheses after some results have been analyzed, also known as "Hypothesizing After Results Known" (HARKing), can lead to reports of spurious associations that are not repeatable in later studies [@kerr_harking_1998; @smaldino_natural_2016]. Therefore, our conclusions about the effect of \fgmax{} on stomatal kinetics should be interpreted with caution until they are replicated.
 
-Three main questions (where does this go?)
+Four main questions (where does this go?)
 
-1. Are \gcl{} and \fgmax{} positively associated with $\tau$?
-2. At what biological levels of organization do \gcl{} and \fgmax{} influence $\tau$?
-3. Are abaxial-only stomatal responses slower than whole leaf stomatal responses?
+1. Are VPD kinetics adequately characterized by the same functional form as light responses?
+2. Are \gcl{} and \fgmax{} positively associated with $\tau$?
+3. At what biological levels of organization do \gcl{} and \fgmax{} influence $\tau$?
+4. Are abaxial-only stomatal responses slower than whole leaf stomatal responses?
+
+Before analyzing the data, we planned to test two hypotheses based on a recent metaanalysis of stomatal responses to light [@woning_revisiting_2026]. We hypothesized that 1) guard cell size would influence $\tau$ and 2) that $\tau$ would be greater on the abaxial-only leaves. We planned to compare relationships within and among populations using phylogenetic comparative methods. We made the decision to test for an association between \fgmax{} and $\tau$ after exploratory analyses revealed a potential association. Adding hypotheses after some results have been analyzed, also known as "Hypothesizing After Results Known" (HARKing), can lead to reports of spurious associations that are not repeatable in later studies [@kerr_harking_1998; @smaldino_natural_2016]. Therefore, our conclusions about the effect of \fgmax{} on stomatal kinetics should be interpreted with caution until they are replicated.
 
 <!-- might be good paper to revisit and cite: -->
 <!-- Pinpointing the causal influences of stomatal anatomy and behavior on minimum, operational, and maximum leaf surface conductance -->
