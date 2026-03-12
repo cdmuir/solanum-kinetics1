@@ -306,6 +306,8 @@ rho_upper = partial_cor$upper
 
 # notes
 
+Kirschbaum et al. 1988 - read
+
 Ochoa et al. (2024) - another study on correlation between stomatal density and size and gop
 
 Tulva et al. (2025) - not super relevant for this paper.
@@ -354,9 +356,15 @@ Binstock et al. (2024) 10.1093/plphys/kiad560 - see if they have estimates of ta
 
 This paper looked at epidermal cell : guard cell size in domesticated tomato and related to closure kinetics. See if I can do this? 10.1111/ppl.70543 (use Sack and Buckley estimate of epidermal cell size based on stomatal index, density, and guard cell size)
 
+<<<<<<< HEAD
 NOT THAT USEFUL - Tinoco-Ojanguren C, Pearcy RW. (1993) Stomatal dynamics and its importance to carbon gain in 2 rain forest Piper species. 1. VPD effects on the transient stomatal response to light flecks. Oecologia 94: 388–394
 
 Merilo et al 2014 New Phyt - this paper decreased RH to 30-40%
+=======
+Some OG citations "Changes in stomatal aperture are driven by changes in turgor pressure of guard cells (Heath 1938) due to the accumulation of ions and/or solutes (Imamura 1943; Fujino 1967; Outlaw 1983), which increases the osmotic potential and lowers the water potential of guard cells (Weyers and Meidner 1990; Willmer and Fricker 1996)." quote from Lawson et al (2010)
+
+This discusses cost of imperfect stomatal tracking, but otherwise not super relevant. Lawson T, von Caemmerer S, Baroli I. (2010) Photosynthesis and stomatal behaviour. Prog Bot 72: 265–304
+>>>>>>> c80149cc51f9e43f8121eeab962427598cccb357
 
 ## Abstract
 
