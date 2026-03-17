@@ -1,3 +1,9 @@
+# Decompose variance of log(gcl) into:
+# - within leaf + error
+# - among individual within population
+# - among population (nonphylogenetic)
+# - among population (phylogeny)
+
 source("r/header.R")
 
 plant_info = read_rds("data/plant_info.rds") |>
@@ -5,7 +11,7 @@ plant_info = read_rds("data/plant_info.rds") |>
 
 gcl = read_rds("data/guard-cell-length.rds") |>
   ungroup() |>
-  mutate(loggcl = log(guard_cell_length_um))
+  mutate(loggcl = log(guard_cell_length_um)) 
 
 phy = read_rds("data/phylogeny.rds")
 A = vcv(phy, corr = TRUE)
@@ -22,18 +28,23 @@ gcl1 = gcl |>
   filter(!is.na(use)) |>
   select(-use) |>
   left_join(plant_info, by = join_by(accession, replicate)) |>
-  unite("acc_id", accession, replicate, sep = "-", remove = FALSE) |>
-  mutate(phy = accession)
+  unite("acc_id",
+        accession,
+        replicate,
+        sep = "-",
+        remove = FALSE) |>
+  mutate(phy = accession) |>
+  # Trim most extreme 1%
+  filter(loggcl > quantile(loggcl, 0.01 / 2),
+         loggcl < quantile(loggcl, 1 - 0.01 / 2))
 
-# library(lme4)
-# library(lmerTest)
-# fit_gcl = lmer(loggcl ~ light_treatment * surface + (1 | acc_id) + (light_treatment * surface | accession), data = gcl1)
-# summary(fit_gcl)
-
-thin = 1
+thin = 2
 
 fit_gcl = brm(
-  loggcl ~ light_treatment * surface + (1 | acc_id) + (1 | accession) + (1 | gr(phy, cov = A)),
+  loggcl ~ light_treatment * surface + 
+    (1 | acc_id) + 
+    (1 | accession) + 
+    (1 + light_treatment * surface | gr(phy, cov = A)),
   data = gcl1,
   data2 = list(A = A),
   cores = 4,
@@ -45,6 +56,7 @@ fit_gcl = brm(
   backend = "cmdstanr",
   # family = student(),
   seed = 613135062
-) |> add_criterion("loo")
+) |> 
+  add_criterion("loo")
 
 write_rds(fit_gcl, "objects/fit-gcl.rds")
