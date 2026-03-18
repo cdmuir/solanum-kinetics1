@@ -80,7 +80,7 @@ fit = brm(
   backend = "cmdstanr",
   family = student(),
   seed = 613135062
-) |> add_criterion("loo")
+) 
 
 
 write_rds(fit, "objects/fit-test.rds")

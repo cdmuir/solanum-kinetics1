@@ -38,7 +38,7 @@ gcl1 = gcl |>
   filter(loggcl > quantile(loggcl, 0.01 / 2),
          loggcl < quantile(loggcl, 1 - 0.01 / 2))
 
-thin = 2
+thin = 3
 
 fit_gcl = brm(
   loggcl ~ light_treatment * surface + 

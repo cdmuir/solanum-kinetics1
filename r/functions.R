@@ -391,3 +391,8 @@ join_nodes_edges = function(df_edges, df_nodes) {
     left_join(df_nodes, by = c("to" = "name")) |>
     rename(xend = x, yend = y) 
 }
+
+# Calculate saturating vapor pressure following the LI6800 manual
+li6800_svp = function(T_degreeC) {
+  0.61365 * exp(17.502 * T_degreeC / (240.97 + T_degreeC))
+}
