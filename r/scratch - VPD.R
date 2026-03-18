@@ -1,7 +1,7 @@
 # summarize VPD for paper, rename, delete
 source("r/header.R")
 
-read_rds("processed-data/rh_curves.rds") |> colnames() |> sort()
+read_rds("data/rh_curves.rds") |> colnames() |> sort()
 
 li6800_svp = function(T_degreeC) {
   0.61365 * exp(17.502 * T_degreeC / (240.97 + T_degreeC))
