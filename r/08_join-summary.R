@@ -30,6 +30,7 @@ pars_summary = read_rds("objects/pars-summary.rds") |>
 
 joined_data = read_rds("data/joined-data.rds") |>
   summarize(
+    epidermal_cell_area_um2 = first(epidermal_cell_area_um2),
     guard_cell_length_um = first(guard_cell_length_um),
     gmax = first(gmax),
     .by = c(acc, id, curve_type)
