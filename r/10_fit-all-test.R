@@ -17,7 +17,7 @@ bf_lambda0 = bf(
     lightintensity +
     curve_type +
     loggcl +
-    logeca +
+    mi(logeca) +
     logitfgmax +
     (1 | accid) +
     (1 | a | accession) +
@@ -33,7 +33,7 @@ bf_tau0 = bf(
     lightintensity +
     curve_type +
     loggcl +
-    logeca +
+    mi(logeca) +
     logitfgmax +
     (1 | accid) +
     (1 | a | accession) +
