@@ -42,9 +42,9 @@ thin = 4
 
 fit_gcl = brm(
   loggcl ~ light_treatment * surface + 
-    (1 + surface || acc_id) + 
-    (1 + light_treatment * surface || accession) + 
-    (1 + light_treatment * surface || gr(phy, cov = A)),
+    (1 + | acc_id) + 
+    (1 + | accession) + 
+    (1 + | gr(phy, cov = A)),
   data = gcl1,
   data2 = list(A = A),
   cores = 4,

@@ -33,8 +33,7 @@ stomata = read_rds("data/stomata.rds") |>
     leaflet_stomata = leaflet,
     ends_with("_gmax"),
     ends_with("_guard_cell_length_um"),
-    ends_with("_stomatal_density_mm2"),
-    ends_with("_epidermal_cell_area_um2")
+    ends_with("_stomatal_density_mm2")
   ) |>
   mutate(
     # Calculate total gmax and divide by 1e3 to have same units as gsw
@@ -43,11 +42,6 @@ stomata = read_rds("data/stomata.rds") |>
     # Calculate weighted average guard cell length
     total_guard_cell_length_um = (
       lower_guard_cell_length_um * lower_stomatal_density_mm2 + upper_guard_cell_length_um * upper_stomatal_density_mm2
-    ) / total_stomatal_density_mm2,
-    # Calculate weighted average epidermal cell area
-    # Note that it is weighted by stomatal density
-    total_epidermal_cell_area_um2 = (
-      lower_epidermal_cell_area_um2 * lower_stomatal_density_mm2 + upper_epidermal_cell_area_um2 * upper_stomatal_density_mm2
     ) / total_stomatal_density_mm2
   ) |>
   select(-starts_with("upper_"), -ends_with("_stomatal_density_mm2")) |>
@@ -80,14 +74,6 @@ stomata = read_rds("data/stomata.rds") |>
         guard_cell_length_um[idx_match[1]] # take the (first) matching value
       } else {
         guard_cell_length_um[which(!is.na(guard_cell_length_um))[1]] # otherwise take first available
-      }
-    },
-    epidermal_cell_area_um2 = {
-      idx_match = which(leaflet_stomata == leaflet_licor & !is.na(epidermal_cell_area_um2))
-      if (length(idx_match) == 1) {
-        epidermal_cell_area_um2[idx_match[1]] # take the (first) matching value
-      } else {
-        epidermal_cell_area_um2[which(!is.na(epidermal_cell_area_um2))[1]] # otherwise take first available
       }
     },
     .groups = "drop"
