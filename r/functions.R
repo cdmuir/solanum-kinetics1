@@ -190,14 +190,14 @@ prepare_tau_anatomy_data = function(joined_summary, logtau_threshold) {
   out = joined_summary |>
     filter(logtau_mean < logtau_threshold) |>
     mutate(loggcl = log(guard_cell_length_um),
-           logitfgmax = qlogis(f_gmax),
-           logeca = log(epidermal_cell_area_um2)) |>
+           logitfgmax = qlogis(f_gmax)) |>
     rename(
       logtaumean = logtau_mean,
       logtausd = logtau_sd,
       loglambdamean = loglambda_mean,
       loglambdasd = loglambda_sd,
       accid = acc_id,
+      curvetype = curve_type,
       lightintensity = light_intensity,
       lighttreatment = light_treatment
     ) |>
@@ -350,8 +350,13 @@ ellipse_points = function(mu, Sigma, level = 0.95, n = 200) {
   data.frame(x = mu[1] + pts[,1], y = mu[2] + pts[,2])
 }
 
-# Saturated vapor pressure
+# Saturated vapor pressure (for RH calculation)
 svp = function(T_leaf, Pa) (0.61365 * exp(17.502 * T_leaf / (240.97 + T_leaf) / Pa))
+
+# Saturated vapor pressure (for VPD calculation)
+li6800_svp = function(T_degreeC) {
+  0.61365 * exp(17.502 * T_degreeC / (240.97 + T_degreeC))
+}
 
 # Convert log-change to %-change
 log_to_percent = function(.x) {

@@ -22,7 +22,7 @@ pars_summary = read_rds("objects/pars-summary.rds") |>
     names_glue = "{variable}_{.value}"
   ) |>
   mutate(
-    accession = str_extract(id, "^(LA[0-9]{4}A{0,1}|nelsonii|sandwicense)"),
+    accession = str_extract(id, "^(LA[0-9]{4}A{0,1})"),
     replicate = str_extract(id, "-([A-Z][AB]{0,1})_", group = 1),
     curve_type = str_extract(id, "amphi|pseudohypo"),
     light_intensity = str_extract(id, "150|2000")
@@ -30,7 +30,6 @@ pars_summary = read_rds("objects/pars-summary.rds") |>
 
 joined_data = read_rds("data/joined-data.rds") |>
   summarize(
-    epidermal_cell_area_um2 = first(epidermal_cell_area_um2),
     guard_cell_length_um = first(guard_cell_length_um),
     gmax = first(gmax),
     .by = c(acc, id, curve_type)

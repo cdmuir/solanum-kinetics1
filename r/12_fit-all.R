@@ -18,7 +18,7 @@ thin = 6 #12
 bf_lambda0 = bf(loglambdamean | se(loglambdasd, sigma = TRUE) ~ 
                   lighttreatment + 
                   lightintensity +
-                  curve_type +
+                  curvetype +
                   loggcl + 
                   logitfgmax + 
                   (1|accid) +
@@ -31,7 +31,7 @@ bf_lambda3 = update(bf_lambda0, . ~ . - loggcl - logitfgmax)
 bf_tau0 = bf(logtaumean | se(logtausd, sigma = TRUE) ~ 
                lighttreatment + 
                lightintensity +
-               curve_type +
+               curvetype +
                loggcl + 
                logitfgmax + 
                (1|accid) +
@@ -44,14 +44,14 @@ bf_tau3 = update(bf_tau0, . ~ . - loggcl - logitfgmax)
 
 bf_gcl = bf(loggcl ~ 
               lighttreatment + 
-              curve_type +
+              curvetype +
               (1|a|accession) + 
               (1|b|gr(phy, cov = A)))
 
 bf_fgmax = bf(logitfgmax ~ 
                 lighttreatment + 
                 lightintensity + 
-                curve_type +
+                curvetype +
                 (1|accid) +
                 (1|a|accession) + 
                 (1|b|gr(phy, cov = A)))

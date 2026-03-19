@@ -8,17 +8,17 @@ joined_summary = read_rds("data/joined-summary.rds") |>
 joined_summary  |>
   ggplot(aes(gfinal_mean, logtau_mean)) +
   geom_point() +
-  facet_grid(light_intensity ~ light_treatment + curve_type) +
+  facet_grid(light_intensity ~ light_treatment + curvetype) +
   scale_x_log10()
 
 joined_summary |>
   ggplot(aes(ginit_mean, logtau_mean)) +
   geom_point() +
-  facet_grid(light_intensity ~ light_treatment + curve_type, scales = "free") +
+  facet_grid(light_intensity ~ light_treatment + curvetype, scales = "free") +
   scale_x_log10()
 
 joined_summary |>
   ggplot(aes(ginit_mean, loglambda_mean)) +
   geom_point() +
-  facet_grid(light_intensity ~ light_treatment + curve_type, scales = "free") +
+  facet_grid(light_intensity ~ light_treatment + curvetype, scales = "free") +
   scale_x_log10()
