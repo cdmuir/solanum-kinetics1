@@ -8,7 +8,7 @@ if (!dir.exists(sk_dir)) {
 
 joined_data = read_rds("data/joined-data.rds")
 
-plan(multisession, workers = 19)
+plan(multisession, workers = 15)
 
 # Alternative formulation of CDWeibull
 form_cdweibull = gsw ~ exp(loggf) + exp(logdg) * exp(-(t_sec / exp(logtau))^exp(loglambda))

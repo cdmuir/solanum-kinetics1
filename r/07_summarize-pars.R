@@ -3,7 +3,7 @@ source("r/header.R")
 
 sk_dir1 = "objects/weibull"
 
-plan(multisession, workers = 9)
+plan(multisession, workers = 19)
 
 pars_summary = list.files(sk_dir1) |>
   future_map_dfr(\(.x) {

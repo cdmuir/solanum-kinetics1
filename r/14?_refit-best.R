@@ -1,6 +1,4 @@
-# Analyze effect of anatomy on tau in untreated (amphistomatous) leaves
-# Note: I did some preliminary model comparisons suggesting no random effects 
-# of light_intensity, light_treatment, log_gcl, or log_fgmax
+# Refit best model with VPD as covariate
 source("r/header.R")
 
 plan(multisession, workers = 16)
@@ -10,26 +8,34 @@ joined_summary = read_rds("data/joined-summary.rds") |>
 
 write_rds(list(logtau_threshold = logtau_threshold, n_removed = attr(joined_summary, "n_removed")), "objects/n_removed.rds")
 
-assert_true(all(!is.na(joined_summary$loglambdamean)))
-assert_true(all(!is.na(joined_summary$loglambdasd)))
-assert_true(all(!is.na(joined_summary$logtausd)))
-assert_true(all(!is.na(joined_summary$logtausd)))
-assert_true(all(!is.na(joined_summary$loggcl)))
-assert_true(all(!is.na(joined_summary$logitfgmax)))
+curve_vpd = read_rds("objects/curve-vpd.rds")
 
-assert_true(all(!is.na(joined_summary$lighttreatment)))
-assert_true(all(!is.na(joined_summary$lightintensity)))
-assert_true(all(!is.na(joined_summary$curvetype)))
+joined_summary1 = joined_summary |>
+  left_join(curve_vpd, by = join_by(curvetype, lightintensity, accid, lighttreatment)) |>
+  mutate(vpd = scale(VPDleaf)[,1])
+
+assert_true(all(!is.na(joined_summary1$loglambdamean)))
+assert_true(all(!is.na(joined_summary1$loglambdasd)))
+assert_true(all(!is.na(joined_summary1$logtausd)))
+assert_true(all(!is.na(joined_summary1$logtausd)))
+assert_true(all(!is.na(joined_summary1$loggcl)))
+assert_true(all(!is.na(joined_summary1$logitfgmax)))
+
+assert_true(all(!is.na(joined_summary1$lighttreatment)))
+assert_true(all(!is.na(joined_summary1$lightintensity)))
+assert_true(all(!is.na(joined_summary1$curvetype)))
+assert_true(all(!is.na(joined_summary1$VPDleaf)))
 
 phy = read_rds("data/phylogeny.rds")
 A = vcv(phy, corr = TRUE)
-thin = 6
+thin = 6 #12
 
 # Define formula
 bf_lambda0 = bf(loglambdamean | se(loglambdasd, sigma = TRUE) ~ 
                   lighttreatment + 
                   lightintensity +
                   curvetype +
+                  vpd +
                   loggcl + 
                   logitfgmax + 
                   (1|accid) +
@@ -43,6 +49,7 @@ bf_tau0 = bf(logtaumean | se(logtausd, sigma = TRUE) ~
                lighttreatment + 
                lightintensity +
                curvetype +
+               vpd +
                loggcl + 
                logitfgmax + 
                (1|accid) +
@@ -76,7 +83,7 @@ fits = crossing(
     fit = future_map2(form, row_number(), \(.form, i) {
       brm(
         formula = .form,
-        data = joined_summary |>
+        data = joined_summary1 |>
           mutate(phy = accession),
         data2 = list(A = A),
         cores = 1,

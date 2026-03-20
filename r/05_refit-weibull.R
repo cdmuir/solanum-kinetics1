@@ -1,7 +1,7 @@
 # Refit each CDWeibull model curve to achieve convergence if needed
 source("r/header.R")
 
-plan(multisession, workers = 19)
+plan(multisession, workers = 15)
 
 sk_dir = c("objects/weibull/")
 list.files(sk_dir, full.names = TRUE) |>
