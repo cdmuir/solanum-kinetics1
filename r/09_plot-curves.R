@@ -67,7 +67,7 @@ rh_curves = list.files(sk_dir1) |>
     )
     
     sub = glue(
-      "growth: {x}; meas: {y}; curve type: {z}",
+      "growth: {x}; meas: {y}; leaf type: {z}",
       x = pix$light_treatment,
       y = pix$light_intensity,
       z = pix$curve_type

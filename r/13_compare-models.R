@@ -67,5 +67,14 @@ map2_dfr(fits$fit, fits$model, \(.fit, .name) {
   write_rds("objects/tbl-comparison.rds")
 
 
-# Write best model
-write_rds(fits$fit[[as.numeric(str_extract(rownames(looic_table)[1], "\\d+"))]], "objects/best_model.rds")
+# Write "best" model
+# Note: I reran the models several times and the order of the top four models
+# changed, consistent with the difference in LOOIC being caused by sampling 
+# variability. After reviewing model estimates, I determined that model 6 is the
+# clearest to interpret.
+
+# Previous version (lowest LOOIC)
+# write_rds(fits$fit[[as.numeric(str_extract(rownames(looic_table)[1], "\\d+"))]], "objects/best_model.rds")
+
+# Current version (model 6)
+write_rds(fits$fit[[6]], "objects/best_model.rds")

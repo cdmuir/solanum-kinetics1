@@ -1,5 +1,5 @@
 # Test whether plasticity in stomatal anatomy mediates the effects of light
-# and curve type on tau.
+# and leaf type on tau.
 
 # NOTE: We can't include phylogenetic and residual covariances in mediation
 # because effects of lighttreatment and lightintensity are not varying at those
@@ -46,11 +46,11 @@ mediation = list(
   # total effect = direct effect of pseudohypo on tau +
   #   mediated effect of pseudohypo on tau through fgmax +
   #   mediated effect of pseudohypo on tau through gcl
-  curvetype = post |>
+  leaftype = post |>
     mutate(
-      direct_effect = b_logtaumean_curve_typepseudohypo,
-      mediated_effect_fgmax = b_logitfgmax_curve_typepseudohypo * b_logtaumean_logitfgmax,
-      # mediated_effect_gcl = b_loggcl_curve_typepseudohypo * b_logtaumean_loggcl,
+      direct_effect = b_logtaumean_leaftypepseudohypo,
+      mediated_effect_fgmax = b_logitfgmax_leaftypepseudohypo * b_logtaumean_logitfgmax,
+      # mediated_effect_gcl = b_loggcl_leaftypepseudohypo * b_logtaumean_loggcl,
       proportion_mediated = mediated_effect_fgmax / (direct_effect + mediated_effect_fgmax),
       .keep = "none"
     )
@@ -69,7 +69,6 @@ mediation = list(
 
 post_summary = post |>
   summarize_draws(estimate = median, se = \(.x, ...) sd(.x), quantile2, .args = list(probs = c(0.025, 0.975))) |>
-  mutate(variable = str_replace(variable, "curve_type", "curvetype")) |>
   separate_wider_delim(variable,
                        delim = "_",
                        names = c("b", "to", "from")) |>
@@ -78,18 +77,18 @@ post_summary = post |>
 ### Growth light intensity
 df_edges_sun = post_summary |>
   filter(to %in% c("logtaumean", "logitfgmax"), !(
-    from %in% c("Intercept", "lightintensityhigh", "curvetypepseudohypo")
+    from %in% c("Intercept", "lightintensityhigh", "leaftypepseudohypo")
   )) |>
   prepare_edges() 
 
 ### Measurement light intensity
 df_edges_high = post_summary |>
   filter(to %in% c("logtaumean", "logitfgmax"), !(
-    from %in% c("Intercept", "lighttreatmentsun", "curvetypepseudohypo")
+    from %in% c("Intercept", "lighttreatmentsun", "leaftypepseudohypo")
   )) |>
   prepare_edges()
 
-### Pseudohypo curve type
+### Pseudohypo leaf type
 df_edges_pseudohypo = post_summary |>
   filter(to %in% c("logtaumean", "logitfgmax"), !(
     from %in% c("Intercept", "lightintensityhigh", "lighttreatmentsun")
@@ -115,7 +114,7 @@ df_node_labels = df_nodes |>
   mutate(treatment = case_when(
     treatment == "sun treatment" ~ "Growth\nlight intensity",
     treatment == "high light" ~ "Measurement\nlight intensity",
-    treatment == "pseudohypo" ~ "Curve type",
+    treatment == "pseudohypo" ~ "Leaf type",
     TRUE ~ treatment
   ))
 
@@ -174,7 +173,7 @@ edge_plot = join_nodes_edges(df_edges_sun, df_nodes) |>
         ystart1 = ystart + pstart * (yend - ystart),
         xend1 = xstart + pend * (xend - xstart),
         yend1 = ystart + pend * (yend - ystart),
-        treatment = "Curve type")
+        treatment = "Leaf type")
     ) |>
   mutate(angle = 180 / pi * atan2(yend - ystart, xend - xstart))
 

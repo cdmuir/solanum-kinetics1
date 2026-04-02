@@ -264,7 +264,7 @@ max_lambda = tab_estimates |>
   pull(estimate) |>
   max()
 
-# Effect of light treatments and curve type on gcl and fgmax
+# Effect of light treatments and leaf type on gcl and fgmax
 post_gcl_sun = fit |>
   as_draws_df() |>
   select(b_loggcl_lighttreatmentsun) |>
@@ -598,11 +598,11 @@ tab |>
 
 #### Bayesian multiresponse phylogenetic models
 
-Multiresponse models enable us to disentangle whether traits are associated among populations, individuals, and/or treatments that induce plasticity. The response variables in our models are $\tau$, $\lambda$, \gcl, and \fgmax. All models included a subset of explanatory variables that were integral to the experimental design or necessary to account for statistical nonindependence. As explanatory variables, we included fixed effects of manipulative treatments: growth light intensity (sun and shade); measurement light intensity (high and low); and curve type (amphistomatous and pseudohypostomatous). All models also included population as both a phylogenetically structured random effect and a non-phylogenetic random effect following @halliwell_multiresponse_2025. Prior to fitting, the phylogenetic (co)variance matrix was rescaled as a correlation matrix [@devillemereuil_general_2014]. For traits measured multiple times within the same leaf (\fgmax, $\lambda$, $\tau$) we included a random effect of individual to account for repeated measures. We accounted for uncertainty in $\tau$ and $\lambda$ using the standard deviation of the posterior distribution of each estimate (see 'Humidity response curves' for details). We modeled residual (co)variance, a combination among-individual (co)variance and measurement error, as a multivariate Student $t$-distribution, which is more robust to extreme values than the multivariate normal distribution [@gelman_bayesian_2014]. To account for heteroskedasticity, bounded measurements, and to linearize relationships, \gcl, $\lambda$, and $\tau$ were log-transformed prior to analysis whereas \fgmax{} was logit-transformed. All models were fit with *Stan* following the same methods described above for fitting @eq-weibull to the humidity response curves. 
+Multiresponse models enable us to disentangle whether traits are associated among populations, individuals, and/or treatments that induce plasticity. The response variables in our models are $\tau$, $\lambda$, \gcl, and \fgmax. All models included a subset of explanatory variables that were integral to the experimental design or necessary to account for statistical nonindependence. As explanatory variables, we included fixed effects of manipulative treatments: growth light intensity (sun and shade); measurement light intensity (high and low); and leaf type (amphi and pseudohypo). All models also included population as both a phylogenetically structured random effect and a non-phylogenetic random effect following @halliwell_multiresponse_2025. Prior to fitting, the phylogenetic (co)variance matrix was rescaled as a correlation matrix [@devillemereuil_general_2014]. For traits measured multiple times within the same leaf (\fgmax, $\lambda$, $\tau$) we included a random effect of individual to account for repeated measures. We accounted for uncertainty in $\tau$ and $\lambda$ using the standard deviation of the posterior distribution of each estimate (see 'Humidity response curves' for details). We modeled residual (co)variance, a combination among-individual (co)variance and measurement error, as a multivariate Student $t$-distribution, which is more robust to extreme values than the multivariate normal distribution [@gelman_bayesian_2014]. To account for heteroskedasticity, bounded measurements, and to linearize relationships, \gcl, $\lambda$, and $\tau$ were log-transformed prior to analysis whereas \fgmax{} was logit-transformed. All models were fit with *Stan* following the same methods described above for fitting @eq-weibull to the humidity response curves. 
 
 #### Phylogenetic correlation among traits
 
-We inferred that traits covary among populations if the 95% confidence intervals of the phylogenetic correlation between traits did not overlap zero and the correlation was in the predicted direction. For example, a positive phylogenetic correlation between \gcl{} and $\tau$ would be consistent with the prediction that species with larger guard cells have slower stomatal kinetics. Phylogenetic covariance specifically indicates long-term evolutionary covariation among traits because our model simultaneously accounts for trait associations among individuals, shared plastic responses, and residual covariance.
+We inferred that traits covary among populations if the 95% confidence intervals of the phylogenetic correlation between traits did not overlap zero and the correlation was in the predicted direction. For example, a positive phylogenetic correlation between \gcl{} and $\tau$ would be consistent with the prediction that species with larger guard cells have slower stomatal kinetics. Phylogenetic covariance specifically indicates long-term evolutionary covariation among traits because our model simultaneously accounts for trait associations among individuals, shared plastic responses, and residual covariance. To test for possible causation, we used the inferred phylogenetic trait covariance matrix to estimate partial correlations between anatomical and kinetic variables [@halliwell_multiresponse_2025]. We interpret a significant partial correlation between variables as a plausible causal hypothesis.
 
 #### Model selection and parameter estimation of individual-level effects
 
@@ -642,7 +642,7 @@ ggplot(df_point, aes(delta_gcl, delta_tau)) +
 # is tau related to epidermal cell size?
 ```
 
-If adaxial stomata respond faster than abaxial stomata (Question 4), we predicted that $\tau$ should be greater in pseudohypo leaves compared to amphi. We evaluated this prediction by estimating the fixed effect of curve type (amphi vs pseudohypo) on $\tau$ in the multiresponse model. 
+If adaxial stomata respond faster than abaxial stomata (Question 4), we predicted that $\tau$ should be greater in pseudohypo leaves compared to amphi. We evaluated this prediction by estimating the fixed effect of leaf type (amphi vs pseudohypo) on $\tau$ in the multiresponse model. 
 
 ## Results
 
@@ -697,12 +697,12 @@ knitr::include_graphics("../figures/accession-anatomy.pdf")
 #| fig-align: center
 #| fig-width: 0.1
 #| fig-height: 0.1
-#| fig-cap: "\\textbf{Guard cell length (\\gcl) and stomatal conductance as a fraction of maximum conductance (\\fgmax) vary among populations and treatments.} In both panels, black points are mean trait value per population within a particular treatment. Gray lines connect values within populations across treatments. (a) Most of the variation in \\gcl{} is among populations, but developmental plasticity to growth light intensity tends to increase \\gcl in sun (left facet) compared to shade (right facet) grown plants. There is no plasticity to curve type (amphi vs. pseudohypo), but the average \\gcl{} is slightly high in pseudohypo leaves because abaxial stomata tended to be larger than adaxial stomata on the same leaf. (b) Measurement light intensity has the most direct effect on \\fgmax{} because stomatal aperture increases under high light intensity. To a lesser extent, \\fgmax{} varies among populations and is slightly lower in sun-grown plants. ADD RESULTS ON EFFECT OF CURVE TYPE. "
+#| fig-cap: "\\textbf{Guard cell length (\\gcl) and stomatal conductance as a fraction of maximum conductance (\\fgmax) vary among populations and treatments.} In both panels, black points are mean trait value per population within a particular treatment. Gray lines connect values within populations across treatments. (a) Most of the variation in \\gcl{} is among populations, but developmental plasticity to growth light intensity tends to increase \\gcl in sun (left facet) compared to shade (right facet) grown plants. There is no plasticity to leaf type (amphi vs. pseudohypo), but the average \\gcl{} is slightly high in pseudohypo leaves because abaxial stomata tended to be larger than adaxial stomata on the same leaf. (b) Measurement light intensity has the most direct effect on \\fgmax{} because stomatal aperture increases under high light intensity. To a lesser extent, \\fgmax{} varies among populations and is slightly lower in sun-grown plants. ADD RESULTS ON EFFECT OF LEAF TYPE. "
 ```
 
 ### Variation in stomatal closure kinetic parameters
 
-Estimates of stomatal closure kinetic parameters are in @tbl-main and will be deposited on Dryad upon publication. The time-constant $\tau$ exhibited moderate phylogenetic heritability, accounting for `r `tau_phylo_var` of the variance, whereas $\lambda$ varied more within populations ([@fig-variance; @tbl-variance]). Some light treatments also affected kinetic parameters. Growth light intensity did not significantly affect $\tau$ ([@fig-accession-kinetics; @tab-fit-amphi]). In sun plants, $\tau$ was on average `r signif(100 * (exp(post_tau_sun["Estimate"]) - 1), 3)`% [95% CI: `r signif(100 * (exp(post_tau_sun["Q2.5"]) - 1), 3)` to `r signif(100 * (exp(post_tau_sun["Q97.5"]) - 1), 3)`%] lower than in shade plants after accounting for other explanatory variables. Within the same leaf, increasing the measurement light intensity prior to the humidity step change from \ppfdqty{150} to \ppfdqty{2000} significantly increased $\tau$ by `r signif(100 * (exp(post_tau_high["Estimate"]) - 1), 3)`% [95% CI: `r signif(100 * (exp(post_tau_high["Q2.5"]) - 1), 3)` to `r signif(100 * (exp(post_tau_high["Q97.5"]) - 1), 3)`%] ([@fig-accession-kinetics; @tab-fit-amphi]). The time lag $\lambda$ responded to growth, but not measurement light intensity after accounting for other explanatory variables ([@fig-accession-kinetics; @tab-fit-amphi]). In sun plants, $\tau$ was on average `r signif(100 * (exp(post_lambda_sun["Estimate"]) - 1), 3)`% [95% CI: `r signif(100 * (exp(post_lambda_sun["Q2.5"]) - 1), 3)` to `r signif(100 * (exp(post_lambda_sun["Q97.5"]) - 1), 3)`%] greater than in shade plants. Higher measurement light decreased increased $\lambda$ slightly by `r signif(100 * (exp(post_lambda_high["Estimate"]) - 1), 3)`% [95% CI: `r signif(100 * (exp(post_lambda_high["Q2.5"]) - 1), 3)` to `r signif(100 * (exp(post_lambda_high["Q97.5"]) - 1), 3)`%]. 
+Estimates of stomatal closure kinetic parameters for each curve are in @tbl-estimates-curve and estimates for each population are in @tbl-estimates-accession. These will be deposited on Dryad upon publication. The time-constant $\tau$ exhibited moderate phylogenetic heritability, accounting for `r `tau_phylo_var` of the variance, whereas $\lambda$ varied more within populations ([@fig-variance; @tbl-variance]). Some light treatments also affected kinetic parameters. Growth light intensity did not significantly affect $\tau$ ([@fig-accession-kinetics; @tbl-fit-summary]). In sun plants, $\tau$ was on average `r signif(100 * (exp(post_tau_sun["Estimate"]) - 1), 3)`% [95% CI: `r signif(100 * (exp(post_tau_sun["Q2.5"]) - 1), 3)` to `r signif(100 * (exp(post_tau_sun["Q97.5"]) - 1), 3)`%] lower than in shade plants after accounting for other explanatory variables. Within the same leaf, increasing the measurement light intensity prior to the humidity step change from \ppfdqty{150} to \ppfdqty{2000} significantly increased $\tau$ by `r signif(100 * (exp(post_tau_high["Estimate"]) - 1), 3)`% [95% CI: `r signif(100 * (exp(post_tau_high["Q2.5"]) - 1), 3)` to `r signif(100 * (exp(post_tau_high["Q97.5"]) - 1), 3)`%] ([@fig-accession-kinetics; @tbl-fit-summary]). The time lag $\lambda$ responded to growth, but not measurement light intensity after accounting for other explanatory variables ([@fig-accession-kinetics; @tbl-fit-summary]). In sun plants, $\tau$ was on average `r signif(100 * (exp(post_lambda_sun["Estimate"]) - 1), 3)`% [95% CI: `r signif(100 * (exp(post_lambda_sun["Q2.5"]) - 1), 3)` to `r signif(100 * (exp(post_lambda_sun["Q97.5"]) - 1), 3)`%] greater than in shade plants. Higher measurement light decreased increased $\lambda$ slightly by `r signif(100 * (exp(post_lambda_high["Estimate"]) - 1), 3)`% [95% CI: `r signif(100 * (exp(post_lambda_high["Q2.5"]) - 1), 3)` to `r signif(100 * (exp(post_lambda_high["Q97.5"]) - 1), 3)`%]. 
 
 ##### MARKER - working here on this table
 
@@ -714,15 +714,10 @@ Estimates of stomatal closure kinetic parameters are in @tbl-main and will be de
 knitr::include_graphics("../figures/accession-kinetics.pdf")
 ```
 
-```{r, fit-amphi, echo = FALSE}
-#| label: tab-fit-amphi
-
-# placeholder for table of model estimates
-iris %>%
-  group_by(Species) %>%
-  summarise(mean = mean(Sepal.Length), sd = sd(Sepal.Length)) %>%
-  kable() %>%
-  kable_styling()
+```{r fit-summary, echo=FALSE, eval=TRUE, message=FALSE, warning=FALSE}
+#| label: tbl-fit-summary
+#| tbl-cap: "Parameter estimates and 95% confidence intervals (CIs) from the posterior distribution of the selected model with leaf mass per area (LMA) as potential mediator variable. Models potentially include fixed and random effects of growth light intensity (shade and sun), measurement light intensity (low and high), $\\log \\mathrm{LMA}$, and their interactions on amphistomy advantage ($\\mathrm{AA}$). LMA can also be affected by growth light intensity and population. For phylogenetically structured random effects, we report the estimated standard deviation (SD)."
+#| results: asis
 ```
 
 
@@ -756,7 +751,7 @@ clean_explanatory_var = function(.x) {
     .x == "Intercept" ~ "intercept (shade, low light)",
     .x == "lighttreatmentsun" ~ "sun growth treatment",
     .x == "lightintensityhigh" ~ "high measurement light intensity",
-    .x == "curvetypepseudohypo" ~ "pseudohypostomatous curve type",
+    .x == "curvetypepseudohypo" ~ "pseudohypo leaf type",
     .x == "logitfgmax" ~ "$\\logit(f_g)$",
     .x == "loggcl" ~ "$\\log(l_\\mathrm{gc})$",
     .x == "loglambdamean" ~ "$\\log(\\lambda)$",
@@ -857,12 +852,12 @@ kbl(
 
 ### Stomatal aperture mediates plasticity in $\tau$
 
-We imposed three treatments that influenced stomatal kinetics: growth light intensity, measurement light intensity, and curve type. All three treatments directly effect $\tau$ and had indirect effects mediated by \fgmax{} (@fig-mediation). We did not estimate effects mediated by \gcl{} because the selected model did not retain direct effects of \gcl{} on $\tau$ (@tbl-comparison). The direct effect of the high light intensity (sun) growth treatment increased $\tau$ by $`r formatC(log_to_percent(de_sun[['estimate']]), format = 'f', digits = 2)`$% [95% CI: $`r formatC(log_to_percent(de_sun[['q2.5']]), format = 'f', digits = 2)`$ to $`r formatC(log_to_percent(de_sun[['q97.5']]), format = 'f', digits = 2)`$%], but the indirect of lower \fgmax{} counteracted by $`r formatC(log_to_percent(me_sun[['estimate']]), format = 'f', digits = 2)`$% [95% CI: $`r formatC(log_to_percent(me_sun[['q2.5']]), format = 'f', digits = 2)`$ to $`r formatC(log_to_percent(me_sun[['q97.5']]), format = 'f', digits = 2)`$%]. In contrast, direct and indirect effects of high measurement light intensity increased $\tau$. The direct effect increased $\tau$ by $`r formatC(log_to_percent(de_high[['estimate']]), format = 'f', digits = 2)`$% [95% CI: $`r formatC(log_to_percent(de_high[['q2.5']]), format = 'f', digits = 2)`$ to $`r formatC(log_to_percent(de_high[['q97.5']]), format = 'f', digits = 2)`$%] and the indirect effect mediated by \fgmax{} increased $\tau$ by $`r formatC(log_to_percent(me_high[['estimate']]), format = 'f', digits = 2)`$% [95% CI: $`r formatC(log_to_percent(me_high[['q2.5']]), format = 'f', digits = 2)`$ to $`r formatC(log_to_percent(me_high[['q97.5']]), format = 'f', digits = 2)`$%]. The direct effect of the pseudohypo treatment decreased $\tau$ slightly by $`r formatC(log_to_percent(de_pseudo[['estimate']]), format = 'f', digits = 2)`$% [95% CI: $`r formatC(log_to_percent(de_pseudo[['q2.5']]), format = 'f', digits = 2)`$ to $`r formatC(log_to_percent(de_pseudo[['q97.5']]), format = 'f', digits = 2)`$%], but the indirect effect mediated by greater \fgmax{} increased $\tau$ by $`r formatC(log_to_percent(me_pseudo[['estimate']]), format = 'f', digits = 2)`$% [95% CI: $`r formatC(log_to_percent(me_pseudo[['q2.5']]), format = 'f', digits = 2)`$ to $`r formatC(log_to_percent(me_pseudo[['q97.5']]), format = 'f', digits = 2)`$%].
+We imposed three treatments that influenced stomatal kinetics: growth light intensity, measurement light intensity, and leaf type. All three treatments directly effect $\tau$ and had indirect effects mediated by \fgmax{} (@fig-mediation). We did not estimate effects mediated by \gcl{} because the selected model did not retain direct effects of \gcl{} on $\tau$ (@tbl-comparison). The direct effect of the high light intensity (sun) growth treatment increased $\tau$ by $`r formatC(log_to_percent(de_sun[['estimate']]), format = 'f', digits = 2)`$% [95% CI: $`r formatC(log_to_percent(de_sun[['q2.5']]), format = 'f', digits = 2)`$ to $`r formatC(log_to_percent(de_sun[['q97.5']]), format = 'f', digits = 2)`$%], but the indirect of lower \fgmax{} counteracted by $`r formatC(log_to_percent(me_sun[['estimate']]), format = 'f', digits = 2)`$% [95% CI: $`r formatC(log_to_percent(me_sun[['q2.5']]), format = 'f', digits = 2)`$ to $`r formatC(log_to_percent(me_sun[['q97.5']]), format = 'f', digits = 2)`$%]. In contrast, direct and indirect effects of high measurement light intensity increased $\tau$. The direct effect increased $\tau$ by $`r formatC(log_to_percent(de_high[['estimate']]), format = 'f', digits = 2)`$% [95% CI: $`r formatC(log_to_percent(de_high[['q2.5']]), format = 'f', digits = 2)`$ to $`r formatC(log_to_percent(de_high[['q97.5']]), format = 'f', digits = 2)`$%] and the indirect effect mediated by \fgmax{} increased $\tau$ by $`r formatC(log_to_percent(me_high[['estimate']]), format = 'f', digits = 2)`$% [95% CI: $`r formatC(log_to_percent(me_high[['q2.5']]), format = 'f', digits = 2)`$ to $`r formatC(log_to_percent(me_high[['q97.5']]), format = 'f', digits = 2)`$%]. The direct effect of the pseudohypo treatment decreased $\tau$ slightly by $`r formatC(log_to_percent(de_pseudo[['estimate']]), format = 'f', digits = 2)`$% [95% CI: $`r formatC(log_to_percent(de_pseudo[['q2.5']]), format = 'f', digits = 2)`$ to $`r formatC(log_to_percent(de_pseudo[['q97.5']]), format = 'f', digits = 2)`$%], but the indirect effect mediated by greater \fgmax{} increased $\tau$ by $`r formatC(log_to_percent(me_pseudo[['estimate']]), format = 'f', digits = 2)`$% [95% CI: $`r formatC(log_to_percent(me_pseudo[['q2.5']]), format = 'f', digits = 2)`$ to $`r formatC(log_to_percent(me_pseudo[['q97.5']]), format = 'f', digits = 2)`$%].
 
 ```{r, mediation, echo = FALSE}
 #| label: fig-mediation
 #| fig-align: center
-#| fig-cap: "\\textbf{Stomatal aperture as a fraction of anatomical maximum stomatal conductance (\\fgmax) mediates plasticity in the time constant $\\tau$.} The three treatments are curve type (top facet; amphi vs. pseudohypo), growth light intensity (middle facet; shade vs. sun), and measurement light intensity (bottom facet; low vs. high). Horizontal arrows at the bottom of each graph indicate the direct effect of the treatment level on $\\tau$; slanted arrows leading to or from \\fgmax{} indicate mediated effects of the treatment on $\\tau$. Line thickness is proportional to the effect size and line color indicates whether the effects are negative (red) positive (blue). Parameter estimates of the effect and 95\\% confidence intervals are above each line. Note that are not consistent because \\fgmax{} is on a logit scale whereas $\\tau$ is on a log-seconds scale. The selected model did not retain direct effeects of \\gcl{} on $\\tau$ and hence this variable could not be considered as a mediator."
+#| fig-cap: "\\textbf{Stomatal aperture as a fraction of anatomical maximum stomatal conductance (\\fgmax) mediates plasticity in the time constant $\\tau$.} The three treatments are leaf type (top facet; amphi vs. pseudohypo), growth light intensity (middle facet; shade vs. sun), and measurement light intensity (bottom facet; low vs. high). Horizontal arrows at the bottom of each graph indicate the direct effect of the treatment level on $\\tau$; slanted arrows leading to or from \\fgmax{} indicate mediated effects of the treatment on $\\tau$. Line thickness is proportional to the effect size and line color indicates whether the effects are negative (red) positive (blue). Parameter estimates of the effect and 95\\% confidence intervals are above each line. Note that are not consistent because \\fgmax{} is on a logit scale whereas $\\tau$ is on a log-seconds scale. The selected model did not retain direct effeects of \\gcl{} on $\\tau$ and hence this variable could not be considered as a mediator."
 
 knitr::include_graphics("../figures/mediation.pdf")
 ```
@@ -980,11 +975,18 @@ tbl_variance |>
              escape = FALSE) 
 ```
 
-::: {#tbl-main}
+::: {#tbl-estimates-curve}
 **Table file:**  
-Download from: \url{https://github.com/cdmuir/solanum-kinetics/raw/refs/heads/main/dryad/main.csv}
+Download from: \url{https://github.com/cdmuir/solanum-kinetics/raw/refs/heads/main/tables/tbl-estimates-curve.csv}
 
-: Raw data file in CSV format for multiresponse models. A final version will be deposited on Dryad after acceptance. This version is available for reviewers.
+: Raw data file in CSV format containing estimates of stomatal anatomy and kinetic variables associated with each curve. These are raw data for fitting multiresponse models. A final version will be deposited on Dryad after acceptance. This version is available for reviewers.
+:::
+
+::: {#tbl-estimates-accession}
+**Table file:**  
+Download from: \url{https://github.com/cdmuir/solanum-kinetics/raw/refs/heads/main/tables/tbl-estimates-accession.csv}
+
+: Raw data file in CSV format containing estimates of stomatal anatomy and kinetic variables associated with each population based on multiresponse model predictions. A final version will be deposited on Dryad after acceptance. This version is available for reviewers.
 :::
 
 {{< pagebreak >}}
@@ -995,7 +997,7 @@ Download from: \url{https://github.com/cdmuir/solanum-kinetics/raw/refs/heads/ma
 **Figure file:**  
 Download from: \url{https://github.com/cdmuir/solanum-kinetics/raw/refs/heads/main/figures/rh-curves.pdf}
 
-: Humidity-response curves and fitted lines. The title provides the Tomato Genetics Resource Center accession number, replicate letter, and species names. The subtitle indicates the growth light intensity (sun or shade), measurement light intensity (low or high), and curve type (amphi or pseudohypo). Points are raw data and lines are fitted curves. The Bayesian correlation coefficient, $\text{Bayes}~R^2$, is shown to the right of each curve.
+: Humidity-response curves and fitted lines. The title provides the Tomato Genetics Resource Center accession number, replicate letter, and species names. The subtitle indicates the growth light intensity (sun or shade), measurement light intensity (low or high), and leaf type (amphi or pseudohypo). Points are raw data and lines are fitted curves. The Bayesian correlation coefficient, $\text{Bayes}~R^2$, is shown to the right of each curve.
 :::
 
 ```{r, compare-gsw, echo = FALSE}

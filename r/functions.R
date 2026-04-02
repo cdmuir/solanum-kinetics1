@@ -197,7 +197,7 @@ prepare_tau_anatomy_data = function(joined_summary, logtau_threshold) {
       loglambdamean = loglambda_mean,
       loglambdasd = loglambda_sd,
       accid = acc_id,
-      curvetype = curve_type,
+      leaftype = leaf_type,
       lightintensity = light_intensity,
       lighttreatment = light_treatment
     ) |>
@@ -422,4 +422,21 @@ num2word = function(x) {
   } else {
     as.character(x)
   }
+}
+
+# Get posterior predictions for each trait and accession
+get_posterior_epred = function(fit, newdata, resp, prefix = resp, inv) {
+  posterior_epred(
+    fit,
+    newdata = newdata,
+    resp = resp,
+    re_formula = ~ (1 | accession) +
+      (1 | gr(phy, cov = A))
+  ) |>
+    as_draws_df() |>
+    summarise_draws() |>
+    mutate(
+      !!paste0(prefix, "_estimate") := inv(median),!!paste0(prefix, "_lowerCI")  := inv(q5),!!paste0(prefix, "_upperCI")  := inv(q95)
+    ) |>
+    select(variable, starts_with(prefix))
 }

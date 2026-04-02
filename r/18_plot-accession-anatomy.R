@@ -3,38 +3,38 @@ source("r/header.R")
 
 fit = read_rds("objects/best_model.rds")
 
-## Effects of growth light intensity and curve type on gcl
+## Effects of growth light intensity and leaf type on gcl
 df1 = fit$data |>
   summarize(
     loggcl = mean(loggcl),
-    .by = c("accession", "lighttreatment", "curve_type")) |>
+    .by = c("accession", "lighttreatment", "leaftype")) |>
   mutate(
     gcl = exp(loggcl),
     .keep = "unused"
   ) 
 
-gp1 = ggplot(df1, aes(curve_type, gcl)) +
+gp1 = ggplot(df1, aes(leaftype, gcl)) +
   facet_grid(. ~ lighttreatment, scales = "free_y") +
   geom_line(mapping = aes(group = accession), color = "grey") + 
   geom_point() +
   labs(
-    x = expression(curve~type),
+    x = expression(leaf~type),
     y = expression(paste(guard~cell~length, ' (', mu, 'm)'))
     ) +
   scale_y_continuous(breaks = seq(15, 25, 5), limits = c(15, 27.5))
 
-## Effects of growth light intensity, measurement light intensity, and curve type on fgmax
+## Effects of growth light intensity, measurement light intensity, and leaf type on fgmax
 df2 = fit$data |>
   summarize(
     logitfgmax = mean(logitfgmax),
-    .by = c("accession", "lighttreatment", "lightintensity", "curve_type")) |>
+    .by = c("accession", "lighttreatment", "lightintensity", "leaftype")) |>
   mutate(
     fgmax = plogis(logitfgmax),
     .keep = "unused"
   ) 
 
 gp2 = ggplot(df2, aes(lightintensity, fgmax)) +
-  facet_grid(curve_type ~ lighttreatment, scales = "free_y",
+  facet_grid(leaftype ~ lighttreatment, scales = "free_y",
              labeller = "label_parsed") +
   geom_line(mapping = aes(group = accession), color = "grey") + 
   geom_point() +

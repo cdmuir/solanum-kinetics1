@@ -1,4 +1,4 @@
-# Refit best model with VPD as covariate
+# Refit best model with VPD as covariate - not currently implementing
 source("r/header.R")
 
 plan(multisession, workers = 16)

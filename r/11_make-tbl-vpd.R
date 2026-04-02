@@ -23,7 +23,7 @@ curve_vpd = rh_curves |>
       light_intensity == "2000" ~ "high"
     ), levels = c("low", "high")) |>
       factor(levels = c("low", "high")),
-    curvetype = factor(case_when(
+    leaftype = factor(case_when(
       curve_type == "1-sided RH" ~ "pseudohypo",
       curve_type == "2-sided RH" ~ "amphi"
     ), levels = c("amphi", "pseudohypo"))
@@ -37,25 +37,25 @@ curve_vpd |>
     # max_VPDleaf = max(VPDleaf),
     RH = mean(RH),
     VPDleaf = mean(VPDleaf),
-    .by = c(lightintensity, lighttreatment, curvetype)
+    .by = c(lightintensity, lighttreatment, leaftype)
   ) |>
   mutate(
     `Growth\nlight intensity` = lighttreatment,
     `Measurement\nlight intensity` = lightintensity,
-    `Curve type` = curvetype,
+    `Leaf type` = leaftype,
     `RH (\\%)` = prettyNum(100 * RH, digits = 3),
     `VPD (kPa)` = formatC(VPDleaf, format = "f", digits = 2)
   ) |>
   select(
     `Growth\nlight intensity`,
     `Measurement\nlight intensity`,
-    `Curve type`,
+    `Leaf type`,
     `RH (\\%)`,
     `VPD (kPa)`
   ) |>
   arrange(`Growth\nlight intensity`,
           `Measurement\nlight intensity`,
-          desc(`Curve type`)) |>
+          desc(`Leaf type`)) |>
   write_rds("objects/tbl-vpd.rds")
 
 write_rds(curve_vpd, "objects/curve-vpd.rds")

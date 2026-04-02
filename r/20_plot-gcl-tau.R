@@ -5,7 +5,7 @@ fit = read_rds("objects/best_model.rds")
 
 df_new = crossing(
   phy = unique(fit$data$phy),
-  curve_type = unique(fit$data$curve_type),
+  leaftype = unique(fit$data$leaftype),
   lightintensity = unique(fit$data$lightintensity),
   lighttreatment = unique(fit$data$lighttreatment),
   logtausd = 0
@@ -15,22 +15,22 @@ df_new = crossing(
            fit$data |>
              summarize(
                logitfgmax = median(logitfgmax),
-               .by = c(curve_type, lightintensity, lighttreatment)
+               .by = c(leaftype, lightintensity, lighttreatment)
              ),
-           by = join_by(curve_type, lightintensity, lighttreatment)
+           by = join_by(leaftype, lightintensity, lighttreatment)
          )
 
 df_pred_loggcl = posterior_epred(fit, newdata = df_new, re_formula = ~ phy, resp = "loggcl") |>
   as_draws_df() |>
   summarize_draws() |>
   full_join(df_new, by = "variable") |>
-  select(accession, curve_type, lightintensity, lighttreatment, loggcl = median)
+  select(accession, leaftype, lightintensity, lighttreatment, loggcl = median)
 
 df_pred_logtau = posterior_epred(fit, newdata = df_new, re_formula = ~ phy, resp = "logtaumean") |>
   as_draws_df() |>
   summarize_draws() |>
   full_join(df_new, by = "variable") |>
-  select(accession, curve_type, lightintensity, lighttreatment, logtau = median)
+  select(accession, leaftype, lightintensity, lighttreatment, logtau = median)
 
 Sigma_median = fit |>
   as_draws_df() |>
@@ -59,13 +59,13 @@ df_acc = fit$data |>
   summarize(
     loggcl = median(loggcl),
     logtaumean = median(logtaumean), 
-    .by = c(phy, curve_type, lightintensity, lighttreatment)) 
+    .by = c(phy, leaftype, lightintensity, lighttreatment)) 
 
 df_mu = df_acc |>
   summarize(
     loggcl = mean(loggcl),
     logtaumean = mean(logtaumean), 
-    .by = c(curve_type, lightintensity, lighttreatment))
+    .by = c(leaftype, lightintensity, lighttreatment))
 
 df_ellipse = df_mu |>
   mutate(ell = map2(loggcl, logtaumean, \(.x, .y) {
@@ -75,10 +75,10 @@ df_ellipse = df_mu |>
   select(-loggcl, -logtaumean) |>
   rename(loggcl = x, logtaumean = y)
 
-p = ggplot(df_acc, aes(exp(loggcl), exp(logtaumean), color = curve_type)) +
+p = ggplot(df_acc, aes(exp(loggcl), exp(logtaumean), color = leaftype)) +
   geom_polygon(
     data = df_ellipse,
-    aes(exp(loggcl), exp(logtaumean), fill = curve_type),
+    aes(exp(loggcl), exp(logtaumean), fill = leaftype),
     color = "black",
     alpha = 0.25,
     inherit.aes = FALSE
@@ -92,8 +92,8 @@ p = ggplot(df_acc, aes(exp(loggcl), exp(logtaumean), color = curve_type)) +
   labs(
     x = expression(Guard ~ cell ~ length ~ (paste(mu, "m"))),
     y = expression(tau ~ (s)),
-    color = "Curve type:",
-    fill = "Curve type:"
+    color = "Leaf type:",
+    fill = "Leaf type:"
   ) +
   theme(legend.position = "bottom")
 

@@ -24,7 +24,7 @@ pars_summary = read_rds("objects/pars-summary.rds") |>
   mutate(
     accession = str_extract(id, "^(LA[0-9]{4}A{0,1})"),
     replicate = str_extract(id, "-([A-Z][AB]{0,1})_", group = 1),
-    curve_type = str_extract(id, "amphi|pseudohypo"),
+    leaf_type = str_extract(id, "amphi|pseudohypo"),
     light_intensity = str_extract(id, "150|2000")
   )
 
@@ -36,15 +36,16 @@ joined_data = read_rds("data/joined-data.rds") |>
   ) |>
   rename(accession = acc, replicate = id) |>
   mutate(
-    curve_type = case_when(
+    leaf_type = case_when(
       curve_type == "2-sided RH" ~ "amphi",
       curve_type == "1-sided RH" ~ "pseudohypo"
-    )
+    ),
+    .keep = "unused"
   )
 
 left_join(pars_summary,
           joined_data,
-          by = join_by(accession, replicate, curve_type)) |>
+          by = join_by(accession, replicate, leaf_type)) |>
   # missing kinetic data or any data contributed to gmax_ratio
   filter(!is.na(logtau_mean), !is.na(gmax)) |>
   left_join(
@@ -59,6 +60,8 @@ left_join(pars_summary,
     light_intensity = light_intensity |>
       factor(levels = c("150", "2000")) |>
       fct_recode(low = "150", high = "2000"),
+    leaf_type = leaf_type |>
+      factor(levels = c("amphi", "pseudohypo")),
     f_gmax = ginit_mean / gmax
   ) |>
   write_rds("data/joined-summary.rds")
