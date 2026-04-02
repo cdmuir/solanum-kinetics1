@@ -19,7 +19,7 @@ assert_true(all(!is.na(joined_summary$logitfgmax)))
 
 assert_true(all(!is.na(joined_summary$lighttreatment)))
 assert_true(all(!is.na(joined_summary$lightintensity)))
-assert_true(all(!is.na(joined_summary$curvetype)))
+assert_true(all(!is.na(joined_summary$leaftype)))
 
 phy = read_rds("data/phylogeny.rds")
 A = vcv(phy, corr = TRUE)
@@ -29,7 +29,7 @@ thin = 6
 bf_lambda0 = bf(loglambdamean | se(loglambdasd, sigma = TRUE) ~ 
                   lighttreatment + 
                   lightintensity +
-                  curvetype +
+                  leaftype +
                   loggcl + 
                   logitfgmax + 
                   (1|accid) +
@@ -42,7 +42,7 @@ bf_lambda3 = update(bf_lambda0, . ~ . - loggcl - logitfgmax)
 bf_tau0 = bf(logtaumean | se(logtausd, sigma = TRUE) ~ 
                lighttreatment + 
                lightintensity +
-               curvetype +
+               leaftype +
                loggcl + 
                logitfgmax + 
                (1|accid) +
@@ -55,14 +55,14 @@ bf_tau3 = update(bf_tau0, . ~ . - loggcl - logitfgmax)
 
 bf_gcl = bf(loggcl ~ 
               lighttreatment + 
-              curvetype +
+              leaftype +
               (1|a|accession) + 
               (1|b|gr(phy, cov = A)))
 
 bf_fgmax = bf(logitfgmax ~ 
                 lighttreatment + 
                 lightintensity + 
-                curvetype +
+                leaftype +
                 (1|accid) +
                 (1|a|accession) + 
                 (1|b|gr(phy, cov = A)))
@@ -79,8 +79,8 @@ fits = crossing(
         data = joined_summary |>
           mutate(phy = accession),
         data2 = list(A = A),
-        cores = 1,
-        chains = 4,
+        cores = 3, #1,
+        chains = 3, #4,
         iter = thin * 2e3,
         thin = thin,
         refresh = thin * 1e2,
