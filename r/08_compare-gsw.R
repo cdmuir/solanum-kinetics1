@@ -28,8 +28,19 @@ ggplot(df1, aes(mean, gsw_max)) +
   scale_y_log10() +
   theme_cowplot() +
   coord_equal() +
-  labs(x = expression(Maximum ~ italic(g)[sw] ~ (estimated)),
-       y = expression(Maximum ~ italic(g)[sw] ~ (observed)))
+  labs(x = expression(atop(
+    Maximum ~ italic(g)[sw] ~ (estimated), (mol ~ m^{
+      -2
+    } ~ s^{
+      -1
+    })
+  )), y = expression(atop(
+    Maximum ~ italic(g)[sw] ~ (observed), (mol ~ m^{
+      -2
+    } ~ s^{
+      -1
+    })
+  )))
 
 ggsave("figures/compare-gsw.pdf",
        width = 4,

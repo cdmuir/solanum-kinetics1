@@ -397,7 +397,29 @@ join_nodes_edges = function(df_edges, df_nodes) {
     rename(xend = x, yend = y) 
 }
 
-# Calculate saturating vapor pressure following the LI6800 manual
-li6800_svp = function(T_degreeC) {
-  0.61365 * exp(17.502 * T_degreeC / (240.97 + T_degreeC))
+# Helper function
+num2word = function(x) {
+  if (x == 1) {
+    "one"
+  } else if (x == 2) {
+    "two"
+  } else if (x == 3) {
+    "three"
+  } else if (x == 4) {
+    "four"
+  } else if (x == 5) {
+    "five"
+  } else if (x == 6) {
+    "six"
+  } else if (x == 7) {
+    "seven"
+  } else if (x == 8) {
+    "eight"
+  } else if (x == 9) {
+    "nine"
+  } else if (x == 10) {
+    "ten"
+  } else {
+    as.character(x)
+  }
 }

@@ -1,0 +1,27 @@
+
+## MANUSCRAPS
+
+[not sure where this goes]
+many, large - slow because of large size, but fast because of low gop
+few, small - slow because of high gop, but fast because of small size
+some, moderate - best of both worlds?
+IDEA FOR FIGURE - use empirical estimates to predict tau (z-axis) for a given optimal gs as a function of 
+
+Note: this theory did not really pan out. It did not come up with models that really fit better than the CD Weibull model and they included an extra parameter. Therefore, I am tabling this for now and trying OnGuard3 instead.
+
+### Theory
+
+Our goal here is derive equations that integrate the effects of guard cell size and aperture on stomatal kinetics. A fully mechanistic model is beyond the scope of our goals here. Instead, we use phenomenological equations that adequately capture empirical patterns. There are three main assumptions of our model. First, we assume linear relaxation kinetics for guard cell turgor pressure ($P$):
+
+$$ \frac{d P}{d t} = \frac{P^* - P}{\tau}.$$
+In this differential equation, $P^*$ is the equilibrium turgor pressure and $\tau$ is a time constant that determines the speed of relaxation. Solving this equation gives:
+
+$$ P(t) = P^* + [P(0) - P^*] e^{-t/\tau}, $$
+where $P(0)$ is the initial turgor pressure at time $t=0$.
+
+The rate of relaxation is determined by the surface area to volume ratio. Assume constant transport per surface area. Surface area determined by geometry. 
+
+What is eqn for this?
+
+
+

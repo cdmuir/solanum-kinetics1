@@ -1,4 +1,5 @@
-# Decompose variance in response variables to phylogenetic, population, and residual components
+# Decompose variance in response variables to phylogenetic, population, and
+# individual components
 source("r/header.R")
 
 fit = read_rds("objects/best_model.rds")
@@ -27,6 +28,7 @@ df_var = fit |>
   mutate(total_var = sum(c_across(where(is_double)))) |>
   ungroup() |>
   mutate(across(where(is_double), ~ .x / total_var)) |>
+  mutate(ind = resid + accid, .keep = "unused") |>
   split(~ trait) |>
   map(summarize_draws) |>
   map(filter, variable != "trait") |>
@@ -41,15 +43,13 @@ df_var = fit |>
       variable,
       phylogenetic = "phy",
       population = "accession",
-      `within-individual` = "accid",
-      `between-individual` = "resid"
+      `among-individual` = "ind"
     ) |>
       fct_relevel(
         c(
           "phylogenetic",
           "population",
-          "between-individual",
-          "within-individual"
+          "among-individual"
         )
       ),
     trait1 = fct_recode(
@@ -70,25 +70,7 @@ gp1 = df_var |>
   labs(x = "proportion of variance", fill = "variance component") +
   theme(axis.title.y = element_blank())
 
-
-# Alternate - point range
-gp2 = df_var |>
-  ggplot(aes(
-    trait1,
-    median,
-    color = vc,
-    ymin = q5,
-    ymax = q95
-  )) +
-  geom_pointrange(position = position_dodge2(width = 0.5)) +
-  scale_x_discrete() +
-  scale_y_continuous(limits = c(0, 1)) +
-  scale_color_viridis_d() +
-  labs(y = "proportion of variance", color = "variance component") +
-  theme(axis.title.x = element_blank())
-
 # ggsave("figures/variance.pdf", plot = gp1, width = 6, height = 4)
-# ggsave("figures/variance-alt.pdf", plot = gp2, width = 6, height = 4)
 
 tikz(
   "figures/variance.tex",
