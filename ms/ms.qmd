@@ -211,7 +211,7 @@ n_curve = prettyNum(nrow(fit$data), big.mark = ',')
 
 median_curves_per_population = fit$data |>
   summarize(n = n(),
-            .by = c(phy, lighttreatment, lightintensity, curve_type)) |>
+            .by = c(phy, lighttreatment, lightintensity, leaftype)) |>
   pull(n) |>
   median()
 
@@ -242,24 +242,24 @@ post_tau_high = post_summary["b_logtaumean_lightintensityhigh", ]
 post_lambda_sun = post_summary["b_loglambdamean_lighttreatmentsun", ]
 post_lambda_high = post_summary["b_loglambdamean_lightintensityhigh", ]
 
-tab_estimates = read_csv("../tables/tab-estimates.csv", show_col_types = FALSE)
+tbl_estimates_accession = read_csv("../tables/tbl-estimates-accession.csv", show_col_types = FALSE)
 
-median_tau = tab_estimates |>
+median_tau = tbl_estimates_accession |>
   filter(trait == "tau") |>
   pull(estimate) |>
   median()
 
-max_tau = tab_estimates |>
+max_tau = tbl_estimates_accession |>
   filter(trait == "tau") |>
   pull(estimate) |>
   max()
 
-median_lambda = tab_estimates |>
+median_lambda = tbl_estimates_accession |>
   filter(trait == "lambda") |>
   pull(estimate) |>
   median()
 
-max_lambda = tab_estimates |>
+max_lambda = tbl_estimates_accession |>
   filter(trait == "lambda") |>
   pull(estimate) |>
   max()
@@ -273,7 +273,7 @@ post_gcl_sun = fit |>
 
 post_gcl_curvetype = fit |>
   as_draws_df() |>
-  select(b_loggcl_curve_typepseudohypo) |>
+  select(b_loggcl_leaftypepseudohypo) |>
   summarize_draws(estimate = median, quantile2, .args= list(probs = c(0.025, 0.975))) |>
   mutate(across(where(is.numeric), log_to_percent))
 
@@ -289,7 +289,7 @@ post_fgmax_sun = fit |>
 
 post_fgmax_pseudohypo = fit |>
   as_draws_df() |>
-  select(b_logitfgmax_curve_typepseudohypo) |>
+  select(b_logitfgmax_leaftypepseudohypo) |>
   summarize_draws(estimate = median, quantile2, .args= list(probs = c(0.025, 0.975)))
 
 # Variance decomposition values
@@ -495,10 +495,10 @@ Prior to analysis, we removed unreliable and unusable data points, removed point
 df1 = fit$data |>
   summarize(
     n = n(),
-    .by = c(lightintensity, lighttreatment, curve_type)
+    .by = c(lightintensity, lighttreatment, leaftype)
   ) |>
   pivot_wider(
-    names_from = c(lightintensity, curve_type),
+    names_from = c(lightintensity, leaftype),
     values_from = n
   ) |>
   # add row totals
@@ -628,8 +628,8 @@ where $\sigma^2_\mathrm{phy}$, $\sigma^2_\mathrm{pop}$, $\sigma^2_\mathrm{ind}$ 
 # to pseudohypo did not strongly correlate with change in tau
 
 df_point = fit$data |>
-  select(accid, lighttreatment, lightintensity, curve_type, loggcl, logtaumean) |>
-  pivot_wider(values_from = loggcl:logtaumean, names_from = curve_type) |>
+  select(accid, lighttreatment, lightintensity, leaftype, loggcl, logtaumean) |>
+  pivot_wider(values_from = loggcl:logtaumean, names_from = leaftype) |>
   mutate(delta_tau = logtaumean_amphi - logtaumean_pseudohypo,
          delta_gcl = loggcl_amphi - loggcl_pseudohypo)
 
@@ -716,13 +716,60 @@ knitr::include_graphics("../figures/accession-kinetics.pdf")
 
 ```{r fit-summary, echo=FALSE, eval=TRUE, message=FALSE, warning=FALSE}
 #| label: tbl-fit-summary
-#| tbl-cap: "Parameter estimates and 95% confidence intervals (CIs) from the posterior distribution of the selected model with leaf mass per area (LMA) as potential mediator variable. Models potentially include fixed and random effects of growth light intensity (shade and sun), measurement light intensity (low and high), $\\log \\mathrm{LMA}$, and their interactions on amphistomy advantage ($\\mathrm{AA}$). LMA can also be affected by growth light intensity and population. For phylogenetically structured random effects, we report the estimated standard deviation (SD)."
+#| tbl-cap: "Parameter estimates and 95% confidence intervals (CIs) from the posterior distribution of the selected model. CONTINUE EDITING HERE Models potentially include fixed and random effects of growth light intensity (shade and sun), measurement light intensity (low and high), $\\log \\mathrm{LMA}$, and their interactions on amphistomy advantage ($\\mathrm{AA}$). LMA can also be affected by growth light intensity and population. For phylogenetically structured random effects, we report the estimated standard deviation (SD)."
 #| results: asis
+
+tbl_fit_summary = read_rds("../objects/tbl-fit-summary.rds")
+
+invisible(list2env(tbl_fit_summary, envir = .GlobalEnv))
+
+bind_rows(
+  df_random_sd |>
+    select(group2, Type, resp, `Estimate [95% CI]`, description),
+  
+  df_random_cor |>
+    select(group2, Type, resp1, resp2, `Estimate [95% CI]`, description)
+) |>
+  arrange(group2, Type) |>
+  select(description, `Estimate [95% CI]`) |>
+  kable(
+    col.names = c("Parameter description", "Estimate [95\\% CI]"),
+    booktabs = TRUE,
+    format = "latex",
+    escape = FALSE
+  ) |>
+  kable_styling(latex_options = c("striped")) |>
+  pack_rows(
+    "among-individual random effects",
+    1,
+    3,
+    escape = FALSE,
+    bold = TRUE,
+    italic = FALSE
+  ) |>
+  pack_rows(
+    "phylogenetic random effects",
+    4,
+    13,
+    escape = FALSE,
+    bold = TRUE,
+    italic = FALSE
+  ) |>
+  pack_rows(
+    "population (nonphylogenetic) random effects",
+    14,
+    23,
+    escape = FALSE,
+    bold = TRUE,
+    italic = FALSE
+  ) |>
+  column_spec(1, width = "4.5in") |>
+  column_spec(2, width = "2in")
+
 ```
 
 
-
-Guard cell size and \fgmax affected stomatal kinetics, but at different levels of biological organization. In the model with the lowest LOOIC (see @tbl-comparison for model comparison results), the only significant partial correlation was between \gcl and $\tau$ ($\rho = `r signif(rho, 2)`$ [95% CI: $`r signif(rho_lower, 2)` to `r signif(rho_upper, 2)`$)] was a significant phylogenetic correlation between \gcl and $\tau$ [@fig-?]. PARTIAL CORRELATION RESULT. Variation in \gcl within populations did not explain within-population variation in $\tau$ [@tbl-fit]. NOTE THAT BEST MODEL RETAINED INDIVIDUAL LEVEL EFFECT OF GCL, BUT COEFFICIENT WAS NOT SIGNIFICANT. OTHER BEST MODELS DID NOT RETAIN THIS. DID GCL MEDIATE AFFECT OF TREATMENTS?
+Guard cell size and \fgmax{} affected stomatal kinetics, but at different levels of biological organization. In the model with the lowest LOOIC (see @tbl-comparison for model comparison results), the only significant partial correlation was between \gcl and $\tau$ ($\rho = `r signif(rho, 2)`$ [95% CI: $`r signif(rho_lower, 2)` to `r signif(rho_upper, 2)`$)] was a significant phylogenetic correlation between \gcl and $\tau$ [@fig-?]. PARTIAL CORRELATION RESULT. Variation in \gcl within populations did not explain within-population variation in $\tau$ [@tbl-fit]. NOTE THAT BEST MODEL RETAINED INDIVIDUAL LEVEL EFFECT OF GCL, BUT COEFFICIENT WAS NOT SIGNIFICANT. OTHER BEST MODELS DID NOT RETAIN THIS. DID GCL MEDIATE AFFECT OF TREATMENTS?
 
 
 Need to show (this is a growing, incomplete list):
@@ -751,7 +798,7 @@ clean_explanatory_var = function(.x) {
     .x == "Intercept" ~ "intercept (shade, low light)",
     .x == "lighttreatmentsun" ~ "sun growth treatment",
     .x == "lightintensityhigh" ~ "high measurement light intensity",
-    .x == "curvetypepseudohypo" ~ "pseudohypo leaf type",
+    .x == "leaftypepseudohypo" ~ "pseudohypo leaf type",
     .x == "logitfgmax" ~ "$\\logit(f_g)$",
     .x == "loggcl" ~ "$\\log(l_\\mathrm{gc})$",
     .x == "loglambdamean" ~ "$\\log(\\lambda)$",
@@ -773,8 +820,7 @@ fx1 = fixef(fit, summary = TRUE) |>
   tibble::rownames_to_column("par") |>
   mutate(
     across(where(is_double), ~ formatC(., format = "f", digits = 2)),
-    `Estimate [95\\% CI]` = glue("{Estimate} [{Q2.5}, {Q97.5}]"),
-    par = str_replace(par, "curve_type", "curvetype")
+    `Estimate [95\\% CI]` = glue("{Estimate} [{Q2.5}, {Q97.5}]")
   ) |>
   separate_wider_delim(par, delim = "_", names = c("response", "explanatory")) |>
   mutate(
