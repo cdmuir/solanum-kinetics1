@@ -9,7 +9,7 @@ draws_df = fit |>
          starts_with("sd_phy__"),
          starts_with("cor_phy__"))
 
-Omega_draws <- make_precision_phy(draws_df)
+Omega_draws = make_precision_phy(draws_df)
 
 P_post = map_dfr(seq_len(dim(Omega_draws)[1]), \(.i) {
   P = -cov2cor(Omega_draws[.i, , ])

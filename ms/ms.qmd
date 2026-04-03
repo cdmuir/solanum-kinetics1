@@ -331,8 +331,8 @@ me_sun = filter(mediation$lighttreatment, variable == "mediated_effect_fgmax")
 de_high = filter(mediation$lightintensity, variable == "direct_effect")
 me_high = filter(mediation$lightintensity, variable == "mediated_effect_fgmax")
 
-de_pseudo = filter(mediation$curvetype, variable == "direct_effect")
-me_pseudo = filter(mediation$curvetype, variable == "mediated_effect_fgmax")
+de_pseudo = filter(mediation$leaftype, variable == "direct_effect")
+me_pseudo = filter(mediation$leaftype, variable == "mediated_effect_fgmax")
 
 # Partial correlation
 partial_cor = read_rds("../objects/partial-cor.rds") |>
@@ -704,10 +704,6 @@ knitr::include_graphics("../figures/accession-anatomy.pdf")
 
 Estimates of stomatal closure kinetic parameters for each curve are in @tbl-estimates-curve and estimates for each population are in @tbl-estimates-accession. These will be deposited on Dryad upon publication. The time-constant $\tau$ exhibited moderate phylogenetic heritability, accounting for `r `tau_phylo_var` of the variance, whereas $\lambda$ varied more within populations ([@fig-variance; @tbl-variance]). Some light treatments also affected kinetic parameters. Growth light intensity did not significantly affect $\tau$ ([@fig-accession-kinetics; @tbl-fixed]). In sun plants, $\tau$ was on average `r signif(100 * (exp(post_tau_sun["Estimate"]) - 1), 3)`% [95% CI: `r signif(100 * (exp(post_tau_sun["Q2.5"]) - 1), 3)` to `r signif(100 * (exp(post_tau_sun["Q97.5"]) - 1), 3)`%] lower than in shade plants after accounting for other explanatory variables. Within the same leaf, increasing the measurement light intensity prior to the humidity step change from \ppfdqty{150} to \ppfdqty{2000} significantly increased $\tau$ by `r signif(100 * (exp(post_tau_high["Estimate"]) - 1), 3)`% [95% CI: `r signif(100 * (exp(post_tau_high["Q2.5"]) - 1), 3)` to `r signif(100 * (exp(post_tau_high["Q97.5"]) - 1), 3)`%] ([@fig-accession-kinetics; @tbl-fixed]). The time lag $\lambda$ responded to growth, but not measurement light intensity after accounting for other explanatory variables ([@fig-accession-kinetics; @tbl-fixed]). In sun plants, $\tau$ was on average `r signif(100 * (exp(post_lambda_sun["Estimate"]) - 1), 3)`% [95% CI: `r signif(100 * (exp(post_lambda_sun["Q2.5"]) - 1), 3)` to `r signif(100 * (exp(post_lambda_sun["Q97.5"]) - 1), 3)`%] greater than in shade plants. Higher measurement light decreased increased $\lambda$ slightly by `r signif(100 * (exp(post_lambda_high["Estimate"]) - 1), 3)`% [95% CI: `r signif(100 * (exp(post_lambda_high["Q2.5"]) - 1), 3)` to `r signif(100 * (exp(post_lambda_high["Q97.5"]) - 1), 3)`%]. 
 
-somewhere, random effect [@tbl-random]
-
-##### MARKER - working here on this table
-
 ```{r, accession-kinetics, echo = FALSE}
 #| label: fig-accession-kinetics
 #| fig-align: center
@@ -716,7 +712,13 @@ somewhere, random effect [@tbl-random]
 knitr::include_graphics("../figures/accession-kinetics.pdf")
 ```
 
+#### MARKER - next section answers question 2 and 3 together
 
+<!-- 2. Are \gcl{} and \fgmax{} positively associated with $\tau$? -->
+<!-- 3. At what biological levels of organization do \gcl{} and \fgmax{} vary and influence $\tau$? -->
+
+
+somewhere, random effect [@tbl-random]
 
 Guard cell size and \fgmax{} affected stomatal kinetics, but at different levels of biological organization. In the model with the lowest LOOIC (see @tbl-comparison for model comparison results), the only significant partial correlation was between \gcl{} and $\tau$ ($\rho = `r signif(rho, 2)`$ [95% CI: $`r signif(rho_lower, 2)` to `r signif(rho_upper, 2)`$)] was a significant phylogenetic correlation between \gcl{} and $\tau$ [@fig-?]. PARTIAL CORRELATION RESULT. Variation in \gcl{} within populations did not explain within-population variation in $\tau$ [@tbl-fixed]. NOTE THAT BEST MODEL RETAINED INDIVIDUAL LEVEL EFFECT OF GCL, BUT COEFFICIENT WAS NOT SIGNIFICANT. OTHER BEST MODELS DID NOT RETAIN THIS. DID GCL MEDIATE AFFECT OF TREATMENTS?
 
@@ -728,25 +730,67 @@ Need to show (this is a growing, incomplete list):
 
 ```{r, tbl-comparison}
 #| label: tbl-comparison
-#| tbl-cap: "Model comparison results. Models with a $\\Delta$LOOIC less than two standard errors (SE) from the minimum LOOIC are considered to have substantial support and are used for posterior predictions to test hypotheses about the effects of guard cell length (\\gcl) and the stomatal conductance as a fraction of anatomical maximum stomatal conductance (\\fgmax) on stomatal kinetic parameter $\\lambda$ (time lag) and $\\tau$ (time constant). LOOIC stands for leave-one-out cross-validation information criterion."
+#| tbl-cap: "Model comparison results. Models with a $\\Delta$LOOIC less than two standard errors (SE) from the minimum LOOIC are considered to have substantial support and are used for posterior predictions to test hypotheses about the effects of guard cell length (\\gcl) and the stomatal conductance as a fraction of anatomical maximum stomatal conductance (\\fgmax) on stomatal kinetic parameter $\\lambda$ (time lag) and $\\tau$ (time constant). Unsupoorted models are in gray italic font. The model selected for subsequence inference is in bold. LOOIC stands for leave-one-out cross-validation information criterion."
 #| results: asis
 #| echo: false
 #| message: false
 #| warning: false
 
-df_comparison = read_rds("../objects/tbl-comparison.rds") |>
-  select(`$\\Delta \\text{LOOIC}$`, SE, `$\\lambda$__\\fgmax`, `$\\lambda$__\\gcl`, `$\\tau$__\\fgmax`, `$\\tau$__\\gcl`)
+df_comparison = read_rds("../objects/tbl-comparison.rds")
 
-kbl(
-  df_comparison,
-  format = "latex",
-  booktabs = TRUE,
-  escape = FALSE,
-  col.names = str_remove(colnames(df_comparison), "^.*__"),
-  align = c(rep("l", 2), rep("c", 4))
-) |>
-  add_header_above(c(" " = 2, "$\\\\lambda$" = 2, "$\\\\tau$" = 2), escape = FALSE) |>
-  kable_styling(latex_options = c("hold_position", "striped"))
+rows_grey = which(!df_comparison$plausible)
+rows_bold = which(df_comparison$selected)
+
+df_comparison1 = df_comparison |>
+  select(
+    `$\\Delta \\text{LOOIC}$`,
+    SE,
+    `$\\lambda$__\\fgmax`,
+    `$\\lambda$__\\gcl`,
+    `$\\tau$__\\fgmax`,
+    `$\\tau$__\\gcl`
+  )
+
+tbl_comparison = df_comparison1 |>
+  kbl(
+    format = "latex",
+    booktabs = TRUE,
+    escape = FALSE,
+    col.names = str_remove(colnames(df_comparison1), "^.*__"),
+    align = c(rep("l", 2), rep("c", 4))
+  ) |>
+  add_header_above(c(
+    " " = 2,
+    "$\\\\lambda$" = 2,
+    "$\\\\tau$" = 2
+  ), escape = FALSE) 
+
+# grey out implausible models
+if (length(rows_grey) > 0) {
+  for (i in rows_grey) {
+    tbl_comparison = tbl_comparison |>
+      row_spec(i, color = "gray", italic = TRUE)
+  }
+}
+
+# bold selected model
+if (length(rows_bold) > 0) {
+  for (i in rows_bold) {
+    tbl_comparison = tbl_comparison |>
+      row_spec(i, bold = TRUE)
+  }
+}
+
+tbl_comparison
+
+```
+
+```{r, gcl-tau, echo = FALSE}
+#| label: fig-gcl-tau
+#| fig-align: center
+#| fig-cap: "\\textbf{Phylogenetic covariance between guard cell length (\\gcl, $x$-axis) and the stomatal closure time-constant ($\\tau$, $y$-axis) indicates that populations with larger stomata tend to closer more slowly in response to humidity.} The overall pattern was consistent across grow light intensity treatments (left and right facets), measurement light intensity treatments (top and bottom facets), and leaf types (point colors). The direction and magnitude of the ellipses are such that they should encompass 95\\% of the phylogenetically structured (co)variance in \\gcl{} and $\\tau$ on log-transformed scales. The location of ellipses are set to the median trait values in each treatment combination for visual comparison. Each point is the average parameter value for one accession in that treatment combination. The growth and measurement light intensity treatments are described in the Materials and Methods section."
+
+knitr::include_graphics("../figures/gcl-tau.pdf")
 ```
 
 ### Stomatal aperture mediates plasticity in $\tau$
@@ -808,13 +852,13 @@ note about adaxial stomata: Mott (2007) reported that stomatal responses to humi
 
 ## Supporting tables
 
-```{r, tbl-vpd, eval = TRUE}
+```{r eval=TRUE}
 #| label: tbl-vpd
-#| tbl-cap: "Relative humidity (RH) and leaf vapor pressure deficit (VPD) during stomatal kinetics measurements systematically differed because of differences in stomatal conductance. Stomatal conductance tended to be greatest in sun-grown plants, measured a high light intensity, and untreated (amphistomatous). The mean values across replicate curves in each treatment conditions are given; within each curve we calculated the median RH and VPD across time points before calculating the mean among curves."
-#| results: asis
 #| echo: false
 #| message: false
 #| warning: false
+#| results: asis
+#| tbl-cap: Relative humidity (RH) and leaf vapor pressure deficit (VPD) during stomatal kinetics measurements systematically differed because of differences in stomatal conductance. Stomatal conductance tended to be greatest in sun-grown plants, measured a high light intensity, and untreated (amphistomatous). The mean values across replicate curves in each treatment conditions are given; within each curve we calculated the median RH and VPD across time points before calculating the mean among curves.
 
 kbl(
   df_vpd,

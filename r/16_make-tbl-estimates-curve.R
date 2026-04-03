@@ -8,7 +8,7 @@ tbl_estimates = fit$data |>
     accid,
     lighttreatment,
     lightintensity,
-    curvetype,
+    leaftype,
     loggcl,
     logitfgmax,
     loglambdamean,
@@ -32,6 +32,10 @@ dict = tibble(
   data_type = map_chr(tbl_estimates, type_label),
   acceptable_values = map_chr(tbl_estimates, acceptable_values),
 ) |>
+  mutate(acceptable_values = case_when(
+    variable == "id" ~ "A-Z",
+    TRUE ~ acceptable_values
+  )) |>
   full_join(tibble(
     variable = c(
       "accession",
@@ -52,6 +56,8 @@ dict = tibble(
       "Growth light intensity treatment",
       "Measurement light intensity treatment",
       "Leaf type treatment",
+      "Estimate of log-transformed guard cell length (um)",
+      "Estimate of logit-transformed stomatal conductance as a fraction of maximum conductance",
       "Point estimate of logit-transformed lag-time parameter",
       "Standard error of logit-transformed lag-time parameter",
       "Point estimate of log-transformed time-constant parameter",

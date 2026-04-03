@@ -1,5 +1,4 @@
 % Options for packages loaded elsewhere
-% Options for packages loaded elsewhere
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
 \PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
@@ -8,22 +7,21 @@
   letterpaper,
   DIV=11,
   numbers=noendperiod]{scrartcl}
-\usepackage{xcolor}
+
 \usepackage{amsmath,amssymb}
-\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
 \usepackage{iftex}
 \ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
 \else % if luatex or xetex
-  \usepackage{unicode-math} % this also loads fontspec
+  \usepackage{unicode-math}
   \defaultfontfeatures{Scale=MatchLowercase}
   \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
 \fi
 \usepackage{lmodern}
-\ifPDFTeX\else
-  % xetex/luatex font selection
+\ifPDFTeX\else  
+    % xetex/luatex font selection
   \setmainfont[]{Times New Roman}
 \fi
 % Use upquote if available, for straight quotes in verbatim environments
@@ -42,32 +40,22 @@
 }{% if KOMA class
   \KOMAoptions{parskip=half}}
 \makeatother
+\usepackage{xcolor}
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
 % Make \paragraph and \subparagraph free-standing
-\makeatletter
 \ifx\paragraph\undefined\else
   \let\oldparagraph\paragraph
-  \renewcommand{\paragraph}{
-    \@ifstar
-      \xxxParagraphStar
-      \xxxParagraphNoStar
-  }
-  \newcommand{\xxxParagraphStar}[1]{\oldparagraph*{#1}\mbox{}}
-  \newcommand{\xxxParagraphNoStar}[1]{\oldparagraph{#1}\mbox{}}
+  \renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
 \fi
 \ifx\subparagraph\undefined\else
   \let\oldsubparagraph\subparagraph
-  \renewcommand{\subparagraph}{
-    \@ifstar
-      \xxxSubParagraphStar
-      \xxxSubParagraphNoStar
-  }
-  \newcommand{\xxxSubParagraphStar}[1]{\oldsubparagraph*{#1}\mbox{}}
-  \newcommand{\xxxSubParagraphNoStar}[1]{\oldsubparagraph{#1}\mbox{}}
+  \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
 \fi
-\makeatother
 
 
-\usepackage{longtable,booktabs,array}
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}\usepackage{longtable,booktabs,array}
 \usepackage{calc} % for calculating minipage widths
 % Correct order of tables after \paragraph or \subparagraph
 \usepackage{etoolbox}
@@ -79,21 +67,17 @@
 \makesavenoteenv{longtable}
 \usepackage{graphicx}
 \makeatletter
-\newsavebox\pandoc@box
-\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
-  \sbox\pandoc@box{#1}%
-  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
-  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
-  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
-  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
-  \else\usebox{\pandoc@box}%
-  \fi%
-}
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
 % Set default figure placement to htbp
+\makeatletter
 \def\fps@figure{htbp}
 \makeatother
-
-
 % definitions for citeproc citations
 \NewDocumentCommand\citeproctext{}{}
 \NewDocumentCommand\citeproc{mm}{%
@@ -127,18 +111,6 @@
 \newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{\strut#1\strut}}
 \newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{\strut#1\strut}}
 \newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
-
-
-
-\setlength{\emergencystretch}{3em} % prevent overfull lines
-
-\providecommand{\tightlist}{%
-  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
-
-
-
- 
-
 
 \usepackage{booktabs}
 \usepackage{longtable}
@@ -227,9 +199,13 @@
 \@ifpackageloaded{caption}{}{\usepackage{caption}}
 \@ifpackageloaded{subcaption}{}{\usepackage{subcaption}}
 \makeatother
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
 \usepackage{bookmark}
+
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
-\urlstyle{same}
+\urlstyle{same} % disable monospaced font for URLs
 \hypersetup{
   pdftitle={Guard cell size and pore aperture influence stomatal closure kinetics},
   pdfauthor={Christopher D. Muir\^{}\{1,2*\}; Wei Shen Lim\^{}\{1\}},
@@ -240,14 +216,13 @@
   urlcolor={Blue},
   pdfcreator={LaTeX via pandoc}}
 
-
 \title{Guard cell size and pore aperture influence stomatal closure
 kinetics}
 \author{Christopher D. Muir\(^{1,2*}\) \and Wei Shen Lim\(^{1}\)}
 \date{}
+
 \begin{document}
 \maketitle
-
 
 \begin{center}
 $^1$School of Life Sciences, University of Hawaiʻi; Mānoa, Hawaiʻi, USA\\
@@ -1083,14 +1058,14 @@ extent between growth light intensity treatments and leaf surfaces. In
 contrast, stomatal conductance as a fraction of maximum conductance
 (\fgmax) was most strongly determined by measurement light intensity.
 Excluding treatment effects, phylogenetically structured differences
-among populations (i.e.~phylogenetic heriability) accounted for 63.9\%
-{[}95\% CI: 32.8 to 80.9\%{]} of the variance in \gcl{}
+among populations (i.e.~phylogenetic heriability) accounted for 64.4\%
+{[}95\% CI: 32.3 to 81.0\%{]} of the variance in \gcl{}
 (Figure~\ref{fig-variance}, Table~\ref{tbl-variance}). There was also
 developmental plasticity in \gcl. On average, \gcl{} increased by
-\(12.1\)\% {[}95\% CI: \(11.2\) to \(13.0\)\%{]} in the sun treatment
+\(12.1\)\% {[}95\% CI: \(11.1\) to \(13.0\)\%{]} in the sun treatment
 (Figure~\ref{fig-accession-anatomy}a; Table~\ref{tbl-fixed}). The
-average \gcl{} of pseudohypo leaves was \(-5.8\)\% {[}95\% CI: \(-6.7\)
-to \(-5.0\)\%{]} shorter than amphi leaves
+average \gcl{} of pseudohypo leaves was \(-5.8\)\% {[}95\% CI: \(-6.6\)
+to \(-5.1\)\%{]} shorter than amphi leaves
 (Figure~\ref{fig-accession-anatomy}a; Table~\ref{tbl-fixed}). This was
 not because of plasticity, as we measured amphi and pseudohypo curves on
 the same leaf. Rather, this was a composition effect. Adaxial stomata
@@ -1098,15 +1073,15 @@ are larger than abaxial stomata in these species (Figure~\ref{fig-gcl}),
 so the average \gcl{} in pseudohypo leaves was higher than in amphi
 leaves because the former only included abaxial stomata.
 
-The phylogenetic heritability of \fgmax{} was low, accounted for 16.9\%
-{[}95\% CI: 3.9 to 34.4\%{]} of the variance
+The phylogenetic heritability of \fgmax{} was low, accounted for 16.6\%
+{[}95\% CI: 3.1 to 34.9\%{]} of the variance
 (Figure~\ref{fig-variance}, Table~\ref{tbl-variance}). High measurement
 light intensity increased \fgmax{} by an average of \(0.85\) logit units
 {[}95\% CI: \(0.82\) to \(0.87\){]}
 (Figure~\ref{fig-accession-anatomy}b; Table~\ref{tbl-fixed}). For
 example, if \(f_\text{gmax} = 0.1\) in low light, the typical \fgmax{}
 for the same leaf acclimated to high light was 0.21. Sun leaves had on
-average \(-0.28\) logit units {[}95\% CI: \(-0.34\) to \(-0.21\){]}
+average \(-0.28\) logit units {[}95\% CI: \(-0.35\) to \(-0.21\){]}
 lower \fgmax{} than shade-grown plants
 (Figure~\ref{fig-accession-anatomy}b; Table~\ref{tbl-fixed}). Treated
 pseudohypo leaves had on average \(0.21\) logit units {[}95\% CI:
@@ -1119,7 +1094,7 @@ exchange through adaxial stomata was blocked.
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/variance.pdf}}
+\includegraphics{../figures/variance.pdf}
 
 }
 
@@ -1137,7 +1112,7 @@ populations was low for all traits.}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/accession-anatomy.pdf}}
+\includegraphics{../figures/accession-anatomy.pdf}
 
 }
 
@@ -1160,30 +1135,27 @@ the variance, whereas \(\lambda\) varied more within populations
 treatments also affected kinetic parameters. Growth light intensity did
 not significantly affect \(\tau\)
 (Figure~\ref{fig-accession-kinetics}, Table~\ref{tbl-fixed}). In sun
-plants, \(\tau\) was on average 5.63\% {[}95\% CI: 1.04 to 10.5\%{]}
+plants, \(\tau\) was on average 5.59\% {[}95\% CI: 0.993 to 10.3\%{]}
 lower than in shade plants after accounting for other explanatory
 variables. Within the same leaf, increasing the measurement light
 intensity prior to the humidity step change from \ppfdqty{150} to
-\ppfdqty{2000} significantly increased \(\tau\) by 17.9\% {[}95\% CI:
-11.4 to 24.8\%{]}
+\ppfdqty{2000} significantly increased \(\tau\) by 17.8\% {[}95\% CI:
+11.6 to 24.7\%{]}
 (Figure~\ref{fig-accession-kinetics}, Table~\ref{tbl-fixed}). The time
 lag \(\lambda\) responded to growth, but not measurement light intensity
 after accounting for other explanatory variables
 (Figure~\ref{fig-accession-kinetics}, Table~\ref{tbl-fixed}). In sun
-plants, \(\tau\) was on average 12.2\% {[}95\% CI: 10.1 to 14.2\%{]}
+plants, \(\tau\) was on average 12.1\% {[}95\% CI: 10.2 to 14.1\%{]}
 greater than in shade plants. Higher measurement light decreased
-increased \(\lambda\) slightly by 1.17\% {[}95\% CI: -1.24 to 3.59\%{]}.
+increased \(\lambda\) slightly by 1.2\% {[}95\% CI: -1.13 to 3.62\%{]}.
 
 somewhere, random effect Table~\ref{tbl-random}
-
-\subparagraph{MARKER - working here on this
-table}\label{marker---working-here-on-this-table}
 
 \begin{figure}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/accession-kinetics.pdf}}
+\includegraphics{../figures/accession-kinetics.pdf}
 
 }
 
@@ -1202,9 +1174,9 @@ described in the Materials and Methods section.}
 Guard cell size and \fgmax{} affected stomatal kinetics, but at
 different levels of biological organization. In the model with the
 lowest LOOIC (see Table~\ref{tbl-comparison} for model comparison
-results), the only significant partial correlation was between \gcl and
-\(\tau\) (\(\rho = 0.72\) {[}95\% CI: \(-0.073 to 0.97\)){]} was a
-significant phylogenetic correlation between \gcl and \(\tau\)
+results), the only significant partial correlation was between \gcl{}
+and \(\tau\) (\(\rho = 0.72\) {[}95\% CI: \(-0.073 to 0.97\)){]} was a
+significant phylogenetic correlation between \gcl{} and \(\tau\)
 (\textbf{fig?}-?). PARTIAL CORRELATION RESULT. Variation in \gcl{}
 within populations did not explain within-population variation in
 \(\tau\) Table~\ref{tbl-fixed}. NOTE THAT BEST MODEL RETAINED INDIVIDUAL
@@ -1223,43 +1195,67 @@ LOOIC are considered to have substantial support and are used for
 posterior predictions to test hypotheses about the effects of guard cell
 length (\gcl) and the stomatal conductance as a fraction of anatomical
 maximum stomatal conductance (\fgmax) on stomatal kinetic parameter
-\(\lambda\) (time lag) and \(\tau\) (time constant). LOOIC stands for
-leave-one-out cross-validation information criterion.}
+\(\lambda\) (time lag) and \(\tau\) (time constant). Unsupoorted models
+are in gray italic font. The model selected for subsequence inference is
+in bold. LOOIC stands for leave-one-out cross-validation information
+criterion.}
 
 \centering{
 
-\centering
 \begin{tabular}[t]{llcccc}
 \toprule
 \multicolumn{2}{c}{ } & \multicolumn{2}{c}{$\lambda$} & \multicolumn{2}{c}{$\tau$} \\
 \cmidrule(l{3pt}r{3pt}){3-4} \cmidrule(l{3pt}r{3pt}){5-6}
 $\Delta \text{LOOIC}$ & SE & \fgmax & \gcl & \fgmax & \gcl\\
 \midrule
-\cellcolor{gray!10}{0.00} & \cellcolor{gray!10}{0.00} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark}\\
+0.00 & 0.00 & \cmark &  & \cmark & \cmark\\
 3.51 & 2.56 & \cmark & \cmark & \cmark & \cmark\\
-\cellcolor{gray!10}{3.57} & \cellcolor{gray!10}{2.60} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{}\\
+\textbf{3.57} & \textbf{2.60} & \textbf{\cmark} & \textbf{} & \textbf{\cmark} & \textbf{}\\
 4.17 & 2.74 & \cmark & \cmark & \cmark & \\
-\cellcolor{gray!10}{19.58} & \cellcolor{gray!10}{10.66} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark}\\
+19.58 & 10.66 & \cmark &  &  & \cmark\\
 \addlinespace
 21.19 & 10.71 & \cmark &  &  & \\
-\cellcolor{gray!10}{23.84} & \cellcolor{gray!10}{10.76} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark}\\
-24.18 & 10.70 & \cmark & \cmark &  & \\
-\cellcolor{gray!10}{47.84} & \cellcolor{gray!10}{14.41} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark}\\
-50.07 & 14.50 &  & \cmark & \cmark & \\
+\textcolor{gray}{\em{23.84}} & \textcolor{gray}{\em{10.76}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}}\\
+\textcolor{gray}{\em{24.18}} & \textcolor{gray}{\em{10.70}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}}\\
+\textcolor{gray}{\em{47.84}} & \textcolor{gray}{\em{14.41}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}}\\
+\textcolor{gray}{\em{50.07}} & \textcolor{gray}{\em{14.50}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}}\\
 \addlinespace
-\cellcolor{gray!10}{50.49} & \cellcolor{gray!10}{14.48} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{\cmark}\\
-56.07 & 14.52 &  &  & \cmark & \\
-\cellcolor{gray!10}{68.18} & \cellcolor{gray!10}{18.48} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{}\\
-69.96 & 18.31 &  & \cmark &  & \\
-\cellcolor{gray!10}{74.42} & \cellcolor{gray!10}{18.31} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark} & \cellcolor{gray!10}{} & \cellcolor{gray!10}{\cmark}\\
+\textcolor{gray}{\em{50.49}} & \textcolor{gray}{\em{14.48}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}}\\
+\textcolor{gray}{\em{56.07}} & \textcolor{gray}{\em{14.52}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}}\\
+\textcolor{gray}{\em{68.18}} & \textcolor{gray}{\em{18.48}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}}\\
+\textcolor{gray}{\em{69.96}} & \textcolor{gray}{\em{18.31}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}}\\
+\textcolor{gray}{\em{74.42}} & \textcolor{gray}{\em{18.31}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}}\\
 \addlinespace
-75.56 & 18.29 &  &  &  & \cmark\\
+\textcolor{gray}{\em{75.56}} & \textcolor{gray}{\em{18.29}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}}\\
 \bottomrule
 \end{tabular}
 
 }
 
 \end{table}%
+
+\begin{figure}
+
+\centering{
+
+\includegraphics{../figures/gcl-tau.pdf}
+
+}
+
+\caption{\label{fig-gcl-tau}\textbf{Phylogenetic covariance between guard cell length (\gcl, $x$-axis) and the stomatal closure time-constant ($\tau$, $y$-axis) indicates that populations with larger stomata tend to closer more slowly in response to humidity.}
+The overall pattern was consistent across grow light intensity
+treatments (left and right facets), measurement light intensity
+treatments (top and bottom facets), and leaf types (point colors). The
+direction and magnitude of the ellipses are such that they should
+encompass 95\% of the phylogenetically structured (co)variance in \gcl{}
+and \(\tau\) on log-transformed scales. The location of ellipses are set
+to the median trait values in each treatment combination for visual
+comparison. Each point is the average parameter value for one accession
+in that treatment combination. The growth and measurement light
+intensity treatments are described in the Materials and Methods
+section.}
+
+\end{figure}%
 
 \subsubsection{\texorpdfstring{Stomatal aperture mediates plasticity in
 \(\tau\)}{Stomatal aperture mediates plasticity in \textbackslash tau}}\label{stomatal-aperture-mediates-plasticity-in-tau}
@@ -1271,23 +1267,23 @@ treatments directly effect \(\tau\) and had indirect effects mediated by
 mediated by \gcl{} because the selected model did not retain direct
 effects of \gcl{} on \(\tau\) (Table~\ref{tbl-comparison}). The direct
 effect of the high light intensity (sun) growth treatment increased
-\(\tau\) by \(5.64\)\% {[}95\% CI: \(1.03\) to \(10.55\)\%{]}, but the
-indirect of lower \fgmax{} counteracted by \(-5.01\)\% {[}95\% CI:
-\(-7.14\) to \(-3.12\)\%{]}. In contrast, direct and indirect effects of
+\(\tau\) by \(5.57\)\% {[}95\% CI: \(0.99\) to \(10.33\)\%{]}, but the
+indirect of lower \fgmax{} counteracted by \(-5.09\)\% {[}95\% CI:
+\(-7.36\) to \(-3.22\)\%{]}. In contrast, direct and indirect effects of
 high measurement light intensity increased \(\tau\). The direct effect
-increased \(\tau\) by \(18.28\)\% {[}95\% CI: \(11.85\) to
-\(24.98\)\%{]} and the indirect effect mediated by \fgmax{} increased
-\(\tau\) by \(16.83\)\% {[}95\% CI: \(11.04\) to \(23.14\)\%{]}. The
+increased \(\tau\) by \(17.81\)\% {[}95\% CI: \(11.56\) to
+\(24.74\)\%{]} and the indirect effect mediated by \fgmax{} increased
+\(\tau\) by \(17.33\)\% {[}95\% CI: \(11.23\) to \(23.73\)\%{]}. The
 direct effect of the pseudohypo treatment decreased \(\tau\) slightly by
-\(-2.60\)\% {[}95\% CI: \(-4.93\) to \(-0.18\)\%{]}, but the indirect
-effect mediated by greater \fgmax{} increased \(\tau\) by \(3.98\)\%
-{[}95\% CI: \(2.60\) to \(5.50\)\%{]}.
+\(-2.63\)\% {[}95\% CI: \(-5.03\) to \(-0.09\)\%{]}, but the indirect
+effect mediated by greater \fgmax{} increased \(\tau\) by \(4.03\)\%
+{[}95\% CI: \(2.58\) to \(5.53\)\%{]}.
 
 \begin{figure}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/mediation.pdf}}
+\includegraphics{../figures/mediation.pdf}
 
 }
 
@@ -2100,6 +2096,7 @@ calculating the mean among curves.}
 
 \centering{
 
+[!h]
 \centering
 \begin{tabular}[t]{ccccc}
 \toprule
@@ -2155,24 +2152,24 @@ component & \% variance & 95\% CI\\
 \endlastfoot
 \addlinespace[0.3em]
 \multicolumn{3}{l}{\textbf{$\log(l_\mathrm{gc})$}}\\
-\hspace{1em}phylogenetic & 63.9 & {}[32.8, 80.9]\\
-\hspace{1em}population & 6.6 & {}[0.9, 25.2]\\
-\hspace{1em}among-individual & 29.1 & {}[17.2, 44.8]\\
+\hspace{1em}phylogenetic & 64.4 & {}[32.3, 81.0]\\
+\hspace{1em}population & 6.6 & {}[0.9, 25.7]\\
+\hspace{1em}among-individual & 28.7 & {}[17.0, 45.0]\\
 \addlinespace[0.3em]
 \multicolumn{3}{l}{\textbf{$\mathrm{logit}(f_\mathrm{gmax})$}}\\
-\hspace{1em}\hspace{1em}phylogenetic & 16.9 & {}[3.9, 34.4]\\
-\hspace{1em}\hspace{1em}population & 6.7 & {}[2.0, 16.4]\\
-\hspace{1em}\hspace{1em}among-individual & 75.7 & {}[60.0, 85.7]\\
+\hspace{1em}\hspace{1em}phylogenetic & 16.6 & {}[3.1, 34.9]\\
+\hspace{1em}\hspace{1em}population & 7.0 & {}[2.1, 17.2]\\
+\hspace{1em}\hspace{1em}among-individual & 75.7 & {}[59.6, 85.5]\\
 \addlinespace[0.3em]
 \multicolumn{3}{l}{\textbf{$\log(\lambda)$}}\\
-\hspace{1em}phylogenetic & 18.8 & {}[5.3, 36.4]\\
-\hspace{1em}population & 2.3 & {}[0.1, 9.3]\\
-\hspace{1em}among-individual & 78.4 & {}[61.9, 88.4]\\
+\hspace{1em}phylogenetic & 18.9 & {}[4.8, 35.9]\\
+\hspace{1em}population & 2.3 & {}[0.1, 9.9]\\
+\hspace{1em}among-individual & 78.3 & {}[62.2, 88.3]\\
 \addlinespace[0.3em]
 \multicolumn{3}{l}{\textbf{$\log(\tau)$}}\\
-\hspace{1em}phylogenetic & 42.3 & {}[24.7, 59.3]\\
-\hspace{1em}population & 0.9 & {}[0.0, 7.5]\\
-\hspace{1em}among-individual & 56.1 & {}[39.9, 70.5]\\*
+\hspace{1em}phylogenetic & 42.4 & {}[24.2, 58.9]\\
+\hspace{1em}population & 1.0 & {}[0.0, 7.7]\\
+\hspace{1em}among-individual & 56.1 & {}[40.2, 70.6]\\*
 
 \end{longtable}
 
@@ -2239,25 +2236,25 @@ potentially includes of effects of \gcl{} and \fgmax{} on \(\tau\) and
 \endlastfoot
 \addlinespace[0.3em]
 \multicolumn{2}{l}{\textbf{$\log(l_\text{gc})$}}\\
-\hspace{1em}intercept (shade, low light, amphi) & 2.96 [2.80, 3.12]\\
+\hspace{1em}intercept (shade, low light, amphi) & 2.96 [2.79, 3.13]\\
 \hspace{1em}effect of sun growth treatment on $\log(l_\text{gc})$ & 0.11 [0.11, 0.12]\\
 \hspace{1em}effect of pseudohypo leaf type on $\log(l_\text{gc})$ & -0.06 [-0.07, -0.05]\\
 \addlinespace[0.3em]
 \multicolumn{2}{l}{\textbf{$\logit(f_\text{gmax})$}}\\
-\hspace{1em}intercept (shade, low light, amphi) & -2.49 [-2.79, -2.19]\\
-\hspace{1em}effect of sun growth treatment on $\logit(f_\text{gmax})$ & -0.28 [-0.34, -0.21]\\
+\hspace{1em}intercept (shade, low light, amphi) & -2.50 [-2.79, -2.19]\\
+\hspace{1em}effect of sun growth treatment on $\logit(f_\text{gmax})$ & -0.28 [-0.35, -0.21]\\
 \hspace{1em}effect of high measurement light intensity on $\logit(f_\text{gmax})$ & 0.85 [0.82, 0.87]\\
 \hspace{1em}effect of pseudohypo leaf type on $\logit(f_\text{gmax})$ & 0.21 [0.18, 0.24]\\
 \addlinespace[0.3em]
 \multicolumn{2}{l}{\textbf{$\log(\lambda)$}}\\
-\hspace{1em}intercept (shade, low light, amphi) & 0.39 [0.28, 0.49]\\
+\hspace{1em}intercept (shade, low light, amphi) & 0.39 [0.28, 0.48]\\
 \hspace{1em}effect of sun growth treatment on $\log(\lambda)$ & 0.11 [0.10, 0.13]\\
 \hspace{1em}effect of high measurement light intensity on $\log(\lambda)$ & 0.01 [-0.01, 0.04]\\
 \hspace{1em}effect of pseudohypo leaf type on $\log(\lambda)$ & -0.04 [-0.05, -0.03]\\
 \hspace{1em}effect of $\logit(f_\text{gmax})$ on $\log(\lambda)$ & 0.10 [0.08, 0.13]\\
 \addlinespace[0.3em]
 \multicolumn{2}{l}{\textbf{$\log(\tau)$}}\\
-\hspace{1em}intercept (shade, low light, amphi) & 5.50 [5.14, 5.83]\\
+\hspace{1em}intercept (shade, low light, amphi) & 5.50 [5.14, 5.84]\\
 \hspace{1em}effect of sun growth treatment on $\log(\tau)$ & 0.05 [0.01, 0.10]\\
 \hspace{1em}effect of high measurement light intensity on $\log(\tau)$ & 0.16 [0.11, 0.22]\\
 \hspace{1em}effect of pseudohypo leaf type on $\log(\tau)$ & -0.03 [-0.05, -0.00]\\
@@ -2299,28 +2296,28 @@ traits.}
 \hspace{1em}SD in $\text{logit} \left( f_\text{gmax} \right)$ & 0.38 [0.35, 0.41]\\
 \addlinespace[0.3em]
 \multicolumn{2}{l}{\textit{phylogenetic random effects}}\\
-\hspace{1em}SD in $\log \left( \lambda \right)$ & 0.07 [0.01, 0.11]\\
+\hspace{1em}SD in $\log \left( \lambda \right)$ & 0.07 [0.02, 0.11]\\
 \hspace{1em}SD in $\log \left( \tau \right)$ & 0.27 [0.16, 0.40]\\
-\hspace{1em}SD in $\log \left( l_\text{gc} \right)$ & 0.13 [0.07, 0.21]\\
-\hspace{1em}SD in $\text{logit} \left( f_\text{gmax} \right)$ & 0.23 [0.06, 0.41]\\
-\hspace{1em}correlation between in $\log \left( \lambda \right)$ and $\log \left( \tau \right)$ & 0.47 [-0.23, 0.84]\\
-\hspace{1em}correlation between in $\log \left( \lambda \right)$ and $\log \left( l_\text{gc} \right)$ & 0.16 [-0.42, 0.71]\\
-\hspace{1em}correlation between in $\log \left( \lambda \right)$ and $\text{logit} \left( f_\text{gmax} \right)$ & -0.02 [-0.63, 0.61]\\
-\hspace{1em}correlation between in $\log \left( \tau \right)$ and $\log \left( l_\text{gc} \right)$ & 0.68 [0.15, 0.91]\\
-\hspace{1em}correlation between in $\log \left( \tau \right)$ and $\text{logit} \left( f_\text{gmax} \right)$ & 0.22 [-0.43, 0.71]\\
-\hspace{1em}correlation between in $\log \left( l_\text{gc} \right)$ and $\text{logit} \left( f_\text{gmax} \right)$ & 0.46 [-0.24, 0.88]\\
+\hspace{1em}SD in $\log \left( l_\text{gc} \right)$ & 0.14 [0.07, 0.21]\\
+\hspace{1em}SD in $\text{logit} \left( f_\text{gmax} \right)$ & 0.23 [0.07, 0.40]\\
+\hspace{1em}correlation between in $\log \left( \lambda \right)$ and $\log \left( \tau \right)$ & 0.45 [-0.18, 0.84]\\
+\hspace{1em}correlation between in $\log \left( \lambda \right)$ and $\log \left( l_\text{gc} \right)$ & 0.11 [-0.48, 0.70]\\
+\hspace{1em}correlation between in $\log \left( \lambda \right)$ and $\text{logit} \left( f_\text{gmax} \right)$ & -0.01 [-0.63, 0.63]\\
+\hspace{1em}correlation between in $\log \left( \tau \right)$ and $\log \left( l_\text{gc} \right)$ & 0.67 [0.16, 0.91]\\
+\hspace{1em}correlation between in $\log \left( \tau \right)$ and $\text{logit} \left( f_\text{gmax} \right)$ & 0.21 [-0.46, 0.72]\\
+\hspace{1em}correlation between in $\log \left( l_\text{gc} \right)$ and $\text{logit} \left( f_\text{gmax} \right)$ & 0.47 [-0.26, 0.88]\\
 \addlinespace[0.3em]
 \multicolumn{2}{l}{\textit{population (nonphylogenetic) random effects}}\\
 \hspace{1em}SD in $\log \left( \lambda \right)$ & 0.02 [0.00, 0.05]\\
-\hspace{1em}SD in $\log \left( \tau \right)$ & 0.04 [0.00, 0.13]\\
-\hspace{1em}SD in $\log \left( l_\text{gc} \right)$ & 0.04 [0.02, 0.08]\\
-\hspace{1em}SD in $\text{logit} \left( f_\text{gmax} \right)$ & 0.15 [0.07, 0.25]\\
-\hspace{1em}correlation between in $\log \left( \lambda \right)$ and $\log \left( \tau \right)$ & 0.09 [-0.76, 0.81]\\
-\hspace{1em}correlation between in $\log \left( \lambda \right)$ and $\log \left( l_\text{gc} \right)$ & 0.05 [-0.74, 0.75]\\
-\hspace{1em}correlation between in $\log \left( \lambda \right)$ and $\text{logit} \left( f_\text{gmax} \right)$ & -0.22 [-0.81, 0.60]\\
-\hspace{1em}correlation between in $\log \left( \tau \right)$ and $\log \left( l_\text{gc} \right)$ & 0.25 [-0.70, 0.88]\\
-\hspace{1em}correlation between in $\log \left( \tau \right)$ and $\text{logit} \left( f_\text{gmax} \right)$ & 0.14 [-0.68, 0.78]\\
-\hspace{1em}correlation between in $\log \left( l_\text{gc} \right)$ and $\text{logit} \left( f_\text{gmax} \right)$ & 0.38 [-0.27, 0.83]\\*
+\hspace{1em}SD in $\log \left( \tau \right)$ & 0.04 [0.00, 0.12]\\
+\hspace{1em}SD in $\log \left( l_\text{gc} \right)$ & 0.04 [0.01, 0.08]\\
+\hspace{1em}SD in $\text{logit} \left( f_\text{gmax} \right)$ & 0.15 [0.07, 0.26]\\
+\hspace{1em}correlation between in $\log \left( \lambda \right)$ and $\log \left( \tau \right)$ & 0.07 [-0.75, 0.80]\\
+\hspace{1em}correlation between in $\log \left( \lambda \right)$ and $\log \left( l_\text{gc} \right)$ & 0.04 [-0.68, 0.74]\\
+\hspace{1em}correlation between in $\log \left( \lambda \right)$ and $\text{logit} \left( f_\text{gmax} \right)$ & -0.23 [-0.82, 0.55]\\
+\hspace{1em}correlation between in $\log \left( \tau \right)$ and $\log \left( l_\text{gc} \right)$ & 0.27 [-0.67, 0.89]\\
+\hspace{1em}correlation between in $\log \left( \tau \right)$ and $\text{logit} \left( f_\text{gmax} \right)$ & 0.11 [-0.69, 0.78]\\
+\hspace{1em}correlation between in $\log \left( l_\text{gc} \right)$ and $\text{logit} \left( f_\text{gmax} \right)$ & 0.40 [-0.27, 0.84]\\*
 
 \end{longtable}
 
@@ -2352,7 +2349,7 @@ lines are fitted curves. The Bayesian correlation coefficient,
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/compare-gsw.pdf}}
+\includegraphics{../figures/compare-gsw.pdf}
 
 }
 
@@ -2367,7 +2364,7 @@ line for reference. Both axes are on a log-scale.}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/gcl.pdf}}
+\includegraphics{../figures/gcl.pdf}
 
 }
 
@@ -2379,7 +2376,6 @@ line is the 1:1 line for reference. All points above this line indicate
 larger values on the adaxial surface.}
 
 \end{figure}%
-
 
 
 

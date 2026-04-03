@@ -90,8 +90,8 @@ p = ggplot(df_acc, aes(exp(loggcl), exp(logtaumean), color = leaftype)) +
   scale_fill_manual(values = c("steelblue", "tomato")) +
   scale_color_manual(values = c("steelblue", "tomato")) +
   labs(
-    x = expression(Guard ~ cell ~ length ~ (paste(mu, "m"))),
-    y = expression(tau ~ (s)),
+    x = expression(Guard ~ cell ~ length ~ (paste(paste(mu, "m"), ", log-scale"))),
+    y = expression(paste(tau ~ (s), ", log-scale")),
     color = "Leaf type:",
     fill = "Leaf type:"
   ) +

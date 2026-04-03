@@ -383,7 +383,7 @@ prepare_edges = function(.x) {
         loggcl = "$l_\\mathrm{gc}$",
         lighttreatmentsun = "sun treatment",
         lightintensityhigh = "high light",
-        curvetypepseudohypo = "pseudohypo"
+        leaftypepseudohypo = "pseudohypo"
       )
     ))
 }

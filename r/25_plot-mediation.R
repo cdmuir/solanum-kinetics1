@@ -15,8 +15,7 @@ source("r/header.R")
 
 post = read_rds("objects/best_model.rds") |>
   as_draws_df() |>
-  select(starts_with("."), starts_with("b_")) |>
-  bind_cols(df_sigma) 
+  select(starts_with("."), starts_with("b_")) 
 
 # List of tables of direct and indirect effects for text output
 mediation = list(

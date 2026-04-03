@@ -1,6 +1,8 @@
 # Compare models using LOOIC
 source("r/header.R")
 
+selected_model = "model6" # see note at bottom
+
 plan(multisession, workers = 19)
 
 fits = read_rds("objects/fits.rds") |>
@@ -13,7 +15,7 @@ assert_true(all(converged))
 
 looic_table = fits$loo |>
   set_names(paste0("model", seq_along(fits$loo))) |>
-  loo_compare()
+  loo_compare() 
 
 fits = fits |>
   mutate(model = paste0("model", row_number()))
@@ -53,7 +55,9 @@ map2_dfr(fits$fit, fits$model, \(.fit, .name) {
     SE = 2 * looic_table[, "se_diff"]
   ),
   by = "model") |>
-  mutate(across(where(is_logical), \(.x) ifelse(.x, "\\cmark", ""))) |>
+  mutate(across(where(is_logical), \(.x) ifelse(.x, "\\cmark", "")),
+         plausible = abs(`$\\Delta \\text{LOOIC}$`) <= 2 * SE,
+         selected = model == selected_model) |>
   arrange(`$\\Delta \\text{LOOIC}$`) |>
   mutate(
     `$\\Delta \\text{LOOIC}$` = formatC(
@@ -77,4 +81,4 @@ map2_dfr(fits$fit, fits$model, \(.fit, .name) {
 # write_rds(fits$fit[[as.numeric(str_extract(rownames(looic_table)[1], "\\d+"))]], "objects/best_model.rds")
 
 # Current version (model 6)
-write_rds(fits$fit[[6]], "objects/best_model.rds")
+write_rds(fits$fit[[as.numeric(str_remove(selected_model, "model"))]], "objects/best_model.rds")

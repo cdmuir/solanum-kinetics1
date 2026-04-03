@@ -2,7 +2,7 @@ variable,data_type,acceptable_values,description
 accession,character,LA0107; LA0407; LA0429; LA0436; LA0444; LA0716; LA0750; LA1028; LA1044; LA1269; LA1316; LA1322; LA1358; LA1360; LA1364; LA1589; LA1777; LA1782; LA2133; LA2172; LA2744; LA2933; LA2951; LA2964; LA3124; LA3778; LA4116; LA4117A; LA4126,TGRC accession
 lighttreatment,factor,shade; sun,Growth light intensity treatment
 lightintensity,factor,low; high,Measurement light intensity treatment
-curvetype,character,amphi; pseudohypo,Leaf type treatment
+leaftype,factor,amphi; pseudohypo,Leaf type treatment
 n_plant,integer,,Number of replicate plants
 trait,character,fgmax; gcl; lambda; tau,Trait name
 estimate,numeric,,Posterior estimate

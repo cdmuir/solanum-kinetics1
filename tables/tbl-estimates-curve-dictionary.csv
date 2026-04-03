@@ -1,0 +1,12 @@
+variable,data_type,acceptable_values,description
+accession,character,LA0107; LA0407; LA0429; LA0436; LA0444; LA0716; LA0750; LA1028; LA1044; LA1269; LA1316; LA1322; LA1358; LA1360; LA1364; LA1589; LA1777; LA1782; LA2133; LA2172; LA2744; LA2933; LA2951; LA2964; LA3124; LA3778; LA4116; LA4117A; LA4126,TGRC accession
+id,character,A-Z,Unique identifier for each accession
+lighttreatment,factor,shade; sun,Growth light intensity treatment
+lightintensity,factor,low; high,Measurement light intensity treatment
+leaftype,factor,amphi; pseudohypo,Leaf type treatment
+loggcl,numeric,,Estimate of log-transformed guard cell length (um)
+logitfgmax,numeric,,Estimate of logit-transformed stomatal conductance as a fraction of maximum conductance
+loglambdamean,numeric,,Point estimate of logit-transformed lag-time parameter
+loglambdasd,numeric,,Standard error of logit-transformed lag-time parameter
+logtaumean,numeric,,Point estimate of log-transformed time-constant parameter
+logtausd,numeric,,Standard error of log-transformed time-constant parameter

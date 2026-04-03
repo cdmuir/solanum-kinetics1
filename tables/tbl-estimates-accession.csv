@@ -1,4 +1,4 @@
-accession,lighttreatment,lightintensity,curvetype,n_plant,trait,estimate,lowerCI,upperCI
+accession,lighttreatment,lightintensity,leaftype,n_plant,trait,estimate,lowerCI,upperCI
 LA0107,shade,low,amphi,8,tau,167.4559204291936,152.38180997658756,183.83051533729503
 LA0107,shade,low,amphi,8,lambda,1.1426435760931482,1.1010897958411079,1.185064684652623
 LA0107,shade,low,amphi,8,gcl,19.26086883010733,18.831084295399393,19.707629475440175
