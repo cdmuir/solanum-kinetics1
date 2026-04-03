@@ -1088,31 +1088,32 @@ among populations (i.e.~phylogenetic heriability) accounted for 63.9\%
 (Figure~\ref{fig-variance}, Table~\ref{tbl-variance}). There was also
 developmental plasticity in \gcl. On average, \gcl{} increased by
 \(12.1\)\% {[}95\% CI: \(11.2\) to \(13.0\)\%{]} in the sun treatment
-(Figure~\ref{fig-accession-anatomy}a; Table~\ref{tbl-fit}). The average
-\gcl{} of pseudohypo leaves was \(-5.8\)\% {[}95\% CI: \(-6.7\) to
-\(-5.0\)\%{]} shorter than amphi leaves
-(Figure~\ref{fig-accession-anatomy}a; Table~\ref{tbl-fit}). This was not
-because of plasticity, as we measured amphi and pseudohypo curves on the
-same leaf. Rather, this was a composition effect. Adaxial stomata are
-larger than abaxial stomata in these species (Figure~\ref{fig-gcl}), so
-the average \gcl{} in pseudohypo leaves was higher than in amphi leaves
-because the former only included abaxial stomata.
+(Figure~\ref{fig-accession-anatomy}a; Table~\ref{tbl-fixed}). The
+average \gcl{} of pseudohypo leaves was \(-5.8\)\% {[}95\% CI: \(-6.7\)
+to \(-5.0\)\%{]} shorter than amphi leaves
+(Figure~\ref{fig-accession-anatomy}a; Table~\ref{tbl-fixed}). This was
+not because of plasticity, as we measured amphi and pseudohypo curves on
+the same leaf. Rather, this was a composition effect. Adaxial stomata
+are larger than abaxial stomata in these species (Figure~\ref{fig-gcl}),
+so the average \gcl{} in pseudohypo leaves was higher than in amphi
+leaves because the former only included abaxial stomata.
 
 The phylogenetic heritability of \fgmax{} was low, accounted for 16.9\%
 {[}95\% CI: 3.9 to 34.4\%{]} of the variance
 (Figure~\ref{fig-variance}, Table~\ref{tbl-variance}). High measurement
 light intensity increased \fgmax{} by an average of \(0.85\) logit units
 {[}95\% CI: \(0.82\) to \(0.87\){]}
-(Figure~\ref{fig-accession-anatomy}b; Table~\ref{tbl-fit}). For example,
-if \(f_\text{gmax} = 0.1\) in low light, the typical \fgmax{} for the
-same leaf acclimated to high light was 0.21. Sun leaves had on average
-\(-0.28\) logit units {[}95\% CI: \(-0.34\) to \(-0.21\){]} lower
-\fgmax{} than shade-grown plants (Figure~\ref{fig-accession-anatomy}b;
-Table~\ref{tbl-fit}). Treated pseudohypo leaves had on average \(0.21\)
-logit units {[}95\% CI: \(0.18\) to \(0.24\){]} higher \fgmax{} than
-untreated, amphistomatous leaves (Figure~\ref{fig-accession-anatomy}b;
-Table~\ref{tbl-fit}). This indicates that stomatal aperture was more
-open in leaves where gas exchange through adaxial stomata was blocked.
+(Figure~\ref{fig-accession-anatomy}b; Table~\ref{tbl-fixed}). For
+example, if \(f_\text{gmax} = 0.1\) in low light, the typical \fgmax{}
+for the same leaf acclimated to high light was 0.21. Sun leaves had on
+average \(-0.28\) logit units {[}95\% CI: \(-0.34\) to \(-0.21\){]}
+lower \fgmax{} than shade-grown plants
+(Figure~\ref{fig-accession-anatomy}b; Table~\ref{tbl-fixed}). Treated
+pseudohypo leaves had on average \(0.21\) logit units {[}95\% CI:
+\(0.18\) to \(0.24\){]} higher \fgmax{} than untreated, amphistomatous
+leaves (Figure~\ref{fig-accession-anatomy}b; Table~\ref{tbl-fixed}).
+This indicates that stomatal aperture was more open in leaves where gas
+exchange through adaxial stomata was blocked.
 
 \begin{figure}
 
@@ -1158,20 +1159,22 @@ the variance, whereas \(\lambda\) varied more within populations
 (Figure~\ref{fig-variance}, Table~\ref{tbl-variance}). Some light
 treatments also affected kinetic parameters. Growth light intensity did
 not significantly affect \(\tau\)
-(Figure~\ref{fig-accession-kinetics}, Table~\ref{tbl-fit-summary}). In
-sun plants, \(\tau\) was on average 5.63\% {[}95\% CI: 1.04 to 10.5\%{]}
+(Figure~\ref{fig-accession-kinetics}, Table~\ref{tbl-fixed}). In sun
+plants, \(\tau\) was on average 5.63\% {[}95\% CI: 1.04 to 10.5\%{]}
 lower than in shade plants after accounting for other explanatory
 variables. Within the same leaf, increasing the measurement light
 intensity prior to the humidity step change from \ppfdqty{150} to
 \ppfdqty{2000} significantly increased \(\tau\) by 17.9\% {[}95\% CI:
 11.4 to 24.8\%{]}
-(Figure~\ref{fig-accession-kinetics}, Table~\ref{tbl-fit-summary}). The
-time lag \(\lambda\) responded to growth, but not measurement light
-intensity after accounting for other explanatory variables
-(Figure~\ref{fig-accession-kinetics}, Table~\ref{tbl-fit-summary}). In
-sun plants, \(\tau\) was on average 12.2\% {[}95\% CI: 10.1 to 14.2\%{]}
+(Figure~\ref{fig-accession-kinetics}, Table~\ref{tbl-fixed}). The time
+lag \(\lambda\) responded to growth, but not measurement light intensity
+after accounting for other explanatory variables
+(Figure~\ref{fig-accession-kinetics}, Table~\ref{tbl-fixed}). In sun
+plants, \(\tau\) was on average 12.2\% {[}95\% CI: 10.1 to 14.2\%{]}
 greater than in shade plants. Higher measurement light decreased
 increased \(\lambda\) slightly by 1.17\% {[}95\% CI: -1.24 to 3.59\%{]}.
+
+somewhere, random effect Table~\ref{tbl-random}
 
 \subparagraph{MARKER - working here on this
 table}\label{marker---working-here-on-this-table}
@@ -1196,124 +1199,21 @@ described in the Materials and Methods section.}
 
 \end{figure}%
 
-\begin{table}
-
-\caption{\label{tbl-fit-summary}Parameter estimates and 95\% confidence
-intervals (CIs) from the posterior distribution of the selected model.
-CONTINUE EDITING HERE Models potentially include fixed and random
-effects of growth light intensity (shade and sun), measurement light
-intensity (low and high), \(\log \mathrm{LMA}\), and their interactions
-on amphistomy advantage (\(\mathrm{AA}\)). LMA can also be affected by
-growth light intensity and population. For phylogenetically structured
-random effects, we report the estimated standard deviation (SD).}
-
-\centering{
-
-\centering
-\begin{tabular}{>{\raggedright\arraybackslash}p{4.5in}>{\raggedright\arraybackslash}p{2in}}
-\toprule
-Parameter description & Estimate [95\% CI]\\
-\midrule
-\addlinespace[0.3em]
-\multicolumn{2}{l}{\textbf{among-individual random effects}}\\
-\hspace{1em}\cellcolor{gray!10}{SD in $\log \left( \lambda \right)$} & \cellcolor{gray!10}{0.08 [0.07, 0.08]}\\
-\hspace{1em}SD in $\log \left( \tau \right)$ & 0.21 [0.19, 0.23]\\
-\hspace{1em}\cellcolor{gray!10}{SD in $\text{logit} \left( f_\text{gmax} \right)$} & \cellcolor{gray!10}{0.38 [0.35, 0.41]}\\
-\addlinespace[0.3em]
-\multicolumn{2}{l}{\textbf{phylogenetic random effects}}\\
-\hspace{1em}SD in $\log \left( \lambda \right)$ & 0.07 [0.01, 0.11]\\
-\hspace{1em}\cellcolor{gray!10}{SD in $\log \left( \tau \right)$} & \cellcolor{gray!10}{0.27 [0.16, 0.40]}\\
-\hspace{1em}SD in $\log \left( l_\text{gc} \right)$ & 0.13 [0.07, 0.21]\\
-\hspace{1em}\cellcolor{gray!10}{SD in $\text{logit} \left( f_\text{gmax} \right)$} & \cellcolor{gray!10}{0.23 [0.06, 0.41]}\\
-\hspace{1em}correlation between in $\log \left( \lambda \right)$ and $\log \left( \tau \right)$ & 0.47 [-0.23, 0.84]\\
-\hspace{1em}\cellcolor{gray!10}{correlation between in $\log \left( \lambda \right)$ and $\log \left( l_\text{gc} \right)$} & \cellcolor{gray!10}{0.16 [-0.42, 0.71]}\\
-\hspace{1em}correlation between in $\log \left( \tau \right)$ and $\log \left( l_\text{gc} \right)$ & 0.68 [0.15, 0.91]\\
-\hspace{1em}\cellcolor{gray!10}{correlation between in $\log \left( \lambda \right)$ and $\text{logit} \left( f_\text{gmax} \right)$} & \cellcolor{gray!10}{-0.02 [-0.63, 0.61]}\\
-\hspace{1em}correlation between in $\log \left( \tau \right)$ and $\text{logit} \left( f_\text{gmax} \right)$ & 0.22 [-0.43, 0.71]\\
-\hspace{1em}\cellcolor{gray!10}{correlation between in $\log \left( l_\text{gc} \right)$ and $\text{logit} \left( f_\text{gmax} \right)$} & \cellcolor{gray!10}{0.46 [-0.24, 0.88]}\\
-\addlinespace[0.3em]
-\multicolumn{2}{l}{\textbf{population (nonphylogenetic) random effects}}\\
-\hspace{1em}SD in $\log \left( \lambda \right)$ & 0.02 [0.00, 0.05]\\
-\hspace{1em}\cellcolor{gray!10}{SD in $\log \left( \tau \right)$} & \cellcolor{gray!10}{0.04 [0.00, 0.13]}\\
-\hspace{1em}SD in $\log \left( l_\text{gc} \right)$ & 0.04 [0.02, 0.08]\\
-\hspace{1em}\cellcolor{gray!10}{SD in $\text{logit} \left( f_\text{gmax} \right)$} & \cellcolor{gray!10}{0.15 [0.07, 0.25]}\\
-\hspace{1em}correlation between in $\log \left( \lambda \right)$ and $\log \left( \tau \right)$ & 0.09 [-0.76, 0.81]\\
-\hspace{1em}\cellcolor{gray!10}{correlation between in $\log \left( \lambda \right)$ and $\log \left( l_\text{gc} \right)$} & \cellcolor{gray!10}{0.05 [-0.74, 0.75]}\\
-\hspace{1em}correlation between in $\log \left( \tau \right)$ and $\log \left( l_\text{gc} \right)$ & 0.25 [-0.70, 0.88]\\
-\hspace{1em}\cellcolor{gray!10}{correlation between in $\log \left( \lambda \right)$ and $\text{logit} \left( f_\text{gmax} \right)$} & \cellcolor{gray!10}{-0.22 [-0.81, 0.60]}\\
-\hspace{1em}correlation between in $\log \left( \tau \right)$ and $\text{logit} \left( f_\text{gmax} \right)$ & 0.14 [-0.68, 0.78]\\
-\hspace{1em}\cellcolor{gray!10}{correlation between in $\log \left( l_\text{gc} \right)$ and $\text{logit} \left( f_\text{gmax} \right)$} & \cellcolor{gray!10}{0.38 [-0.27, 0.83]}\\
-\bottomrule
-\end{tabular}
-
-}
-
-\end{table}%
-
 Guard cell size and \fgmax{} affected stomatal kinetics, but at
 different levels of biological organization. In the model with the
 lowest LOOIC (see Table~\ref{tbl-comparison} for model comparison
 results), the only significant partial correlation was between \gcl and
 \(\tau\) (\(\rho = 0.72\) {[}95\% CI: \(-0.073 to 0.97\)){]} was a
 significant phylogenetic correlation between \gcl and \(\tau\)
-(\textbf{fig?}-?). PARTIAL CORRELATION RESULT. Variation in \gcl within
-populations did not explain within-population variation in \(\tau\)
-Table~\ref{tbl-fit}. NOTE THAT BEST MODEL RETAINED INDIVIDUAL LEVEL
-EFFECT OF GCL, BUT COEFFICIENT WAS NOT SIGNIFICANT. OTHER BEST MODELS
-DID NOT RETAIN THIS. DID GCL MEDIATE AFFECT OF TREATMENTS?
+(\textbf{fig?}-?). PARTIAL CORRELATION RESULT. Variation in \gcl{}
+within populations did not explain within-population variation in
+\(\tau\) Table~\ref{tbl-fixed}. NOTE THAT BEST MODEL RETAINED INDIVIDUAL
+LEVEL EFFECT OF GCL, BUT COEFFICIENT WAS NOT SIGNIFICANT. OTHER BEST
+MODELS DID NOT RETAIN THIS. DID GCL MEDIATE AFFECT OF TREATMENTS?
 
 Need to show (this is a growing, incomplete list): - phylogenetic
 partial correlation - partial correlation showing that gcl and tau are
 (only?) significant phylogenetic covariates
-
-\begin{longtable}[t]{>{\raggedright\arraybackslash}p{4in}>{\raggedright\arraybackslash}p{2in}}
-
-\caption{\label{tbl-fit}Fixed effects (posterior mean, SE, and 95\%
-confidence intervals).}
-
-\tabularnewline
-
-\\
-\toprule
-\textbf{Parameter} & \textbf{Estimate [95\% CI]}\\
-\midrule
-\endfirsthead
-\caption[]{Fixed effects (posterior mean, SE, and 95\% confidence intervals). \textit{(continued)}}\\
-\toprule
-\textbf{Parameter} & \textbf{Estimate [95\% CI]}\\
-\midrule
-\endhead
-
-\endfoot
-\bottomrule
-\endlastfoot
-\addlinespace[0.3em]
-\multicolumn{2}{l}{\textbf{$\log(\lambda)$}}\\
-\hspace{1em}effect of $\logit(f_g)$ on $\log(\lambda)$ & 0.10 [0.08, 0.13]\\
-\hspace{1em}effect of high measurement light intensity on $\log(\lambda)$ & 0.01 [-0.01, 0.04]\\
-\hspace{1em}intercept (shade, low light) & 0.39 [0.28, 0.49]\\
-\hspace{1em}effect of pseudohypo leaf type on $\log(\lambda)$ & -0.04 [-0.05, -0.03]\\
-\hspace{1em}effect of sun growth treatment on $\log(\lambda)$ & 0.11 [0.10, 0.13]\\
-\addlinespace[0.3em]
-\multicolumn{2}{l}{\textbf{$\log(\tau)$}}\\
-\hspace{1em}effect of $\logit(f_g)$ on $\log(\tau)$ & 0.19 [0.13, 0.25]\\
-\hspace{1em}effect of high measurement light intensity on $\log(\tau)$ & 0.16 [0.11, 0.22]\\
-\hspace{1em}intercept (shade, low light) & 5.50 [5.14, 5.83]\\
-\hspace{1em}effect of pseudohypo leaf type on $\log(\tau)$ & -0.03 [-0.05, -0.00]\\
-\hspace{1em}effect of sun growth treatment on $\log(\tau)$ & 0.05 [0.01, 0.10]\\
-\addlinespace[0.3em]
-\multicolumn{2}{l}{\textbf{$\log(l_\mathrm{gc})$}}\\
-\hspace{1em}intercept (shade, low light) & 2.96 [2.80, 3.12]\\
-\hspace{1em}effect of pseudohypo leaf type on $\log(l_\mathrm{gc})$ & -0.06 [-0.07, -0.05]\\
-\hspace{1em}effect of sun growth treatment on $\log(l_\mathrm{gc})$ & 0.11 [0.11, 0.12]\\
-\addlinespace[0.3em]
-\multicolumn{2}{l}{\textbf{$\logit(f_g)$}}\\
-\hspace{1em}effect of high measurement light intensity on $\logit(f_g)$ & 0.85 [0.82, 0.87]\\
-\hspace{1em}intercept (shade, low light) & -2.49 [-2.79, -2.19]\\
-\hspace{1em}effect of pseudohypo leaf type on $\logit(f_g)$ & 0.21 [0.18, 0.24]\\
-\hspace{1em}effect of sun growth treatment on $\logit(f_g)$ & -0.28 [-0.34, -0.21]\\*
-
-\end{longtable}
 
 \begin{table}
 
@@ -2311,6 +2211,118 @@ Download from:
 }
 
 \end{table}%
+
+\begin{longtable}{>{\raggedright\arraybackslash}p{3.5in}>{\raggedright\arraybackslash}p{2in}}
+
+\caption{\label{tbl-fixed}Fixed effect parameter estimates and 95\%
+confidence intervals (CIs) from the posterior distribution of the
+selected model. For each response variable, we estimated effects of
+growth light intensity (sun vs.~shade), measurement light intensity
+(high vs.~low), and leaf type (amphi vs.~pseudohypo). The selected model
+potentially includes of effects of \gcl{} and \fgmax{} on \(\tau\) and
+\(\lambda\).}
+
+\tabularnewline
+
+\toprule
+\textbf{Parameter} & \textbf{Estimate [95\% CI]}\\
+\midrule
+\endfirsthead
+\multicolumn{2}{@{}l}{\textit{(continued)}}\\
+\toprule
+\textbf{Parameter} & \textbf{Estimate [95\% CI]}\\
+\midrule
+\endhead
+
+\endfoot
+\bottomrule
+\endlastfoot
+\addlinespace[0.3em]
+\multicolumn{2}{l}{\textbf{$\log(l_\text{gc})$}}\\
+\hspace{1em}intercept (shade, low light, amphi) & 2.96 [2.80, 3.12]\\
+\hspace{1em}effect of sun growth treatment on $\log(l_\text{gc})$ & 0.11 [0.11, 0.12]\\
+\hspace{1em}effect of pseudohypo leaf type on $\log(l_\text{gc})$ & -0.06 [-0.07, -0.05]\\
+\addlinespace[0.3em]
+\multicolumn{2}{l}{\textbf{$\logit(f_\text{gmax})$}}\\
+\hspace{1em}intercept (shade, low light, amphi) & -2.49 [-2.79, -2.19]\\
+\hspace{1em}effect of sun growth treatment on $\logit(f_\text{gmax})$ & -0.28 [-0.34, -0.21]\\
+\hspace{1em}effect of high measurement light intensity on $\logit(f_\text{gmax})$ & 0.85 [0.82, 0.87]\\
+\hspace{1em}effect of pseudohypo leaf type on $\logit(f_\text{gmax})$ & 0.21 [0.18, 0.24]\\
+\addlinespace[0.3em]
+\multicolumn{2}{l}{\textbf{$\log(\lambda)$}}\\
+\hspace{1em}intercept (shade, low light, amphi) & 0.39 [0.28, 0.49]\\
+\hspace{1em}effect of sun growth treatment on $\log(\lambda)$ & 0.11 [0.10, 0.13]\\
+\hspace{1em}effect of high measurement light intensity on $\log(\lambda)$ & 0.01 [-0.01, 0.04]\\
+\hspace{1em}effect of pseudohypo leaf type on $\log(\lambda)$ & -0.04 [-0.05, -0.03]\\
+\hspace{1em}effect of $\logit(f_\text{gmax})$ on $\log(\lambda)$ & 0.10 [0.08, 0.13]\\
+\addlinespace[0.3em]
+\multicolumn{2}{l}{\textbf{$\log(\tau)$}}\\
+\hspace{1em}intercept (shade, low light, amphi) & 5.50 [5.14, 5.83]\\
+\hspace{1em}effect of sun growth treatment on $\log(\tau)$ & 0.05 [0.01, 0.10]\\
+\hspace{1em}effect of high measurement light intensity on $\log(\tau)$ & 0.16 [0.11, 0.22]\\
+\hspace{1em}effect of pseudohypo leaf type on $\log(\tau)$ & -0.03 [-0.05, -0.00]\\
+\hspace{1em}effect of $\logit(f_\text{gmax})$ on $\log(\tau)$ & 0.19 [0.13, 0.25]\\*
+
+\end{longtable}
+
+\begin{longtable}{>{\raggedright\arraybackslash}p{3.5in}>{\raggedright\arraybackslash}p{2in}}
+
+\caption{\label{tbl-random}Random effect parameter estimates and 95\%
+confidence intervals (CIs) from the posterior distribution of the
+selected model. For each response variable, we estimated
+among-individual random effects from repeated measures of the same
+individual, where possible, random effects of population
+(nonphylogenetic), and phylogenetically structured random effects of
+population. We report the random effect standard deviations (SD). For
+population-level random effects, we also estimated correlations between
+traits.}
+
+\tabularnewline
+
+\toprule
+\textbf{Parameter} & \textbf{Estimate [95\% CI]}\\
+\midrule
+\endfirsthead
+\multicolumn{2}{@{}l}{\textit{(continued)}}\\
+\toprule
+\textbf{Parameter} & \textbf{Estimate [95\% CI]}\\
+\midrule
+\endhead
+
+\endfoot
+\bottomrule
+\endlastfoot
+\addlinespace[0.3em]
+\multicolumn{2}{l}{\textit{among-individual random effects}}\\
+\hspace{1em}SD in $\log \left( \lambda \right)$ & 0.08 [0.07, 0.08]\\
+\hspace{1em}SD in $\log \left( \tau \right)$ & 0.21 [0.19, 0.23]\\
+\hspace{1em}SD in $\text{logit} \left( f_\text{gmax} \right)$ & 0.38 [0.35, 0.41]\\
+\addlinespace[0.3em]
+\multicolumn{2}{l}{\textit{phylogenetic random effects}}\\
+\hspace{1em}SD in $\log \left( \lambda \right)$ & 0.07 [0.01, 0.11]\\
+\hspace{1em}SD in $\log \left( \tau \right)$ & 0.27 [0.16, 0.40]\\
+\hspace{1em}SD in $\log \left( l_\text{gc} \right)$ & 0.13 [0.07, 0.21]\\
+\hspace{1em}SD in $\text{logit} \left( f_\text{gmax} \right)$ & 0.23 [0.06, 0.41]\\
+\hspace{1em}correlation between in $\log \left( \lambda \right)$ and $\log \left( \tau \right)$ & 0.47 [-0.23, 0.84]\\
+\hspace{1em}correlation between in $\log \left( \lambda \right)$ and $\log \left( l_\text{gc} \right)$ & 0.16 [-0.42, 0.71]\\
+\hspace{1em}correlation between in $\log \left( \lambda \right)$ and $\text{logit} \left( f_\text{gmax} \right)$ & -0.02 [-0.63, 0.61]\\
+\hspace{1em}correlation between in $\log \left( \tau \right)$ and $\log \left( l_\text{gc} \right)$ & 0.68 [0.15, 0.91]\\
+\hspace{1em}correlation between in $\log \left( \tau \right)$ and $\text{logit} \left( f_\text{gmax} \right)$ & 0.22 [-0.43, 0.71]\\
+\hspace{1em}correlation between in $\log \left( l_\text{gc} \right)$ and $\text{logit} \left( f_\text{gmax} \right)$ & 0.46 [-0.24, 0.88]\\
+\addlinespace[0.3em]
+\multicolumn{2}{l}{\textit{population (nonphylogenetic) random effects}}\\
+\hspace{1em}SD in $\log \left( \lambda \right)$ & 0.02 [0.00, 0.05]\\
+\hspace{1em}SD in $\log \left( \tau \right)$ & 0.04 [0.00, 0.13]\\
+\hspace{1em}SD in $\log \left( l_\text{gc} \right)$ & 0.04 [0.02, 0.08]\\
+\hspace{1em}SD in $\text{logit} \left( f_\text{gmax} \right)$ & 0.15 [0.07, 0.25]\\
+\hspace{1em}correlation between in $\log \left( \lambda \right)$ and $\log \left( \tau \right)$ & 0.09 [-0.76, 0.81]\\
+\hspace{1em}correlation between in $\log \left( \lambda \right)$ and $\log \left( l_\text{gc} \right)$ & 0.05 [-0.74, 0.75]\\
+\hspace{1em}correlation between in $\log \left( \lambda \right)$ and $\text{logit} \left( f_\text{gmax} \right)$ & -0.22 [-0.81, 0.60]\\
+\hspace{1em}correlation between in $\log \left( \tau \right)$ and $\log \left( l_\text{gc} \right)$ & 0.25 [-0.70, 0.88]\\
+\hspace{1em}correlation between in $\log \left( \tau \right)$ and $\text{logit} \left( f_\text{gmax} \right)$ & 0.14 [-0.68, 0.78]\\
+\hspace{1em}correlation between in $\log \left( l_\text{gc} \right)$ and $\text{logit} \left( f_\text{gmax} \right)$ & 0.38 [-0.27, 0.83]\\*
+
+\end{longtable}
 
 \newpage{}
 

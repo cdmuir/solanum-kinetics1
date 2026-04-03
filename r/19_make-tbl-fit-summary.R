@@ -1,4 +1,8 @@
 # Make table of all model parameter estimates and CIs
+# Note that I made separate fixed effects table in the qmd file, so even though
+# I export a fixed effects table, I am currently only using the random effects
+# table in the qmd file.
+
 source("r/header.R")
 
 loggcl_latex = "$\\log \\left( l_\\text{gc} \\right)$"
@@ -17,7 +21,7 @@ df_summary1 = summarise_draws(fit,
                               .args = list(probs = c((1 - ci_level) / 2, 1 - (1 - ci_level) / 2), names = FALSE)) |>
   mutate(
     across(where(is_double), ~ formatC(., format = "f", digits = digits)),
-    `Estimate [95% CI]` = glue("{estimate} [{quantile2.1}, {quantile2.2}]")
+    `Estimate [95\\% CI]` = glue("{estimate} [{quantile2.1}, {quantile2.2}]")
     ) |>
   filter(
     !str_detect(variable, "^Intercept_"),
@@ -118,48 +122,3 @@ write_rds(list(
   df_random_sd = df_random_sd,
   df_random_cor = df_random_cor
 ), "objects/tbl-fit-summary.rds")
-
-library(knitr)
-library(kableExtra)
-bind_rows(
-  df_random_sd |>
-    select(group2, Type, resp, `Estimate [95% CI]`, description),
-  
-  df_random_cor |>
-    select(group2, Type, resp1, resp2, `Estimate [95% CI]`, description)
-) |>
-  arrange(group2, Type) |>
-  select(description, `Estimate [95% CI]`) |>
-  kable(
-    col.names = c("Parameter description", "Estimate [95\\% CI]"),
-    booktabs = TRUE,
-    format = "latex",
-    escape = FALSE
-  ) |>
-  kable_styling(latex_options = c("striped")) |>
-  pack_rows(
-    "among-individual random effects",
-    1,
-    3,
-    escape = FALSE,
-    bold = TRUE,
-    italic = FALSE
-  ) |>
-  pack_rows(
-    "phylogenetic random effects",
-    4,
-    13,
-    escape = FALSE,
-    bold = TRUE,
-    italic = FALSE
-  ) |>
-  pack_rows(
-    "population (nonphylogenetic) random effects",
-    14,
-    23,
-    escape = FALSE,
-    bold = TRUE,
-    italic = FALSE
-  ) |>
-  column_spec(1, width = "4.5in") |>
-  column_spec(2, width = "2in")

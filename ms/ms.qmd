@@ -665,9 +665,9 @@ Stomatal conductance (\gsw) decreased rapidly in response to a step change in hu
 
 ### Variation in guard cell length and aperture
 
-Guard cell length (\gcl) differed among species and varied to a lesser extent between growth light intensity treatments and leaf surfaces. In contrast, stomatal conductance as a fraction of maximum conductance (\fgmax) was most strongly determined by measurement light intensity. Excluding treatment effects, phylogenetically structured differences among populations (i.e. phylogenetic heriability) accounted for `r gcl_phylo_var` of the variance in \gcl{} ([@fig-variance; @tbl-variance]). There was also developmental plasticity in \gcl. On average, \gcl{} increased by $`r formatC(post_gcl_sun[['estimate']], format = 'f', digits = 1)`$% [95% CI: $`r formatC(post_gcl_sun[['q2.5']], format = 'f', digits = 1)`$ to $`r formatC(post_gcl_sun[['q97.5']], format = 'f', digits = 1)`$%] in the sun treatment ([@fig-accession-anatomy]a; [@tbl-fit]). The average \gcl{} of pseudohypo leaves was $`r formatC(post_gcl_curvetype[['estimate']], format = 'f', digits = 1)`$% [95% CI: $`r formatC(post_gcl_curvetype[['q2.5']], format = 'f', digits = 1)`$ to $`r formatC(post_gcl_curvetype[['q97.5']], format = 'f', digits = 1)`$%] shorter than amphi leaves ([@fig-accession-anatomy]a; [@tbl-fit]). This was not because of plasticity, as we measured amphi and pseudohypo curves on the same leaf. Rather, this was a composition effect. Adaxial stomata are larger than abaxial stomata in these species ([@fig-gcl]), so the average \gcl{} in pseudohypo leaves was higher than in amphi leaves because the former only included abaxial stomata. 
+Guard cell length (\gcl) differed among species and varied to a lesser extent between growth light intensity treatments and leaf surfaces. In contrast, stomatal conductance as a fraction of maximum conductance (\fgmax) was most strongly determined by measurement light intensity. Excluding treatment effects, phylogenetically structured differences among populations (i.e. phylogenetic heriability) accounted for `r gcl_phylo_var` of the variance in \gcl{} ([@fig-variance; @tbl-variance]). There was also developmental plasticity in \gcl. On average, \gcl{} increased by $`r formatC(post_gcl_sun[['estimate']], format = 'f', digits = 1)`$% [95% CI: $`r formatC(post_gcl_sun[['q2.5']], format = 'f', digits = 1)`$ to $`r formatC(post_gcl_sun[['q97.5']], format = 'f', digits = 1)`$%] in the sun treatment ([@fig-accession-anatomy]a; [@tbl-fixed]). The average \gcl{} of pseudohypo leaves was $`r formatC(post_gcl_curvetype[['estimate']], format = 'f', digits = 1)`$% [95% CI: $`r formatC(post_gcl_curvetype[['q2.5']], format = 'f', digits = 1)`$ to $`r formatC(post_gcl_curvetype[['q97.5']], format = 'f', digits = 1)`$%] shorter than amphi leaves ([@fig-accession-anatomy]a; [@tbl-fixed]). This was not because of plasticity, as we measured amphi and pseudohypo curves on the same leaf. Rather, this was a composition effect. Adaxial stomata are larger than abaxial stomata in these species ([@fig-gcl]), so the average \gcl{} in pseudohypo leaves was higher than in amphi leaves because the former only included abaxial stomata. 
 
-The phylogenetic heritability of \fgmax{} was low, accounted for `r fgmax_phylo_var` of the variance ([@fig-variance; @tbl-variance]). High measurement light intensity increased \fgmax{} by an average of $`r formatC(post_fgmax_high[['estimate']], format = 'f', digits = 2)`$ logit units [95% CI: $`r formatC(post_fgmax_high[['q2.5']], format = 'f', digits = 2)`$ to $`r formatC(post_fgmax_high[['q97.5']], format = 'f', digits = 2)`$] ([@fig-accession-anatomy]b; [@tbl-fit]). For example, if $f_\text{gmax} = 0.1$ in low light, the typical \fgmax{} for the same leaf acclimated to high light was `r formatC(plogis(qlogis(0.1) + post_fgmax_high[['estimate']]), format = 'f', digits = 2)`. Sun leaves had on average $`r formatC(post_fgmax_sun[['estimate']], format = 'f', digits = 2)`$ logit units [95% CI: $`r formatC(post_fgmax_sun[['q2.5']], format = 'f', digits = 2)`$ to $`r formatC(post_fgmax_sun[['q97.5']], format = 'f', digits = 2)`$] lower \fgmax{} than shade-grown plants ([@fig-accession-anatomy]b; [@tbl-fit]). Treated pseudohypo leaves had on average $`r formatC(post_fgmax_pseudohypo[['estimate']], format = 'f', digits = 2)`$ logit units [95% CI: $`r formatC(post_fgmax_pseudohypo[['q2.5']], format = 'f', digits = 2)`$ to $`r formatC(post_fgmax_pseudohypo[['q97.5']], format = 'f', digits = 2)`$] higher \fgmax{} than untreated, amphistomatous leaves ([@fig-accession-anatomy]b; [@tbl-fit]). This indicates that stomatal aperture was more open in leaves where gas exchange through adaxial stomata was blocked.
+The phylogenetic heritability of \fgmax{} was low, accounted for `r fgmax_phylo_var` of the variance ([@fig-variance; @tbl-variance]). High measurement light intensity increased \fgmax{} by an average of $`r formatC(post_fgmax_high[['estimate']], format = 'f', digits = 2)`$ logit units [95% CI: $`r formatC(post_fgmax_high[['q2.5']], format = 'f', digits = 2)`$ to $`r formatC(post_fgmax_high[['q97.5']], format = 'f', digits = 2)`$] ([@fig-accession-anatomy]b; [@tbl-fixed]). For example, if $f_\text{gmax} = 0.1$ in low light, the typical \fgmax{} for the same leaf acclimated to high light was `r formatC(plogis(qlogis(0.1) + post_fgmax_high[['estimate']]), format = 'f', digits = 2)`. Sun leaves had on average $`r formatC(post_fgmax_sun[['estimate']], format = 'f', digits = 2)`$ logit units [95% CI: $`r formatC(post_fgmax_sun[['q2.5']], format = 'f', digits = 2)`$ to $`r formatC(post_fgmax_sun[['q97.5']], format = 'f', digits = 2)`$] lower \fgmax{} than shade-grown plants ([@fig-accession-anatomy]b; [@tbl-fixed]). Treated pseudohypo leaves had on average $`r formatC(post_fgmax_pseudohypo[['estimate']], format = 'f', digits = 2)`$ logit units [95% CI: $`r formatC(post_fgmax_pseudohypo[['q2.5']], format = 'f', digits = 2)`$ to $`r formatC(post_fgmax_pseudohypo[['q97.5']], format = 'f', digits = 2)`$] higher \fgmax{} than untreated, amphistomatous leaves ([@fig-accession-anatomy]b; [@tbl-fixed]). This indicates that stomatal aperture was more open in leaves where gas exchange through adaxial stomata was blocked.
 
 ```{r, variance, echo = FALSE}
 #| label: fig-variance
@@ -702,7 +702,9 @@ knitr::include_graphics("../figures/accession-anatomy.pdf")
 
 ### Variation in stomatal closure kinetic parameters
 
-Estimates of stomatal closure kinetic parameters for each curve are in @tbl-estimates-curve and estimates for each population are in @tbl-estimates-accession. These will be deposited on Dryad upon publication. The time-constant $\tau$ exhibited moderate phylogenetic heritability, accounting for `r `tau_phylo_var` of the variance, whereas $\lambda$ varied more within populations ([@fig-variance; @tbl-variance]). Some light treatments also affected kinetic parameters. Growth light intensity did not significantly affect $\tau$ ([@fig-accession-kinetics; @tbl-fit-summary]). In sun plants, $\tau$ was on average `r signif(100 * (exp(post_tau_sun["Estimate"]) - 1), 3)`% [95% CI: `r signif(100 * (exp(post_tau_sun["Q2.5"]) - 1), 3)` to `r signif(100 * (exp(post_tau_sun["Q97.5"]) - 1), 3)`%] lower than in shade plants after accounting for other explanatory variables. Within the same leaf, increasing the measurement light intensity prior to the humidity step change from \ppfdqty{150} to \ppfdqty{2000} significantly increased $\tau$ by `r signif(100 * (exp(post_tau_high["Estimate"]) - 1), 3)`% [95% CI: `r signif(100 * (exp(post_tau_high["Q2.5"]) - 1), 3)` to `r signif(100 * (exp(post_tau_high["Q97.5"]) - 1), 3)`%] ([@fig-accession-kinetics; @tbl-fit-summary]). The time lag $\lambda$ responded to growth, but not measurement light intensity after accounting for other explanatory variables ([@fig-accession-kinetics; @tbl-fit-summary]). In sun plants, $\tau$ was on average `r signif(100 * (exp(post_lambda_sun["Estimate"]) - 1), 3)`% [95% CI: `r signif(100 * (exp(post_lambda_sun["Q2.5"]) - 1), 3)` to `r signif(100 * (exp(post_lambda_sun["Q97.5"]) - 1), 3)`%] greater than in shade plants. Higher measurement light decreased increased $\lambda$ slightly by `r signif(100 * (exp(post_lambda_high["Estimate"]) - 1), 3)`% [95% CI: `r signif(100 * (exp(post_lambda_high["Q2.5"]) - 1), 3)` to `r signif(100 * (exp(post_lambda_high["Q97.5"]) - 1), 3)`%]. 
+Estimates of stomatal closure kinetic parameters for each curve are in @tbl-estimates-curve and estimates for each population are in @tbl-estimates-accession. These will be deposited on Dryad upon publication. The time-constant $\tau$ exhibited moderate phylogenetic heritability, accounting for `r `tau_phylo_var` of the variance, whereas $\lambda$ varied more within populations ([@fig-variance; @tbl-variance]). Some light treatments also affected kinetic parameters. Growth light intensity did not significantly affect $\tau$ ([@fig-accession-kinetics; @tbl-fixed]). In sun plants, $\tau$ was on average `r signif(100 * (exp(post_tau_sun["Estimate"]) - 1), 3)`% [95% CI: `r signif(100 * (exp(post_tau_sun["Q2.5"]) - 1), 3)` to `r signif(100 * (exp(post_tau_sun["Q97.5"]) - 1), 3)`%] lower than in shade plants after accounting for other explanatory variables. Within the same leaf, increasing the measurement light intensity prior to the humidity step change from \ppfdqty{150} to \ppfdqty{2000} significantly increased $\tau$ by `r signif(100 * (exp(post_tau_high["Estimate"]) - 1), 3)`% [95% CI: `r signif(100 * (exp(post_tau_high["Q2.5"]) - 1), 3)` to `r signif(100 * (exp(post_tau_high["Q97.5"]) - 1), 3)`%] ([@fig-accession-kinetics; @tbl-fixed]). The time lag $\lambda$ responded to growth, but not measurement light intensity after accounting for other explanatory variables ([@fig-accession-kinetics; @tbl-fixed]). In sun plants, $\tau$ was on average `r signif(100 * (exp(post_lambda_sun["Estimate"]) - 1), 3)`% [95% CI: `r signif(100 * (exp(post_lambda_sun["Q2.5"]) - 1), 3)` to `r signif(100 * (exp(post_lambda_sun["Q97.5"]) - 1), 3)`%] greater than in shade plants. Higher measurement light decreased increased $\lambda$ slightly by `r signif(100 * (exp(post_lambda_high["Estimate"]) - 1), 3)`% [95% CI: `r signif(100 * (exp(post_lambda_high["Q2.5"]) - 1), 3)` to `r signif(100 * (exp(post_lambda_high["Q97.5"]) - 1), 3)`%]. 
+
+somewhere, random effect [@tbl-random]
 
 ##### MARKER - working here on this table
 
@@ -714,164 +716,15 @@ Estimates of stomatal closure kinetic parameters for each curve are in @tbl-esti
 knitr::include_graphics("../figures/accession-kinetics.pdf")
 ```
 
-```{r fit-summary, echo=FALSE, eval=TRUE, message=FALSE, warning=FALSE}
-#| label: tbl-fit-summary
-#| tbl-cap: "Parameter estimates and 95% confidence intervals (CIs) from the posterior distribution of the selected model. CONTINUE EDITING HERE Models potentially include fixed and random effects of growth light intensity (shade and sun), measurement light intensity (low and high), $\\log \\mathrm{LMA}$, and their interactions on amphistomy advantage ($\\mathrm{AA}$). LMA can also be affected by growth light intensity and population. For phylogenetically structured random effects, we report the estimated standard deviation (SD)."
-#| results: asis
-
-tbl_fit_summary = read_rds("../objects/tbl-fit-summary.rds")
-
-invisible(list2env(tbl_fit_summary, envir = .GlobalEnv))
-
-bind_rows(
-  df_random_sd |>
-    select(group2, Type, resp, `Estimate [95% CI]`, description),
-  
-  df_random_cor |>
-    select(group2, Type, resp1, resp2, `Estimate [95% CI]`, description)
-) |>
-  arrange(group2, Type) |>
-  select(description, `Estimate [95% CI]`) |>
-  kable(
-    col.names = c("Parameter description", "Estimate [95\\% CI]"),
-    booktabs = TRUE,
-    format = "latex",
-    escape = FALSE
-  ) |>
-  kable_styling(latex_options = c("striped")) |>
-  pack_rows(
-    "among-individual random effects",
-    1,
-    3,
-    escape = FALSE,
-    bold = TRUE,
-    italic = FALSE
-  ) |>
-  pack_rows(
-    "phylogenetic random effects",
-    4,
-    13,
-    escape = FALSE,
-    bold = TRUE,
-    italic = FALSE
-  ) |>
-  pack_rows(
-    "population (nonphylogenetic) random effects",
-    14,
-    23,
-    escape = FALSE,
-    bold = TRUE,
-    italic = FALSE
-  ) |>
-  column_spec(1, width = "4.5in") |>
-  column_spec(2, width = "2in")
-
-```
 
 
-Guard cell size and \fgmax{} affected stomatal kinetics, but at different levels of biological organization. In the model with the lowest LOOIC (see @tbl-comparison for model comparison results), the only significant partial correlation was between \gcl and $\tau$ ($\rho = `r signif(rho, 2)`$ [95% CI: $`r signif(rho_lower, 2)` to `r signif(rho_upper, 2)`$)] was a significant phylogenetic correlation between \gcl and $\tau$ [@fig-?]. PARTIAL CORRELATION RESULT. Variation in \gcl within populations did not explain within-population variation in $\tau$ [@tbl-fit]. NOTE THAT BEST MODEL RETAINED INDIVIDUAL LEVEL EFFECT OF GCL, BUT COEFFICIENT WAS NOT SIGNIFICANT. OTHER BEST MODELS DID NOT RETAIN THIS. DID GCL MEDIATE AFFECT OF TREATMENTS?
+Guard cell size and \fgmax{} affected stomatal kinetics, but at different levels of biological organization. In the model with the lowest LOOIC (see @tbl-comparison for model comparison results), the only significant partial correlation was between \gcl{} and $\tau$ ($\rho = `r signif(rho, 2)`$ [95% CI: $`r signif(rho_lower, 2)` to `r signif(rho_upper, 2)`$)] was a significant phylogenetic correlation between \gcl{} and $\tau$ [@fig-?]. PARTIAL CORRELATION RESULT. Variation in \gcl{} within populations did not explain within-population variation in $\tau$ [@tbl-fixed]. NOTE THAT BEST MODEL RETAINED INDIVIDUAL LEVEL EFFECT OF GCL, BUT COEFFICIENT WAS NOT SIGNIFICANT. OTHER BEST MODELS DID NOT RETAIN THIS. DID GCL MEDIATE AFFECT OF TREATMENTS?
 
 
 Need to show (this is a growing, incomplete list):
 - phylogenetic partial correlation
 - partial correlation showing that gcl and tau are (only?) significant phylogenetic covariates
 
-```{r fit}
-#| label: tbl-fit
-#| results: asis
-#| echo: false
-#| message: false
-#| warning: false
-
-clean_repsonse_var = function(.x) {
-  case_when(
-    .x == "logitfgmax" ~ "$\\logit(f_g)$",
-    .x == "loggcl" ~ "$\\log(l_\\mathrm{gc})$",
-    .x == "loglambdamean" ~ "$\\log(\\lambda)$",
-    .x == "logtaumean" ~ "$\\log(\\tau)$",
-    TRUE ~ .x
-  )
-}
-
-clean_explanatory_var = function(.x) {
-  case_when(
-    .x == "Intercept" ~ "intercept (shade, low light)",
-    .x == "lighttreatmentsun" ~ "sun growth treatment",
-    .x == "lightintensityhigh" ~ "high measurement light intensity",
-    .x == "leaftypepseudohypo" ~ "pseudohypo leaf type",
-    .x == "logitfgmax" ~ "$\\logit(f_g)$",
-    .x == "loggcl" ~ "$\\log(l_\\mathrm{gc})$",
-    .x == "loglambdamean" ~ "$\\log(\\lambda)$",
-    .x == "logtaumean" ~ "$\\log(\\tau)$",
-    TRUE ~ .x
-  )
-}
-
-describe_effect = function(explanatory, response) {
-  if (str_detect(explanatory, "^intercept")) {
-    explanatory
-  } else {
-    glue("effect of {explanatory} on {response}")
-  }
-}
-
-fx1 = fixef(fit, summary = TRUE) |>
-  as.data.frame() |>
-  tibble::rownames_to_column("par") |>
-  mutate(
-    across(where(is_double), ~ formatC(., format = "f", digits = 2)),
-    `Estimate [95\\% CI]` = glue("{Estimate} [{Q2.5}, {Q97.5}]")
-  ) |>
-  separate_wider_delim(par, delim = "_", names = c("response", "explanatory")) |>
-  mutate(
-    response = clean_repsonse_var(response),
-    explanatory = clean_explanatory_var(explanatory)
-  ) |>
-  rowwise() |>
-  mutate(
-    Parameter = describe_effect(explanatory, response)
-  ) |>
-  ungroup() |>
-  arrange(response, explanatory) 
-
-fx2 = fx1 |>
-  summarize(n = n(), .by = response) |>
-  mutate(
-    response = str_replace_all(response, "\\\\", "\\\\\\\\"),
-    cumsum = cumsum(n)
-  )
-
-fx1 |>
-  select(Parameter, `Estimate [95\\% CI]`) |>
-    kable(
-      format = "latex",
-      booktabs = TRUE,
-      longtable = TRUE,
-      escape = FALSE,
-      caption = "Fixed effects (posterior mean, SE, and 95\\% confidence intervals)."
-    ) |>
-    kable_styling(latex_options = c("repeat_header", "hold_position")) |>
-    row_spec(0, bold = TRUE) |>
-    pack_rows(fx2$response[1],
-            1,
-            fx2$cumsum[1],
-            escape = FALSE) |>
-    pack_rows(fx2$response[2],
-             fx2$cumsum[1] + 1,
-             fx2$cumsum[2],
-             escape = FALSE) |>
-  pack_rows(fx2$response[3],
-             fx2$cumsum[2] + 1,
-             fx2$cumsum[3],
-             escape = FALSE) |>
-  pack_rows(fx2$response[4],
-             fx2$cumsum[3] + 1,
-             fx2$cumsum[4],
-             escape = FALSE) |>
-  column_spec(1, width = "4in") |>
-  column_spec(2, width = "2in")
-
-```
 
 ```{r, tbl-comparison}
 #| label: tbl-comparison
@@ -1034,6 +887,174 @@ Download from: \url{https://github.com/cdmuir/solanum-kinetics/raw/refs/heads/ma
 
 : Raw data file in CSV format containing estimates of stomatal anatomy and kinetic variables associated with each population based on multiresponse model predictions. A final version will be deposited on Dryad after acceptance. This version is available for reviewers.
 :::
+
+```{r fixed}
+#| label: tbl-fixed
+#| results: asis
+#| echo: false
+#| message: false
+#| warning: false
+#| tbl-cap: "Fixed effect parameter estimates and 95% confidence intervals (CIs) from the posterior distribution of the selected model. For each response variable, we estimated effects of growth light intensity (sun vs. shade), measurement light intensity (high vs. low), and leaf type (amphi vs. pseudohypo). The selected model potentially includes of effects of \\gcl{} and \\fgmax{} on $\\tau$ and $\\lambda$."
+
+clean_repsonse_var = function(.x) {
+  case_when(
+    .x == "logitfgmax" ~ "$\\logit(f_\\text{gmax})$",
+    .x == "loggcl" ~ "$\\log(l_\\text{gc})$",
+    .x == "loglambdamean" ~ "$\\log(\\lambda)$",
+    .x == "logtaumean" ~ "$\\log(\\tau)$",
+    TRUE ~ .x
+  )
+}
+
+clean_explanatory_var = function(.x) {
+  case_when(
+    .x == "Intercept" ~ "intercept (shade, low light, amphi)",
+    .x == "lighttreatmentsun" ~ "sun growth treatment",
+    .x == "lightintensityhigh" ~ "high measurement light intensity",
+    .x == "leaftypepseudohypo" ~ "pseudohypo leaf type",
+    .x == "logitfgmax" ~ "$\\logit(f_\\text{gmax})$",
+    .x == "loggcl" ~ "$\\log(l_\\text{gc})$",
+    .x == "loglambdamean" ~ "$\\log(\\lambda)$",
+    .x == "logtaumean" ~ "$\\log(\\tau)$",
+    TRUE ~ .x
+  )
+}
+
+describe_effect = function(explanatory, response) {
+  if (str_detect(explanatory, "^intercept")) {
+    explanatory
+  } else {
+    glue("effect of {explanatory} on {response}")
+  }
+}
+
+fx1 = fixef(fit, summary = TRUE) |>
+  as.data.frame() |>
+  rownames_to_column("par") |>
+  mutate(across(where(is_double), ~ formatC(., format = "f", digits = 2)),
+         `Estimate [95\\% CI]` = glue("{Estimate} [{Q2.5}, {Q97.5}]")) |>
+  separate_wider_delim(par,
+                       delim = "_",
+                       names = c("response", "explanatory")) |>
+  arrange(response, match(
+    explanatory,
+    c(
+      "Intercept",
+      "lighttreatmentsun",
+      "lightintensityhigh",
+      "leaftypepseudohypo",
+      "logitfgmax",
+      "loggcl"
+    )
+  )) |>
+  mutate(response = clean_repsonse_var(response),
+         explanatory = clean_explanatory_var(explanatory)) |>
+  rowwise() |>
+  mutate(Parameter = describe_effect(explanatory, response)) |>
+  ungroup()
+
+
+fx2 = fx1 |>
+  summarize(n = n(), .by = response) |>
+  mutate(
+    response = str_replace_all(response, "\\\\", "\\\\\\\\"),
+    cumsum = cumsum(n)
+  )
+
+fx1 |>
+  select(Parameter, `Estimate [95\\% CI]`) |>
+    kable(
+      format = "latex",
+      booktabs = TRUE,
+      longtable = TRUE,
+      escape = FALSE
+    ) |>
+    kable_styling(latex_options = c("repeat_header", "hold_position")) |>
+    row_spec(0, bold = TRUE) |>
+    pack_rows(fx2$response[1],
+            1,
+            fx2$cumsum[1],
+            escape = FALSE) |>
+    pack_rows(fx2$response[2],
+             fx2$cumsum[1] + 1,
+             fx2$cumsum[2],
+             escape = FALSE) |>
+  pack_rows(fx2$response[3],
+             fx2$cumsum[2] + 1,
+             fx2$cumsum[3],
+             escape = FALSE) |>
+  pack_rows(fx2$response[4],
+             fx2$cumsum[3] + 1,
+             fx2$cumsum[4],
+             escape = FALSE) |>
+  column_spec(1, width = "3.5in") |>
+  column_spec(2, width = "2in")
+
+```
+
+```{r random, eval = TRUE}
+#| label: tbl-random
+#| results: asis
+#| echo: false
+#| message: false
+#| warning: false
+#| tbl-cap: "Random effect parameter estimates and 95% confidence intervals (CIs) from the posterior distribution of the selected model. For each response variable, we estimated among-individual random effects from repeated measures of the same individual, where possible, random effects of population (nonphylogenetic), and phylogenetically structured random effects of population. We report the random effect standard deviations (SD). For population-level random effects, we also estimated correlations between traits."
+
+tbl_fit_summary = read_rds("../objects/tbl-fit-summary.rds")
+
+invisible(list2env(tbl_fit_summary, envir = .GlobalEnv))
+
+rx1 = bind_rows(
+  df_random_sd |>
+    select(group2, Type, resp, `Estimate [95\\% CI]`, description),
+  
+  df_random_cor |>
+    select(group2, Type, resp1, resp2, `Estimate [95\\% CI]`, description)
+) |>
+  arrange(group2, Type, resp, resp1, resp2)
+
+rx2 = rx1 |>
+  summarize(n = n(), .by = group2) |>
+  mutate(group2 = paste0(group2, " random effects"), cumsum = cumsum(n))
+    
+rx1 |>
+  select(Parameter = description, `Estimate [95\\% CI]`) |>
+  kable(
+    format = "latex",
+    booktabs = TRUE,
+    longtable = TRUE,
+    escape = FALSE
+  ) |>
+    kable_styling(latex_options = c("repeat_header", "hold_position")) |>
+    row_spec(0, bold = TRUE) |>
+  pack_rows(
+    rx2$group2[1],
+    1,
+    rx2$cumsum[1],
+    escape = FALSE,
+    bold = FALSE,
+    italic = TRUE
+  ) |>
+  pack_rows(
+    rx2$group2[2],
+    rx2$cumsum[1] + 1,
+    rx2$cumsum[2],
+    escape = FALSE,
+    bold = FALSE,
+    italic = TRUE
+  ) |>
+  pack_rows(
+    rx2$group2[3],
+    rx2$cumsum[2] + 1,
+    rx2$cumsum[3],
+    escape = FALSE,
+    bold = FALSE,
+    italic = TRUE
+  ) |>
+  column_spec(1, width = "3.5in") |>
+  column_spec(2, width = "2in")
+
+```
 
 {{< pagebreak >}}
 
