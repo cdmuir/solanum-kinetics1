@@ -76,7 +76,7 @@ bf_fgmax = bf(
     (1 | b | gr(phy, cov = A))
 )
 
-l_form = crossing(
+crossing(
   lhs |>
     mutate(.resp = "loglambdamean | se(loglambdasd, sigma = TRUE)") |>
     mutate(form_lambda = glue(template_form), .keep = "unused"),
@@ -85,7 +85,8 @@ l_form = crossing(
     mutate(form_tau = glue(template_form), .keep = "unused")
 ) |>
   mutate(i = row_number(), fit_dir = fit_dir) |>
-  slice_sample(n = 19) |>
+  # randomize order
+  slice_sample(n = nrow(lhs) ^ 2) |>
   future_pwalk(\(form_lambda, form_tau, i, fit_dir) {
     file_name = glue("{fit_dir}/fit{.n}.rds",
                      .n = str_pad(
