@@ -15,7 +15,7 @@ fit = read_rds("objects/best_model.rds")
 ci_level = 0.95
 digits = 2 
 
-df_summary1 = summarise_draws(fit,
+df_summary1 = summarize_draws(fit,
                               estimate = median,
                               quantile2,
                               .args = list(probs = c((1 - ci_level) / 2, 1 - (1 - ci_level) / 2), names = FALSE)) |>

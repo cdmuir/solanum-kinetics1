@@ -30,12 +30,12 @@ df_var = fit |>
   mutate(across(where(is_double), ~ .x / total_var)) |>
   mutate(ind = resid + accid, .keep = "unused") |>
   split(~ trait) |>
-  map(summarize_draws) |>
+  map(summarize_draws, median, quantile2, .args = list(probs = c(0.025, 0.975))) |>
   map(filter, variable != "trait") |>
   imap_dfr(\(.x, .y) {
     .x |> mutate(trait = .y)
   }) |>
-  select(variable, median, q5, q95, trait) |>
+  select(variable, median, `q2.5`, `q97.5`, trait) |>
   mutate(across(where(is_double), ~ if_else(.x == 0, NA_real_, .x))) |>
   filter(variable != "total_var") |>
   mutate(
@@ -88,7 +88,7 @@ df_var |>
   mutate(
     Trait = trait1,
     `\\% variance` = formatC(median * 100, format = "f", digits = 1),
-    `95\\% CI` = glue("[{formatC(q5 * 100, format = 'f', digits = 1)}, {formatC(q95 * 100, format = 'f', digits = 1)}]"),
+    `95\\% CI` = glue("[{formatC(`q2.5` * 100, format = 'f', digits = 1)}, {formatC(`q97.5` * 100, format = 'f', digits = 1)}]"),
   ) |>
   filter(`\\% variance` != "NA") |>
   arrange(Trait, vc) |>

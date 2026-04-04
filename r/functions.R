@@ -24,7 +24,7 @@ check_convergence = function(fit, convergence_criteria) {
   diag = c(
     fit |>
       as_draws_df() |>
-      summarise_draws() |>
+      summarize_draws() |>
       as_tibble() |>
       filter(variable != "lprior") |>
       summarize(
@@ -434,9 +434,11 @@ get_posterior_epred = function(fit, newdata, resp, prefix = resp, inv) {
       (1 | gr(phy, cov = A))
   ) |>
     as_draws_df() |>
-    summarise_draws() |>
+    summarize_draws(median, quantile2, .args = list(probs = c(0.025, 0.975))) |>
     mutate(
-      !!paste0(prefix, "_estimate") := inv(median),!!paste0(prefix, "_lowerCI")  := inv(q5),!!paste0(prefix, "_upperCI")  := inv(q95)
+      !!paste0(prefix, "_estimate") := inv(median),
+      !!paste0(prefix, "_lowerCI")  := inv(`q2.5`),
+      !!paste0(prefix, "_upperCI")  := inv(`q97.5`)
     ) |>
     select(variable, starts_with(prefix))
 }
