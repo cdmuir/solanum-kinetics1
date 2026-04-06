@@ -1,0 +1,95 @@
+# Plot effects of fgmax on tau and lambda - WORK IN PROGRESS
+source("r/header.R")
+
+fit = read_rds("objects/best_model.rds")
+dat = fit$data
+
+df_new = dat |>
+  summarize(
+    min_logitfgmax = min(logitfgmax),
+    max_logitfgmax = max(logitfgmax),
+    .by = c(lighttreatment, lightintensity, leaftype)
+  ) |>
+  reframe(
+    logitfgmax = seq(min_logitfgmax, max_logitfgmax, length.out = 100),
+    .by = c(lighttreatment, lightintensity, leaftype)
+  ) |>
+  mutate(
+    logtausd = 0,
+    loglambdasd = 0,
+    variable = glue("...{row_number()}")
+  )
+
+df_pred_tau = posterior_epred(fit,
+                              newdata = df_new,
+                              re_formula = NA,
+                              resp = "logtaumean") |>
+  as_draws_df() |>
+  summarize_draws(median, quantile2, .args = list(probs = c(0.025, 0.975))) |>
+  full_join(df_new, by = join_by(variable)) |>
+  rename(logtaumean = median)
+
+df_pred_lambda = posterior_epred(fit,
+                                 newdata = df_new,
+                                 re_formula = NA,
+                                 resp = "loglambdamean") |>
+  as_draws_df() |>
+  summarize_draws(median, quantile2, .args = list(probs = c(0.025, 0.975))) |>
+  full_join(df_new, by = join_by(variable)) |>
+  rename(loglambdamean = median)
+
+# fgmax vs. tau
+ggplot(dat, aes(plogis(logitfgmax), exp(logtaumean), color = leaftype)) +
+  geom_point(alpha = 0.5) +
+  geom_ribbon(
+    data = df_pred_tau,
+    aes(
+      x = plogis(logitfgmax),
+      ymin = exp(`q2.5`),
+      ymax = exp(`q97.5`),
+      fill = leaftype,
+      color = NULL
+    ),
+    alpha = 0.3
+  ) +
+  geom_line(data = df_pred_tau, aes(x = plogis(logitfgmax))) +
+  facet_grid(lightintensity ~ lighttreatment) +
+  scale_x_continuous(transform = "logit", breaks = c(0.025, 0.1, 0.4)) +
+  scale_y_log10(breaks = c(50, 100, 200, 400)) +
+  scale_fill_manual(values = c("steelblue", "tomato")) +
+  scale_color_manual(values = c("steelblue", "tomato")) +
+  labs(
+    x = expression(paste(italic(f)[gmax], ", logit-scale")),
+    y = expression(paste(tau ~ (s), ", log-scale")),
+    color = "Leaf type:",
+    fill = "Leaf type:"
+  ) +
+  theme(legend.position = "bottom")
+
+# fgmax vs. lambda
+ggplot(dat, aes(plogis(logitfgmax), exp(loglambdamean), color = leaftype)) +
+  geom_point(alpha = 0.5) +
+  geom_ribbon(
+    data = df_pred_lambda,
+    aes(
+      x = plogis(logitfgmax),
+      ymin = exp(`q2.5`),
+      ymax = exp(`q97.5`),
+      fill = leaftype,
+      color = NULL
+    ),
+    alpha = 0.3
+  ) +
+  geom_line(data = df_pred_lambda, aes(x = plogis(logitfgmax))) +
+  facet_grid(lightintensity ~ lighttreatment) +
+  scale_x_continuous(transform = "logit", breaks = c(0.025, 0.1, 0.4)) +
+  scale_y_log10(breaks = c(1, 2)) +
+  scale_fill_manual(values = c("steelblue", "tomato")) +
+  scale_color_manual(values = c("steelblue", "tomato")) +
+  labs(
+    x = expression(paste(italic(f)[gmax], ", logit-scale")),
+    y = expression(paste(lambda ~ (unitless), ", log-scale")),
+    color = "Leaf type:",
+    fill = "Leaf type:"
+  ) +
+  theme(legend.position = "bottom")
