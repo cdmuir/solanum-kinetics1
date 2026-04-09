@@ -1084,7 +1084,7 @@ contrast, stomatal conductance as a fraction of maximum conductance
 (\fgmax) was most strongly determined by measurement light intensity.
 Excluding treatment effects, phylogenetically structured differences
 among populations (i.e.~phylogenetic heriability) accounted for 64.4\%
-{[}95\% CI: 32.3 to 81.0\%{]} of the variance in \gcl{}
+{[}95\% CI: 24.4 to 83.1\%{]} of the variance in \gcl{}
 (Figure~\ref{fig-variance}, Table~\ref{tbl-variance}). There was also
 developmental plasticity in \gcl. On average, \gcl{} increased by
 \(12.1\)\% {[}95\% CI: \(11.1\) to \(13.0\)\%{]} in the sun treatment
@@ -1099,7 +1099,7 @@ so the average \gcl{} in pseudohypo leaves was higher than in amphi
 leaves because the former only included abaxial stomata.
 
 The phylogenetic heritability of \fgmax{} was low, accounted for 16.6\%
-{[}95\% CI: 3.1 to 34.9\%{]} of the variance
+{[}95\% CI: 1.4 to 38.8\%{]} of the variance
 (Figure~\ref{fig-variance}, Table~\ref{tbl-variance}). High measurement
 light intensity increased \fgmax{} by an average of \(0.85\) logit units
 {[}95\% CI: \(0.82\) to \(0.87\){]}
@@ -1213,23 +1213,30 @@ the phylogenetic correlation nor the fixed effect regression coefficient
 were significantly different from zero (results not shown). These
 parameters are highly colinear in the posterior
 (Figure~\ref{fig-colinear}) indicating difficulty in estimating both
-terms simultaneously. Hence, the model with only phylogenetic effects is
-easier to interpret. The second reason we favor this model is that it is
+terms simultaneously and ``smearing'' out their confidence intervals
+(92). Hence, the model with only phylogenetic effects is easier to
+interpret. The second reason we favor this model is that it is
 consistent with the high phylogenetic heritability in both \gcl{} and
 \(\tau\) (Figure~\ref{fig-variance}). Visually, we observed positive
 relationships among species mean trait values (Figure~\ref{fig-gcl-tau})
 but little relationship between \gcl{} and \(\tau\) within species
 (results not shown). When comparing many models simultaneously,
-differences in LOOIC performance can occur by chance (92), so making
-judgement calls among models with similar performance can be necessary.
-The preponderance of evidence suggests that \gcl{} explains variation
-among rather than within our populations. The results in the main text
-follow from the model selected on this basis, but we discuss slightly
-different, yet plausible alternative explanations in the Supporting
-Information (Notes S1).
+differences in LOOIC performance can occur by chance (93), so judgement
+calls among models with similar performance can be necessary. The
+preponderance of evidence indicates that \gcl{} explains variation
+primarily among rather than within our populations. The results in the
+main text are based on estimates from the selected model.
 
-Focusing on the selected model, \(\tau\) increased by \ldots{} The only
-significant partial correlation was between \gcl{} and \(\tau\)
+Leaves with stomatal apertures closer to their maximum aperture closed
+more slowly than those less open (Figure~\ref{fig-fgmax-tau}). For
+example, increasing \fgmax{} from 20\% to 30\% resulted in a 10.7\%
+{[}95\% CI: 7.0 to 14.4\%{]} increase in \(\tau\) for a typical leaf in
+the reference treatment set (shade, low, amphi).
+
+\paragraph{MARKER - continue working on results
+here}\label{marker---continue-working-on-results-here}
+
+The only significant partial correlation was between \gcl{} and \(\tau\)
 (\(\rho = 0.72\) {[}95\% CI: \(-0.073 to 0.97\)){]} was a significant
 phylogenetic correlation between \gcl{} and \(\tau\) (\textbf{fig?}-?).
 PARTIAL CORRELATION RESULT. Variation in \gcl{} within populations did
@@ -1237,6 +1244,14 @@ not explain within-population variation in \(\tau\)
 Table~\ref{tbl-fixed}. NOTE THAT BEST MODEL RETAINED INDIVIDUAL LEVEL
 EFFECT OF GCL, BUT COEFFICIENT WAS NOT SIGNIFICANT. OTHER BEST MODELS
 DID NOT RETAIN THIS. DID GCL MEDIATE AFFECT OF TREATMENTS?
+
+effect of \fgmax{} on \(\tau\) Figure~\ref{fig-fgmax-tau} and
+\(\lambda\) Figure~\ref{fig-fgmax-lambda} was significant at the
+among-individual level, but there was no significant phylogenetic
+correlation between \fgmax{} and either kinetic parameter
+Table~\ref{tbl-random}. This suggests that variation in stomatal
+aperture among individuals within populations influences stomatal
+kinetics, but variation in aperture among populations does not.
 
 somewhere, random effect Table~\ref{tbl-random}
 
@@ -1311,6 +1326,27 @@ comparison. Each point is the average parameter value for one accession
 in that treatment combination. The growth and measurement light
 intensity treatments are described in the Materials and Methods
 section.}
+
+\end{figure}%
+
+\begin{figure}
+
+\centering{
+
+\pandocbounded{\includegraphics[keepaspectratio]{../figures/fgmax-tau.pdf}}
+
+}
+
+\caption{\label{fig-fgmax-tau}\textbf{Individual-level variation in stomatal apertures influences stomatal closures kinetics.}
+As the stomatal conductance as a fraction of anatomical maximum stomatal
+conductance (\fgmax, \(x\)-axis) increase, the stomatal closure
+time-constant (\(\tau\), \(y\)-axis) increases. The overall pattern was
+consistent across grow light intensity treatments (left and right
+facets), measurement light intensity treatments (top and bottom facets),
+and leaf types (point colors). Lines are estimated using linear
+regression along with 95\% confidence ribbons. The growth and
+measurement light intensity treatments are described in the Materials
+and Methods section.}
 
 \end{figure}%
 
@@ -1422,7 +1458,7 @@ between small stomata and high density, and relatedly the dearth of
 leaves with sparse, small stomata.
 
 Might be useful to relate to literature on clines in stomatal size,
-especially poplar (93) and (94) and (95)
+especially poplar (94) and (95) and (96)
 
 note about adaxial stomata: Mott (2007) reported that stomatal responses
 to humidity were independent on the two surfaces of amphistomatous
@@ -2100,15 +2136,21 @@ mediation analysis.} \emph{Psychological Methods} \textbf{15}, 309--334
 the analysis of comparative data in evolutionary biology}.
 \emph{Evolution} \textbf{45}, 1065--1080 (1991).}
 
-\bibitem[\citeproctext]{ref-mclatchie_efficient_2024}
+\bibitem[\citeproctext]{ref-mcelreath_statistical_2020}
 \CSLLeftMargin{92. }%
+\CSLRightInline{R. McElreath, \emph{Statistical {Rethinking}: A
+{Bayesian} course with examples in {R} and {Stan}}, 2nd Ed. ({Taylor and
+Francis, CRC Press}, 2020).}
+
+\bibitem[\citeproctext]{ref-mclatchie_efficient_2024}
+\CSLLeftMargin{93. }%
 \CSLRightInline{Y. McLatchie, A. Vehtari,
 \href{https://doi.org/10.1007/s11222-024-10442-4}{Efficient estimation
 and correction of selection-induced bias with order statistics}.
 \emph{Statistics and Computing} \textbf{34}, 132 (2024).}
 
 \bibitem[\citeproctext]{ref-klein_climate_2025}
-\CSLLeftMargin{93. }%
+\CSLLeftMargin{94. }%
 \CSLRightInline{M. C. Klein, \emph{et al.},
 \href{https://doi.org/10.1111/nph.70343}{Climate adaptation in
 {\emph{Populus}}{ \emph{Trichocarpa}} : Key adaptive loci identified for
@@ -2116,7 +2158,7 @@ stomata and leaf traits}. \emph{New Phytologist} \textbf{247},
 2647--2664 (2025).}
 
 \bibitem[\citeproctext]{ref-dittberner_natural_2018}
-\CSLLeftMargin{94. }%
+\CSLLeftMargin{95. }%
 \CSLRightInline{H. Dittberner, \emph{et al.},
 \href{https://doi.org/10.1111/mec.14838}{Natural variation in stomata
 size contributes to the local adaptation of water-use efficiency in
@@ -2124,7 +2166,7 @@ size contributes to the local adaptation of water-use efficiency in
 \textbf{27}, 4052--4065 (2018).}
 
 \bibitem[\citeproctext]{ref-zavala-paez_climate_2026}
-\CSLLeftMargin{95. }%
+\CSLLeftMargin{96. }%
 \CSLRightInline{M. Zavala-Paez, S. R. Keller, J. Holliday, M. C.
 Fitzpatrick, J. A. Hamilton,
 \href{https://doi.org/10.1111/nph.70706}{Climate and hybridization shape
@@ -2144,12 +2186,6 @@ stomatal trait evolution in {\emph{Populus}}}. \emph{New Phytologist}
 \setcounter{table}{0}
 \setcounter{equation}{0}
 \setcounter{page}{1}
-
-\subsection{Notes S1: Model comparison
-results}\label{notes-s1-model-comparison-results}
-
-Discuss alternative interpretation of models with gcl as both individual
-and phylogenetic predictor.
 
 \subsection{Supporting tables}\label{supporting-tables}
 
@@ -2221,24 +2257,24 @@ component & \% variance & 95\% CI\\
 \endlastfoot
 \addlinespace[0.3em]
 \multicolumn{3}{l}{\textbf{$\log(l_\mathrm{gc})$}}\\
-\hspace{1em}phylogenetic & 64.4 & {}[32.3, 81.0]\\
-\hspace{1em}population & 6.6 & {}[0.9, 25.7]\\
-\hspace{1em}among-individual & 28.7 & {}[17.0, 45.0]\\
+\hspace{1em}phylogenetic & 64.4 & {}[24.4, 83.1]\\
+\hspace{1em}population & 6.6 & {}[0.4, 31.8]\\
+\hspace{1em}among-individual & 28.7 & {}[15.3, 47.7]\\
 \addlinespace[0.3em]
 \multicolumn{3}{l}{\textbf{$\mathrm{logit}(f_\mathrm{gmax})$}}\\
-\hspace{1em}\hspace{1em}phylogenetic & 16.6 & {}[3.1, 34.9]\\
-\hspace{1em}\hspace{1em}population & 7.0 & {}[2.1, 17.2]\\
-\hspace{1em}\hspace{1em}among-individual & 75.7 & {}[59.6, 85.5]\\
+\hspace{1em}\hspace{1em}phylogenetic & 16.6 & {}[1.4, 38.8]\\
+\hspace{1em}\hspace{1em}population & 7.0 & {}[1.5, 19.9]\\
+\hspace{1em}\hspace{1em}among-individual & 75.7 & {}[55.7, 86.9]\\
 \addlinespace[0.3em]
 \multicolumn{3}{l}{\textbf{$\log(\lambda)$}}\\
-\hspace{1em}phylogenetic & 18.9 & {}[4.8, 35.9]\\
-\hspace{1em}population & 2.3 & {}[0.1, 9.9]\\
-\hspace{1em}among-individual & 78.3 & {}[62.2, 88.3]\\
+\hspace{1em}phylogenetic & 18.9 & {}[2.4, 40.0]\\
+\hspace{1em}population & 2.3 & {}[0.0, 11.9]\\
+\hspace{1em}among-individual & 78.3 & {}[58.6, 89.6]\\
 \addlinespace[0.3em]
 \multicolumn{3}{l}{\textbf{$\log(\tau)$}}\\
-\hspace{1em}phylogenetic & 42.4 & {}[24.2, 58.9]\\
-\hspace{1em}population & 1.0 & {}[0.0, 7.7]\\
-\hspace{1em}among-individual & 56.1 & {}[40.2, 70.6]\\*
+\hspace{1em}phylogenetic & 42.4 & {}[19.8, 62.2]\\
+\hspace{1em}population & 1.0 & {}[0.0, 10.3]\\
+\hspace{1em}among-individual & 56.1 & {}[37.1, 73.5]\\*
 
 \end{longtable}
 
@@ -2462,6 +2498,26 @@ relationship between variables as a higher level phylogenetic effect
 versus a lower level, individual effect. This results in more
 uncertainty and larger confidence intervals in each individual
 parameter.}
+
+\end{figure}%
+
+\begin{figure}
+
+\centering{
+
+\pandocbounded{\includegraphics[keepaspectratio]{../figures/fgmax-lambda.pdf}}
+
+}
+
+\caption{\label{fig-fgmax-lambda}\textbf{Individual-level variation in stomatal apertures influences stomatal closures kinetics.}
+As the stomatal conductance as a fraction of anatomical maximum stomatal
+conductance (\fgmax, \(x\)-axis) increase, the stomatal closure lag-time
+(\(\lambda\), \(y\)-axis) increases. The overall pattern was consistent
+across grow light intensity treatments (left and right facets),
+measurement light intensity treatments (top and bottom facets), and leaf
+types (point colors). Lines are estimated using linear regression along
+with 95\% confidence ribbons. The growth and measurement light intensity
+treatments are described in the Materials and Methods section.}
 
 \end{figure}%
 

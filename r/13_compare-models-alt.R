@@ -5,21 +5,24 @@ plan(multisession, workers = 9)
 
 file_names = list.files("objects/fits", full.names = TRUE)
 
-fits = file_names |>
-  future_map(\(.x) {read_rds(.x) |>
-  add_criterion(criterion = "loo")}, .progress = TRUE)
+loos = file_names |>
+  future_map(\(.x) {
+    fit = read_rds(.x) |>
+      add_criterion(criterion = "loo")
+    fit$criteria$loo
+  }, .progress = TRUE)
 
 # converged = fits$fit |>
   # future_map_lgl(check_convergence, convergence_criteria)
 
 # assert_true(all(converged))
-fits |>
+loos |>
   set_names(file_names) |>
-  map(\(.x) .x$criteria$loo) |>
-  loo_compare() 
+  loo_compare() |> head()
 
+which(file_names == "objects/fits/fit3744.rds")
 which(file_names == "objects/fits/fit4881.rds")
-fits[71]
+read_rds(file_names[784])
 
 # from old file
 looic_table = fits$loo |>

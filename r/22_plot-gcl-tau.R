@@ -97,7 +97,7 @@ p = ggplot(df_acc, aes(exp(loggcl), exp(logtaumean), color = leaftype)) +
   ) +
   theme(legend.position = "bottom")
 
-ggpubr::annotate_figure(
+annotate_figure(
   p,
   top = ggpubr::text_grob("        Growth light intensity"),
   right = ggpubr::text_grob("Measurement light intensity        ", rot = -90)

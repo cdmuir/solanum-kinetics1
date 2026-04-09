@@ -325,6 +325,33 @@ tau_phylo_var = tbl_variance |>
 # Model comparison table
 df_comparison = read_rds("../objects/tbl-comparison.rds")
 
+# Example effect of fgmax on tau
+example_fgmax = c(0.2, 0.3)
+
+example_trt = list(
+  lighttreatment = levels(fit$data$lighttreatment)[1],
+  lightintensity = levels(fit$data$lightintensity)[1],
+  leaftype = levels(fit$data$leaftype)[1]
+)
+
+df_new = tibble(
+  logitfgmax = qlogis(example_fgmax),
+  lighttreatment = example_trt$lighttreatment,
+  lightintensity = example_trt$lightintensity,
+  leaftype = example_trt$leaftype,
+  logtausd = 0
+)
+
+df_example1 = posterior_epred(fit,
+                              newdata = df_new,
+                              resp = "logtaumean",
+                              re_formula = NA) |>
+  as_draws_df() |>
+  mutate(logchange = ...2 - ...1, .keep = "unused") |>
+  summarize_draws(median, quantile2, .args = list(probs = c(0.025, 0.975))) |>
+  mutate(across(where(is.numeric), log_to_percent)) |>
+  mutate(across(where(is.numeric), \(.x) formatC(.x , format = "f", digits = 1)))
+
 # Mediation results
 mediation = read_rds("../objects/mediation.rds")
 
@@ -720,9 +747,15 @@ knitr::include_graphics("../figures/accession-kinetics.pdf")
 <!-- 2. Are \gcl{} and \fgmax{} positively associated with $\tau$? -->
 <!-- 3. At what biological levels of organization do \gcl{} and \fgmax{} vary and influence $\tau$? -->
 
-Guard cell length and \fgmax{} affected stomatal closure kinetics in the directions predicted by our hypotheses, but they operated at different levels of biological organization. `r num2word(sum(df_comparison$plausible))` of the models we tested were plausible in that their predictive accuracy was similar based on $\Delta \text{LOOIC}$ (@tbl-comparison). All models in the plausible set indicated among-individual level effects of \fgmax{} on $\tau$ and $\lambda$, as we discuss in more detail below. Models that included both among-individual and phylogenetic effects of \gcl{} had similar LOOIC values but we selected a model with only phylogenetic effects for two reasons (@tbl-comparison). First, in models that included both among-individual and phylogenetic effects, neither the phylogenetic correlation nor the fixed effect regression coefficient were significantly different from zero (results not shown). These parameters are highly colinear in the posterior (@fig-colinear) indicating difficulty in estimating both terms simultaneously. Hence, the model with only phylogenetic effects is easier to interpret. The second reason we favor this model is that it is consistent with the high phylogenetic heritability in both \gcl{} and $\tau$ (@fig-variance). Visually, we observed positive relationships among species mean trait values (@fig-gcl-tau) but little relationship between \gcl{} and $\tau$ within species (results not shown). When comparing many models simultaneously, differences in LOOIC performance can occur by chance [@mclatchie_efficient_2024], so making judgement calls among models with similar performance can be necessary. The preponderance of evidence suggests that \gcl{} explains variation among rather than within our populations. The results in the main text follow from the model selected on this basis, but we discuss slightly different, yet plausible alternative explanations in the Supporting Information (Notes S1). 
+Guard cell length and \fgmax{} affected stomatal closure kinetics in the directions predicted by our hypotheses, but they operated at different levels of biological organization. `r num2word(sum(df_comparison$plausible))` of the models we tested were plausible in that their predictive accuracy was similar based on $\Delta \text{LOOIC}$ (@tbl-comparison). All models in the plausible set indicated among-individual level effects of \fgmax{} on $\tau$ and $\lambda$, as we discuss in more detail below. Models that included both among-individual and phylogenetic effects of \gcl{} had similar LOOIC values but we selected a model with only phylogenetic effects for two reasons (@tbl-comparison). First, in models that included both among-individual and phylogenetic effects, neither the phylogenetic correlation nor the fixed effect regression coefficient were significantly different from zero (results not shown). These parameters are highly colinear in the posterior (@fig-colinear) indicating difficulty in estimating both terms simultaneously and "smearing" out their confidence intervals [@mcelreath_statistical_2020]. Hence, the model with only phylogenetic effects is easier to interpret. The second reason we favor this model is that it is consistent with the high phylogenetic heritability in both \gcl{} and $\tau$ (@fig-variance). Visually, we observed positive relationships among species mean trait values (@fig-gcl-tau) but little relationship between \gcl{} and $\tau$ within species (results not shown). When comparing many models simultaneously, differences in LOOIC performance can occur by chance [@mclatchie_efficient_2024], so judgement calls among models with similar performance can be necessary. The preponderance of evidence indicates that \gcl{} explains variation primarily among rather than within our populations. The results in the main text are based on estimates from the selected model. 
 
-Focusing on the selected model, $\tau$ increased by ...  The only significant partial correlation was between \gcl{} and $\tau$ ($\rho = `r signif(rho, 2)`$ [95% CI: $`r signif(rho_lower, 2)` to `r signif(rho_upper, 2)`$)] was a significant phylogenetic correlation between \gcl{} and $\tau$ [@fig-?]. PARTIAL CORRELATION RESULT. Variation in \gcl{} within populations did not explain within-population variation in $\tau$ [@tbl-fixed]. NOTE THAT BEST MODEL RETAINED INDIVIDUAL LEVEL EFFECT OF GCL, BUT COEFFICIENT WAS NOT SIGNIFICANT. OTHER BEST MODELS DID NOT RETAIN THIS. DID GCL MEDIATE AFFECT OF TREATMENTS?
+Leaves with stomatal apertures closer to their maximum aperture closed more slowly than those less open (@fig-fgmax-tau). For example, increasing \fgmax{} from `r formatC(100 * example_fgmax[1], format = "f", digits = 0)`% to `r formatC(100 * example_fgmax[2], format = "f", digits = 0)`% resulted in a `r df_example1[['median']]`% [95% CI: `r df_example1[['q2.5']]` to `r df_example1[['q97.5']]`%] increase in $\tau$ for a typical leaf in the reference treatment set (`r str_c(unlist(example_trt), collapse = ", ")`). 
+
+#### MARKER - continue working on results here
+
+The only significant partial correlation was between \gcl{} and $\tau$ ($\rho = `r signif(rho, 2)`$ [95% CI: $`r signif(rho_lower, 2)` to `r signif(rho_upper, 2)`$)] was a significant phylogenetic correlation between \gcl{} and $\tau$ [@fig-?]. PARTIAL CORRELATION RESULT. Variation in \gcl{} within populations did not explain within-population variation in $\tau$ [@tbl-fixed]. NOTE THAT BEST MODEL RETAINED INDIVIDUAL LEVEL EFFECT OF GCL, BUT COEFFICIENT WAS NOT SIGNIFICANT. OTHER BEST MODELS DID NOT RETAIN THIS. DID GCL MEDIATE AFFECT OF TREATMENTS?
+
+effect of \fgmax{} on $\tau$ [@fig-fgmax-tau] and $\lambda$ [@fig-fgmax-lambda] was significant at the among-individual level, but there was no significant phylogenetic correlation between \fgmax{} and either kinetic parameter [@tbl-random]. This suggests that variation in stomatal aperture among individuals within populations influences stomatal kinetics, but variation in aperture among populations does not.
 
 somewhere, random effect [@tbl-random]
 
@@ -796,6 +829,14 @@ tbl_comparison
 knitr::include_graphics("../figures/gcl-tau.pdf")
 ```
 
+```{r, fgmax-tau, echo = FALSE}
+#| label: fig-fgmax-tau
+#| fig-align: center
+#| fig-cap: "\\textbf{Individual-level variation in stomatal apertures influences stomatal closures kinetics.} As the stomatal conductance as a fraction of anatomical maximum stomatal conductance (\\fgmax, $x$-axis) increase, the stomatal closure time-constant ($\\tau$, $y$-axis) increases. The overall pattern was consistent across grow light intensity treatments (left and right facets), measurement light intensity treatments (top and bottom facets), and leaf types (point colors). Lines are estimated using linear regression along with 95\\% confidence ribbons. The growth and measurement light intensity treatments are described in the Materials and Methods section."
+
+knitr::include_graphics("../figures/fgmax-tau.pdf")
+```
+
 ### Stomatal aperture mediates plasticity in $\tau$
 
 We imposed three treatments that influenced stomatal kinetics: growth light intensity, measurement light intensity, and leaf type. All three treatments directly effect $\tau$ and had indirect effects mediated by \fgmax{} (@fig-mediation). We did not estimate effects mediated by \gcl{} because the selected model did not retain direct effects of \gcl{} on $\tau$ (@tbl-comparison). The direct effect of the high light intensity (sun) growth treatment increased $\tau$ by $`r formatC(log_to_percent(de_sun[['estimate']]), format = 'f', digits = 2)`$% [95% CI: $`r formatC(log_to_percent(de_sun[['q2.5']]), format = 'f', digits = 2)`$ to $`r formatC(log_to_percent(de_sun[['q97.5']]), format = 'f', digits = 2)`$%], but the indirect of lower \fgmax{} counteracted by $`r formatC(log_to_percent(me_sun[['estimate']]), format = 'f', digits = 2)`$% [95% CI: $`r formatC(log_to_percent(me_sun[['q2.5']]), format = 'f', digits = 2)`$ to $`r formatC(log_to_percent(me_sun[['q97.5']]), format = 'f', digits = 2)`$%]. In contrast, direct and indirect effects of high measurement light intensity increased $\tau$. The direct effect increased $\tau$ by $`r formatC(log_to_percent(de_high[['estimate']]), format = 'f', digits = 2)`$% [95% CI: $`r formatC(log_to_percent(de_high[['q2.5']]), format = 'f', digits = 2)`$ to $`r formatC(log_to_percent(de_high[['q97.5']]), format = 'f', digits = 2)`$%] and the indirect effect mediated by \fgmax{} increased $\tau$ by $`r formatC(log_to_percent(me_high[['estimate']]), format = 'f', digits = 2)`$% [95% CI: $`r formatC(log_to_percent(me_high[['q2.5']]), format = 'f', digits = 2)`$ to $`r formatC(log_to_percent(me_high[['q97.5']]), format = 'f', digits = 2)`$%]. The direct effect of the pseudohypo treatment decreased $\tau$ slightly by $`r formatC(log_to_percent(de_pseudo[['estimate']]), format = 'f', digits = 2)`$% [95% CI: $`r formatC(log_to_percent(de_pseudo[['q2.5']]), format = 'f', digits = 2)`$ to $`r formatC(log_to_percent(de_pseudo[['q97.5']]), format = 'f', digits = 2)`$%], but the indirect effect mediated by greater \fgmax{} increased $\tau$ by $`r formatC(log_to_percent(me_pseudo[['estimate']]), format = 'f', digits = 2)`$% [95% CI: $`r formatC(log_to_percent(me_pseudo[['q2.5']]), format = 'f', digits = 2)`$ to $`r formatC(log_to_percent(me_pseudo[['q97.5']]), format = 'f', digits = 2)`$%].
@@ -852,10 +893,6 @@ note about adaxial stomata: Mott (2007) reported that stomatal responses to humi
 \setcounter{equation}{0}
 \setcounter{page}{1}
 ```
-
-## Notes S1: Model comparison results
-
-Discuss alternative interpretation of models with gcl as both individual and phylogenetic predictor.
 
 ## Supporting tables
 
@@ -1140,4 +1177,12 @@ knitr::include_graphics("../figures/gcl.pdf")
 #| fig-cap: "\\textbf{Posterior estimates of phylogenetic corrleations ($x$-axis) and fixed effects ($y$-axis) of guard cell length (\\gcl) on the time-constant ($\\tau$) ear colinear.} Each point is the estimate from one draw of the posterior distribution for both parameters from the model with the lowest LOOIC. The negative relationship indicates that there is tradeoff in fitting the relationship between variables as a higher level phylogenetic effect versus a lower level, individual effect. This results in more uncertainty and larger confidence intervals in each individual parameter."
 
 knitr::include_graphics("../figures/colinear.pdf")
+```
+
+```{r, fgmax-lambda, echo = FALSE}
+#| label: fig-fgmax-lambda
+#| fig-align: center
+#| fig-cap: "\\textbf{Individual-level variation in stomatal apertures influences stomatal closures kinetics.} As the stomatal conductance as a fraction of anatomical maximum stomatal conductance (\\fgmax, $x$-axis) increase, the stomatal closure lag-time ($\\lambda$, $y$-axis) increases. The overall pattern was consistent across grow light intensity treatments (left and right facets), measurement light intensity treatments (top and bottom facets), and leaf types (point colors). Lines are estimated using linear regression along with 95\\% confidence ribbons. The growth and measurement light intensity treatments are described in the Materials and Methods section."
+
+knitr::include_graphics("../figures/fgmax-lambda.pdf")
 ```

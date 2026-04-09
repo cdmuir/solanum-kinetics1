@@ -39,7 +39,7 @@ df_pred_lambda = posterior_epred(fit,
   rename(loglambdamean = median)
 
 # fgmax vs. tau
-ggplot(dat, aes(plogis(logitfgmax), exp(logtaumean), color = leaftype)) +
+gp_tau = ggplot(dat, aes(plogis(logitfgmax), exp(logtaumean), color = leaftype)) +
   geom_point(alpha = 0.5) +
   geom_ribbon(
     data = df_pred_tau,
@@ -67,7 +67,7 @@ ggplot(dat, aes(plogis(logitfgmax), exp(logtaumean), color = leaftype)) +
   theme(legend.position = "bottom")
 
 # fgmax vs. lambda
-ggplot(dat, aes(plogis(logitfgmax), exp(loglambdamean), color = leaftype)) +
+gp_lambda = ggplot(dat, aes(plogis(logitfgmax), exp(loglambdamean), color = leaftype)) +
   geom_point(alpha = 0.5) +
   geom_ribbon(
     data = df_pred_lambda,
@@ -93,3 +93,29 @@ ggplot(dat, aes(plogis(logitfgmax), exp(loglambdamean), color = leaftype)) +
     fill = "Leaf type:"
   ) +
   theme(legend.position = "bottom")
+
+# Annotate and write
+annotate_figure(
+  gp_tau,
+  top = ggpubr::text_grob("        Growth light intensity"),
+  right = ggpubr::text_grob("Measurement light intensity        ", rot = -90)
+)
+
+ggsave(
+  filename = "figures/fgmax-tau.pdf",
+  width = 5,
+  height = 5
+)
+
+annotate_figure(
+  gp_lambda,
+  top = ggpubr::text_grob("        Growth light intensity"),
+  right = ggpubr::text_grob("Measurement light intensity        ", rot = -90)
+)
+
+ggsave(
+  plot = gp_lambda,
+  filename = "figures/fgmax-lambda.pdf",
+  width = 5,
+  height = 5
+)
