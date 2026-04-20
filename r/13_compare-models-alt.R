@@ -1,6 +1,25 @@
 # Compare models using LOOIC
 source("r/header.R")
 
+#### ADD TO HEADER/FUNCTIONS IF RETAINING
+library(reformulas)
+
+get_terms_vec = function(fit, resp) {
+  
+  f = fit$formula$forms[[resp]]
+  
+  lhs = formula(f)[[2]]
+  rhs = formula(f)[[3]]
+  
+  rhs_fixed = nobars(rhs)
+  
+  f_fixed = formula(paste(deparse(lhs), "~", paste(deparse(rhs_fixed), collapse = " ")))
+  
+  terms_vec = attr(terms(f_fixed), "term.labels")
+  terms_vec
+}
+#####
+
 plan(multisession, workers = 9)
 
 file_names = list.files("objects/fits", full.names = TRUE)
@@ -12,85 +31,46 @@ loos = file_names |>
     fit$criteria$loo
   }, .progress = TRUE)
 
-# converged = fits$fit |>
-  # future_map_lgl(check_convergence, convergence_criteria)
+looic_table = loos[-3744] |>
+  set_names(file_names[-3744]) |>
+  loo_compare() |>
+  as.data.frame() |>
+  rownames_to_column("file") |>
+  filter(abs(elpd_diff) <= 2 * se_diff) 
 
-# assert_true(all(converged))
-loos |>
-  set_names(file_names) |>
-  loo_compare() |> head()
+write_rds(looic_table, "objects/looic_table-alt.rds")
 
-which(file_names == "objects/fits/fit3744.rds")
-which(file_names == "objects/fits/fit4881.rds")
-read_rds(file_names[784])
-
-# from old file
-looic_table = fits$loo |>
-  set_names(paste0("model", seq_along(fits$loo))) |>
-  loo_compare() 
-
-fits = fits |>
-  mutate(model = paste0("model", row_number()))
-
-map2_dfr(fits$fit, fits$model, \(.fit, .name) {
-  tibble(par = .fit |>
-           as_draws_df() |>
-           select(contains("b_")) |>
-           colnames()) |>
-    mutate(par = str_remove(par, "b_") |>
-             str_replace("curve_type", "curvetype")) |>
-    separate_wider_delim(par,
-                         delim = "_",
-                         names = c("response", "explanatory")) |>
-    filter(
-      str_detect(response, "^log(lambda|tau)mean$"),
-      explanatory %in% c("logitfgmax", "loggcl")
-    ) |>
-    mutate(
-      response = fct_recode(response, `$\\lambda$` = "loglambdamean", `$\\tau$` = "logtaumean"),
-      explanatory = fct_recode(explanatory, `\\gcl` = "loggcl", `\\fgmax` = "logitfgmax"),
-      model = .name
-    )
-  
-}) |>
+df_terms_tau = file_names |>
+  future_map_dfr(\(.x) {
+    fit = read_rds(.x)
+    terms_vec = get_terms_vec(fit, resp = "logtaumean")
+    tibble(file = .x, terms = terms_vec)
+  }, .progress = TRUE) |>
   mutate(value = TRUE) |>
-  pivot_wider(id_cols = c(response, model), names_from = explanatory) |>
-  pivot_wider(
-    id_cols = model,
-    names_from = response,
-    values_from = c(`\\gcl`, `\\fgmax`),
-    names_glue = "{response}__{.value}"
-  ) |>
-  full_join(tibble(
-    model = rownames(looic_table),
-    `$\\Delta \\text{LOOIC}$` = -2 * looic_table[, "elpd_diff"],
-    SE = 2 * looic_table[, "se_diff"]
-  ),
-  by = "model") |>
-  mutate(across(where(is_logical), \(.x) ifelse(.x, "\\cmark", "")),
-         plausible = abs(`$\\Delta \\text{LOOIC}$`) <= 2 * SE,
-         selected = model == selected_model) |>
-  arrange(`$\\Delta \\text{LOOIC}$`) |>
-  mutate(
-    `$\\Delta \\text{LOOIC}$` = formatC(
-      abs(`$\\Delta \\text{LOOIC}$`),
-      format = "f",
-      digits = 2
-    ),
-    SE = formatC(SE, format = "f", digits = 2),
-    mutate(across(everything(), \(.x) replace_na(.x, "")))
-  ) |>
-  write_rds("objects/tbl-comparison.rds")
+  pivot_wider(names_from = terms, values_from = value, values_fill = FALSE)
+
+df_terms_lambda = file_names |>
+  future_map_dfr(\(.x) {
+    fit = read_rds(.x)
+    terms_vec = get_terms_vec(fit, resp = "loglambdamean")
+    tibble(file = .x, terms = terms_vec)
+  }, .progress = TRUE) |>
+  mutate(value = TRUE) |>
+  pivot_wider(names_from = terms, values_from = value, values_fill = FALSE)
+
+write_rds(df_terms_tau, "objects/df_terms_tau.rds")
+write_rds(df_terms_lambda, "objects/df_terms_lambda.rds")
+
+# looic_table = read_rds("objects/looic_table-alt.rds")
+# df_terms_tau = read_rds("objects/df_terms_tau.rds")
+# df_terms_lambda = read_rds("objects/df_terms_lambda.rds")
+
+looic_table |>
+  left_join(df_terms_tau, by = "file") 
+
+looic_table |>
+  left_join(df_terms_lambda, by = "file")
 
 
-# Write "best" model
-# Note: I reran the models several times and the order of the top four models
-# changed, consistent with the difference in LOOIC being caused by sampling 
-# variability. After reviewing model estimates, I determined that model 6 is the
-# clearest to interpret.
 
-# Previous version (lowest LOOIC)
-# write_rds(fits$fit[[as.numeric(str_extract(rownames(looic_table)[1], "\\d+"))]], "objects/best_model.rds")
-
-# Current version (model 6)
-write_rds(fits$fit[[as.numeric(str_remove(selected_model, "model"))]], "objects/best_model.rds")
+  
