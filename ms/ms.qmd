@@ -749,23 +749,6 @@ knitr::include_graphics("../figures/accession-kinetics.pdf")
 
 Guard cell length and \fgmax{} affected stomatal closure kinetics in the directions predicted by our hypotheses, but they operated at different levels of biological organization. `r num2word(sum(df_comparison$plausible))` of the models we tested were plausible in that their predictive accuracy was similar based on $\Delta \text{LOOIC}$ (@tbl-comparison). All models in the plausible set indicated among-individual level effects of \fgmax{} on $\tau$ and $\lambda$, as we discuss in more detail below. Models that included both among-individual and phylogenetic effects of \gcl{} had similar LOOIC values but we selected a model with only phylogenetic effects for two reasons (@tbl-comparison). First, in models that included both among-individual and phylogenetic effects, neither the phylogenetic correlation nor the fixed effect regression coefficient were significantly different from zero (results not shown). These parameters are highly colinear in the posterior (@fig-colinear) indicating difficulty in estimating both terms simultaneously and "smearing" out their confidence intervals [@mcelreath_statistical_2020]. Hence, the model with only phylogenetic effects is easier to interpret. The second reason we favor this model is that it is consistent with the high phylogenetic heritability in both \gcl{} and $\tau$ (@fig-variance). Visually, we observed positive relationships among species mean trait values (@fig-gcl-tau) but little relationship between \gcl{} and $\tau$ within species (results not shown). When comparing many models simultaneously, differences in LOOIC performance can occur by chance [@mclatchie_efficient_2024], so judgement calls among models with similar performance can be necessary. The preponderance of evidence indicates that \gcl{} explains variation primarily among rather than within our populations. The results in the main text are based on estimates from the selected model. 
 
-Leaves with stomatal apertures closer to their maximum aperture closed more slowly than those less open (@fig-fgmax-tau). For example, increasing \fgmax{} from `r formatC(100 * example_fgmax[1], format = "f", digits = 0)`% to `r formatC(100 * example_fgmax[2], format = "f", digits = 0)`% resulted in a `r df_example1[['median']]`% [95% CI: `r df_example1[['q2.5']]` to `r df_example1[['q97.5']]`%] increase in $\tau$ for a typical leaf in the reference treatment set (`r str_c(unlist(example_trt), collapse = ", ")`). 
-
-#### MARKER - continue working on results here
-
-The only significant partial correlation was between \gcl{} and $\tau$ ($\rho = `r signif(rho, 2)`$ [95% CI: $`r signif(rho_lower, 2)` to `r signif(rho_upper, 2)`$)] was a significant phylogenetic correlation between \gcl{} and $\tau$ [@fig-?]. PARTIAL CORRELATION RESULT. Variation in \gcl{} within populations did not explain within-population variation in $\tau$ [@tbl-fixed]. NOTE THAT BEST MODEL RETAINED INDIVIDUAL LEVEL EFFECT OF GCL, BUT COEFFICIENT WAS NOT SIGNIFICANT. OTHER BEST MODELS DID NOT RETAIN THIS. DID GCL MEDIATE AFFECT OF TREATMENTS?
-
-effect of \fgmax{} on $\tau$ [@fig-fgmax-tau] and $\lambda$ [@fig-fgmax-lambda] was significant at the among-individual level, but there was no significant phylogenetic correlation between \fgmax{} and either kinetic parameter [@tbl-random]. This suggests that variation in stomatal aperture among individuals within populations influences stomatal kinetics, but variation in aperture among populations does not.
-
-somewhere, random effect [@tbl-random]
-
-
-
-Need to show (this is a growing, incomplete list):
-- phylogenetic partial correlation
-- partial correlation showing that gcl and tau are (only?) significant phylogenetic covariates
-
-
 ```{r, tbl-comparison}
 #| label: tbl-comparison
 #| tbl-cap: "Model comparison results. Models with a $\\Delta$LOOIC less than two standard errors (SE) from the minimum LOOIC are considered to have substantial support and are used for posterior predictions to test hypotheses about the effects of guard cell length (\\gcl) and the stomatal conductance as a fraction of anatomical maximum stomatal conductance (\\fgmax) on stomatal kinetic parameter $\\lambda$ (time lag) and $\\tau$ (time constant). Unsupoorted models are in gray italic font. The model selected for subsequence inference is in bold. LOOIC stands for leave-one-out cross-validation information criterion."
@@ -821,6 +804,10 @@ tbl_comparison
 
 ```
 
+Leaves with stomatal apertures closer to their maximum aperture closed more slowly than those less open (@fig-fgmax-tau). For example, increasing \fgmax{} from `r formatC(100 * example_fgmax[1], format = "f", digits = 0)`% to `r formatC(100 * example_fgmax[2], format = "f", digits = 0)`% resulted in a `r df_example1[['median']]`% [95% CI: `r df_example1[['q2.5']]` to `r df_example1[['q97.5']]`%] increase in $\tau$ for a typical leaf in the reference treatment set (`r str_c(unlist(example_trt), collapse = ", ")`). Leaves with higher \fgmax{} also had a significant effect on $\lambda$ [@tbl-fixed].
+
+Populations that tended to have larger guard cells (lower \gcl) also tended to have greater $\tau$ as evidenced by a positive phylogenetic correlation [@tbl-random; @fig-gcl-tau]. However, we found little evidence that variation in \gcl{} explained $\tau$ or $\lambda$ within populations. There were no other significant phylogenetic correlations [@tbl-random]. The only significant partial correlation was between \gcl{} and $\tau$ ($\rho = `r signif(rho, 2)`$ [95% CI: $`r signif(rho_lower, 2)` to `r signif(rho_upper, 2)`$)], indicating a plausible causal effect of \gcl{} on $\tau$ among populations.
+
 ```{r, gcl-tau, echo = FALSE}
 #| label: fig-gcl-tau
 #| fig-align: center
@@ -848,6 +835,10 @@ We imposed three treatments that influenced stomatal kinetics: growth light inte
 
 knitr::include_graphics("../figures/mediation.pdf")
 ```
+
+### No evidence that adaxial stomata close faster than abaxial stomata
+
+The time constant $\tau$ was slightly greater in pseudohypo leaves compared to the paired amphi leaf (results not shown), which would suggest that adaxial stomata close faster. However, pseudohypo leaves also had greater \fgmax, which slows stomatal closure, as discussed in the previous section. Once, the indirect effect of \fgmax{} on $\tau$ is accounted for, the direct effect of pseudohypo leaf type on $\tau$ disappears, indicating that the observed difference in $\tau$ between pseudohypo and amphi leaves is mediated by \fgmax [@fig-mediation]. There is actually a slight tendency for $\tau$ to be slightly lower when only abaxial stomata are measured in pseudohypo leaves, as evidenced by the negative effect of this leaf type on $\tau$ [@tbl-fixed].
 
 ## Discussion
 
