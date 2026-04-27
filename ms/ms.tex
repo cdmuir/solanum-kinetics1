@@ -32,16 +32,6 @@
   \usepackage[]{microtype}
   \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
-\makeatletter
-\@ifundefined{KOMAClassName}{% if non-KOMA class
-  \IfFileExists{parskip.sty}{%
-    \usepackage{parskip}
-  }{% else
-    \setlength{\parindent}{0pt}
-    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
-}{% if KOMA class
-  \KOMAoptions{parskip=half}}
-\makeatother
 % Make \paragraph and \subparagraph free-standing
 \makeatletter
 \ifx\paragraph\undefined\else
@@ -68,6 +58,7 @@
 
 
 \usepackage{longtable,booktabs,array}
+\newcounter{none} % for unnumbered tables
 \usepackage{calc} % for calculating minipage widths
 % Correct order of tables after \paragraph or \subparagraph
 \usepackage{etoolbox}
@@ -160,19 +151,19 @@
 \usepackage{siunitx}
 \newcommand{\Aamphi}{$A_{\mathrm{amphi}}$}
 \newcommand{\Ahypo}{$A_{\mathrm{hypo}}$}
-\newcommand{\agcurve}{$A \textendash g_\text{sw}$}
+\newcommand{\agcurve}{$A \textendash g_\mathrm{sw}$}
 \newcommand{\ca}{$C_\mathrm{a}$}
 \newcommand{\caequals}[1]{$C_\mathrm{a} = \SI{#1}{\micro\mol\raiseto{-1}\mol}$}
 \newcommand{\cabetween}[2]{#1 < $C_\mathrm{a} < \SI{#2}{\micro\mol\raiseto{-1}\mol}$}
-\newcommand{\fgmax}{$f_\text{gmax}$}
-\newcommand{\gcl}{$l_\text{gc}$}
-\newcommand{\gmax}{$g_\text{max}$}
-\newcommand{\gmaxratio}{$g_\text{max,ratio}$}
-\newcommand{\gmaxshade}{$g_\text{max,shade}$}
-\newcommand{\gmaxsun}{$g_\text{max,sun}$}
-\newcommand{\gop}{$g_\text{op}$}
-\newcommand{\gsw}{$g_\text{sw}$}
-\newcommand{\loggsw}{$\log(g_\text{sw})$}
+\newcommand{\fgmax}{$f_\mathrm{gmax}$}
+\newcommand{\gcl}{$l_\mathrm{gc}$}
+\newcommand{\gmax}{$g_\mathrm{max}$}
+\newcommand{\gmaxratio}{$g_\mathrm{max,ratio}$}
+\newcommand{\gmaxshade}{$g_\mathrm{max,shade}$}
+\newcommand{\gmaxsun}{$g_\mathrm{max,sun}$}
+\newcommand{\gop}{$g_\mathrm{op}$}
+\newcommand{\gsw}{$g_\mathrm{sw}$}
+\newcommand{\loggsw}{$\log(g_\mathrm{sw})$}
 \newcommand{\logA}{$\log(A)$}
 \newcommand{\ppfd}{$\mathrm{PPFD}$}
 \newcommand{\ppfdequals}[1]{$\mathrm{PPFD} = \SI{#1}{\micro\mole\per\meter\squared\per\second}$}
@@ -186,6 +177,8 @@
 \usepackage{pifont}
 \newcommand{\cmark}{\ding{51}}
 \DeclareMathOperator{\logit}{logit}
+% To control table and figure placements
+\usepackage{placeins}
 \makeatletter
 \@ifpackageloaded{caption}{}{\usepackage{caption}}
 \AtBeginDocument{%
@@ -257,146 +250,67 @@ $^2$Department of Botany, University of Wisconsin, Madison; Wisconsin, USA\\
 \medskip
 ORCID: Christopher D. Muir — \href{https://orcid.org/0000-0003-2555-3878}{0000-0003-2555-3878}\\
 \medskip
-Classification: Biological Sciences, Ecology\\
-\medskip
 Keywords: amphistomy, leaf gas exchange, \textit{Solanum}, stomatal kinetics, stomatal size
 \end{center}
 
-\section{notes}\label{notes}
+\linenumbers
+\doublespacing
 
-Kirschbaum et al.~1988 - read
-
-Tulva et al.~(2025) - not super relevant for this paper.
-
-Hsu et al.~(2021) - t50 WT aribodopsis: 5.1 ± 0.4 min. Their VPD method
-``followed by ∼2.0 kPa VPD (20 to 32\% relative air humidity) in most
-experiments, as indicated in the figures''. There was a lot in this
-paper. Basically, they don't know exactly how VPD is sensed, but show
-that it's independent of CO2 mechanism.
-
-Some older references:
-
-(this measured steady state responses, not kinetics) Morison J.I.L.
-Gifford R.M. 1983. Stomatal sensitivity to carbon dioxide and humidity.
-A comparison of two C3 and C4 grass species. Plant Physiol. 71:789--796.
-
-(not really relevant) Talbott L.D. Rahveh E. Zeiger E. 2003. Relative
-humidity is a key factor in the acclimation of the stomatal response to
-CO2. J. Exp. Bot. 54:2141--2147.
-
-hall\_leaf\_1976 - shows that gsw responds to VPD per se at constant LWP
-
-Bunce (1997) - not very relevant
-
-Blatt et al.~(2026) - not sure if this is useful. Shows that guard cell
-walls stay hydrated even when airspace is subsaturated.
-
-Buckley 2016 (10.1111/pce.12651) provides useful background on why
-hydroactive response takes time (ABA synthesis).
-
-Merilo et al.~(2018) say ``The ABA signaling unit consists of cytosolic
-PYRABACTIN RESISTANCE1 (PYR1)/PYR1-LIKE (PYL)/ REGULATORY COMPONENTS OF
-ABA RECEPTORS (RCAR) receptors that, in the presence of ABA sequester
-type 2 protein phosphatases, lead to the activation of protein kinase
-OST1, which, in turn, activates the slow-type anion channel SLAC1 and
-triggers stomatal closure (Geiger et al., 2009; Lee et al., 2009; Ma et
-al., 2009; Park et al., 2009)'' (these are steps after ABA synthesis)
-
-Ivanoff 1928 - original wrong-way response citation? from Jalakas et al
-2021 (``promoting a transient passive `wrong-way' stomatal opening
-(Ivanoff, 1928; Mott \& Franks, 2001; Buckley, 2019).'')
-
-FYI, t50 = ``6.1 ± 0.32 min in Arabidopsis Col-0 wild-type (Merilo et
-al., 2018)'' I also have read this:
-https://nph-onlinelibrary-wiley-com.ezproxy.library.wisc.edu/doi/full/10.1111/nph.17592
-
-Need to check out these references ``Although the plant hormone abscisic
-acid (ABA) is involved in stomatal closure in response to drought stress
-and reduced air humidity (Bunce, 1997; Roelfsema \& Hedrich, 2005; Bauer
-et al., 2013), the existence of an ABA-independent pathway participating
-in low humidity-induced stomatal response has been suggested (Xie et
-al., 2006). Furthermore, stomata may also directly respond to leaf water
-status without relying on ABA production and signalling (see Buckley,
-2005; Damour et al., 2010; Peak \& Mott, 2011). However, both the
-metabolically mediated hydro-active feedback response of guard cell
-osmotic pressure to the water status of epidermal evaporative site
-(Buckley, 2005) and the stomatal response mechanism based on a
-near-equilibrium in water potential between the guard cells and the air
-in the stomatal pore (Peak \& Mott, 2011) still embed the potential for
-ABA to be involved in air humidity-related stomatal behaviour.''
-
-Binstock et al.~(2024) 10.1093/plphys/kiad560 - see if they have
-estimates of tau
-
-This paper looked at epidermal cell : guard cell size in domesticated
-tomato and related to closure kinetics. See if I can do this?
-10.1111/ppl.70543 (use Sack and Buckley estimate of epidermal cell size
-based on stomatal index, density, and guard cell size)
-
-NOT THAT USEFUL - Tinoco-Ojanguren C, Pearcy RW. (1993) Stomatal
-dynamics and its importance to carbon gain in 2 rain forest Piper
-species. 1. VPD effects on the transient stomatal response to light
-flecks. Oecologia 94: 388--394
-
-Some OG citations ``Changes in stomatal aperture are driven by changes
-in turgor pressure of guard cells (Heath 1938) due to the accumulation
-of ions and/or solutes (Imamura 1943; Fujino 1967; Outlaw 1983), which
-increases the osmotic potential and lowers the water potential of guard
-cells (Weyers and Meidner 1990; Willmer and Fricker 1996).'' quote from
-Lawson et al (2010)
+\newpage{}
 
 \subsection{Abstract}\label{abstract}
 
-Guard cell size and stomatal density vary over X and X orders of
-magnitude among extant vascular land plants, yet the adaptive
-significance of much of this variation remains unclear. The evolution of
-guard cell size in particular is poorly understood and may even be
-constrained by nonadaptive features like genome size. One hypothesis is
-that natural selection may favor smaller guard cells to increase the
-rate at which stomatal conductance responds to fluctuating environmental
-conditions. A related hypothesis is that operational stomatal
-conductance (\gop) is often \(\approx 25\%\) of its theoretical maximum
-(gmax) because at this stomatal aperture, guard cell volume is poised to
-change rapidly with changes in turgor pressure. The support for both
-hypothesis is limited and mixed, in part because they have not been
-tested together, even though both guard cell size and the ratio of
-\gop{} to \gmax{} (\fgmax) should influence stomatal kinetics. We
-analyzed 2,124 estimates of stomatal closure kinetics in response to an
-abrupt increase in vapor pressure deficit (VPD) among 29 diverse wild
-tomato populations in the genus \textit{Solanum}. Both smaller guard
-cell size and lower \fgmax{} were associated with faster stomatal
-closure kinetics, but at different levels of biological organization.
-Guard cell size explained X\% of the variance in stomatal kinetics among
-populations, whereas gop:gmax explained X\% of the variance among
-individuals within populations. {[}neither result would have been
-supported if analyzed in isolation - is this true?{]}. We conclude that
-guard cell size may respond to selection on stomatal kinetics over
-evolutionary time, but actual kinetics are modulated by a tradeoff
-between maximizing gop and minimizing the time required for stomatal
-closure. Putting these hypotheses together with stabilizing selection on
-gop may explain why stomatal size and density negatively covary among
-species.
+In fluctuating environments, the kinetics of stomatal opening and
+closing influence the balance between carbon gain and water loss. The
+rate of stomatal aperture change varies widely among plants, but the
+underlying causes of this variation are not well understood. One
+hypothesis is that smaller guard cells respond faster to fluctuating
+environmental conditions because of their greater surface area for
+osmolyte flux relative to cell volume. A related hypothesis is that
+operational stomatal conductance (\gop) is often well below its
+theoretical maximum (\gmax) because at this stomatal aperture, guard
+cell volume is poised to change rapidly with small changes in turgor
+pressure. The support for both hypotheses is limited and mixed, in part
+because they have not been tested together. We analyzed 2,124 estimates
+of stomatal closure kinetics in response to an abrupt increase in vapor
+pressure deficit (VPD) among 29 diverse wild tomato populations in the
+genus \emph{Solanum}. Both smaller guard cell size and a lower \gop{} to
+\gmax{} ratio (\fgmax) were associated with faster stomatal closure
+kinetics, but at different levels of biological organization. Guard cell
+size had high phylogenetic heritability and varied relatively little
+within populations, whereas \fgmax{} varied mostly among individuals and
+between light intensity treatments. Together, these results indicate
+that smaller stomata can be speedier, but only if stomata are held at an
+aperture where they are responsive to changing turgor pressure. We
+predict that selection on stomatal speed will influence not only
+anatomical traits like guard cell size, but also physiological controls
+on \gop.
+
+\newpage{}
 
 \subsection{Introduction}\label{introduction}
 
 In nature, change is the only constant. One way that vascular plants
 (tracheophytes) cope with change is by adjusting stomatal pore aperture
-to optimize the trade-off between carbon gain and water loss (1--3). In
-the absence of physical limits and energetic tradeoffs, natural
-selection would favor plants that could instantaneously adjust stomatal
+to optimize the trade-off between carbon gain and water loss (Cowan \&
+Farquhar, 1977; Raven, 2002; Hetherington \& Woodward, 2003). In the
+absence of physical limits and energetic tradeoffs, natural selection
+would favor plants that could instantaneously adjust stomatal
 conductance (\gsw) to perfectly track dynamic environmental conditions
-(4). In reality, stomatal responses take time, creating a lag between
-actual and optimal stomatal aperture. For example, many species use
-hydroactive feedback mechanisms to precisely control stomatal responses
-to changing vapor pressure deficit (VPD), the driving force for
-evaporation (5). Hydroactive stomatal control requires sensing a change
-in VPD through as-yet-unknown mechanisms, signal transduction, and
-efflux of osmotic solutes to alter guard cell turgor more than the
-surrounding epidermal cells. Abscisic acid (ABA) dependent responses
-require several minutes to accumulate or synthesize hormone pools
-\emph{de novo} (6--9); ABA-independent stomatal responses require
-changes in gene expression and protein synthesis that take time (10).
-Once anion channels are activated, the rate of change in stomatal
+(Lawson \emph{et al.}, 2010). In reality, stomatal responses take time,
+creating a lag between actual and optimal stomatal aperture. For
+example, many species use hydroactive feedback mechanisms to precisely
+control stomatal responses to changing vapor pressure deficit (VPD), the
+driving force for evaporation (Buckley, 2019). Hydroactive stomatal
+control requires sensing a change in VPD through as-yet-unknown
+mechanisms, signal transduction, and efflux of osmotic solutes to alter
+guard cell turgor more than the surrounding epidermal cells. Abscisic
+acid (ABA) dependent responses require several minutes to accumulate or
+synthesize hormone pools \emph{de novo} (Xie \emph{et al.}, 2006; Bauer
+\emph{et al.}, 2013; McAdam \emph{et al.}, 2016; Desai \& Stroock,
+2025); ABA-independent stomatal responses require changes in gene
+expression and protein synthesis that take time (Jalakas \emph{et al.},
+2021). Once anion channels are activated, the rate of change in stomatal
 aperture depends on the rate of change in guard cell turgor
 (\(d P_\mathrm{g} / dt\)) and the sensitivity of aperture to change in
 turgor (\(d a_\mathrm{S} / d P_\mathrm{g}\)). As we discuss below, these
@@ -405,25 +319,30 @@ two factors (\(d P_\mathrm{g} / dt\) and
 size and the ratio of operational to maximum stomatal conductance
 (\fgmax), respectively.
 
-Over a century ago (11) observed that after an initial increase, leaf
-transpiration decreases in response to decreasing humidity. He correctly
-attributed changes in transpiration to changes in stomatal aperture and
-subsequent studies have confirmed that stomatal aperture responds to
-humidity (12) and, more specifically, transpiration rate (13, 14), which
-is the product of VPD and \gsw. The VPD is related to RH but also
-temperature. In angiosperms and some pteridophytes (15--17), a sudden
-increase in VPD, usually induced by lower RH at a constant temperature,
-causes a transient increase in \gsw, as Darwin observed. After a period
-of several minutes, stomata close until the leaf reaches a new
-steady-state \gsw. These phases of stomatal response to VPD are often
-referred to as the ``wrong-way response'' (WWR) and ``right-way
-response'' (RWR), respectively. The normative `wrong' and `right'
-appellations refer to the presumed adaptive significance. At steady
-state, \gsw{} is negatively correlated with VPD, all else being equal,
-which is interpreted as an adaptive response to the marginal carbon cost
-of water (1, 18, 19). Models built around this assumption generally
-predict steady state \gsw{} well, although the functional form and
-presumed fitness costs are areas of active research (20--24).
+Over a century ago Darwin (1898) observed that after an initial
+increase, leaf transpiration decreases in response to decreasing
+humidity. He correctly attributed changes in transpiration to changes in
+stomatal aperture and subsequent studies have confirmed that stomatal
+aperture responds to humidity (Lange \emph{et al.}, 1971) and, more
+specifically, transpiration rate (Mott \& Parkhurst, 1991; Monteith,
+1995), which is the product of VPD and \gsw. The VPD is related to
+relative humidity (RH) but also temperature. In angiosperms and some
+pteridophytes, a sudden increase in VPD, usually induced by lower RH at
+a constant temperature, causes a transient increase in \gsw, as Darwin
+observed (Cowan, 1972; Buckley \emph{et al.}, 2011; Westbrook \& McAdam,
+2021). After a period of several minutes, stomata close until the leaf
+reaches a new steady-state \gsw. These phases of stomatal response to
+VPD are often referred to as the ``wrong-way response'' (WWR) and
+``right-way response'' (RWR), respectively. The normative `wrong' and
+`right' appellations refer to the presumed adaptive significance. At
+steady state, \gsw{} is negatively correlated with VPD, all else being
+equal, which is interpreted as an adaptive response to the marginal
+carbon cost of water (Givnish \& Vermeij, 1976; Cowan \& Farquhar, 1977;
+Buckley \emph{et al.}, 2017). Models built around this assumption
+generally predict steady state \gsw{} well, although the functional form
+and presumed fitness costs are areas of active research (Damour \emph{et
+al.}, 2010; Medlyn \emph{et al.}, 2011; Prentice \emph{et al.}, 2014;
+Sperry \emph{et al.}, 2017; Potkay \emph{et al.}, 2025).
 
 Stomatal responses are as much about the journey (kinetics) as they are
 about the destination (steady state). If stomatal response kinetics are
@@ -431,163 +350,186 @@ too slow relative to the temporal grain size of environmental
 variability, then it would be futile for \gsw{} to track environmental
 variation since the leaf will constantly lag the environment,
 perpetually fighting the last war. This may explain why \gsw{} can be
-insensitive to short sun/shade flecks (25) and shaded leaves are likely
-primed to cope with the hydraulic demands of sudden increases in light,
-temperature, and VPD (26). If stomatal responses can track environmental
-variation, then minimizing the lag time can greatly improve resource-use
-efficiency (4). For example, optogenetic control of stomatal aperture in
-response to fluctuating light increases water-use efficiency in
-\emph{Arabidopsis} (27). Therefore the rate of stomatal opening and
-closing is predicted to have a major effect on how natural selection
-optimizes stomatal control in variable environments (28).
+insensitive to short sun/shade flecks (Knapp \& Smith, 1990) and shaded
+leaves are likely primed to cope with the hydraulic demands of sudden
+increases in light, temperature, and VPD (Schymanski \emph{et al.},
+2013). If stomatal responses can track environmental variation, then
+minimizing the lag time can greatly improve resource-use efficiency
+(Lawson \emph{et al.}, 2010). For example, optogenetic control of
+stomatal aperture in response to fluctuating light increases water-use
+efficiency in \emph{Arabidopsis} compared to wild-type responses
+(Papanatsiou \emph{et al.}, 2019). Therefore the rate of stomatal
+opening and closing is predicted to have a major effect on how natural
+selection optimizes stomatal control in variable environments (Buckley
+\emph{et al.}, 2023).
 
 Much of the research on stomatal kinetics focuses on light responses
 because light intensity is usually the most important, rapidly
 fluctuating environmental variable affecting photosynthesis. In nature,
 fluctuating light intensity simulateneously alters leaf temperature and
-VPD (e.g. 29). We focus on stomatal closure kinetic in response to an
-abrupt increased in for three reasons. First of all, the primary aims
-and \emph{a priori} hypotheses of this study were not to study stomatal
-kinetic parameters and are described in (30). The idea to
-opportunistically use \gsw{} response curves generated during this study
-to test hypotheses about which traits influence stomatal kinetics came
-after the data had been collected, but not yet analyzed for this
-purpose. Second, VPD responses exhibit a similar functional form as
-light-responses, suggesting similar underlying mechanisms (5). Factors
-that affect stomatal response kinetics to VPD likely generalize to other
+VPD (e.g. Ishida \emph{et al.}, 1992). We focus on stomatal closure
+kinetic in response to an abrupt increased in VPD for three reasons.
+First of all, the primary aims and \emph{a priori} hypotheses of this
+study were not to study stomatal kinetic parameters and are described in
+Muir \emph{et al.} (2025). The idea to opportunistically use
+\gsw-response curves generated during this study to test hypotheses
+about which traits influence stomatal kinetics came after the data had
+been collected, but not yet analyzed for this purpose. Second, VPD
+responses exhibit a similar functional form as light-responses,
+suggesting similar underlying mechanisms (Buckley, 2019). Factors that
+affect stomatal response kinetics to VPD likely generalize to other
 environmental variables. Third, humidity responses tend to dominate over
-and are faster than other environmental responses (31, 32), but there is
-variation among species (33). Thus, factors that constrain maximum rates
-of stomatal closure are most likely to be observed in response to VPD.
-Finally, the ecological salience of VPD responses is increasing as
-climate change warms the atmosphere (34).
+and are faster than other environmental responses (Aasamaa \& Sõber,
+2011a,b), but there is variation among species (Merilo \emph{et al.},
+2014). Thus, factors that constrain maximum rates of stomatal closure
+are most likely to be observed in response to VPD. Finally, the
+ecological salience of VPD responses is increasing as climate change
+warms the atmosphere (Grossiord \emph{et al.}, 2020).
 
-Fully describing stomatal responses to the environment is complex (9,
-35, 36), but the dynamics of \gsw{} in response to an abrupt
+Fully describing stomatal responses to the environment is complex
+(Buckley \emph{et al.}, 2003; Jezek \emph{et al.}, 2021; Desai \&
+Stroock, 2025), but the dynamics of \gsw{} in response to an abrupt
 environmental change is well described by relatively simple
-phenomenological functions (37, 38). A four-parameter equation describes
-stomatal response kinetics to a step change in light intensity across
-dozens of plant species (39):
+phenomenological functions (Vico \emph{et al.}, 2011; McAusland \emph{et
+al.}, 2016). A four-parameter equation describes stomatal response
+kinetics to a step change in light intensity across dozens of plant
+species (Woning \emph{et al.}, 2026):
 
-\begin{equation}\phantomsection\label{eq-weibull}{
-  g_\text{sw,t} = g_\text{f} + (g_\text{i} - g_\text{f}) e^{-\left(\frac{t}{\tau}\right)^\lambda}.
+\begin{equation}\protect\phantomsection\label{eq-weibull}{
+  g_\mathrm{sw,t} = g_\mathrm{f} + (g_\mathrm{i} - g_\mathrm{f}) e^{-\left(\frac{t}{\tau}\right)^\lambda}.
 }\end{equation}
 
-In this equation, \(g_\text{sw,t}\) is stomatal conductance at time
-\(t\), \(g_\text{i}\) is the initial \gsw{} before the step change,
-\(g_\text{f}\) is the final \gsw{} after the step change, \(\tau\) is a
-time constant that describes how quickly stomata respond to the step
+In this equation, \(g_\mathrm{sw,t}\) is stomatal conductance at time
+\(t\), \(g_\mathrm{i}\) is the initial \gsw{} before the step change,
+\(g_\mathrm{f}\) is the final \gsw{} after the step change, \(\tau\) is
+a time constant that describes how quickly stomata respond to the step
 change, and \(\lambda\) is a shape parameter that describes how the
 response rate changes over time. When \(\lambda = 1\), the response rate
 is constant over time and \(\tau\) represents the time required for
-\gsw{} to reach 36.8\% of the way between initial and final values. When
-\(\lambda > 1\), the response rate increases over time, and when
-\(\lambda < 1\), the response rate decreases over time. (39) refer to
-\(\lambda\) as a lag-time parameter because empirically \(\lambda > 1\).
-We refer to stomatal kinetic parameters \(\tau\) (time-constant) and
-\(\lambda\) (lag-time) henceforth. The first goal of this study is to
-evaluate whether kinetics of the RWR after a step change in VPD are
-adequately described by Equation~\ref{eq-weibull}. If so, it suggests
-that some fundamentally similar mechanisms are shared between light and
-hydroactive stomatal responses (40).
+\gsw{} to reach 36.8\% (\(1/e\)) of the way between initial and final
+values. When \(\lambda > 1\), the response rate increases over time, and
+when \(\lambda < 1\), the response rate decreases over time. Woning
+\emph{et al.} (2026) refer to \(\lambda\) as a lag-time parameter
+because empirically \(\lambda > 1\). We refer to stomatal kinetic
+parameters \(\tau\) (time-constant) and \(\lambda\) (lag-time)
+henceforth. The first goal of this study is to evaluate whether kinetics
+of the RWR after a step change in VPD are adequately described by
+Equation~\ref{eq-weibull}. If so, it suggests that some fundamentally
+similar mechanisms are shared between light and hydroactive stomatal
+responses (Grantz \& Zeiger, 1986).
 
 The main goal of this study is to test hypotheses about which stomatal
 anatomical traits affect kinetic parameters \(\tau\) and \(\lambda\). We
 consider two interconnected hypotheses that have thus far been treated
 in isolation. The first hypothesis is that smaller guard cells open and
 close faster because of their intrinsically greater surface area to
-volume ratio (39, 41--43). For approximately cylindrical cell
-geometries, like that found in guard cells, surface area increases
-linearly with radius, whereas volume increases in proportion to the
-radius squared. Consequently, larger guard cells will require more time,
-all else being equal. to achieve a given change in turgor pressure and,
-hence, stomatal pore aperture. A plant with large guard cells can
-partially compensate for this geometric constraint by increasing the
-activity and/or density of ion and solute transporters in the guard cell
-plasma membrane (44--46). However, this may be limited by the available
-membrane area and/or energetic costs of maintaining high transporter
-densities (37). Empirical support for the hypothesis that smaller guard
-cells are faster is mixed and has primarily come from step changes in
-light (38, 42, 47--51). Meta-analysis of dozens of species suggests that
-stomatal size alone is weakly related to kinetics and modulated by
-whether guard cells are kidney or dumbbell shaped (39). The relationship
-between guard cell size and stomatal response kinetics to leaf water
-potential (52) and VPD (53, 54) is less well studied, but similarly
-equivocal.
+volume ratio (Franks \& Farquhar, 2007; Drake \emph{et al.}, 2013;
+Lawson \& Vialet-Chabrand, 2019; Woning \emph{et al.}, 2026). For
+approximately cylindrical cell geometries, like that found in guard
+cells, surface area increases linearly with radius, whereas volume
+increases in proportion to the radius squared. Consequently, larger
+guard cells will require more time, all else being equal, to achieve a
+given change in turgor pressure and, hence, stomatal pore aperture. A
+plant with large guard cells can partially compensate for this geometric
+constraint by increasing the activity and/or density of ion and solute
+transporters in the guard cell plasma membrane (Homann \& Thiel, 2002;
+Lawson \& Blatt, 2014; Raven, 2014). However, compensation may be
+limited by the available membrane area and/or energetic costs of
+maintaining high transporter densities (Vico \emph{et al.}, 2011).
+Empirical support for the hypothesis that smaller guard cells are faster
+is mixed and has primarily come from step changes in light (Drake
+\emph{et al.}, 2013; Elliott-Kingston \emph{et al.}, 2016; McAusland
+\emph{et al.}, 2016; Kardiman \& Ræbild, 2018; Haworth \emph{et al.},
+2023; Brench \emph{et al.}, 2026; Tang \emph{et al.}, 2026).
+Meta-analysis of dozens of species suggests that stomatal size alone is
+weakly related to kinetics and modulated by guard shape (Woning \emph{et
+al.}, 2026). The relationship between guard cell size and stomatal
+response kinetics to leaf water potential (Aasamaa \emph{et al.}, 2001)
+and VPD (Kübarsepp \emph{et al.}, 2020; Qie \emph{et al.}, 2024) is less
+well studied, but similarly equivocal.
 
 One factor that might complicate the relationship between size and speed
 is aperture. Stomatal aperture can vary from near 0 when guard cell
 turgor pressure is low and asymptotically approach \gmax{} as guard cell
-turgor pressure approaches \(\infty\) (Figure 1X). The relationship
+turgor pressure approaches \(\infty\) (Figure ?). The relationship
 between guard cell turgor pressure and stomatal aperture is nonlinear
-(55) as cell walls become less elastic at greater turgor (56). The
-nonlinear relationship between guard cell turgor and pore aperture
-implies that if the rate of turgor change is constant
-(\(\dv{P}{t} = C\)), the rate of change in aperture, and hence stomatal
-conductance, will vary depending on the initial aperture (\(a_0\))
-relative to the maximum aperture (\(a_\mathrm{max}\)). Hence,
-\(\dv{a}{t} = f(a_0 / a_\mathrm{max})\). When initial aperture is high,
-\gsw{} will respond more slowly than when initial aperture is low. Since
-we generally do not observe individual stomatal aperture, relating it
-this idea to leaf-level \gsw{} requires scaling by stomatal density,
-biophysical constants, and morphological constants (e.g. 57). We will
-use the term ``fraction of anatomical maximum stomatal conductance'',
-symbolized as \fgmax{} (this is denoted as \(g_\mathrm{ratio}\) by
-(58)). This value should be proportional to the average aperture divided
-by its maximum aperture for any arbitrary stomatal density. Leaves
-operating at \fgmax{} closer to unity will, all else being equal, will
-be slower to respond than leaves operating with a \fgmax{} close to
-zero, independent of stomatal density. (59) hypothesized that selection
-on stomatal density would maintain typical operational stomatal
-conductance (\gop) relative to \gmax{} at a sufficiently low value that
-\gsw{} would be sensitive to relatively small changes in guard cell
-turgor pressure. Consistent will this hypothesis, the \gop:\gmax{} ratio
-is often near 0.25 (60, 61), well below \(f_\text{gmax} = 1\), and in a
-range where \gsw{} would be responsive to small changes in guard cell
+(Franks \& Farquhar, 2001) as cell walls become less elastic at greater
+turgor (Franks \emph{et al.}, 2001). The nonlinear relationship between
+guard cell turgor and pore aperture implies that if the rate of turgor
+change is constant (\(\dv{P}{t} = C\)), the rate of change in aperture,
+and hence stomatal conductance, will vary depending on the initial
+aperture (\(a_0\)) relative to the maximum aperture
+(\(a_\mathrm{max}\)). Hence, \(\dv{a}{t} = f(a_0 / a_\mathrm{max})\).
+When initial aperture is high, \gsw{} will respond more slowly than when
+initial aperture is low. Since we generally do not observe individual
+stomatal aperture, relating it this idea to leaf-level \gsw{} requires
+scaling by stomatal density, biophysical constants, and morphological
+constants (e.g. Sack \& Buckley, 2016). We will use the term ``fraction
+of anatomical maximum stomatal conductance'', symbolized as \fgmax{}
+(this is denoted as \(g_\mathrm{ratio}\) by Xie \emph{et al.} (2022)).
+This value should be proportional to the average aperture divided by its
+maximum aperture for any arbitrary stomatal density. Leaves operating at
+\fgmax{} closer to unity will, all else being equal, be slower to
+respond than leaves operating with a \fgmax{} close to zero, independent
+of stomatal density. Franks \emph{et al.} (2012) hypothesized that
+selection on stomatal density would maintain typical operational
+stomatal conductance (\gop) relative to \gmax{} at a sufficiently low
+value that \gsw{} would be sensitive to relatively small changes in
+guard cell turgor pressure. Consistent will this hypothesis, the
+\gop:\gmax{} ratio is often near 0.25 (McElwain \emph{et al.}, 2016;
+Murray \emph{et al.}, 2020), well below \(f_\mathrm{gmax} = 1\), and in
+a range where \gsw{} would be responsive to small changes in guard cell
 turgor pressure. There is likely variation within and among species and
-growth forms in the \gop:\gmax{} ratio (58, 62).
+growth forms in the \gop:\gmax{} ratio (Xie \emph{et al.}, 2022; Ochoa
+\emph{et al.}, 2024).
 
 Putting these two hypotheses together, we predict that both guard cell
 size and \fgmax{} will influence stomatal kinetics, but possibly at
 different scales of biological organization. Guard cell size tends to
 vary less than stomatal density or aperture at many biological scales.
 For example, on a mature leaf, guard cell length is nearly constant even
-as cell volume and pore aperture change with turgor (56, 63). Compared
-to stomatal density, guard cell size can be less variable (64, 65) and
-evolve more slowly between species (66). If there is relatively little
-plastic or genetic variation among individuals within a species, then
-most of the variance in stomatal kinetics within species cannot be
-explained by variation in stomatal size. In contrast, \fgmax{} can vary
-immensely within and among individuals because stomatal aperture
-responds dynamically over the day and in response to environmental
-variation. Because guard cell size and aperture typically vary at
-different levels of biological organization, we predict that guard cell
-size likely explains more variation in stomatal kinetics among species,
-whereas \fgmax{} will explain more variation within species. Within
-species variation can arise from either genetic differences among
-individuals or environmental plasticity. We will also test faster
-responses of adaxial stomata respond (39, 67, 68) can be explained
-differences in guard cell size and/or \fgmax{} between surfaces.
+as cell volume and pore aperture change with turgor (Willmer \& Fricker,
+1996; Franks \emph{et al.}, 2001). Compared to stomatal density, guard
+cell size can be less variable (Lammertsma \emph{et al.}, 2011; Bucher
+\emph{et al.}, 2016) and evolve more slowly between species (Muir
+\emph{et al.}, 2023). If there is relatively little plastic or genetic
+variation among individuals within a species, then most of the variance
+in stomatal kinetics within species cannot be explained by variation in
+guard cell size. In contrast, \fgmax{} can vary immensely within and
+among individuals because stomatal aperture responds dynamically over
+the day and in response to environmental variation. Because guard cell
+size and aperture typically vary at different levels of biological
+organization, we predict that guard cell size likely explains more
+variation in stomatal kinetics among species, whereas \fgmax{} will
+explain more variation within species. Within species variation can
+arise from either genetic differences among individuals or environmental
+plasticity. We will also test faster responses of adaxial stomata
+respond (Haworth \emph{et al.}, 2018; Wall \emph{et al.}, 2022; Woning
+\emph{et al.}, 2026) can be explained differences in guard cell size
+and/or \fgmax{} between surfaces.
 
 One challenge in determining whether traits covary at higher levels of
 organization is that statistical procedures to account for phylogenetic
 nonindependence can obscure ecologically relevant covariation caused by
-natural selection (69, 70). For example, in a meta-analysis of stomatal
-kinetic responses to light, the explanatory power of traits like guard
-cell size and stomatal ratio declined in phylogenetic compared to
-nonphylogenetic regression (39). This finding may be caused in large
-part because grasses have small stomata, high adaxial:abaxial stomatal
-ratio, and rapid stomatal kinetics. Are these associations a coincidence
-caused by shared ancestry or ecologically important covariation that
-helps explain how grasses adapt to their environment? Recent advances in
+natural selection (Westoby \emph{et al.}, 1995; Uyeda \emph{et al.},
+2018). For example, in a meta-analysis of stomatal kinetic responses to
+light, the explanatory power of traits like guard cell size and stomatal
+ratio declined in phylogenetic compared to nonphylogenetic regression
+(Woning \emph{et al.}, 2026). This finding may be caused in large part
+because grasses have small stomata, high adaxial:abaxial stomatal ratio,
+and rapid stomatal kinetics. Are these associations a coincidence caused
+by shared ancestry or ecologically important covariation that helps
+explain how grasses adapt to their environment? Recent advances in
 phylogenetic comparative methods use hierarchical, multiresponse
-phylogenetic models (66, 71, 72) to tease apart ``conservative trait
+phylogenetic models (Muir \emph{et al.}, 2023; Westoby \emph{et al.},
+2023; Halliwell \emph{et al.}, 2025) to tease apart ``conservative trait
 correlations'' that act at higher levels of organization (e.g.~among
 species) from trait correlations that explain variation at lower levels
 of organization (e.g.~among individuals within species and plastic
 responses). We use this approach to test whether guard cell size and
 \fgmax{} explain variation in stomatal kinetics at different levels of
-biological organization.
+biological organization. Throughout, we use guard cell length (\gcl) as
+a proxy for size (Sack \& Buckley, 2016).
 
 The four main questions we address in this study are:
 
@@ -596,7 +538,7 @@ The four main questions we address in this study are:
 \tightlist
 \item
   Are VPD kinetics adequately characterized by the same functional form
-  as light responses?
+  in Equation~\ref{eq-weibull} as light responses?
 \item
   Are \gcl{} and \fgmax{} positively associated with \(\tau\)?
 \item
@@ -612,48 +554,50 @@ experiment designed to answer different questions. Before analyzing the
 kinetic data, we planned to test whether 1) guard cell size would
 influence \(\tau\) and 2) that \(\tau\) would be greater on the
 abaxial-only leaves based on a recent metaanalysis of stomatal responses
-to light (39). We made the decision to test for an association between
-\fgmax{} and \(\tau\) after exploratory analyses revealed a potential
-association. Adding hypotheses after some results have been analyzed,
-also known as ``Hypothesizing After Results Known'' (HARKing), can lead
-to reports of spurious associations that are not repeatable in later
-studies (73, 74). Therefore, our conclusions about the effect of
-\fgmax{} on stomatal kinetics should be interpreted with caution until
-they are replicated.
+to light (Woning \emph{et al.}, 2026). We made the decision to test for
+an association between \fgmax{} and \(\tau\) after exploratory analyses
+revealed a potential association. Adding hypotheses after some results
+have been analyzed, also known as ``Hypothesizing After Results Known''
+(HARKing), can lead to reports of spurious associations that are not
+repeatable in later studies (Kerr, 1998; Smaldino \& McElreath, 2016).
+Therefore, our conclusions about the effect of \fgmax{} on stomatal
+kinetics should be interpreted with caution until they are replicated.
 
 \subsection{Materials and Methods}\label{sec-methods}
 
 \subsubsection{Populations and
 phylogeny}\label{populations-and-phylogeny}
 
-We analyzed stomatal responses to changing humidity among 29
-ecologically diverse populations of wild tomato, including
-representatives of all described species of \emph{Solanum} sect.
-\emph{Lycopersicon} and sect. \emph{Lycopersicoides} (75) and the
-cultivated tomato \emph{S. lycopersicum} var. \emph{lycopersicum}
-(Table~\ref{tbl-populations}), as described in (30). These populations
-were selected because they encompass the breadth of climatic variation
-in the wild tomato clade (76). In one case, we substituted a congeneric
-population of the species (\emph{S. galapagense}) because of difficulty
-growing the focal population and we also added a population of \emph{S.
+We grew 29 populations of wild tomato, including representatives of all
+described species of \emph{Solanum} sect. \emph{Lycopersicon} and sect.
+\emph{Lycopersicoides} (Peralta \emph{et al.}, 2008) and the cultivated
+tomato \emph{S. lycopersicum} var. \emph{lycopersicum}
+(Table~\ref{tbl-populations}), as described in Muir \emph{et al.}
+(2025). These populations were selected because they encompass the
+breadth of climatic variation in the wild tomato clade (Pease \emph{et
+al.}, 2016). In one case, we substituted a congeneric population of the
+species (\emph{S. galapagense}) and added a population of \emph{S.
 pennellii}. Due to constraints on growth space and time, we spread out
-measurements over -Inf weeks from Inf to -Inf. Replicates within
-population were evenly spread out over this period to prevent
-confounding of temporal variation in growth conditions with variation
-among populations. To estimate phylogenetic effects, we used the RAxML
-whole-transcriptome concatenated phylogeny based on 2,745 100-kb genomic
-windows from (76). Two of our populations were not in this tree. We used
-accession LA1044 in place of LA3909, two populations of \emph{S.
-galapagense}; LA0750 was added as sister to LA0716, two closely related
-populations of \emph{S. pennellii}. The node separating LA0750 from
+measurements over 61.1 weeks from August 29, 2022 to October 31, 2023.
+Replicates within population were evenly spread out over this period to
+prevent confounding of temporal variation in growth conditions with
+variation among populations. To estimate phylogenetic effects, we used
+the RAxML whole-transcriptome concatenated phylogeny based on 2,745
+100-kb genomic windows from Pease \emph{et al.} (2016). Two of our
+populations were not in this tree. We used \emph{S. galapagense}
+accession LA1044 in place of LA3909. \emph{S. pennellii} accession
+LA0750 was added as sister to LA0716. The node separating LA0750 from
 LA0716 was placed half-way between the next deepest node.
+
+\begingroup
+\singlespacing
 
 \begin{longtable}{>{\raggedright\arraybackslash}p{3.25cm}lrrr}
 
 \caption{\label{tbl-populations}Accession information of \emph{Solanum}
 populations used in this study. The species name, accession number,
 collection latitude, longitude, and elevation. TGRC: Tomato Genetics
-Resource Center.}
+Resource Center; mas: meters above sea level.}
 
 \tabularnewline
 
@@ -707,21 +651,23 @@ Species & TGRC accession & Latitude & Longitude & Elevation (mas)\\
 
 \end{longtable}
 
+\endgroup
+
 \subsubsection{Plant growth conditions and light
 treatments}\label{plant-growth-conditions-and-light-treatments}
 
-A thorough description of plant growth conditions can be found (30),
-therefore we summarize the most important information here. Seeds
-provided by the Tomato Genetics Resource Center germinated on moist
-paper in plastic boxes after soaking for 30-60 minutes in a 50\% (volume
-per volume) solution of household bleach and water, followed by a
-thorough rinse. We transferred seedlings to cell-pack flats containing
-Pro-Mix BX potting mix (Premier Tech, Rivière-du-Loup, Quebec, Canada)
-once cotyledons fully emerged, typically within 1-2 weeks of sowing. We
-grew seeds and seedlings for both sun and shade treatments under the
-same environmental conditions (12:12 h,
-24.3:\(\SI{21.7}{\degreeCelsius}\), 49.6:58.4 RH day:night cycle). LED
-light provided
+A thorough description of plant growth conditions can be found Muir
+\emph{et al.} (2025), therefore we summarize the most important
+information here. Seeds provided by the Tomato Genetics Resource Center
+germinated on moist paper in plastic boxes after soaking for 30-60
+minutes in a 50\% (volume per volume) solution of household bleach and
+water, followed by a thorough rinse. We transferred seedlings to
+cell-pack flats containing Pro-Mix BX potting mix (Premier Tech,
+Rivière-du-Loup, Quebec, Canada) once cotyledons fully emerged,
+typically within 1-2 weeks of sowing. We grew seeds and seedlings for
+both sun and shade treatments under the same environmental conditions
+(12:12 h, 24.3:\(\SI{21.7}{\degreeCelsius}\), 49.6:58.4 RH day:night
+cycle). LED light provided
 \(\mathrm{PPFD} = \SI{267}{\micro\mole\per\meter\squared\per\second}\)
 (Fluence RAZRx, Austin, Texas, USA) during the germination and seedling
 stages.
@@ -729,7 +675,7 @@ stages.
 Immediately prior to starting growth light intensity treatments (sun and
 shade), we transplanted seedlings to 3.78 L plastic pots containing 60\%
 Pro-Mix BX potting mix, 20\% coral sand (Pro-Pak, Honolulu, Hawaiʻi,
-USA), and 20\% cinders (Niu Nursery, Honolulu, Hawaiʻi, USA) withslow
+USA), and 20\% cinders (Niu Nursery, Honolulu, Hawaiʻi, USA) with slow
 release NPK fertilizer following manufacturer instructions (Osmocote
 Smart-Release Plant Food Flower \& Vegetable, The Scotts Company,
 Marysville, Ohio, USA). Percentage composition is on a volume basis. We
@@ -745,35 +691,37 @@ We selected a fully expanded, unshaded leaf at least six leaves above
 the cotyledons during early vegetative growth. This typically meant that
 plants had grown in light treatments for \(\approx 4\) weeks, ensuring
 they had time to sense and respond developmentally to the light
-intensity of the treatment rather than the seedling conditions (77). See
-(30) for further detail.
+intensity of the treatment rather than the seedling conditions (Schoch
+\emph{et al.}, 1980).
 
-To measure stomatal responses to a step change in humidity at a constant
-leaf temperature, which we refer to this as a humidity-response curve.
-We measured humidity-response curves using a portable infrared gas
-analyzer (LI-6800PF, LI-COR Biosciences, Lincoln, Nebraska, USA).
-Light-acclimated plants were placed under LEDs dimmed to match their
-light treatment during gas exchange measurements. We collected four
-humidity-response curves per leaf, an amphi (untreated) curve and a
-pseudohypo (treated) curve at high light-intensity (\ppfdequals{2000};
-97.8:2.24 red:blue) and low light-intensity (\ppfdequals{150}; 87.0:13.0
-red:blue). We always measured high light-intensity curves first because
-photosynthetic downregulation is faster than upregulation in these
-species. Pseudohypostomatous leaves are the same as the amphistomatous
-leaves except gas exchange through the upper (adaxial) surface blocked
-by a neutral density plastic (propafilm). Comparing amphi and pseudohypo
-curves on the same leaf enables us to test whether stomatal kinetics are
+We measured stomatal conductance over time after a step change in
+humidity at a constant leaf temperature, which we refer to this as a
+humidity-response curve. We measured humidity-response curves using a
+portable infrared gas analyzer (LI-6800PF, LI-COR Biosciences, Lincoln,
+Nebraska, USA). Light-acclimated plants were placed under LEDs dimmed to
+match their light treatment during gas exchange measurements. We
+collected four humidity-response curves per leaf, an amphistomatous
+(untreated) curve and a pseudohypostomatous (treated) curve at high
+light-intensity (\ppfdequals{2000}; 97.8:2.24 red:blue) and low
+light-intensity (\ppfdequals{150}; 87.0:13.0 red:blue). We always
+measured high light-intensity curves first because photosynthetic
+downregulation is faster than upregulation in these species.
+Pseudohypostomatous leaves are the same as the amphistomatous leaves
+except gas exchange through the upper (adaxial) surface blocked by a
+neutral density plastic (propafilm). For brevity, we hereafter refer to
+these as ``pseudohypo'' and ``amphi'' leaf types. Comparing amphi and
+pseudohypo leaf types enabled us to test whether stomatal kinetics are
 different for ab- and adaxial stomata on the same leaf. To compensate
 for reduced transmission, we increased incident \ppfd{} for pseudohypo
 leaves by a factor 1/0.91, the inverse of the measured transmissivity of
 the propafilm. We also set the stomatal conductance ratio, for purposes
 of calculating boundary layer conductance, to 0 for pseudohypo leaves
 following manufacturer directions. To control for order effects, we
-alternated between starting with amphi or pseudohypo leaf measurements.
-We made measurements over two days. On the first day, we measured high
-and low light-intensity curves for either amphi or pseudohypo leaves; on
-the second day, we measured high and low light-intensity curves on the
-other leaf type.
+alternated between starting with amphi or pseudohypo measurements. We
+made measurements over two days. On the first day, we measured high and
+low light-intensity curves for either amphi or pseudohypo leaves; on the
+second day, we measured high and low light-intensity curves on the other
+leaf type.
 
 In all humidity-response curves, we acclimated the focal leaf ambient
 CO\(_2\) (\caequals{415}), \tleafequals{25.0}, high light
@@ -785,31 +733,32 @@ concentration in the incoming air to be on average
 \(\SI{0.36}{\milli\mol\per\mol}\). This treatment induced rapid stomatal
 closure, but it did not standardize chamber air humidity because water
 vapor was introduced by leaf transpiration. Consequently, the RH was
-systematically higher at high light intensity, in sun plants, and
-amphistomatous leaves (Table~\ref{tbl-vpd}) because the \gsw{} was
-typically greater in these conditions. In all treatment conditions, the
-final RH (\(7.62\%--20.4\%\)) and VPD
-(\(\SI{2.5}{\kPa} -- \SI{2.92}{\kPa}\)) elicited rapid stomatal response
-and is comparable to treatments used in similar experiments (33, 53, 54,
-78), but was not intended to mimic natural environmental variability. We
-started logging data after the transient WWR and continued logging data
-until \gsw{} reached its nadir. We then acclimated the leaf to low light
+systematically higher at high light intensity, in sun plants, and amphi
+leaf types (Table~\ref{tbl-vpd}) because the \gsw{} was typically
+greater in these conditions. In all treatment conditions, the final RH
+(\(7.62\%-20.4\%\)) and VPD (\(\SI{2.5}{\kPa} - \SI{2.92}{\kPa}\))
+elicited rapid stomatal response and is comparable to treatments used in
+similar experiments (Merilo \emph{et al.}, 2014; Kübarsepp \emph{et
+al.}, 2020; Hsu \emph{et al.}, 2021; Qie \emph{et al.}, 2024), but was
+not intended to mimic natural environmental variability. We started
+logging data after the transient WWR and continued logging data until
+\gsw{} reached its nadir. We then acclimated the leaf to low light
 (\ppfdequals{150}) and \rhequals{70} before inducing stomatal closure
 with low \rh{} and logging data again.
 
 Prior to analysis, we removed unreliable and unusable data points,
-removed points not at instrument steady state, removed hysteretic
+removed points not at instrument steady state, removed the hysteretic
 portion of each curves at low \gsw{}, removed outliers within each
 curve, removed replicates with no overlap between amphi and pseudohypo
 curves from the same leaf, and thinned redundant data points within each
 curve. The rationale and procedure for each cleaning step is described
-in (30). Additionally, we excluded stomatal kinetic parameter estimates
-from four curves where \(\tau\) was estimated to be greater than
-\(\SI{1097}{\second}\), greatly exceeding the typical estimates (see
-Results). After these steps, the total number of humidity response
+in Muir \emph{et al.} (2025). Additionally, we excluded stomatal kinetic
+parameter estimates from four curves where \(\tau\) was estimated to be
+greater than \(\SI{1097}{\second}\), far exceeding the typical estimates
+(see Results). After these steps, the total number of humidity response
 curves analyzed is given in Table~\ref{tbl-sample-size}. The median
 number of curves per population per treatment was 9 and the median
-number of points per curve was 26. We extracted the the posterior
+number of points per curve was 26. We extracted the posterior
 distribution for \(\tau\) and \(\lambda\) from each fitted curve to
 calculate the parameter estimate (median) and uncertainty (standard
 deviation) for subsequent analyses.
@@ -845,52 +794,55 @@ Total & 520 & 520 & 544 & 540 & 2,124\\
 
 We estimated the stomatal density and \gcl{} on ab- and adaxial surfaces
 from all leaves used for humidity response curves. We used standard
-methods described fully in (30). For each surface we calculated the
-anatomical maximum stomatal conductance (\gmax) at a reference leaf
-temperature of \(\SI{25}{\degreeCelsius}\) following (57) as:
+methods described fully in Muir \emph{et al.} (2025). For each surface
+we calculated the anatomical maximum stomatal conductance (\gmax) at a
+reference leaf temperature of \(\SI{25}{\degreeCelsius}\) following Sack
+\& Buckley (2016) as:
 
 \[g_\mathrm{max} = b m d l_\mathrm{gc} / \sqrt{2}.\]
 
 The biophysical and morphological constants \(b\) and \(m\) are:
 
-\[b = \frac{D_\mathrm{wv}}{v},~\text{and}\]
+\[b = \frac{D_\mathrm{wv}}{v},~\mathrm{and}\]\\
 \[m = \frac{\pi c ^ 2}{j^{0.5} (4 h j + \pi c)},\]
 
 where \(D_\mathrm{wv}\) is the diffusion coefficient of water vapor in
 air and \(v\) is by the kinematic viscosity of dry air. We assumed
 \(D_\mathrm{wv} = \SI{2.49e-5}{\meter\squared\per\second}\) and
-\(v = \SI{2.24e-2}{\raiseto{3}\meter\per\mol}\) (79). For kidney-shaped
-guard cells like those in wild tomatoes, \(c = h = j = 0.5\). The
-\gmaxratio{} is the \gmax{} of the adaxial surface divided by the sum
-total \gmax{} of both surfaces. To estimate \fgmax, we divided the
-initial \gsw{} estimated from the parameter \(g_\text{i}\) in
-Equation~\ref{eq-weibull} from each humidity response curve by the
-anatomical \gmax{} for that leaf. The estimated \(g_\text{i}\) was very
-close to the maximum \gsw{} observed near the beginning of each curve
-(Figure~\ref{fig-compare-gsw}), suggesting that the initial \gsw{} was a
-good proxy for operational stomatal conductance at the time of the step
-change in humidity. We used the anatomical \gmax{} for the surface(s)
-measured in each curve to calculate \fgmax. For amphi curves, we used
-the sum of adaxial and abaxial \gmax{}; for pseudohypo curves, we used
-only the abaxial \gmax{}.
+\(v = \SI{2.24e-2}{\raiseto{3}\meter\per\mol}\) (Monteith \& Unsworth,
+2013). For kidney-shaped guard cells like those in wild tomatoes,
+\(c = h = j = 0.5\). The \gmaxratio{} is the \gmax{} of the adaxial
+surface divided by the sum total \gmax{} of both surfaces. To estimate
+\fgmax, we divided the initial \gsw{} estimated from the parameter
+\(g_\mathrm{i}\) in Equation~\ref{eq-weibull} from each humidity
+response curve by the anatomical \gmax{} for that leaf. The estimated
+\(g_\mathrm{i}\) was very close to the maximum \gsw{} observed near the
+beginning of each curve (Figure~\ref{fig-compare-gsw}), suggesting that
+the estimated \(g_\mathrm{i}\) was a good proxy for stomatal conductance
+at the time of the step change in humidity. We used the anatomical
+\gmax{} for the surface(s) measured in each curve to calculate \fgmax.
+For amphi curves, we used the sum of adaxial and abaxial \gmax{}; for
+pseudohypo curves, we used only the abaxial \gmax{}.
 
 \subsubsection{Estimating kinetic
 parameters}\label{estimating-kinetic-parameters}
 
 We estimated \(\tau\) and \(\lambda\) for each response curve by fitting
-Equation~\ref{eq-weibull} to a time-series of \gsw{} values using
+Equation~\ref{eq-weibull} to a time course of \gsw{} values using
 Bayesian nonlinear regression. All models were fit using a Bayesian HMC
-sampling in the probabilistic programming language \emph{Stan} (80)
-using the \emph{R} package \textbf{brms} version 2.23.0 (81). We used
-\emph{CmdStan} version 2.38.0 and \textbf{cmdstanr} version 0.9.0 (82)
-to interface with \emph{R} version 4.5.2 (83). We sampled 1000
+sampling in the probabilistic programming language \emph{Stan} (Stan
+Development Team, 2026) using the \emph{R} package \textbf{brms} version
+2.23.0 (Bürkner, 2017). We used \emph{CmdStan} version 2.38.0 and
+\textbf{cmdstanr} version 0.9.0 (Gabry \emph{et al.}, 2025) to interface
+with \emph{R} version 4.5.3 (R Core Team, 2026). We sampled 1000
 post-warmup draws from the posterior distribution on a single chain. We
 adjusted the number of sampling iterations and thinning interval for
 each curve so that the Gelman-Rubin convergence statistic (\(\hat{R}\))
-(84) was less than 1.05 and the bulk effective sample size (ESS) was
-greater than 400 for all model parameters, and there were fewer than 10
-divergent transitions. To answer Question 1, we assessed model fit using
-Bayesian \(R^2\) (85) implemented in \textbf{brms}.
+(Gelman \& Rubin, 1992) was less than 1.05 and the bulk effective sample
+size (ESS) was greater than 400 for all model parameters, and there were
+fewer than 10 divergent transitions. To answer Question 1, we assessed
+model fit using Bayesian \(R^2\) (Gelman \emph{et al.}, 2019)
+implemented in \textbf{brms}.
 
 \subsubsection{Estimating effects of stomatal anatomy on kinetic
 parameters}\label{estimating-effects-of-stomatal-anatomy-on-kinetic-parameters}
@@ -906,7 +858,7 @@ among individuals. We interpreted nonzero phylogenetic correlations
 among traits as evidence that these traits covary among populations.
 Finally, we used mediation analysis to test whether \gcl{} and/or
 \fgmax{} contribute to plasticity in stomatal kinetics.
-Table~\ref{tbl-criteria} summarizes the statistical criteria for for
+Table~\ref{tbl-criteria} summarizes the statistical criteria for
 determining whether and at what level of biological organization
 stomatal anatomical traits affected kinetic parameters. The subsections
 below describe specific procedures for deciding whether those are met.
@@ -947,18 +899,19 @@ variables, we included fixed effects of manipulative treatments: growth
 light intensity (sun and shade); measurement light intensity (high and
 low); and leaf type (amphi and pseudohypo). All models also included
 population as both a phylogenetically structured random effect and a
-non-phylogenetic random effect following (72). Prior to fitting, the
-phylogenetic (co)variance matrix was rescaled as a correlation matrix
-(86). For traits measured multiple times within the same leaf (\fgmax,
-\(\lambda\), \(\tau\)) we included a random effect of individual to
-account for repeated measures. We accounted for uncertainty in \(\tau\)
-and \(\lambda\) using the standard deviation of the posterior
-distribution of each estimate (see `Humidity response curves' for
-details). We modeled residual (co)variance, a combination
-among-individual (co)variance and measurement error, as a multivariate
-Student \(t\)-distribution, which is more robust to extreme values than
-the multivariate normal distribution (87). To account for
-heteroskedasticity, bounded measurements, and to linearize
+non-phylogenetic random effect following Halliwell \emph{et al.} (2025).
+Prior to fitting, the phylogenetic (co)variance matrix was rescaled as a
+correlation matrix (De Villemereuil \& Nakagawa, 2014). For traits
+measured multiple times within the same leaf (\fgmax, \(\lambda\),
+\(\tau\)) we included a random effect of individual to account for
+repeated measures. We accounted for uncertainty in \(\tau\) and
+\(\lambda\) using the standard deviation of the posterior distribution
+of each estimate (see `Humidity response curves' for details). We
+modeled residual (co)variance, a combination among-individual
+(co)variance and measurement error, as a multivariate Student
+\(t\)-distribution, which is more robust to extreme values than the
+multivariate normal distribution (Gelman \emph{et al.}, 2014). To
+account for heteroskedasticity, bounded measurements, and to linearize
 relationships, \gcl, \(\lambda\), and \(\tau\) were log-transformed
 prior to analysis whereas \fgmax{} was logit-transformed. All models
 were fit with \emph{Stan} following the same methods described above for
@@ -978,8 +931,8 @@ simultaneously accounts for trait associations among individuals, shared
 plastic responses, and residual covariance. To test for possible
 causation, we used the inferred phylogenetic trait covariance matrix to
 estimate partial correlations between anatomical and kinetic variables
-(72). We interpret a significant partial correlation between variables
-as a plausible causal hypothesis.
+(Halliwell \emph{et al.}, 2025). We interpret a significant partial
+correlation between variables as a plausible causal hypothesis.
 
 \paragraph{Model selection and parameter estimation of individual-level
 effects}\label{model-selection-and-parameter-estimation-of-individual-level-effects}
@@ -987,54 +940,57 @@ effects}\label{model-selection-and-parameter-estimation-of-individual-level-effe
 To infer whether individual-level variation in \fgmax{} and \gcl{}
 influence kinetic parameters, we used the leave-one-out cross-validation
 information criterion (LOOIC) to compare the fit of models using the
-\emph{R} package \textbf{loo} version 2.9.0 (88) to calculate LOOIC
-values. We compared models with all permutations of \fgmax{} and \gcl{}
-influencing \(\lambda\) and \(\tau\). We considered all models within
-two \(\Delta\)LOOIC standard errors of the minimum LOOIC
-(Table~\ref{tbl-comparison}) to be in the set of plausible models to
-generate posterior predictions for hypothesis testing. Within each
-plausible model, we assessed whether an effect was significantly
-different from zero based on the 95\% confidence intervals.
+\emph{R} package \textbf{loo} version 2.9.0 (Vehtari \emph{et al.},
+2017) to calculate LOOIC values. We compared models with all
+permutations of \fgmax{} and \gcl{} influencing \(\lambda\) and
+\(\tau\). We considered all models within two \(\Delta\)LOOIC standard
+errors of the minimum LOOIC (Table~\ref{tbl-comparison}) to be in the
+set of plausible models to generate posterior predictions for hypothesis
+testing. Within each plausible model, we assessed whether an effect was
+significantly different from zero based on the 95\% confidence
+intervals.
 
 \paragraph{Mediation analysis to test for plastic
 effects}\label{mediation-analysis-to-test-for-plastic-effects}
 
-We used causal mediation analysis (89) to test whether plasticity in
-\(\tau\) was mediated by plasticity in \fgmax{} or \gcl{} in response to
-measurement light intensity, growth light intensity, and curve-type
-treatments. We inferred the direct effect of treatments on \(\tau\) from
-model coefficients. We estimated the mediated effect of treatments using
-the product of the effect of treatment on mediator (\fgmax{} or \gcl)
-and the effect of the mediator on \(\tau\) (90). We determined
-significant direct and mediator effects based on whether the 95\%
-confidence intervals of the effects were different from zero. We
-calculated effect sizes as the point estimate (median of the posterior)
-divided by the standard error (standard deviation of the posterior).
+We used causal mediation analysis (Pearl, 2022) to test whether
+plasticity in \(\tau\) was mediated by plasticity in \fgmax{} or \gcl{}
+in response to measurement light intensity, growth light intensity, and
+curve-type treatments. We inferred the direct effect of treatments on
+\(\tau\) from model coefficients. We estimated the mediated effect of
+treatments using the product of the effect of treatment on mediator
+(\fgmax{} or \gcl) and the effect of the mediator on \(\tau\) (Imai
+\emph{et al.}, 2010). We determined significant direct and mediator
+effects based on whether the 95\% confidence intervals of the effects
+were different from zero. We calculated effect sizes as the point
+estimate (median of the posterior) divided by the standard error
+(standard deviation of the posterior).
 
 \subsubsection{Variance decomposition and phylogenetic
 heritability}\label{variance-decomposition-and-phylogenetic-heritability}
 
-One explanation from why traits have affects at different levels of
+One explanation from why traits have effects at different levels of
 organization is that variance in those traits are concentrated at those
 different levels of organization. To evaluate this, we decomposed the
 variance in response variables (\(\lambda\), \(\tau\), \fgmax, \gcl)
-into phylogenetic, population (nonphylogenetic), and among-individual
-levels. The phylogenetic variance component quantifies trait evolution
-between populations congruent with the phylogenetic relationships,
-whereas the population component quantifies variance among populations
-independent of phylogenetic relationships (86, 91). We estimated these
-components from the associated random-effect standard deviations for
-each response variable. The among-individual variance components
-quantify variance among individuals within the same population and
-treatment. We estimated the among-individual component as the sum of the
-individual random-effect and residual standard deviations. It was not
-possible to estimate individual random-effect in \gcl{} with our study
-design because we only measured average guard cell length once per leaf.
-The among-individual component is biased upwards because it also
-includes measurement error, which cannot be separately estimated with
-our experimental design. The phylogenetic heritability is equivalent to
-the phylogenetic variance component and is estimated following (91);
-(86) as:
+into phylogenetic, population (nonphylogenetic), and individual levels.
+The phylogenetic variance component quantifies trait evolution between
+populations congruent with the phylogenetic relationships, whereas the
+population (nonphylogenetic) component quantifies variance among
+populations independent of phylogenetic relationships (Lynch, 1991; De
+Villemereuil \& Nakagawa, 2014). We estimated these components from the
+associated random-effect standard deviations for each response variable.
+The among-individual variance components quantify variance among
+individuals within the same population and treatment. We estimated the
+among-individual component as the sum of the individual random-effect
+and residual standard deviations. It was not possible to estimate
+individual random-effect in \gcl{} with our study design because we only
+measured average guard cell length once per leaf. The among-individual
+component is biased upwards because it also includes measurement error,
+which cannot be separately estimated with our experimental design. The
+phylogenetic heritability is equivalent to the phylogenetic variance
+component and is estimated following Lynch (1991) and De Villemereuil \&
+Nakagawa (2014) as:
 
 \[h^2_{\mathrm{phy}} = \frac{\sigma^2_\mathrm{phy}}{\sigma^2_\mathrm{phy} + \sigma^2_\mathrm{pop} + \sigma^2_\mathrm{ind}},\]
 
@@ -1064,9 +1020,9 @@ Bayesian \(R^2\) across all curves was 0.9994 and 0.9802, respectively.
 Consider a typical leaf in the experiment characterized by the median
 time constant (\(\tau\)) and lag time (\(\lambda\)) among wild tomato
 accessions in all treatments. After humidity decreased and the transient
-wrong way response elapsed, it took on average 127 s for \gsw{} to
-decrease half-way (\(t_{50}\)) from its initial (\(g_\text{i}\)) to
-final (\(g_\text{f}\)) steady state value. In terms of the kinetic model
+WWR elapsed, it took on average 127 s for \gsw{} to decrease half-way
+(\(t_{50}\)) from its initial (\(g_\mathrm{i}\)) to final
+(\(g_\mathrm{f}\)) steady state value. In terms of the kinetic model
 parameters, most variation among leaves was due to difference in the
 time constant rather than the lag time. In the previous example,
 increasing \(\lambda\) from its median to its maximum estimated value
@@ -1078,13 +1034,13 @@ on treatments and anatomical parameters affect \(\tau\).
 \subsubsection{Variation in guard cell length and
 aperture}\label{variation-in-guard-cell-length-and-aperture}
 
-Guard cell length (\gcl) differed among species and varied to a lesser
-extent between growth light intensity treatments and leaf surfaces. In
-contrast, stomatal conductance as a fraction of maximum conductance
-(\fgmax) was most strongly determined by measurement light intensity.
-Excluding treatment effects, phylogenetically structured differences
-among populations (i.e.~phylogenetic heriability) accounted for 64.4\%
-{[}95\% CI: 24.4 to 83.1\%{]} of the variance in \gcl{}
+Guard cell length (\gcl) differed among populations and varied to a
+lesser extent between growth light intensity treatments and leaf
+surfaces. In contrast, stomatal conductance as a fraction of maximum
+conductance (\fgmax) was most strongly determined by measurement light
+intensity. Excluding treatment effects, phylogenetically structured
+differences among populations (i.e.~phylogenetic heriability) accounted
+for 64.4\% {[}95\% CI: 24.4 to 83.1\%{]} of the variance in \gcl{}
 (Figure~\ref{fig-variance}, Table~\ref{tbl-variance}). There was also
 developmental plasticity in \gcl. On average, \gcl{} increased by
 \(12.1\)\% {[}95\% CI: \(11.1\) to \(13.0\)\%{]} in the sun treatment
@@ -1098,18 +1054,18 @@ are larger than abaxial stomata in these species (Figure~\ref{fig-gcl}),
 so the average \gcl{} in pseudohypo leaves was higher than in amphi
 leaves because the former only included abaxial stomata.
 
-The phylogenetic heritability of \fgmax{} was low, accounted for 16.6\%
+The phylogenetic heritability of \fgmax{} was low, accounting for 16.6\%
 {[}95\% CI: 1.4 to 38.8\%{]} of the variance
 (Figure~\ref{fig-variance}, Table~\ref{tbl-variance}). High measurement
 light intensity increased \fgmax{} by an average of \(0.85\) logit units
 {[}95\% CI: \(0.82\) to \(0.87\){]}
 (Figure~\ref{fig-accession-anatomy}b; Table~\ref{tbl-fixed}). For
-example, if \(f_\text{gmax} = 0.1\) in low light, the typical \fgmax{}
+example, if \(f_\mathrm{gmax} = 0.1\) in low light, the typical \fgmax{}
 for the same leaf acclimated to high light was 0.21. Sun leaves had on
 average \(-0.28\) logit units {[}95\% CI: \(-0.35\) to \(-0.21\){]}
 lower \fgmax{} than shade-grown plants
-(Figure~\ref{fig-accession-anatomy}b; Table~\ref{tbl-fixed}). Treated
-pseudohypo leaves had on average \(0.21\) logit units {[}95\% CI:
+(Figure~\ref{fig-accession-anatomy}b; Table~\ref{tbl-fixed}). The
+pseudohypo leaf type had on average \(0.21\) logit units {[}95\% CI:
 \(0.18\) to \(0.24\){]} higher \fgmax{} than untreated, amphistomatous
 leaves (Figure~\ref{fig-accession-anatomy}b; Table~\ref{tbl-fixed}).
 This indicates that stomatal aperture was more open in leaves where gas
@@ -1147,6 +1103,32 @@ populations was low for all traits.}
 
 \addtocounter{figure}{-1}
 
+\begin{figure}
+
+\centering{
+
+\pandocbounded{\includegraphics[keepaspectratio]{ms_files/figure-pdf/fig-accession-anatomy-cap-1.pdf}}
+
+}
+
+\caption{\label{fig-accession-anatomy-cap}(previous page)
+\textbf{Guard cell length (\gcl) and stomatal conductance as a fraction of maximum conductance (\fgmax) vary among populations and treatments.}
+In both panels, black points are mean trait value per population within
+a particular treatment. Gray lines connect values within populations
+across treatments. (a) Most of the variation in \gcl{} is among
+populations, but developmental plasticity to growth light intensity
+tends to increase \gcl{} in sun (left facet) compared to shade (right
+facet) grown plants. There is no plasticity to leaf type (amphi
+vs.~pseudohypo), but the average \gcl{} is slightly high in pseudohypo
+leaves because abaxial stomata tended to be larger than adaxial stomata
+on the same leaf. (b) Measurement light intensity has the most direct
+effect on \fgmax{} because stomatal aperture increases under high light
+intensity. To a lesser extent, \fgmax{} varies among populations, is
+slightly lower in sun-grown plants, and slightly higher in pseudohypo
+leaf types.}
+
+\end{figure}%
+
 \subsubsection{Variation in stomatal closure kinetic
 parameters}\label{variation-in-stomatal-closure-kinetic-parameters}
 
@@ -1154,23 +1136,21 @@ Estimates of stomatal closure kinetic parameters for each curve are in
 Table~\ref{tbl-estimates-curve} and estimates for each population are in
 Table~\ref{tbl-estimates-accession}. These will be deposited on Dryad
 upon publication. The time-constant \(\tau\) exhibited moderate
-phylogenetic heritability, accounting for \texttt{r}tau\_phylo\_var` of
-the variance, whereas \(\lambda\) varied more within populations
-(Figure~\ref{fig-variance}, Table~\ref{tbl-variance}). Some light
-treatments also affected kinetic parameters. Growth light intensity did
-not significantly affect \(\tau\)
-(Figure~\ref{fig-accession-kinetics}, Table~\ref{tbl-fixed}). In sun
-plants, \(\tau\) was on average 5.59\% {[}95\% CI: 0.993 to 10.3\%{]}
-lower than in shade plants after accounting for other explanatory
-variables. Within the same leaf, increasing the measurement light
-intensity prior to the humidity step change from \ppfdqty{150} to
-\ppfdqty{2000} significantly increased \(\tau\) by 17.8\% {[}95\% CI:
-11.6 to 24.7\%{]}
+phylogenetic heritability, accounting for 42.4\% {[}95\% CI: 19.8 to
+62.2\%{]} of the variance, whereas \(\lambda\) varied more within
+populations (Figure~\ref{fig-variance}, Table~\ref{tbl-variance}). Some
+light treatments also affected kinetic parameters. In sun plants,
+\(\tau\) was on average 5.59\% {[}95\% CI: 0.993 to 10.3\%{]} lower than
+in shade plants after accounting for other explanatory variables
+(Figure~\ref{fig-accession-kinetics}, Table~\ref{tbl-fixed}). Within the
+same leaf, increasing the measurement light intensity prior to the
+humidity step change from \ppfdqty{150} to \ppfdqty{2000} significantly
+increased \(\tau\) by 17.8\% {[}95\% CI: 11.6 to 24.7\%{]}
 (Figure~\ref{fig-accession-kinetics}, Table~\ref{tbl-fixed}). The time
 lag \(\lambda\) responded to growth, but not measurement light intensity
 after accounting for other explanatory variables
 (Figure~\ref{fig-accession-kinetics}, Table~\ref{tbl-fixed}). In sun
-plants, \(\tau\) was on average 12.1\% {[}95\% CI: 10.2 to 14.1\%{]}
+plants, \(\lambda\) was on average 12.1\% {[}95\% CI: 10.2 to 14.1\%{]}
 greater than in shade plants. Higher measurement light decreased
 increased \(\lambda\) slightly by 1.2\% {[}95\% CI: -1.13 to 3.62\%{]}.
 
@@ -1200,64 +1180,33 @@ kinetics}{Guard cell length and  influence stomatal kinetics}}\label{guard-cell-
 
 Guard cell length and \fgmax{} affected stomatal closure kinetics in the
 directions predicted by our hypotheses, but they operated at different
-levels of biological organization. six of the models we tested were
+levels of biological organization. Among the models we tested, six were
 plausible in that their predictive accuracy was similar based on
-\(\Delta \text{LOOIC}\) (Table~\ref{tbl-comparison}). All models in the
-plausible set indicated among-individual level effects of \fgmax{} on
-\(\tau\) and \(\lambda\), as we discuss in more detail below. Models
-that included both among-individual and phylogenetic effects of \gcl{}
-had similar LOOIC values but we selected a model with only phylogenetic
+\(\Delta \mathrm{LOOIC}\) (Table~\ref{tbl-comparison}). All models in
+the plausible set indicated among-individual level effects of \fgmax{}
+on \(\tau\) and \(\lambda\), as we discuss in more detail below. Models
+that included both individual and phylogenetic effects of \gcl{} had
+similar LOOIC values but we selected a model with only phylogenetic
 effects for two reasons (Table~\ref{tbl-comparison}). First, in models
-that included both among-individual and phylogenetic effects, neither
-the phylogenetic correlation nor the fixed effect regression coefficient
+that included both individual and phylogenetic effects, neither the
+phylogenetic correlation nor the fixed effect regression coefficient
 were significantly different from zero (results not shown). These
 parameters are highly colinear in the posterior
 (Figure~\ref{fig-colinear}) indicating difficulty in estimating both
 terms simultaneously and ``smearing'' out their confidence intervals
-(92). Hence, the model with only phylogenetic effects is easier to
-interpret. The second reason we favor this model is that it is
+(McElreath, 2020). Hence, the model with only phylogenetic effects is
+easier to interpret. The second reason we favor this model is that it is
 consistent with the high phylogenetic heritability in both \gcl{} and
 \(\tau\) (Figure~\ref{fig-variance}). Visually, we observed positive
-relationships among species mean trait values (Figure~\ref{fig-gcl-tau})
-but little relationship between \gcl{} and \(\tau\) within species
-(results not shown). When comparing many models simultaneously,
-differences in LOOIC performance can occur by chance (93), so judgement
-calls among models with similar performance can be necessary. The
-preponderance of evidence indicates that \gcl{} explains variation
-primarily among rather than within our populations. The results in the
-main text are based on estimates from the selected model.
-
-Leaves with stomatal apertures closer to their maximum aperture closed
-more slowly than those less open (Figure~\ref{fig-fgmax-tau}). For
-example, increasing \fgmax{} from 20\% to 30\% resulted in a 10.7\%
-{[}95\% CI: 7.0 to 14.4\%{]} increase in \(\tau\) for a typical leaf in
-the reference treatment set (shade, low, amphi).
-
-\paragraph{MARKER - continue working on results
-here}\label{marker---continue-working-on-results-here}
-
-The only significant partial correlation was between \gcl{} and \(\tau\)
-(\(\rho = 0.72\) {[}95\% CI: \(-0.073 to 0.97\)){]} was a significant
-phylogenetic correlation between \gcl{} and \(\tau\) (\textbf{fig?}-?).
-PARTIAL CORRELATION RESULT. Variation in \gcl{} within populations did
-not explain within-population variation in \(\tau\)
-Table~\ref{tbl-fixed}. NOTE THAT BEST MODEL RETAINED INDIVIDUAL LEVEL
-EFFECT OF GCL, BUT COEFFICIENT WAS NOT SIGNIFICANT. OTHER BEST MODELS
-DID NOT RETAIN THIS. DID GCL MEDIATE AFFECT OF TREATMENTS?
-
-effect of \fgmax{} on \(\tau\) Figure~\ref{fig-fgmax-tau} and
-\(\lambda\) Figure~\ref{fig-fgmax-lambda} was significant at the
-among-individual level, but there was no significant phylogenetic
-correlation between \fgmax{} and either kinetic parameter
-Table~\ref{tbl-random}. This suggests that variation in stomatal
-aperture among individuals within populations influences stomatal
-kinetics, but variation in aperture among populations does not.
-
-somewhere, random effect Table~\ref{tbl-random}
-
-Need to show (this is a growing, incomplete list): - phylogenetic
-partial correlation - partial correlation showing that gcl and tau are
-(only?) significant phylogenetic covariates
+relationships among population mean trait values
+(Figure~\ref{fig-gcl-tau}) but little relationship between \gcl{} and
+\(\tau\) within populations (results not shown). When comparing many
+models simultaneously, differences in LOOIC performance can occur by
+chance (McLatchie \& Vehtari, 2024), so judgement calls among models
+with similar performance can be necessary. The preponderance of evidence
+indicates that \gcl{} explains variation primarily among rather than
+within our populations. The results in the main text are based on
+estimates from the selected model.
 
 \begin{table}
 
@@ -1278,7 +1227,7 @@ criterion.}
 \toprule
 \multicolumn{2}{c}{ } & \multicolumn{2}{c}{$\lambda$} & \multicolumn{2}{c}{$\tau$} \\
 \cmidrule(l{3pt}r{3pt}){3-4} \cmidrule(l{3pt}r{3pt}){5-6}
-$\Delta \text{LOOIC}$ & SE & \fgmax & \gcl & \fgmax & \gcl\\
+$\Delta \mathrm{LOOIC}$ & SE & \fgmax & \gcl & \fgmax & \gcl\\
 \midrule
 0.00 & 0.00 & \cmark &  & \cmark & \cmark\\
 3.51 & 2.56 & \cmark & \cmark & \cmark & \cmark\\
@@ -1305,6 +1254,24 @@ $\Delta \text{LOOIC}$ & SE & \fgmax & \gcl & \fgmax & \gcl\\
 }
 
 \end{table}%
+
+Leaves with stomatal apertures closer to their maximum aperture closed
+more slowly than those less open (Figure~\ref{fig-fgmax-tau}). For
+example, increasing \fgmax{} from 20\% to 30\% resulted in a 10.7\%
+{[}95\% CI: 7.0 to 14.4\%{]} increase in \(\tau\) for a typical leaf in
+the reference treatment set (shade, low, amphi). The \fgmax{} also had a
+significant, positive, individual-level effect on \(\lambda\)
+(Table~\ref{tbl-fixed}).
+
+Populations that tended to have great \gcl{} also tended to have greater
+\(\tau\) as evidenced by a positive phylogenetic correlation
+(Table~\ref{tbl-random}, Figure~\ref{fig-gcl-tau}). However, we found
+little evidence that variation in \gcl{} explained \(\tau\) or
+\(\lambda\) within populations. There were no other significant
+phylogenetic correlations (Table~\ref{tbl-random}). The only marginally
+significant partial correlation was between \gcl{} and \(\tau\)
+(\(\rho = 0.72\) {[}95\% CI: \(-0.073\) to \(0.97\)){]}, indicating a
+plausible causal effect of \gcl{} on \(\tau\) among populations.
 
 \begin{figure}
 
@@ -1359,11 +1326,11 @@ treatments directly effect \(\tau\) and had indirect effects mediated by
 \fgmax{} (Figure~\ref{fig-mediation}). We did not estimate effects
 mediated by \gcl{} because the selected model did not retain direct
 effects of \gcl{} on \(\tau\) (Table~\ref{tbl-comparison}). The direct
-effect of the high light intensity (sun) growth treatment increased
-\(\tau\) by \(5.57\)\% {[}95\% CI: \(0.99\) to \(10.33\)\%{]}, but the
-indirect of lower \fgmax{} counteracted by \(-5.09\)\% {[}95\% CI:
-\(-7.36\) to \(-3.22\)\%{]}. In contrast, direct and indirect effects of
-high measurement light intensity increased \(\tau\). The direct effect
+effect of the sun growth treatment increased \(\tau\) by \(5.57\)\%
+{[}95\% CI: \(0.99\) to \(10.33\)\%{]}, but the indirect of lower
+\fgmax{} counteracted it by \(-5.09\)\% {[}95\% CI: \(-7.36\) to
+\(-3.22\)\%{]}. In contrast, direct and indirect effects of high
+measurement light intensity increased \(\tau\). The direct effect
 increased \(\tau\) by \(17.81\)\% {[}95\% CI: \(11.56\) to
 \(24.74\)\%{]} and the indirect effect mediated by \fgmax{} increased
 \(\tau\) by \(17.33\)\% {[}95\% CI: \(11.23\) to \(23.73\)\%{]}. The
@@ -1397,781 +1364,821 @@ considered as a mediator.}
 
 \end{figure}%
 
+\subsubsection{No evidence that adaxial stomata close faster than
+abaxial
+stomata}\label{no-evidence-that-adaxial-stomata-close-faster-than-abaxial-stomata}
+
+The time constant \(\tau\) was slightly greater in pseudohypo leaves
+compared to the paired amphi leaf (results not shown), which would
+suggest that adaxial stomata close faster. However, pseudohypo leaves
+also had greater \fgmax, which slows stomatal closure, as discussed in
+the previous section. Once, the indirect effect of \fgmax{} on \(\tau\)
+is accounted for, the direct effect of pseudohypo leaf type on \(\tau\)
+disappears, indicating that the observed difference in \(\tau\) between
+pseudohypo and amphi leaves is mediated by \fgmax{}
+(Figure~\ref{fig-mediation}). There is actually a tendency for \(\tau\)
+to be slightly lower when only abaxial stomata are measured in
+pseudohypo leaves, as evidenced by the negative effect of this leaf type
+on \(\tau\) (Table~\ref{tbl-fixed}).
+
 \subsection{Discussion}\label{discussion}
 
 The ability for stomata to adjust to fluctuating environmental
 conditions likely evolved in early land plants because of selection to
-optimize water use relative to carbon gain (2). Hydroactive control of
-stomatal aperture in angiosperms increases flexibility to modulate
-stomatal aperture depending on leaf water status (5), perhaps enabling
-greater maximum hydraulic conductance and photosynthesis {[}mcadam?{]}.
-We now understand the steady-state response of stomatal conductance
-(\gsw) to global increases in vapor pressure deficit (VPD) better but
-there is significantly greater uncertainty surrounding kinetic responses
-to VPD (28). We considered two nonmutually exclusive mechanistic
-hypotheses for how stomatal anatomy influences stomatal closure
-kinetics. First, smaller stomata may close faster because of greater
-surface area to volume ratio (42). Second, stomatal responses should be
-slower in guard cells under higher turgor pressure (59). Based on these
-hypotheses, we predicted that leaves with smaller guard cells and
-operating further from their anatomical maximum stomatal conductance
-(i.e., lower \fgmax) would have faster stomatal closure kinetics (lower
-\(\tau\)). Analysis of 2,124 time courses from 29 populations in
-multiple environments, \ldots{}
+optimize water use relative to carbon gain (Raven, 2002). Hydroactive
+control of stomatal aperture in angiosperms increases flexibility to
+modulate carbon gain and water loss depending on leaf water status
+(Buckley, 2019), perhaps enabling greater maximum hydraulic conductance
+and photosynthesis {[}mcadam?{]}. We now understand the steady-state
+response of stomatal conductance (\gsw) to global increases in vapor
+pressure deficit (VPD) better but there is greater uncertainty
+surrounding kinetic responses to VPD (Buckley \emph{et al.}, 2023). Here
+we considered two nonmutually exclusive mechanistic hypotheses for how
+stomatal anatomy influences stomatal closure kinetics. First, smaller
+stomata may close faster because of greater surface area to volume ratio
+(Drake \emph{et al.}, 2013). Second, guard cells under higher turgor
+pressure respond more slowly because of reduced cell wall elasticity
+(Franks \emph{et al.}, 2012). Based on these hypotheses, we predicted
+that leaves with smaller guard cells and operating further from their
+anatomical maximum \gsw{} (i.e., lower \fgmax) would have faster
+stomatal closure kinetics (lower \(\tau\)). Analysis of 2,124 time
+courses of stomatal closure from 29 populations in multiple environments
+demonstrates that both guard cell size and stomatal aperture influence
+kinetics at different levels of biological organization. This new
+understanding suggests unexplored explanations for the relationships
+between stomatal size, density, speed, and operational \gsw{} (\gop)
+among land plants.
 
-note: this paper (48) also found relationship between gop and kinetics
+The kinetics of stomatal closure in response to VPD closely match
+response to light, suggesting similar underlying mechanisms. The
+lag-time model proposed by Woning \emph{et al.} (2026) for light
+responses also describes humidity responses extremely well following the
+passive wrong-way response. The fitted models explained on average
+99.94\% of the variation in \gsw{} during closure
+(Figure~\ref{fig-rh-curves}). The formal mathematical similarity of
+light and humidity response might indicate that certain factors, like
+guard cell size, influence stomatal kinetics responses in general.
+Alternatively, disparate underlying processes may be described by the
+same macroscale formalism. For example, humidity responses may be
+controlled by ABA accumulation or loss (McAdam \emph{et al.}, 2016),
+whereas \(C_\mathrm{i}\)-independent red-light responses can be
+influenced by accumulation or loss of photosynthetic products (Matthews
+\emph{et al.}, 2020). These disparate processes may both have similar
+kinetic properties, but would not necessarily imply that VPD and light
+responses are strongly correlated. Future research comparing the
+correlation between light, VPD, CO\textsubscript{2}, and other stomatal
+kinetic responses can determine the extent to which generic or specific
+factors determine stomatal opening and closing rates (Creese \emph{et
+al.}, 2014; Kübarsepp \emph{et al.}, 2020).
 
-effect of fgmax is not simply because high light intensity increased
-fgmax and tau. Causal inference dissects different causal paths and
-shows direct effect of fgmax on tau within populations and treatments
+The positive association between \gcl{} and \(\tau\)
+(Figure~\ref{fig-gcl-tau}) is consistent with the hypothesis that
+smaller cells respond faster because they have a greater surface area to
+volume ratio for osmolyte flux (Franks \& Farquhar, 2007; Drake \emph{et
+al.}, 2013; Lawson \& Vialet-Chabrand, 2019; Woning \emph{et al.},
+2026). If correct, this implies that the maximum rate of stomatal
+closure is limited by membrane surface area. We do not have the data to
+evaluate the hypothesis mechanistically, but this should be tested in
+the future. An alternative explanation is that the correlation between
+\gcl{} and \(\tau\) is not causal. The fact that \gcl{} did not explain
+much of the variation in \(\tau\) among individuals within populations
+suggests that \gcl{} may not directly affect \(\tau\). However, the high
+phylogenetic heritability and, hence, low variability in \gcl{} within
+populations may also explain we were unable to detect a
+within-population effect of \gcl{} on \(\tau\).
 
-caveat: this treatment is a hammer than exposes maximum rate of stomatal
-closure. The factors which influence this may not explain variance in
-kinetics in more natural conditions.
+A consequence of greater stomatal aperture is that they close more
+slowly when the environment changes. Much of the variation in \(\tau\)
+among individuals within populations was explained by variation in
+\fgmax{} (Figure~\ref{fig-fgmax-tau}). This factor was positively
+associated with \(\tau\) among individuals in the same combination of
+light treatments, but also mediated much of the plastic effects of these
+treatments on \(\tau\) (Figure~\ref{fig-mediation}). The association
+between \fgmax{} and \(\tau\) could be explained by the hypothesis that
+guard cell wall elasticity declines at greater turgor pressure (Franks
+\emph{et al.}, 2012), like a rubber band that is stretched under
+tension. The impact of \fgmax{} was most pronounced when comparing
+measurement light intensity treatments. Leaves acclimated to high light
+intensity were on average 112\% more open than the same leaves at low
+light intensity in the reference treatment (shade, amphi). As a
+consequence, stomata closed more slowly in leaves acclimated to high
+light intensity, with a 17.3\% greater time-constant on average in the
+reference treatment, based on parameter estimates from the selected
+model (Table~\ref{tbl-fixed}). We did not assess whether \fgmax{} also
+affects stomatal opening and this should be measured to further test
+this hypothesis. The implication is that natural selection should favor
+\gop{} values that not only optimize instantaneous carbon gain and water
+loss in the present environment, but also carbon gain and water loss
+integrated through time in a fluctuating environment. We predict that
+rapid, temporally-uncorrelated fluctuating environments will favor
+leaves with greater \fgmax{} to slow kinetic responses and prevent
+overreacting to transitory changes that are likely to revert; slower,
+temporally-correlated changes will favor lower \fgmax{} to enable close
+tracking of the environment.
 
-Need to mention subsaturation. If airspace is unsaturated, then gs is
-underestimated. This doesn't necessarily affect kinetic parameter
-estimates since all measurements were done at high VPD.
+Outline of remaining paragraphs:
 
-(not sure where this goes) It might seem that natural selection should
-favor faster stomatal responses to get closer to the ideal of
-instantaneous optimization. Under this assumption, variation in stomatal
-kinetics would depend on how strong directional selection for faster
-responses is counterbalanced by costs of faster stomata. We discuss
-multiple, nonmutually exclusive costs below {[}WHERE?{]}. However, once
-models account for inevitable time lags, natural selection can favor
-slower responses when this prevents overreacting to unpredictable and
-shortlived changes in the environment. {[}Review some lit{]} It is
-therefore likely that the direction of selection on stomatal response
-rate varies depending on the predictability and duration of
-environmental fluctuations, as well as the energetic costs of stomatal
-movements.
+\begin{itemize}
+\item
+  Short paragraph describing that there is little difference in abaxial
+  and adaxial stomatal kinetic parameters
+\item
+  Paragraph discussing implications for size-density scaling.
 
-Traditional view is that smaller stomata are selected for speed and
-because there is higher gmax for same fs (Franks). Our results suggest
-an alternative hypothesis. Smaller stomata may increase rate of stomatal
-closure (we haven't tested opening), but only if fgmax is low or
-moderate. Therefore if leaves with smaller stomata maintain a similar
-gop, then stomatal density must increase to prevent fgmax from
-increasing. This may explain the association between the association
-between small stomata and high density, and relatedly the dearth of
-leaves with sparse, small stomata.
+  \begin{itemize}
+  \tightlist
+  \item
+    Since fast speed is probably good, why aren't all stomata very
+    small? There are some lower physical limits on pore size, like
+    knudsen diffusion, but our results lead to a new explanation.
+  \item
+    If all stomata were small, a leaf would need a high stomatla density
+    for \fgmax{} to not be very high.
+  \item
+    This leads to an association between stomatal size and density
+  \item
+    Contrast between our explanation for size-density scaling and
+    previous explanations
+  \end{itemize}
+\item
+  Paragraph on caveats
 
-Might be useful to relate to literature on clines in stomatal size,
-especially poplar (94) and (95) and (96)
-
-note about adaxial stomata: Mott (2007) reported that stomatal responses
-to humidity were independent on the two surfaces of amphistomatous
-leaves of Vicia faba and Xanthium strumarium: when humidity was changed
-at one surface only, stomata on that surface responded but stomata on
-the other surface did not.'' (quote from Buckley et al 2011). FYI,
-tomatoes have BSEs (heterobaric)
+  \begin{itemize}
+  \tightlist
+  \item
+    The RH treatment is a hammer than exposes maximum rate of stomatal
+    closure. The factors which influence this may not explain variance
+    in kinetics in more natural conditions.
+  \item
+    VPD systematically differs between treatments
+  \end{itemize}
+\end{itemize}
 
 \subsection{References}\label{references}
 
-\phantomsection\label{refs}
+\singlespacing
+
+\protect\phantomsection\label{refs}
 \begin{CSLReferences}{0}{1}
-\bibitem[\citeproctext]{ref-cowan_stomatal_1977}
-\CSLLeftMargin{1. }%
-\CSLRightInline{I. R. Cowan, G. D. Farquhar, Stomatal function in
-relation to leaf metabolism and environment. \emph{Symposia of the
-Society for Experimental Biology} \textbf{31}, 471--505 (1977).}
-
-\bibitem[\citeproctext]{ref-raven_selection_2002}
-\CSLLeftMargin{2. }%
-\CSLRightInline{J. A. Raven,
-\href{https://doi.org/10.1046/j.0028-646X.2001.00334.x}{Selection
-pressures on stomatal evolution}. \emph{New Phytologist} \textbf{153},
-371--386 (2002).}
-
-\bibitem[\citeproctext]{ref-hetherington_role_2003}
-\CSLLeftMargin{3. }%
-\CSLRightInline{A. M. Hetherington, F. I. Woodward,
-\href{https://doi.org/10.1038/nature01843}{The role of stomata in
-sensing and driving environmental change}. \emph{Nature} \textbf{424},
-901--908 (2003).}
-
-\bibitem[\citeproctext]{ref-lawson_photosynthesis_2010}
-\CSLLeftMargin{4. }%
-\CSLRightInline{T. Lawson, S. Von Caemmerer, I. Baroli,
-{``\href{https://doi.org/10.1007/978-3-642-13145-5_11}{Photosynthesis
-and {Stomatal Behaviour}}''} in \emph{Progress in {Botany} 72}, U. E.
-Lüttge, W. Beyschlag, B. Büdel, D. Francis, Eds. (Springer Berlin
-Heidelberg, 2010), pp. 265--304.}
-
-\bibitem[\citeproctext]{ref-buckley_how_2019}
-\CSLLeftMargin{5. }%
-\CSLRightInline{T. N. Buckley,
-\href{https://doi.org/10.1111/nph.15899}{How do stomata respond to water
-status?} \emph{New Phytologist} \textbf{224}, 21--36 (2019).}
-
-\bibitem[\citeproctext]{ref-xie_identification_2006}
-\CSLLeftMargin{6. }%
-\CSLRightInline{X. Xie, \emph{et al.},
-\href{https://doi.org/10.1016/j.cub.2006.03.028}{The {Identification} of
-{Genes Involved} in the {Stomatal Response} to {Reduced Atmospheric
-Relative Humidity}}. \emph{Current Biology} \textbf{16}, 882--887
-(2006).}
-
-\bibitem[\citeproctext]{ref-bauer_stomatal_2013}
-\CSLLeftMargin{7. }%
-\CSLRightInline{H. Bauer, \emph{et al.},
-\href{https://doi.org/10.1016/j.cub.2012.11.022}{The {Stomatal Response}
-to {Reduced Relative Humidity Requires Guard Cell-Autonomous ABA
-Synthesis}}. \emph{Current Biology} \textbf{23}, 53--57 (2013).}
-
-\bibitem[\citeproctext]{ref-mcadam_stomatal_2016}
-\CSLLeftMargin{8. }%
-\CSLRightInline{S. A. M. McAdam, F. C. Sussmilch, T. J. Brodribb,
-\href{https://doi.org/10.1111/pce.12633}{Stomatal responses to vapour
-pressure deficit are regulated by high speed gene expression in
-angiosperms}. \emph{Plant, Cell \& Environment} \textbf{39}, 485--491
-(2016).}
-
-\bibitem[\citeproctext]{ref-desai_abscisic_2025}
-\CSLLeftMargin{9. }%
-\CSLRightInline{S. Desai, A. Stroock,
-\href{https://doi.org/10.64898/2025.12.26.696581}{Abscisic acid-mediated
-water stress regulation can mechanistically explain oscillations and
-water stress memory in stomatal conductance}. (2025).}
-
-\bibitem[\citeproctext]{ref-jalakas_molecular_2021}
-\CSLLeftMargin{10. }%
-\CSLRightInline{P. Jalakas, Y. Takahashi, R. Waadt, J. I. Schroeder, E.
-Merilo, \href{https://doi.org/10.1111/nph.17592}{Molecular mechanisms of
-stomatal closure in response to rising vapour pressure deficit}.
-\emph{New Phytologist} \textbf{232}, 468--475 (2021).}
-
-\bibitem[\citeproctext]{ref-darwin_observations_1898}
-\CSLLeftMargin{11. }%
-\CSLRightInline{F. Darwin,
-\href{https://doi.org/10.1098/rspl.1898.0053}{Observations on stomata}.
-\emph{Proceedings of the Royal Society of London} \textbf{63}, 413--417
-(1898).}
-
-\bibitem[\citeproctext]{ref-lange_responses_1971}
-\CSLLeftMargin{12. }%
-\CSLRightInline{O. L. Lange, R. Lösch, E.-D. Schulze, L. Kappen,
-\href{https://doi.org/10.1007/BF00386887}{Responses of stomata to
-changes in humidity}. \emph{Planta} \textbf{100}, 76--86 (1971).}
-
-\bibitem[\citeproctext]{ref-mott_stomatal_1991}
-\CSLLeftMargin{13. }%
-\CSLRightInline{K. A. Mott, D. F. Parkhurst,
-\href{https://doi.org/10.1111/j.1365-3040.1991.tb01521.x}{Stomatal
-responses to humidity in air and helox}. \emph{Plant, Cell \&
-Environment} \textbf{14}, 509--515 (1991).}
-
-\bibitem[\citeproctext]{ref-monteith_reinterpretation_1995}
-\CSLLeftMargin{14. }%
-\CSLRightInline{J. L. Monteith,
-\href{https://doi.org/10.1111/j.1365-3040.1995.tb00371.x}{A
-reinterpretation of stomatal responses to humidity}. \emph{Plant, Cell
-\& Environment} \textbf{18}, 357--364 (1995).}
-
-\bibitem[\citeproctext]{ref-cowan_oscillations_1972}
-\CSLLeftMargin{15. }%
-\CSLRightInline{I. R. Cowan,
-\href{https://doi.org/10.1007/BF00388098}{Oscillations in stomatal
-conductance and plant functioning associated with stomatal conductance:
-{Observations} and a model}. \emph{Planta} \textbf{106}, 185--219
-(1972).}
-
-\bibitem[\citeproctext]{ref-buckley_role_2011}
-\CSLLeftMargin{16. }%
-\CSLRightInline{T. N. Buckley, L. Sack, M. E. Gilbert,
-\href{https://doi.org/10.1104/pp.111.175638}{The {Role} of {Bundle
-Sheath Extensions} and {Life Form} in {Stomatal Responses} to {Leaf
-Water Status}}. \emph{Plant Physiology} \textbf{156}, 962--973 (2011).}
-
-\bibitem[\citeproctext]{ref-westbrook_stomatal_2021}
-\CSLLeftMargin{17. }%
-\CSLRightInline{A. S. Westbrook, S. A. M. McAdam,
-\href{https://doi.org/10.1111/nph.16850}{Stomatal density and mechanics
-are critical for high productivity: Insights from amphibious ferns}.
-\emph{New Phytologist} \textbf{229}, 877--889 (2021).}
-
-\bibitem[\citeproctext]{ref-givnish_sizes_1976}
-\CSLLeftMargin{18. }%
-\CSLRightInline{T. J. Givnish, G. J. Vermeij, Sizes and shapes of liane
-leaves. \emph{American Naturalist} \textbf{110}, 743--778 (1976).}
-
-\bibitem[\citeproctext]{ref-buckley_optimal_2017}
-\CSLLeftMargin{19. }%
-\CSLRightInline{T. N. Buckley, L. Sack, G. D. Farquhar,
-\href{https://doi.org/10.1111/pce.12823}{Optimal plant water economy:
-{Optimal} plant water economy}. \emph{Plant, Cell \& Environment}
-\textbf{40}, 881--896 (2017).}
-
-\bibitem[\citeproctext]{ref-damour_overview_2010}
-\CSLLeftMargin{20. }%
-\CSLRightInline{G. Damour, T. Simonneau, H. Cochard, L. Urban,
-\href{https://doi.org/10.1111/j.1365-3040.2010.02181.x}{An overview of
-models of stomatal conductance at the leaf level: {Models} of stomatal
-conductance}. \emph{Plant, Cell \& Environment} \textbf{33}, 1419--1438
-(2010).}
-
-\bibitem[\citeproctext]{ref-medlyn_reconciling_2011}
-\CSLLeftMargin{21. }%
-\CSLRightInline{B. E. Medlyn, \emph{et al.},
-\href{https://doi.org/10.1111/j.1365-2486.2010.02375.x}{Reconciling the
-optimal and empirical approaches to modelling stomatal conductance}.
-\emph{Global Change Biology} \textbf{17}, 2134--2144 (2011).}
-
-\bibitem[\citeproctext]{ref-prentice_balancing_2014}
-\CSLLeftMargin{22. }%
-\CSLRightInline{I. C. Prentice, N. Dong, S. M. Gleason, V. Maire, I. J.
-Wright, \href{https://doi.org/10.1111/ele.12211}{Balancing the costs of
-carbon gain and water transport: Testing a new theoretical framework for
-plant functional ecology}. \emph{Ecology Letters} \textbf{17}, 82--91
-(2014).}
-
-\bibitem[\citeproctext]{ref-sperry_predicting_2017}
-\CSLLeftMargin{23. }%
-\CSLRightInline{J. S. Sperry, \emph{et al.},
-\href{https://doi.org/10.1111/pce.12852}{Predicting stomatal responses
-to the environment from the optimization of photosynthetic gain and
-hydraulic cost: {A} stomatal optimization model}. \emph{Plant, Cell \&
-Environment} \textbf{40}, 816--830 (2017).}
-
-\bibitem[\citeproctext]{ref-potkay_generalized_2025}
-\CSLLeftMargin{24. }%
-\CSLRightInline{A. Potkay, \emph{et al.},
-\href{https://doi.org/10.1111/gcb.70049}{Generalized {Stomatal
-Optimization} of {Evolutionary Fitness Proxies} for {Predicting Plant
-Gas Exchange Under Drought}, {Heatwaves}, and {Elevated
-CO}{\textsubscript{2}}}. \emph{Global Change Biology} \textbf{31},
-e70049 (2025).}
-
-\bibitem[\citeproctext]{ref-knapp_stomatal_1990}
-\CSLLeftMargin{25. }%
-\CSLRightInline{A. K. Knapp, W. K. Smith,
-\href{https://doi.org/10.1111/j.1399-3054.1990.tb08731.x}{Stomatal and
-photosynthetic responses to variable sunlight}. \emph{Physiologia
-Plantarum} \textbf{78}, 160--165 (1990).}
-
-\bibitem[\citeproctext]{ref-schymanski_stomatal_2013}
-\CSLLeftMargin{26. }%
-\CSLRightInline{S. J. Schymanski, D. Or, M. Zwieniecki,
-\href{https://doi.org/10.1371/journal.pone.0054231}{Stomatal control and
-leaf thermal and hydraulic capacitances under rapid environmental
-fluctuations}. \emph{PLoS ONE} \textbf{8}, e54231 (2013).}
-
-\bibitem[\citeproctext]{ref-papanatsiou_optogenetic_2019}
-\CSLLeftMargin{27. }%
-\CSLRightInline{M. Papanatsiou, \emph{et al.},
-\href{https://doi.org/10.1126/science.aaw0046}{Optogenetic manipulation
-of stomatal kinetics improves carbon assimilation, water use, and
-growth}. \emph{Science} \textbf{363}, 1456--1459 (2019).}
-
-\bibitem[\citeproctext]{ref-buckley_kinetic_2023}
-\CSLLeftMargin{28. }%
-\CSLRightInline{T. N. Buckley, E. H. Frehner, B. N. Bailey,
-\href{https://doi.org/10.1111/nph.18739}{Kinetic factors of physiology
-and the dynamic light environment influence the economic landscape of
-short-term hydraulic risk}. \emph{New Phytologist} \textbf{238},
-529--548 (2023).}
-
-\bibitem[\citeproctext]{ref-ishida_roles_1992}
-\CSLLeftMargin{29. }%
-\CSLRightInline{A. Ishida, Y. Yamamura, Y. Hori,
-\href{https://doi.org/10.1007/BF02347090}{Roles of leaf water potential
-and soil-to-leaf hydraulic conductance in water use by understorey woody
-plants}. \emph{Ecological Research} \textbf{7}, 213--223 (1992).}
-
-\bibitem[\citeproctext]{ref-muir_plasticity_2025}
-\CSLLeftMargin{30. }%
-\CSLRightInline{C. D. Muir, W. S. Lim, D. Wang,
-\href{https://doi.org/10.1101/2025.08.19.671015}{Plasticity and
-adaptation to high light intensity amplify the advantage of
-amphistomatous leaves}. (2025).}
-
 \bibitem[\citeproctext]{ref-aasamaa_stomatal_2011}
-\CSLLeftMargin{31. }%
-\CSLRightInline{K. Aasamaa, A. Sõber,
+\textbf{\textbf{Aasamaa K}, \textbf{Sõber A}}. \textbf{2011a}.
 \href{https://doi.org/10.1016/j.envexpbot.2010.10.013}{Stomatal
 sensitivities to changes in leaf water potential, air humidity,
 {CO}{\textsubscript{2}} concentration and light intensity, and the
 effect of abscisic acid on the sensitivities in six temperate deciduous
-tree species}. \emph{Environmental and Experimental Botany} \textbf{71},
-72--78 (2011).}
+tree species}. \emph{Environmental and Experimental Botany} \textbf{71}:
+72--78.
 
 \bibitem[\citeproctext]{ref-aasamaa_responses_2011}
-\CSLLeftMargin{32. }%
-\CSLRightInline{K. Aasamaa, A. Sober,
+\textbf{\textbf{Aasamaa K}, \textbf{Sõber A}}. \textbf{2011b}.
 \href{https://doi.org/10.1093/treephys/tpr078}{Responses of stomatal
 conductance to simultaneous changes in two environmental factors}.
-\emph{Tree Physiology} \textbf{31}, 855--864 (2011).}
+\emph{Tree Physiology} \textbf{31}: 855--864.
 
-\bibitem[\citeproctext]{ref-merilo_open_2014}
-\CSLLeftMargin{33. }%
-\CSLRightInline{E. Merilo, I. Jõesaar, M. Brosché, H. Kollist,
-\href{https://doi.org/10.1111/nph.12667}{To open or to close:
-Species-specific stomatal responses to simultaneously applied opposing
-environmental factors}. \emph{New Phytologist} \textbf{202}, 499--508
-(2014).}
+\bibitem[\citeproctext]{ref-aasamaa_leaf_2001}
+\textbf{\textbf{Aasamaa K}, \textbf{Sõber A}, \textbf{Rahi M}}.
+\textbf{2001}. \href{https://doi.org/10.1071/PP00157}{Leaf anatomical
+characteristics associated with shoot hydraulic conductance, stomatal
+conductance and stomatal sensitivity to changes of leaf water status in
+temperate deciduous trees}. \emph{Australian Journal of Plant
+Physiology} \textbf{28}: 765--774.
 
-\bibitem[\citeproctext]{ref-grossiord_plant_2020}
-\CSLLeftMargin{34. }%
-\CSLRightInline{C. Grossiord, \emph{et al.},
-\href{https://doi.org/10.1111/nph.16485}{Plant responses to rising vapor
-pressure deficit}. \emph{New Phytologist} \textbf{226}, 1550--1566
-(2020).}
+\bibitem[\citeproctext]{ref-bauer_stomatal_2013}
+\textbf{\textbf{Bauer H}, \textbf{Ache P}, \textbf{Lautner S},
+\textbf{Fromm J}, \textbf{Hartung W}, \textbf{Al-Rasheid KAS},
+\textbf{Sonnewald S}, \textbf{Sonnewald U}, \textbf{Kneitz S},
+\textbf{Lachmann N}, \emph{et al.}} \textbf{2013}.
+\href{https://doi.org/10.1016/j.cub.2012.11.022}{The {Stomatal Response}
+to {Reduced Relative Humidity Requires Guard Cell-Autonomous ABA
+Synthesis}}. \emph{Current Biology} \textbf{23}: 53--57.
+
+\bibitem[\citeproctext]{ref-brench_was_2026}
+\textbf{\textbf{Brench RA}, \textbf{Wilson MJ}, \textbf{Thorne SJ},
+\textbf{Fleming AJ}, \textbf{Gray JE}}. \textbf{2026}.
+\href{https://doi.org/10.1111/nph.70830}{Was the evolution of faster
+stomata driven by increased gas exchange rates rather than increasing
+water use efficiency?} \emph{New Phytologist} \textbf{249}: 2355--2371.
+
+\bibitem[\citeproctext]{ref-bucher_inter_2016}
+\textbf{\textbf{Bucher SF}, \textbf{Auerswald K}, \textbf{Tautenhahn S},
+\textbf{Geiger A}, \textbf{Otto J}, \textbf{Müller A}, \textbf{Römermann
+C}}. \textbf{2016}.
+\href{https://doi.org/10.1007/s11258-016-0564-2}{Inter- and
+intraspecific variation in stomatal pore area index along elevational
+gradients and its relation to leaf functional traits}. \emph{Plant
+Ecology} \textbf{217}: 229--240.
+
+\bibitem[\citeproctext]{ref-buckley_how_2019}
+\textbf{\textbf{Buckley TN}}. \textbf{2019}.
+\href{https://doi.org/10.1111/nph.15899}{How do stomata respond to water
+status?} \emph{New Phytologist} \textbf{224}: 21--36.
+
+\bibitem[\citeproctext]{ref-buckley_kinetic_2023}
+\textbf{\textbf{Buckley TN}, \textbf{Frehner EH}, \textbf{Bailey BN}}.
+\textbf{2023}. \href{https://doi.org/10.1111/nph.18739}{Kinetic factors
+of physiology and the dynamic light environment influence the economic
+landscape of short-term hydraulic risk}. \emph{New Phytologist}
+\textbf{238}: 529--548.
 
 \bibitem[\citeproctext]{ref-buckley_hydromechanical_2003}
-\CSLLeftMargin{35. }%
-\CSLRightInline{T. N. Buckley, K. A. Mott, G. D. Farquhar,
-\href{https://doi.org/10.1046/j.1365-3040.2003.01094.x}{A
+\textbf{\textbf{Buckley TN}, \textbf{Mott KA}, \textbf{Farquhar GD}}.
+\textbf{2003}. \href{https://doi.org/10.1046/j.1365-3040.2003.01094.x}{A
 hydromechanical and biochemical model of stomatal conductance}.
-\emph{Plant, Cell \& Environment} \textbf{26}, 1767--1785 (2003).}
+\emph{Plant, Cell \& Environment} \textbf{26}: 1767--1785.
 
-\bibitem[\citeproctext]{ref-jezek_guard_2021}
-\CSLLeftMargin{36. }%
-\CSLRightInline{M. Jezek, \emph{et al.},
-\href{https://doi.org/10.1038/s41477-021-00966-2}{Guard cell
-endomembrane {Ca2}+-{ATPases} underpin a {``carbon memory''} of
-photosynthetic assimilation that impacts on water-use efficiency}.
-\emph{Nature Plants} \textbf{7}, 1301--1313 (2021).}
+\bibitem[\citeproctext]{ref-buckley_optimal_2017}
+\textbf{\textbf{Buckley TN}, \textbf{Sack L}, \textbf{Farquhar GD}}.
+\textbf{2017}. \href{https://doi.org/10.1111/pce.12823}{Optimal plant
+water economy: {Optimal} plant water economy}. \emph{Plant, Cell \&
+Environment} \textbf{40}: 881--896.
 
-\bibitem[\citeproctext]{ref-vico_effects_2011}
-\CSLLeftMargin{37. }%
-\CSLRightInline{G. Vico, S. Manzoni, S. Palmroth, G. Katul,
-\href{https://doi.org/10.1111/j.1469-8137.2011.03847.x}{Effects of
-stomatal delays on the economics of leaf gas exchange under intermittent
-light regimes}. \emph{New Phytologist} \textbf{192}, 640--652 (2011).}
+\bibitem[\citeproctext]{ref-buckley_role_2011}
+\textbf{\textbf{Buckley TN}, \textbf{Sack L}, \textbf{Gilbert ME}}.
+\textbf{2011}. \href{https://doi.org/10.1104/pp.111.175638}{The {Role}
+of {Bundle Sheath Extensions} and {Life Form} in {Stomatal Responses} to
+{Leaf Water Status}}. \emph{Plant Physiology} \textbf{156}: 962--973.
 
-\bibitem[\citeproctext]{ref-mcausland_effects_2016}
-\CSLLeftMargin{38. }%
-\CSLRightInline{L. McAusland, \emph{et al.},
-\href{https://doi.org/10.1111/nph.14000}{Effects of kinetics of
-light-induced stomatal responses on photosynthesis and water-use
-efficiency}. \emph{New Phytologist} \textbf{211}, 1209--1220 (2016).}
+\bibitem[\citeproctext]{ref-burkner_brms_2017}
+\textbf{\textbf{Bürkner P-C}}. \textbf{2017}.
+\href{https://doi.org/10.18637/jss.v080.i01}{{\textbf{\textbraceleft brms\textbraceright}}:
+{An} {\emph{R}} package for {Bayesian} multilevel models using
+{\emph{Stan}}}. \emph{Journal of Statistical Software} \textbf{80}.
 
-\bibitem[\citeproctext]{ref-woning_revisiting_2026}
-\CSLLeftMargin{39. }%
-\CSLRightInline{N. Woning, \emph{et al.},
-\href{https://doi.org/10.1111/nph.70842}{Revisiting the relationship
-between stomatal size and speed across species -- a meta-analysis}.
-\emph{New Phytologist} \textbf{249}, 2338--2354 (2026).}
+\bibitem[\citeproctext]{ref-cowan_oscillations_1972}
+\textbf{\textbf{Cowan IR}}. \textbf{1972}.
+\href{https://doi.org/10.1007/BF00388098}{Oscillations in stomatal
+conductance and plant functioning associated with stomatal conductance:
+{Observations} and a model}. \emph{Planta} \textbf{106}: 185--219.
 
-\bibitem[\citeproctext]{ref-grantz_stomatal_1986}
-\CSLLeftMargin{40. }%
-\CSLRightInline{D. A. Grantz, E. Zeiger,
-\href{https://doi.org/10.1104/pp.81.3.865}{Stomatal {Responses} to
-{Light} and {Leaf-Air Water Vapor Pressure Difference Show Similar
-Kinetics} in {Sugarcane} and {Soybean}}. \emph{Plant Physiology}
-\textbf{81}, 865--868 (1986).}
+\bibitem[\citeproctext]{ref-cowan_stomatal_1977}
+\textbf{\textbf{Cowan IR}, \textbf{Farquhar GD}}. \textbf{1977}.
+Stomatal function in relation to leaf metabolism and environment.
+\emph{Symposia of the Society for Experimental Biology} \textbf{31}:
+471--505.
 
-\bibitem[\citeproctext]{ref-franks_mechanical_2007}
-\CSLLeftMargin{41. }%
-\CSLRightInline{P. J. Franks, G. D. Farquhar,
-\href{https://doi.org/10.1104/pp.106.089367}{The {Mechanical Diversity}
-of {Stomata} and {Its Significance} in {Gas-Exchange Control}}.
-\emph{Plant Physiology} \textbf{143}, 78--87 (2007).}
+\bibitem[\citeproctext]{ref-creese_are_2014}
+\textbf{\textbf{Creese C}, \textbf{Oberbauer S}, \textbf{Rundel P},
+\textbf{Sack L}}. \textbf{2014}.
+\href{https://doi.org/10.1111/nph.12922}{Are fern stomatal responses to
+different stimuli coordinated? {Testing} responses to light, vapor
+pressure deficit, and {\textsc{CO}}{\textsubscript{2}} for diverse
+species grown under contrasting irradiances}. \emph{New Phytologist}
+\textbf{204}: 92--104.
+
+\bibitem[\citeproctext]{ref-damour_overview_2010}
+\textbf{\textbf{Damour G}, \textbf{Simonneau T}, \textbf{Cochard H},
+\textbf{Urban L}}. \textbf{2010}.
+\href{https://doi.org/10.1111/j.1365-3040.2010.02181.x}{An overview of
+models of stomatal conductance at the leaf level: {Models} of stomatal
+conductance}. \emph{Plant, Cell \& Environment} \textbf{33}: 1419--1438.
+
+\bibitem[\citeproctext]{ref-darwin_observations_1898}
+\textbf{\textbf{Darwin F}}. \textbf{1898}.
+\href{https://doi.org/10.1098/rspl.1898.0053}{Observations on stomata}.
+\emph{Proceedings of the Royal Society of London} \textbf{63}: 413--417.
+
+\bibitem[\citeproctext]{ref-devillemereuil_general_2014}
+\textbf{\textbf{De Villemereuil P}, \textbf{Nakagawa S}}. \textbf{2014}.
+\href{https://doi.org/10.1007/978-3-662-43550-2_11}{General
+{Quantitative Genetic Methods} for {Comparative Biology}}. In:
+Garamszegi LZ, ed. Modern {Phylogenetic Comparative Methods} and {Their
+Application} in {Evolutionary Biology}. Berlin, Heidelberg: Springer
+Berlin Heidelberg, 287--303.
+
+\bibitem[\citeproctext]{ref-desai_abscisic_2025}
+\textbf{\textbf{Desai S}, \textbf{Stroock A}}. \textbf{2025}.
+\href{https://doi.org/10.64898/2025.12.26.696581}{Abscisic acid-mediated
+water stress regulation can mechanistically explain oscillations and
+water stress memory in stomatal conductance}.
 
 \bibitem[\citeproctext]{ref-drake_smaller_2013}
-\CSLLeftMargin{42. }%
-\CSLRightInline{P. L. Drake, R. H. Froend, P. J. Franks,
-\href{https://doi.org/10.1093/jxb/ers347}{Smaller, faster stomata:
-Scaling of stomatal size, rate of response, and stomatal conductance}.
-\emph{Journal of Experimental Botany} \textbf{64}, 495--505 (2013).}
-
-\bibitem[\citeproctext]{ref-lawson_speedy_2019}
-\CSLLeftMargin{43. }%
-\CSLRightInline{T. Lawson, S. Vialet-Chabrand,
-\href{https://doi.org/10.1111/nph.15330}{Speedy stomata, photosynthesis
-and plant water use efficiency}. \emph{New Phytologist} \textbf{221},
-93--98 (2019).}
-
-\bibitem[\citeproctext]{ref-homann_number_2002}
-\CSLLeftMargin{44. }%
-\CSLRightInline{U. Homann, G. Thiel,
-\href{https://doi.org/10.1073/pnas.152324399}{The number of
-{K}{\textsuperscript{+}} channels in the plasma membrane of guard cell
-protoplasts changes in parallel with the surface area}.
-\emph{Proceedings of the National Academy of Sciences} \textbf{99},
-10215--10220 (2002).}
-
-\bibitem[\citeproctext]{ref-lawson_stomatal_2014}
-\CSLLeftMargin{45. }%
-\CSLRightInline{T. Lawson, M. R. Blatt,
-\href{https://doi.org/10.1104/pp.114.237107}{Stomatal {Size}, {Speed},
-and {Responsiveness Impact} on {Photosynthesis} and {Water Use
-Efficiency}}. \emph{Plant Physiology} \textbf{164}, 1556--1570 (2014).}
-
-\bibitem[\citeproctext]{ref-raven_speedy_2014}
-\CSLLeftMargin{46. }%
-\CSLRightInline{J. A. Raven,
-\href{https://doi.org/10.1093/jxb/eru032}{Speedy small stomata?}
-\emph{Journal of Experimental Botany} \textbf{65}, 1415--1424 (2014).}
+\textbf{\textbf{Drake PL}, \textbf{Froend RH}, \textbf{Franks PJ}}.
+\textbf{2013}. \href{https://doi.org/10.1093/jxb/ers347}{Smaller, faster
+stomata: Scaling of stomatal size, rate of response, and stomatal
+conductance}. \emph{Journal of Experimental Botany} \textbf{64}:
+495--505.
 
 \bibitem[\citeproctext]{ref-elliott-kingston_does_2016}
-\CSLLeftMargin{47. }%
-\CSLRightInline{C. Elliott-Kingston, \emph{et al.},
+\textbf{\textbf{Elliott-Kingston C}, \textbf{Haworth M},
+\textbf{Yearsley JM}, \textbf{Batke SP}, \textbf{Lawson T},
+\textbf{McElwain JC}}. \textbf{2016}.
 \href{https://doi.org/10.3389/fpls.2016.01253}{Does {Size Matter}?
 {Atmospheric CO}{\textsubscript{2}} {May Be} a {Stronger Driver} of
 {Stomatal Closing Rate Than Stomatal Size} in {Taxa That Diversified}
 under {Low CO}{\textsubscript{2}}}. \emph{Frontiers in Plant Science}
-\textbf{7} (2016).}
+\textbf{7}.
 
-\bibitem[\citeproctext]{ref-kardiman_relationship_2018}
-\CSLLeftMargin{48. }%
-\CSLRightInline{R. Kardiman, A. Ræbild,
-\href{https://doi.org/10.1093/treephys/tpx149}{Relationship between
-stomatal density, size and speed of opening in {Sumatran} rainforest
-species}. \emph{Tree Physiology} \textbf{38}, 696--705 (2018).}
-
-\bibitem[\citeproctext]{ref-haworth_functional_2023}
-\CSLLeftMargin{49. }%
-\CSLRightInline{M. Haworth, \emph{et al.},
-\href{https://doi.org/10.1016/j.scitotenv.2022.160908}{The functional
-significance of the stomatal size to density relationship: {Interaction}
-with atmospheric {[}{CO2}{]} and role in plant physiological behaviour}.
-\emph{Science of The Total Environment} \textbf{863}, 160908 (2023).}
-
-\bibitem[\citeproctext]{ref-brench_was_2026}
-\CSLLeftMargin{50. }%
-\CSLRightInline{R. A. Brench, M. J. Wilson, S. J. Thorne, A. J. Fleming,
-J. E. Gray, \href{https://doi.org/10.1111/nph.70830}{Was the evolution
-of faster stomata driven by increased gas exchange rates rather than
-increasing water use efficiency?} \emph{New Phytologist} \textbf{249},
-2355--2371 (2026).}
-
-\bibitem[\citeproctext]{ref-tang_variation_2026}
-\CSLLeftMargin{51. }%
-\CSLRightInline{X. Tang, W. Huang, X. Yuan, X. Liu, J. Wan,
-\href{https://doi.org/10.1111/ppl.70824}{Variation in {Stomatal Traits}
-and {Photosynthetic Induction Between Subtropical Evergreen} and
-{Deciduous Broadleaved Tree Species}}. \emph{Physiologia Plantarum}
-\textbf{178}, e70824 (2026).}
-
-\bibitem[\citeproctext]{ref-aasamaa_leaf_2001}
-\CSLLeftMargin{52. }%
-\CSLRightInline{K. Aasamaa, A. Sõber, M. Rahi,
-\href{https://doi.org/10.1071/PP00157}{Leaf anatomical characteristics
-associated with shoot hydraulic conductance, stomatal conductance and
-stomatal sensitivity to changes of leaf water status in temperate
-deciduous trees}. \emph{Australian Journal of Plant Physiology}
-\textbf{28}, 765--774 (2001).}
-
-\bibitem[\citeproctext]{ref-kubarsepp_are_2020}
-\CSLLeftMargin{53. }%
-\CSLRightInline{L. Kübarsepp, L. Laanisto, Ü. Niinemets, E. Talts, T.
-Tosens, \href{https://doi.org/10.1111/nph.16159}{Are stomata in ferns
-and allies sluggish? {Stomatal} responses to {CO}{\textsubscript{2}},
-humidity and light and their scaling with size and density}. \emph{New
-Phytologist} \textbf{225}, 183--195 (2020).}
-
-\bibitem[\citeproctext]{ref-qie_stomatal_2024}
-\CSLLeftMargin{54. }%
-\CSLRightInline{Y.-D. Qie, Q.-W. Zhang, S. A. M. McAdam, K.-F. Cao,
-\href{https://doi.org/10.1016/j.pld.2024.02.003}{Stomatal dynamics are
-regulated by leaf hydraulic traits and guard cell anatomy in nine true
-mangrove species}. \emph{Plant Diversity} \textbf{46}, 395--405 (2024).}
+\bibitem[\citeproctext]{ref-franks_guard_2001}
+\textbf{\textbf{Franks PJ}, \textbf{Buckley TN}, \textbf{Shope JC},
+\textbf{Mott KA}}. \textbf{2001}.
+\href{https://doi.org/10.1104/pp.125.4.1577}{Guard cell volume and
+pressure measured concurrently by confocal microscopy and the cell
+pressure probe}. \emph{Plant Physiology} \textbf{125}: 1577--1584.
 
 \bibitem[\citeproctext]{ref-franks_effect_2001}
-\CSLLeftMargin{55. }%
-\CSLRightInline{P. J. Franks, G. D. Farquhar,
+\textbf{\textbf{Franks PJ}, \textbf{Farquhar GD}}. \textbf{2001}.
 \href{https://doi.org/10.1104/pp.125.2.935}{The {Effect} of {Exogenous
 Abscisic Acid} on {Stomatal Development}, {Stomatal Mechanics}, and
 {Leaf Gas Exchange} in {\emph{Tradescantia}}{ \emph{Virginiana}}}.
-\emph{Plant Physiology} \textbf{125}, 935--942 (2001).}
+\emph{Plant Physiology} \textbf{125}: 935--942.
 
-\bibitem[\citeproctext]{ref-franks_guard_2001}
-\CSLLeftMargin{56. }%
-\CSLRightInline{P. J. Franks, T. N. Buckley, J. C. Shope, K. A. Mott,
-\href{https://doi.org/10.1104/pp.125.4.1577}{Guard cell volume and
-pressure measured concurrently by confocal microscopy and the cell
-pressure probe}. \emph{Plant Physiology} \textbf{125}, 1577--1584
-(2001).}
-
-\bibitem[\citeproctext]{ref-sack_developmental_2016}
-\CSLLeftMargin{57. }%
-\CSLRightInline{L. Sack, T. N. Buckley,
-\href{https://doi.org/10.1104/pp.16.00476}{The developmental basis of
-stomatal density and flux}. \emph{Plant Physiology} \textbf{171},
-2358--2363 (2016).}
-
-\bibitem[\citeproctext]{ref-xie_stomatal_2022}
-\CSLLeftMargin{58. }%
-\CSLRightInline{J. Xie, Z. Wang, Y. Li,
-\href{https://doi.org/10.1111/nph.18189}{Stomatal opening ratio mediates
-trait coordinating network adaptation to environmental gradients}.
-\emph{New Phytologist} \textbf{235}, 907--922 (2022).}
+\bibitem[\citeproctext]{ref-franks_mechanical_2007}
+\textbf{\textbf{Franks PJ}, \textbf{Farquhar GD}}. \textbf{2007}.
+\href{https://doi.org/10.1104/pp.106.089367}{The {Mechanical Diversity}
+of {Stomata} and {Its Significance} in {Gas-Exchange Control}}.
+\emph{Plant Physiology} \textbf{143}: 78--87.
 
 \bibitem[\citeproctext]{ref-franks_physiological_2012}
-\CSLLeftMargin{59. }%
-\CSLRightInline{P. J. Franks, I. J. Leitch, E. M. Ruszala, A. M.
-Hetherington, D. J. Beerling,
+\textbf{\textbf{Franks PJ}, \textbf{Leitch IJ}, \textbf{Ruszala EM},
+\textbf{Hetherington AM}, \textbf{Beerling DJ}}. \textbf{2012}.
 \href{https://doi.org/10.1098/rstb.2011.0270}{Physiological framework
 for adaptation of stomata to {CO} {\textsubscript{2}} from glacial to
 future concentrations}. \emph{Philosophical Transactions of the Royal
-Society B: Biological Sciences} \textbf{367}, 537--546 (2012).}
+Society B: Biological Sciences} \textbf{367}: 537--546.
 
-\bibitem[\citeproctext]{ref-mcelwain_using_2016}
-\CSLLeftMargin{60. }%
-\CSLRightInline{J. C. McElwain, C. Yiotis, T. Lawson,
-\href{https://doi.org/10.1111/nph.13579}{Using modern plant trait
-relationships between observed and theoretical maximum stomatal
-conductance and vein density to examine patterns of plant
-macroevolution}. \emph{New Phytologist} \textbf{209}, 94--103 (2016).}
+\bibitem[\citeproctext]{ref-gabry_cmdstanr_2025}
+\textbf{\textbf{Gabry J}, \textbf{Češnovar R}, \textbf{Johnson A},
+\textbf{Bronder S}}. \textbf{2025}. \emph{Cmdstanr: {R Interface} to
+{`{CmdStan}'}}.
 
-\bibitem[\citeproctext]{ref-murray_consistent_2020}
-\CSLLeftMargin{61. }%
-\CSLRightInline{M. Murray, \emph{et al.},
-\href{https://doi.org/10.1086/706260}{Consistent relationship between
-field-measured stomatal conductance and theoretical maximum stomatal
-conductance in {C}{\textsubscript{3}} woody angiosperms in four major
-biomes}. \emph{International Journal of Plant Sciences} \textbf{181},
-142--154 (2020).}
+\bibitem[\citeproctext]{ref-gelman_bayesian_2014}
+\textbf{\textbf{Gelman A}, \textbf{Carlin JB}, \textbf{Stern HS},
+\textbf{Dunson DB}, \textbf{Vehtari A}, \textbf{Rubin DB}}.
+\textbf{2014}. \emph{Bayesian data analysis}. Boca Raton London New
+York: CRC Press, Taylor \& Francis Group.
 
-\bibitem[\citeproctext]{ref-ochoa_pinpointing_2024}
-\CSLLeftMargin{62. }%
-\CSLRightInline{M. E. Ochoa, \emph{et al.},
-\href{https://doi.org/10.1093/plphys/kiae292}{Pinpointing the causal
-influences of stomatal anatomy and behavior on minimum, operational, and
-maximum leaf surface conductance}. \emph{Plant Physiology} \textbf{196},
-51--66 (2024).}
+\bibitem[\citeproctext]{ref-gelman_rsquared_2019}
+\textbf{\textbf{Gelman A}, \textbf{Goodrich B}, \textbf{Gabry J},
+\textbf{Vehtari A}}. \textbf{2019}.
+\href{https://doi.org/10.1080/00031305.2018.1549100}{R-squared for
+{Bayesian Regression Models}}. \emph{The American Statistician}
+\textbf{73}: 307--309.
 
-\bibitem[\citeproctext]{ref-willmer_stomata_1996}
-\CSLLeftMargin{63. }%
-\CSLRightInline{C. Willmer, M. Fricker,
-\emph{\href{https://doi.org/10.1007/978-94-011-0579-8}{Stomata}}
-(Springer Netherlands, 1996).}
+\bibitem[\citeproctext]{ref-gelman_inference_1992}
+\textbf{\textbf{Gelman A}, \textbf{Rubin DB}}. \textbf{1992}. Inference
+from iterative simulation using multiple sequences. \emph{Statistical
+Science} \textbf{7}: 457--472.
 
-\bibitem[\citeproctext]{ref-lammertsma_global_2011}
-\CSLLeftMargin{64. }%
-\CSLRightInline{E. I. Lammertsma, \emph{et al.},
-\href{https://doi.org/10.1073/pnas.1100371108}{Global
-{CO}{\textsubscript{2}} rise leads to reduced maximum stomatal
-conductance in {Florida} vegetation}. \emph{Proceedings of the National
-Academy of Sciences} \textbf{108}, 4035--4040 (2011).}
+\bibitem[\citeproctext]{ref-givnish_sizes_1976}
+\textbf{\textbf{Givnish TJ}, \textbf{Vermeij GJ}}. \textbf{1976}. Sizes
+and shapes of liane leaves. \emph{American Naturalist} \textbf{110}:
+743--778.
 
-\bibitem[\citeproctext]{ref-bucher_inter_2016}
-\CSLLeftMargin{65. }%
-\CSLRightInline{S. F. Bucher, \emph{et al.},
-\href{https://doi.org/10.1007/s11258-016-0564-2}{Inter- and
-intraspecific variation in stomatal pore area index along elevational
-gradients and its relation to leaf functional traits}. \emph{Plant
-Ecology} \textbf{217}, 229--240 (2016).}
+\bibitem[\citeproctext]{ref-grantz_stomatal_1986}
+\textbf{\textbf{Grantz DA}, \textbf{Zeiger E}}. \textbf{1986}.
+\href{https://doi.org/10.1104/pp.81.3.865}{Stomatal {Responses} to
+{Light} and {Leaf-Air Water Vapor Pressure Difference Show Similar
+Kinetics} in {Sugarcane} and {Soybean}}. \emph{Plant Physiology}
+\textbf{81}: 865--868.
 
-\bibitem[\citeproctext]{ref-muir_how_2023}
-\CSLLeftMargin{66. }%
-\CSLRightInline{C. D. Muir, \emph{et al.},
-\href{https://doi.org/10.1086/723780}{How important are functional and
-developmental constraints on phenotypic evolution? {An} empirical test
-with the stomatal anatomy of flowering plants}. \emph{The American
-Naturalist} \textbf{201}, 794--812 (2023).}
+\bibitem[\citeproctext]{ref-grossiord_plant_2020}
+\textbf{\textbf{Grossiord C}, \textbf{Buckley TN}, \textbf{Cernusak LA},
+\textbf{Novick KA}, \textbf{Poulter B}, \textbf{Siegwolf RTW},
+\textbf{Sperry JS}, \textbf{McDowell NG}}. \textbf{2020}.
+\href{https://doi.org/10.1111/nph.16485}{Plant responses to rising vapor
+pressure deficit}. \emph{New Phytologist} \textbf{226}: 1550--1566.
+
+\bibitem[\citeproctext]{ref-halliwell_multiresponse_2025}
+\textbf{\textbf{Halliwell B}, \textbf{Holland BR}, \textbf{Yates LA}}.
+\textbf{2025}. \href{https://doi.org/10.1111/brv.70001}{Multi-response
+phylogenetic mixed models: Concepts and application}. \emph{Biological
+Reviews} \textbf{100}: 1294--1316.
+
+\bibitem[\citeproctext]{ref-haworth_functional_2023}
+\textbf{\textbf{Haworth M}, \textbf{Marino G}, \textbf{Materassi A},
+\textbf{Raschi A}, \textbf{Scutt CP}, \textbf{Centritto M}}.
+\textbf{2023}.
+\href{https://doi.org/10.1016/j.scitotenv.2022.160908}{The functional
+significance of the stomatal size to density relationship: {Interaction}
+with atmospheric {[}{CO2}{]} and role in plant physiological behaviour}.
+\emph{Science of The Total Environment} \textbf{863}: 160908.
 
 \bibitem[\citeproctext]{ref-haworth_allocation_2018}
-\CSLLeftMargin{67. }%
-\CSLRightInline{M. Haworth, \emph{et al.},
+\textbf{\textbf{Haworth M}, \textbf{Scutt CP}, \textbf{Douthe C},
+\textbf{Marino G}, \textbf{Gomes MTG}, \textbf{Loreto F}, \textbf{Flexas
+J}, \textbf{Centritto M}}. \textbf{2018}.
 \href{https://doi.org/10.1016/j.envexpbot.2018.04.010}{Allocation of the
 epidermis to stomata relates to stomatal physiological control:
 {Stomatal} factors involved in the evolutionary diversification of the
 angiosperms and development of amphistomaty}. \emph{Environmental and
-Experimental Botany} \textbf{151}, 55--63 (2018).}
+Experimental Botany} \textbf{151}: 55--63.
 
-\bibitem[\citeproctext]{ref-wall_stomata_2022}
-\CSLLeftMargin{68. }%
-\CSLRightInline{S. Wall, \emph{et al.},
-\href{https://doi.org/10.1111/nph.18257}{Stomata on the abaxial and
-adaxial leaf surfaces contribute differently to leaf gas exchange and
-photosynthesis in wheat}. \emph{New Phytologist} \textbf{235},
-1743--1756 (2022).}
+\bibitem[\citeproctext]{ref-hetherington_role_2003}
+\textbf{\textbf{Hetherington AM}, \textbf{Woodward FI}}. \textbf{2003}.
+\href{https://doi.org/10.1038/nature01843}{The role of stomata in
+sensing and driving environmental change}. \emph{Nature} \textbf{424}:
+901--908.
 
-\bibitem[\citeproctext]{ref-westoby_misinterpreting_1995}
-\CSLLeftMargin{69. }%
-\CSLRightInline{M. Westoby, M. R. Leishman, J. M. Lord,
-\href{https://doi.org/10.2307/2261605}{On {Misinterpreting} the
-{``{Phylogenetic Correction}''}}. \emph{The Journal of Ecology}
-\textbf{83}, 531 (1995).}
-
-\bibitem[\citeproctext]{ref-uyeda_rethinking_2018}
-\CSLLeftMargin{70. }%
-\CSLRightInline{J. C. Uyeda, R. Zenil-Ferguson, M. W. Pennell,
-\href{https://doi.org/10.1093/sysbio/syy031}{Rethinking phylogenetic
-comparative methods}. \emph{Systematic Biology} \textbf{67}, 1091--1109
-(2018).}
-
-\bibitem[\citeproctext]{ref-westoby_phylogenetically_2023}
-\CSLLeftMargin{71. }%
-\CSLRightInline{M. Westoby, L. Yates, B. Holland, B. Halliwell,
-\href{https://doi.org/10.1111/1365-2745.14150}{Phylogenetically
-conservative trait correlation: {Quantification} and interpretation}.
-\emph{Journal of Ecology} \textbf{111}, 2105--2117 (2023).}
-
-\bibitem[\citeproctext]{ref-halliwell_multiresponse_2025}
-\CSLLeftMargin{72. }%
-\CSLRightInline{B. Halliwell, B. R. Holland, L. A. Yates,
-\href{https://doi.org/10.1111/brv.70001}{Multi-response phylogenetic
-mixed models: Concepts and application}. \emph{Biological Reviews}
-\textbf{100}, 1294--1316 (2025).}
-
-\bibitem[\citeproctext]{ref-kerr_harking_1998}
-\CSLLeftMargin{73. }%
-\CSLRightInline{N. L. Kerr,
-\href{https://doi.org/10.1207/s15327957pspr0203_4}{{HARKing}:
-{Hypothesizing After} the {Results} are {Known}}. \emph{Personality and
-Social Psychology Review} \textbf{2}, 196--217 (1998).}
-
-\bibitem[\citeproctext]{ref-smaldino_natural_2016}
-\CSLLeftMargin{74. }%
-\CSLRightInline{P. E. Smaldino, R. McElreath,
-\href{https://doi.org/10.1098/rsos.160384}{The natural selection of bad
-science}. \emph{Royal Society Open Science} \textbf{3}, 160384 (2016).}
-
-\bibitem[\citeproctext]{ref-peralta_taxonomy_2008}
-\CSLLeftMargin{75. }%
-\CSLRightInline{I. E. Peralta, D. M. Spooner, S. Knapp, Taxonomy of wild
-tomatoes and their relatives ({\emph{Solanum}} sect.
-{\emph{Lycopersicoides}}, sect. {\emph{Juglandifolia}}, sect.
-{\emph{Lycopersicon}}; {Solanaceae}). \textbf{84} (2008).}
-
-\bibitem[\citeproctext]{ref-pease_phylogenomics_2016}
-\CSLLeftMargin{76. }%
-\CSLRightInline{J. B. Pease, D. C. Haak, M. W. Hahn, L. C. Moyle,
-\href{https://doi.org/10.1371/journal.pbio.1002379}{Phylogenomics
-reveals three sources of adaptive variation during a rapid radiation}.
-\emph{PLOS Biology} \textbf{14}, e1002379 (2016).}
-
-\bibitem[\citeproctext]{ref-schoch_dependence_1980}
-\CSLLeftMargin{77. }%
-\CSLRightInline{P.-G. Schoch, C. Zinsou, M. Sibi,
-\href{https://doi.org/10.1093/jxb/31.5.1211}{Dependence of the stomatal
-index on environmental factors during stomatal differentiation in leaves
-of {\emph{Vigna}}{ \emph{Sinensis}} {L}.: 1. {Effect} of light
-intensity}. \emph{Journal of Experimental Botany} \textbf{31},
-1211--1216 (1980).}
+\bibitem[\citeproctext]{ref-homann_number_2002}
+\textbf{\textbf{Homann U}, \textbf{Thiel G}}. \textbf{2002}.
+\href{https://doi.org/10.1073/pnas.152324399}{The number of
+{K}{\textsuperscript{+}} channels in the plasma membrane of guard cell
+protoplasts changes in parallel with the surface area}.
+\emph{Proceedings of the National Academy of Sciences} \textbf{99}:
+10215--10220.
 
 \bibitem[\citeproctext]{ref-hsu_raflike_2021}
-\CSLLeftMargin{78. }%
-\CSLRightInline{P.-K. Hsu, \emph{et al.},
+\textbf{\textbf{Hsu P-K}, \textbf{Takahashi Y}, \textbf{Merilo E},
+\textbf{Costa A}, \textbf{Zhang L}, \textbf{Kernig K}, \textbf{Lee KH},
+\textbf{Schroeder JI}}. \textbf{2021}.
 \href{https://doi.org/10.1073/pnas.2107280118}{Raf-like kinases and
 receptor-like (pseudo)kinase {GHR1} are required for stomatal vapor
 pressure difference response}. \emph{Proceedings of the National Academy
-of Sciences} \textbf{118}, e2107280118 (2021).}
-
-\bibitem[\citeproctext]{ref-monteith_principles_2013}
-\CSLLeftMargin{79. }%
-\CSLRightInline{J. L. Monteith, M. H. Unsworth, \emph{Principles of
-environmental physics: Plants, animals, and the atmosphere}, 4th ed
-(Elsevier/Academic Press, 2013).}
-
-\bibitem[\citeproctext]{ref-standevelopmentteam_stan_2026}
-\CSLLeftMargin{80. }%
-\CSLRightInline{Stan Development Team, \emph{Stan {Modeling Language
-Users Guide} and {Reference Manual}} (2026).}
-
-\bibitem[\citeproctext]{ref-burkner_brms_2017}
-\CSLLeftMargin{81. }%
-\CSLRightInline{P.-C. Bürkner,
-\href{https://doi.org/10.18637/jss.v080.i01}{{\textbf{\textbraceleft brms\textbraceright}}:
-{An} {\emph{R}} package for {Bayesian} multilevel models using
-{\emph{Stan}}}. \emph{Journal of Statistical Software} \textbf{80}
-(2017).}
-
-\bibitem[\citeproctext]{ref-gabry_cmdstanr_2025}
-\CSLLeftMargin{82. }%
-\CSLRightInline{J. Gabry, R. Češnovar, A. Johnson, S. Bronder,
-\emph{Cmdstanr: {R Interface} to {``{CmdStan}''}} (2025).}
-
-\bibitem[\citeproctext]{ref-rcoreteam_language_2025}
-\CSLLeftMargin{83. }%
-\CSLRightInline{R Core Team, \emph{R: {A Language} and {Environment} for
-{Statistical Computing}} (R Foundation for Statistical Computing,
-2025).}
-
-\bibitem[\citeproctext]{ref-gelman_inference_1992}
-\CSLLeftMargin{84. }%
-\CSLRightInline{A. Gelman, D. B. Rubin, Inference from iterative
-simulation using multiple sequences. \emph{Statistical Science}
-\textbf{7}, 457--472 (1992).}
-
-\bibitem[\citeproctext]{ref-gelman_rsquared_2019}
-\CSLLeftMargin{85. }%
-\CSLRightInline{A. Gelman, B. Goodrich, J. Gabry, A. Vehtari,
-\href{https://doi.org/10.1080/00031305.2018.1549100}{R-squared for
-{Bayesian Regression Models}}. \emph{The American Statistician}
-\textbf{73}, 307--309 (2019).}
-
-\bibitem[\citeproctext]{ref-devillemereuil_general_2014}
-\CSLLeftMargin{86. }%
-\CSLRightInline{P. De Villemereuil, S. Nakagawa,
-{``\href{https://doi.org/10.1007/978-3-662-43550-2_11}{General
-{Quantitative Genetic Methods} for {Comparative Biology}}''} in
-\emph{Modern {Phylogenetic Comparative Methods} and {Their Application}
-in {Evolutionary Biology}}, L. Z. Garamszegi, Ed. (Springer Berlin
-Heidelberg, 2014), pp. 287--303.}
-
-\bibitem[\citeproctext]{ref-gelman_bayesian_2014}
-\CSLLeftMargin{87. }%
-\CSLRightInline{A. Gelman, \emph{et al.}, \emph{Bayesian data analysis},
-Third edition (CRC Press, Taylor \& Francis Group, 2014).}
-
-\bibitem[\citeproctext]{ref-vehtari_practical_2017}
-\CSLLeftMargin{88. }%
-\CSLRightInline{A. Vehtari, A. Gelman, J. Gabry,
-\href{https://doi.org/10.1007/s11222-016-9696-4}{Practical {Bayesian}
-model evaluation using leave-one-out cross-validation and {WAIC}}.
-\emph{Statistics and Computing} \textbf{27}, 1413--1432 (2017).}
-
-\bibitem[\citeproctext]{ref-pearl_causality_2022}
-\CSLLeftMargin{89. }%
-\CSLRightInline{J. Pearl, \emph{Causality: Models, reasoning, and
-inference}, Second edition, reprinted with corrections (Cambridge
-University Press, 2022).}
+of Sciences} \textbf{118}: e2107280118.
 
 \bibitem[\citeproctext]{ref-imai_general_2010}
-\CSLLeftMargin{90. }%
-\CSLRightInline{K. Imai, L. Keele, D. Tingley,
-\href{https://doi.org/10.1037/a0020761}{A general approach to causal
-mediation analysis.} \emph{Psychological Methods} \textbf{15}, 309--334
-(2010).}
+\textbf{\textbf{Imai K}, \textbf{Keele L}, \textbf{Tingley D}}.
+\textbf{2010}. \href{https://doi.org/10.1037/a0020761}{A general
+approach to causal mediation analysis.} \emph{Psychological Methods}
+\textbf{15}: 309--334.
+
+\bibitem[\citeproctext]{ref-ishida_roles_1992}
+\textbf{\textbf{Ishida A}, \textbf{Yamamura Y}, \textbf{Hori Y}}.
+\textbf{1992}. \href{https://doi.org/10.1007/BF02347090}{Roles of leaf
+water potential and soil-to-leaf hydraulic conductance in water use by
+understorey woody plants}. \emph{Ecological Research} \textbf{7}:
+213--223.
+
+\bibitem[\citeproctext]{ref-jalakas_molecular_2021}
+\textbf{\textbf{Jalakas P}, \textbf{Takahashi Y}, \textbf{Waadt R},
+\textbf{Schroeder JI}, \textbf{Merilo E}}. \textbf{2021}.
+\href{https://doi.org/10.1111/nph.17592}{Molecular mechanisms of
+stomatal closure in response to rising vapour pressure deficit}.
+\emph{New Phytologist} \textbf{232}: 468--475.
+
+\bibitem[\citeproctext]{ref-jezek_guard_2021}
+\textbf{\textbf{Jezek M}, \textbf{Silva-Alvim FAL}, \textbf{Hills A},
+\textbf{Donald N}, \textbf{Ishka MR}, \textbf{Shadbolt J}, \textbf{He
+B}, \textbf{Lawson T}, \textbf{Harper JF}, \textbf{Wang Y}, \emph{et
+al.}} \textbf{2021}.
+\href{https://doi.org/10.1038/s41477-021-00966-2}{Guard cell
+endomembrane {Ca2}+-{ATPases} underpin a {`carbon memory'} of
+photosynthetic assimilation that impacts on water-use efficiency}.
+\emph{Nature Plants} \textbf{7}: 1301--1313.
+
+\bibitem[\citeproctext]{ref-kardiman_relationship_2018}
+\textbf{\textbf{Kardiman R}, \textbf{Ræbild A}}. \textbf{2018}.
+\href{https://doi.org/10.1093/treephys/tpx149}{Relationship between
+stomatal density, size and speed of opening in {Sumatran} rainforest
+species}. \emph{Tree Physiology} \textbf{38}: 696--705.
+
+\bibitem[\citeproctext]{ref-kerr_harking_1998}
+\textbf{\textbf{Kerr NL}}. \textbf{1998}.
+\href{https://doi.org/10.1207/s15327957pspr0203_4}{{HARKing}:
+{Hypothesizing After} the {Results} are {Known}}. \emph{Personality and
+Social Psychology Review} \textbf{2}: 196--217.
+
+\bibitem[\citeproctext]{ref-knapp_stomatal_1990}
+\textbf{\textbf{Knapp AK}, \textbf{Smith WK}}. \textbf{1990}.
+\href{https://doi.org/10.1111/j.1399-3054.1990.tb08731.x}{Stomatal and
+photosynthetic responses to variable sunlight}. \emph{Physiologia
+Plantarum} \textbf{78}: 160--165.
+
+\bibitem[\citeproctext]{ref-kubarsepp_are_2020}
+\textbf{\textbf{Kübarsepp L}, \textbf{Laanisto L}, \textbf{Niinemets Ü},
+\textbf{Talts E}, \textbf{Tosens T}}. \textbf{2020}.
+\href{https://doi.org/10.1111/nph.16159}{Are stomata in ferns and allies
+sluggish? {Stomatal} responses to {CO}{\textsubscript{2}}, humidity and
+light and their scaling with size and density}. \emph{New Phytologist}
+\textbf{225}: 183--195.
+
+\bibitem[\citeproctext]{ref-lammertsma_global_2011}
+\textbf{\textbf{Lammertsma EI}, \textbf{Boer HJD}, \textbf{Dekker SC},
+\textbf{Dilcher DL}, \textbf{Lotter AF}, \textbf{Wagner-Cremer F}}.
+\textbf{2011}. \href{https://doi.org/10.1073/pnas.1100371108}{Global
+{CO}{\textsubscript{2}} rise leads to reduced maximum stomatal
+conductance in {Florida} vegetation}. \emph{Proceedings of the National
+Academy of Sciences} \textbf{108}: 4035--4040.
+
+\bibitem[\citeproctext]{ref-lange_responses_1971}
+\textbf{\textbf{Lange OL}, \textbf{Lösch R}, \textbf{Schulze E-D},
+\textbf{Kappen L}}. \textbf{1971}.
+\href{https://doi.org/10.1007/BF00386887}{Responses of stomata to
+changes in humidity}. \emph{Planta} \textbf{100}: 76--86.
+
+\bibitem[\citeproctext]{ref-lawson_stomatal_2014}
+\textbf{\textbf{Lawson T}, \textbf{Blatt MR}}. \textbf{2014}.
+\href{https://doi.org/10.1104/pp.114.237107}{Stomatal {Size}, {Speed},
+and {Responsiveness Impact} on {Photosynthesis} and {Water Use
+Efficiency}}. \emph{Plant Physiology} \textbf{164}: 1556--1570.
+
+\bibitem[\citeproctext]{ref-lawson_speedy_2019}
+\textbf{\textbf{Lawson T}, \textbf{Vialet-Chabrand S}}. \textbf{2019}.
+\href{https://doi.org/10.1111/nph.15330}{Speedy stomata, photosynthesis
+and plant water use efficiency}. \emph{New Phytologist} \textbf{221}:
+93--98.
+
+\bibitem[\citeproctext]{ref-lawson_photosynthesis_2010}
+\textbf{\textbf{Lawson T}, \textbf{Von Caemmerer S}, \textbf{Baroli I}}.
+\textbf{2010}.
+\href{https://doi.org/10.1007/978-3-642-13145-5_11}{Photosynthesis and
+{Stomatal Behaviour}}. In: Lüttge UE, Beyschlag W, Büdel B, Francis D,
+eds. Progress in {Botany} 72. Berlin, Heidelberg: Springer Berlin
+Heidelberg, 265--304.
 
 \bibitem[\citeproctext]{ref-lynch_methods_1991}
-\CSLLeftMargin{91. }%
-\CSLRightInline{M. Lynch,
+\textbf{\textbf{Lynch M}}. \textbf{1991}.
 \href{https://doi.org/10.1111/j.1558-5646.1991.tb04375.x}{Methods for
 the analysis of comparative data in evolutionary biology}.
-\emph{Evolution} \textbf{45}, 1065--1080 (1991).}
+\emph{Evolution} \textbf{45}: 1065--1080.
+
+\bibitem[\citeproctext]{ref-matthews_role_2020}
+\textbf{\textbf{Matthews JSA}, \textbf{Vialet-Chabrand S},
+\textbf{Lawson T}}. \textbf{2020}.
+\href{https://doi.org/10.1093/jxb/erz563}{Role of blue and red light in
+stomatal dynamic behaviour} (J Evans, Ed.). \emph{Journal of
+Experimental Botany} \textbf{71}: 2253--2269.
+
+\bibitem[\citeproctext]{ref-mcadam_stomatal_2016}
+\textbf{\textbf{McAdam SAM}, \textbf{Sussmilch FC}, \textbf{Brodribb
+TJ}}. \textbf{2016}. \href{https://doi.org/10.1111/pce.12633}{Stomatal
+responses to vapour pressure deficit are regulated by high speed gene
+expression in angiosperms}. \emph{Plant, Cell \& Environment}
+\textbf{39}: 485--491.
+
+\bibitem[\citeproctext]{ref-mcausland_effects_2016}
+\textbf{\textbf{McAusland L}, \textbf{Vialet-Chabrand S}, \textbf{Davey
+P}, \textbf{Baker NR}, \textbf{Brendel O}, \textbf{Lawson T}}.
+\textbf{2016}. \href{https://doi.org/10.1111/nph.14000}{Effects of
+kinetics of light-induced stomatal responses on photosynthesis and
+water-use efficiency}. \emph{New Phytologist} \textbf{211}: 1209--1220.
 
 \bibitem[\citeproctext]{ref-mcelreath_statistical_2020}
-\CSLLeftMargin{92. }%
-\CSLRightInline{R. McElreath, \emph{Statistical {Rethinking}: A
-{Bayesian} course with examples in {R} and {Stan}}, 2nd Ed. ({Taylor and
-Francis, CRC Press}, 2020).}
+\textbf{\textbf{McElreath R}}. \textbf{2020}. \emph{Statistical
+{Rethinking}: A {Bayesian} course with examples in {R} and {Stan}}. Boca
+Raton: {Taylor and Francis, CRC Press}.
+
+\bibitem[\citeproctext]{ref-mcelwain_using_2016}
+\textbf{\textbf{McElwain JC}, \textbf{Yiotis C}, \textbf{Lawson T}}.
+\textbf{2016}. \href{https://doi.org/10.1111/nph.13579}{Using modern
+plant trait relationships between observed and theoretical maximum
+stomatal conductance and vein density to examine patterns of plant
+macroevolution}. \emph{New Phytologist} \textbf{209}: 94--103.
 
 \bibitem[\citeproctext]{ref-mclatchie_efficient_2024}
-\CSLLeftMargin{93. }%
-\CSLRightInline{Y. McLatchie, A. Vehtari,
+\textbf{\textbf{McLatchie Y}, \textbf{Vehtari A}}. \textbf{2024}.
 \href{https://doi.org/10.1007/s11222-024-10442-4}{Efficient estimation
 and correction of selection-induced bias with order statistics}.
-\emph{Statistics and Computing} \textbf{34}, 132 (2024).}
+\emph{Statistics and Computing} \textbf{34}: 132.
 
-\bibitem[\citeproctext]{ref-klein_climate_2025}
-\CSLLeftMargin{94. }%
-\CSLRightInline{M. C. Klein, \emph{et al.},
-\href{https://doi.org/10.1111/nph.70343}{Climate adaptation in
-{\emph{Populus}}{ \emph{Trichocarpa}} : Key adaptive loci identified for
-stomata and leaf traits}. \emph{New Phytologist} \textbf{247},
-2647--2664 (2025).}
+\bibitem[\citeproctext]{ref-medlyn_reconciling_2011}
+\textbf{\textbf{Medlyn BE}, \textbf{Duursma RA}, \textbf{Eamus D},
+\textbf{Ellsworth DS}, \textbf{Prentice IC}, \textbf{Barton CVM},
+\textbf{Crous KY}, \textbf{De Angelis P}, \textbf{Freeman M},
+\textbf{Wingate L}}. \textbf{2011}.
+\href{https://doi.org/10.1111/j.1365-2486.2010.02375.x}{Reconciling the
+optimal and empirical approaches to modelling stomatal conductance}.
+\emph{Global Change Biology} \textbf{17}: 2134--2144.
 
-\bibitem[\citeproctext]{ref-dittberner_natural_2018}
-\CSLLeftMargin{95. }%
-\CSLRightInline{H. Dittberner, \emph{et al.},
-\href{https://doi.org/10.1111/mec.14838}{Natural variation in stomata
-size contributes to the local adaptation of water-use efficiency in
-{\emph{Arabidopsis}}{ \emph{Thaliana}}}. \emph{Molecular Ecology}
-\textbf{27}, 4052--4065 (2018).}
+\bibitem[\citeproctext]{ref-merilo_open_2014}
+\textbf{\textbf{Merilo E}, \textbf{Jõesaar I}, \textbf{Brosché M},
+\textbf{Kollist H}}. \textbf{2014}.
+\href{https://doi.org/10.1111/nph.12667}{To open or to close:
+Species-specific stomatal responses to simultaneously applied opposing
+environmental factors}. \emph{New Phytologist} \textbf{202}: 499--508.
 
-\bibitem[\citeproctext]{ref-zavala-paez_climate_2026}
-\CSLLeftMargin{96. }%
-\CSLRightInline{M. Zavala-Paez, S. R. Keller, J. Holliday, M. C.
-Fitzpatrick, J. A. Hamilton,
-\href{https://doi.org/10.1111/nph.70706}{Climate and hybridization shape
-stomatal trait evolution in {\emph{Populus}}}. \emph{New Phytologist}
-\textbf{249}, 792--809 (2026).}
+\bibitem[\citeproctext]{ref-monteith_reinterpretation_1995}
+\textbf{\textbf{Monteith JL}}. \textbf{1995}.
+\href{https://doi.org/10.1111/j.1365-3040.1995.tb00371.x}{A
+reinterpretation of stomatal responses to humidity}. \emph{Plant, Cell
+\& Environment} \textbf{18}: 357--364.
+
+\bibitem[\citeproctext]{ref-monteith_principles_2013}
+\textbf{\textbf{Monteith JL}, \textbf{Unsworth MH}}. \textbf{2013}.
+\emph{Principles of environmental physics: Plants, animals, and the
+atmosphere}. Amsterdam ; Boston: Elsevier/Academic Press.
+
+\bibitem[\citeproctext]{ref-mott_stomatal_1991}
+\textbf{\textbf{Mott KA}, \textbf{Parkhurst DF}}. \textbf{1991}.
+\href{https://doi.org/10.1111/j.1365-3040.1991.tb01521.x}{Stomatal
+responses to humidity in air and helox}. \emph{Plant, Cell \&
+Environment} \textbf{14}: 509--515.
+
+\bibitem[\citeproctext]{ref-muir_how_2023}
+\textbf{\textbf{Muir CD}, \textbf{Conesa MÀ}, \textbf{Galmés J},
+\textbf{Pathare VS}, \textbf{Rivera P}, \textbf{López Rodríguez R},
+\textbf{Terrazas T}, \textbf{Xiong D}}. \textbf{2023}.
+\href{https://doi.org/10.1086/723780}{How important are functional and
+developmental constraints on phenotypic evolution? {An} empirical test
+with the stomatal anatomy of flowering plants}. \emph{The American
+Naturalist} \textbf{201}: 794--812.
+
+\bibitem[\citeproctext]{ref-muir_plasticity_2025}
+\textbf{\textbf{Muir CD}, \textbf{Lim WS}, \textbf{Wang D}}.
+\textbf{2025}.
+\href{https://doi.org/10.1101/2025.08.19.671015}{Plasticity and
+adaptation to high light intensity amplify the advantage of
+amphistomatous leaves}.
+
+\bibitem[\citeproctext]{ref-murray_consistent_2020}
+\textbf{\textbf{Murray M}, \textbf{Soh WK}, \textbf{Yiotis C},
+\textbf{Spicer RA}, \textbf{Lawson T}, \textbf{McElwain JC}}.
+\textbf{2020}. \href{https://doi.org/10.1086/706260}{Consistent
+relationship between field-measured stomatal conductance and theoretical
+maximum stomatal conductance in {C}{\textsubscript{3}} woody angiosperms
+in four major biomes}. \emph{International Journal of Plant Sciences}
+\textbf{181}: 142--154.
+
+\bibitem[\citeproctext]{ref-ochoa_pinpointing_2024}
+\textbf{\textbf{Ochoa ME}, \textbf{Henry C}, \textbf{John GP},
+\textbf{Medeiros CD}, \textbf{Pan R}, \textbf{Scoffoni C},
+\textbf{Buckley TN}, \textbf{Sack L}}. \textbf{2024}.
+\href{https://doi.org/10.1093/plphys/kiae292}{Pinpointing the causal
+influences of stomatal anatomy and behavior on minimum, operational, and
+maximum leaf surface conductance}. \emph{Plant Physiology} \textbf{196}:
+51--66.
+
+\bibitem[\citeproctext]{ref-papanatsiou_optogenetic_2019}
+\textbf{\textbf{Papanatsiou M}, \textbf{Petersen J}, \textbf{Henderson
+L}, \textbf{Wang Y}, \textbf{Christie JM}, \textbf{Blatt MR}}.
+\textbf{2019}.
+\href{https://doi.org/10.1126/science.aaw0046}{Optogenetic manipulation
+of stomatal kinetics improves carbon assimilation, water use, and
+growth}. \emph{Science} \textbf{363}: 1456--1459.
+
+\bibitem[\citeproctext]{ref-pearl_causality_2022}
+\textbf{\textbf{Pearl J}}. \textbf{2022}. \emph{Causality: Models,
+reasoning, and inference}. Cambridge New York, NY Port Melbourne New
+Delhi Singapore: Cambridge University Press.
+
+\bibitem[\citeproctext]{ref-pease_phylogenomics_2016}
+\textbf{\textbf{Pease JB}, \textbf{Haak DC}, \textbf{Hahn MW},
+\textbf{Moyle LC}}. \textbf{2016}.
+\href{https://doi.org/10.1371/journal.pbio.1002379}{Phylogenomics
+reveals three sources of adaptive variation during a rapid radiation} (D
+Penny, Ed.). \emph{PLOS Biology} \textbf{14}: e1002379.
+
+\bibitem[\citeproctext]{ref-peralta_taxonomy_2008}
+\textbf{\textbf{Peralta IE}, \textbf{Spooner DM}, \textbf{Knapp S}}.
+\textbf{2008}. Taxonomy of wild tomatoes and their relatives
+({\emph{Solanum}} sect. {\emph{Lycopersicoides}}, sect.
+{\emph{Juglandifolia}}, sect. {\emph{Lycopersicon}}; {Solanaceae}).
+\textbf{84}.
+
+\bibitem[\citeproctext]{ref-potkay_generalized_2025}
+\textbf{\textbf{Potkay A}, \textbf{Cabon A}, \textbf{Peters RL},
+\textbf{Fonti P}, \textbf{Sapes G}, \textbf{Sala A}, \textbf{Stefanski
+A}, \textbf{Butler E}, \textbf{Bermudez R}, \textbf{Montgomery R},
+\emph{et al.}} \textbf{2025}.
+\href{https://doi.org/10.1111/gcb.70049}{Generalized {Stomatal
+Optimization} of {Evolutionary Fitness Proxies} for {Predicting Plant
+Gas Exchange Under Drought}, {Heatwaves}, and {Elevated
+CO}{\textsubscript{2}}}. \emph{Global Change Biology} \textbf{31}:
+e70049.
+
+\bibitem[\citeproctext]{ref-prentice_balancing_2014}
+\textbf{\textbf{Prentice IC}, \textbf{Dong N}, \textbf{Gleason SM},
+\textbf{Maire V}, \textbf{Wright IJ}}. \textbf{2014}.
+\href{https://doi.org/10.1111/ele.12211}{Balancing the costs of carbon
+gain and water transport: Testing a new theoretical framework for plant
+functional ecology} (J Penuelas, Ed.). \emph{Ecology Letters}
+\textbf{17}: 82--91.
+
+\bibitem[\citeproctext]{ref-qie_stomatal_2024}
+\textbf{\textbf{Qie Y-D}, \textbf{Zhang Q-W}, \textbf{McAdam SAM},
+\textbf{Cao K-F}}. \textbf{2024}.
+\href{https://doi.org/10.1016/j.pld.2024.02.003}{Stomatal dynamics are
+regulated by leaf hydraulic traits and guard cell anatomy in nine true
+mangrove species}. \emph{Plant Diversity} \textbf{46}: 395--405.
+
+\bibitem[\citeproctext]{ref-rcoreteam_language_2026}
+\textbf{\textbf{R Core Team}}. \textbf{2026}. \emph{R: {A Language} and
+{Environment} for {Statistical Computing}}. Vienna, Austria: R
+Foundation for Statistical Computing.
+
+\bibitem[\citeproctext]{ref-raven_selection_2002}
+\textbf{\textbf{Raven JA}}. \textbf{2002}.
+\href{https://doi.org/10.1046/j.0028-646X.2001.00334.x}{Selection
+pressures on stomatal evolution}. \emph{New Phytologist} \textbf{153}:
+371--386.
+
+\bibitem[\citeproctext]{ref-raven_speedy_2014}
+\textbf{\textbf{Raven JA}}. \textbf{2014}.
+\href{https://doi.org/10.1093/jxb/eru032}{Speedy small stomata?}
+\emph{Journal of Experimental Botany} \textbf{65}: 1415--1424.
+
+\bibitem[\citeproctext]{ref-sack_developmental_2016}
+\textbf{\textbf{Sack L}, \textbf{Buckley TN}}. \textbf{2016}.
+\href{https://doi.org/10.1104/pp.16.00476}{The developmental basis of
+stomatal density and flux}. \emph{Plant Physiology} \textbf{171}:
+2358--2363.
+
+\bibitem[\citeproctext]{ref-schoch_dependence_1980}
+\textbf{\textbf{Schoch P-G}, \textbf{Zinsou C}, \textbf{Sibi M}}.
+\textbf{1980}. \href{https://doi.org/10.1093/jxb/31.5.1211}{Dependence
+of the stomatal index on environmental factors during stomatal
+differentiation in leaves of {\emph{Vigna}}{ \emph{Sinensis}} {L}.: 1.
+{Effect} of light intensity}. \emph{Journal of Experimental Botany}
+\textbf{31}: 1211--1216.
+
+\bibitem[\citeproctext]{ref-schymanski_stomatal_2013}
+\textbf{\textbf{Schymanski SJ}, \textbf{Or D}, \textbf{Zwieniecki M}}.
+\textbf{2013}.
+\href{https://doi.org/10.1371/journal.pone.0054231}{Stomatal control and
+leaf thermal and hydraulic capacitances under rapid environmental
+fluctuations} (W Bauerle, Ed.). \emph{PLoS ONE} \textbf{8}: e54231.
+
+\bibitem[\citeproctext]{ref-smaldino_natural_2016}
+\textbf{\textbf{Smaldino PE}, \textbf{McElreath R}}. \textbf{2016}.
+\href{https://doi.org/10.1098/rsos.160384}{The natural selection of bad
+science}. \emph{Royal Society Open Science} \textbf{3}: 160384.
+
+\bibitem[\citeproctext]{ref-sperry_predicting_2017}
+\textbf{\textbf{Sperry JS}, \textbf{Venturas MD}, \textbf{Anderegg WRL},
+\textbf{Mencuccini M}, \textbf{Mackay DS}, \textbf{Wang Y}, \textbf{Love
+DM}}. \textbf{2017}. \href{https://doi.org/10.1111/pce.12852}{Predicting
+stomatal responses to the environment from the optimization of
+photosynthetic gain and hydraulic cost: {A} stomatal optimization
+model}. \emph{Plant, Cell \& Environment} \textbf{40}: 816--830.
+
+\bibitem[\citeproctext]{ref-standevelopmentteam_stan_2026}
+\textbf{\textbf{Stan Development Team}}. \textbf{2026}. \emph{Stan
+{Modeling Language Users Guide} and {Reference Manual}}.
+
+\bibitem[\citeproctext]{ref-tang_variation_2026}
+\textbf{\textbf{Tang X}, \textbf{Huang W}, \textbf{Yuan X}, \textbf{Liu
+X}, \textbf{Wan J}}. \textbf{2026}.
+\href{https://doi.org/10.1111/ppl.70824}{Variation in {Stomatal Traits}
+and {Photosynthetic Induction Between Subtropical Evergreen} and
+{Deciduous Broadleaved Tree Species}}. \emph{Physiologia Plantarum}
+\textbf{178}: e70824.
+
+\bibitem[\citeproctext]{ref-uyeda_rethinking_2018}
+\textbf{\textbf{Uyeda JC}, \textbf{Zenil-Ferguson R}, \textbf{Pennell
+MW}}. \textbf{2018}.
+\href{https://doi.org/10.1093/sysbio/syy031}{Rethinking phylogenetic
+comparative methods} (N Matzke, Ed.). \emph{Systematic Biology}
+\textbf{67}: 1091--1109.
+
+\bibitem[\citeproctext]{ref-vehtari_practical_2017}
+\textbf{\textbf{Vehtari A}, \textbf{Gelman A}, \textbf{Gabry J}}.
+\textbf{2017}.
+\href{https://doi.org/10.1007/s11222-016-9696-4}{Practical {Bayesian}
+model evaluation using leave-one-out cross-validation and {WAIC}}.
+\emph{Statistics and Computing} \textbf{27}: 1413--1432.
+
+\bibitem[\citeproctext]{ref-vico_effects_2011}
+\textbf{\textbf{Vico G}, \textbf{Manzoni S}, \textbf{Palmroth S},
+\textbf{Katul G}}. \textbf{2011}.
+\href{https://doi.org/10.1111/j.1469-8137.2011.03847.x}{Effects of
+stomatal delays on the economics of leaf gas exchange under intermittent
+light regimes}. \emph{New Phytologist} \textbf{192}: 640--652.
+
+\bibitem[\citeproctext]{ref-wall_stomata_2022}
+\textbf{\textbf{Wall S}, \textbf{Vialet-Chabrand S}, \textbf{Davey P},
+\textbf{Van Rie J}, \textbf{Galle A}, \textbf{Cockram J}, \textbf{Lawson
+T}}. \textbf{2022}. \href{https://doi.org/10.1111/nph.18257}{Stomata on
+the abaxial and adaxial leaf surfaces contribute differently to leaf gas
+exchange and photosynthesis in wheat}. \emph{New Phytologist}
+\textbf{235}: 1743--1756.
+
+\bibitem[\citeproctext]{ref-westbrook_stomatal_2021}
+\textbf{\textbf{Westbrook AS}, \textbf{McAdam SAM}}. \textbf{2021}.
+\href{https://doi.org/10.1111/nph.16850}{Stomatal density and mechanics
+are critical for high productivity: Insights from amphibious ferns}.
+\emph{New Phytologist} \textbf{229}: 877--889.
+
+\bibitem[\citeproctext]{ref-westoby_misinterpreting_1995}
+\textbf{\textbf{Westoby M}, \textbf{Leishman MR}, \textbf{Lord JM}}.
+\textbf{1995}. \href{https://doi.org/10.2307/2261605}{On
+{Misinterpreting} the {`{Phylogenetic Correction}'}}. \emph{The Journal
+of Ecology} \textbf{83}: 531.
+
+\bibitem[\citeproctext]{ref-westoby_phylogenetically_2023}
+\textbf{\textbf{Westoby M}, \textbf{Yates L}, \textbf{Holland B},
+\textbf{Halliwell B}}. \textbf{2023}.
+\href{https://doi.org/10.1111/1365-2745.14150}{Phylogenetically
+conservative trait correlation: {Quantification} and interpretation}.
+\emph{Journal of Ecology} \textbf{111}: 2105--2117.
+
+\bibitem[\citeproctext]{ref-willmer_stomata_1996}
+\textbf{\textbf{Willmer C}, \textbf{Fricker M}}. \textbf{1996}.
+\emph{\href{https://doi.org/10.1007/978-94-011-0579-8}{Stomata}}.
+Dordrecht: Springer Netherlands.
+
+\bibitem[\citeproctext]{ref-woning_revisiting_2026}
+\textbf{\textbf{Woning N}, \textbf{Al-Salman Y}, \textbf{Kaiser E},
+\textbf{Berman SR}, \textbf{Brendel O}, \textbf{Cano FJ},
+\textbf{Carpentier S}, \textbf{Centritto M}, \textbf{Drake PL},
+\textbf{Durand M}, \emph{et al.}} \textbf{2026}.
+\href{https://doi.org/10.1111/nph.70842}{Revisiting the relationship
+between stomatal size and speed across species -- a meta-analysis}.
+\emph{New Phytologist} \textbf{249}: 2338--2354.
+
+\bibitem[\citeproctext]{ref-xie_stomatal_2022}
+\textbf{\textbf{Xie J}, \textbf{Wang Z}, \textbf{Li Y}}. \textbf{2022}.
+\href{https://doi.org/10.1111/nph.18189}{Stomatal opening ratio mediates
+trait coordinating network adaptation to environmental gradients}.
+\emph{New Phytologist} \textbf{235}: 907--922.
+
+\bibitem[\citeproctext]{ref-xie_identification_2006}
+\textbf{\textbf{Xie X}, \textbf{Wang Y}, \textbf{Williamson L},
+\textbf{Holroyd GH}, \textbf{Tagliavia C}, \textbf{Murchie E},
+\textbf{Theobald J}, \textbf{Knight MR}, \textbf{Davies WJ},
+\textbf{Leyser HMO}, \emph{et al.}} \textbf{2006}.
+\href{https://doi.org/10.1016/j.cub.2006.03.028}{The {Identification} of
+{Genes Involved} in the {Stomatal Response} to {Reduced Atmospheric
+Relative Humidity}}. \emph{Current Biology} \textbf{16}: 882--887.
 
 \end{CSLReferences}
 
@@ -2186,10 +2193,11 @@ stomatal trait evolution in {\emph{Populus}}}. \emph{New Phytologist}
 \setcounter{table}{0}
 \setcounter{equation}{0}
 \setcounter{page}{1}
+\FloatBarrier
 
 \subsection{Supporting tables}\label{supporting-tables}
 
-\begin{table}
+\begin{table}[h]
 
 \caption{\label{tbl-vpd}Relative humidity (RH) and leaf vapor pressure
 deficit (VPD) during stomatal kinetics measurements systematically
@@ -2225,6 +2233,8 @@ sun & high & amphi & 20.4 & 2.50\\
 
 \end{table}%
 
+\newpage{}
+
 \begin{longtable}{lll}
 
 \caption{\label{tbl-variance}The relative contribution of phylogenetic,
@@ -2235,9 +2245,9 @@ non-phylogenetic variance among populations. The among-individual
 variance component is the variation among individuals within a
 population after accounting for treatment effect. Estimates and 95\%
 confidence intervals (CI) are estimated as the median and quantile
-intervals of the posterior distribution. \(f_\text{gmax}\): stomatal
+intervals of the posterior distribution. \(f_\mathrm{gmax}\): stomatal
 conductance as a fraction of anatomical maximum stomatal conductance;
-\(l_\text{gc}\): guard cell length; \(\lambda\): lag time; \(\tau\):
+\(l_\mathrm{gc}\): guard cell length; \(\lambda\): lag time; \(\tau\):
 time constant.}
 
 \tabularnewline
@@ -2278,9 +2288,11 @@ component & \% variance & 95\% CI\\
 
 \end{longtable}
 
+\newpage{}
+
 \begin{table}
 
-\caption{\label{tbl-estimates-curve}: Raw data file in CSV format
+\caption{\label{tbl-estimates-curve}Raw data file in CSV format
 containing estimates of stomatal anatomy and kinetic variables
 associated with each curve. These are raw data for fitting multiresponse
 models. A final version will be deposited on Dryad after acceptance.
@@ -2298,7 +2310,7 @@ Download from:
 
 \begin{table}
 
-\caption{\label{tbl-estimates-accession}: Raw data file in CSV format
+\caption{\label{tbl-estimates-accession}Raw data file in CSV format
 containing estimates of stomatal anatomy and kinetic variables
 associated with each population based on multiresponse model
 predictions. A final version will be deposited on Dryad after
@@ -2314,7 +2326,9 @@ Download from:
 
 \end{table}%
 
-\begin{longtable}{>{\raggedright\arraybackslash}p{3.5in}>{\raggedright\arraybackslash}p{2in}}
+\clearpage
+
+\begin{longtable}{>{\raggedright\arraybackslash}p{3.75in}>{\raggedright\arraybackslash}p{2in}}
 
 \caption{\label{tbl-fixed}Fixed effect parameter estimates and 95\%
 confidence intervals (CIs) from the posterior distribution of the
@@ -2340,32 +2354,34 @@ potentially includes of effects of \gcl{} and \fgmax{} on \(\tau\) and
 \bottomrule
 \endlastfoot
 \addlinespace[0.3em]
-\multicolumn{2}{l}{\textbf{$\log(l_\text{gc})$}}\\
+\multicolumn{2}{l}{\textbf{$\log(l_\mathrm{gc})$}}\\
 \hspace{1em}intercept (shade, low light, amphi) & 2.96 [2.79, 3.13]\\
-\hspace{1em}effect of sun growth treatment on $\log(l_\text{gc})$ & 0.11 [0.11, 0.12]\\
-\hspace{1em}effect of pseudohypo leaf type on $\log(l_\text{gc})$ & -0.06 [-0.07, -0.05]\\
+\hspace{1em}effect of sun growth treatment on $\log(l_\mathrm{gc})$ & 0.11 [0.11, 0.12]\\
+\hspace{1em}effect of pseudohypo leaf type on $\log(l_\mathrm{gc})$ & -0.06 [-0.07, -0.05]\\
 \addlinespace[0.3em]
-\multicolumn{2}{l}{\textbf{$\logit(f_\text{gmax})$}}\\
+\multicolumn{2}{l}{\textbf{$\logit(f_\mathrm{gmax})$}}\\
 \hspace{1em}intercept (shade, low light, amphi) & -2.50 [-2.79, -2.19]\\
-\hspace{1em}effect of sun growth treatment on $\logit(f_\text{gmax})$ & -0.28 [-0.35, -0.21]\\
-\hspace{1em}effect of high measurement light intensity on $\logit(f_\text{gmax})$ & 0.85 [0.82, 0.87]\\
-\hspace{1em}effect of pseudohypo leaf type on $\logit(f_\text{gmax})$ & 0.21 [0.18, 0.24]\\
+\hspace{1em}effect of sun growth treatment on $\logit(f_\mathrm{gmax})$ & -0.28 [-0.35, -0.21]\\
+\hspace{1em}effect of high measurement light intensity on $\logit(f_\mathrm{gmax})$ & 0.85 [0.82, 0.87]\\
+\hspace{1em}effect of pseudohypo leaf type on $\logit(f_\mathrm{gmax})$ & 0.21 [0.18, 0.24]\\
 \addlinespace[0.3em]
 \multicolumn{2}{l}{\textbf{$\log(\lambda)$}}\\
 \hspace{1em}intercept (shade, low light, amphi) & 0.39 [0.28, 0.48]\\
 \hspace{1em}effect of sun growth treatment on $\log(\lambda)$ & 0.11 [0.10, 0.13]\\
 \hspace{1em}effect of high measurement light intensity on $\log(\lambda)$ & 0.01 [-0.01, 0.04]\\
 \hspace{1em}effect of pseudohypo leaf type on $\log(\lambda)$ & -0.04 [-0.05, -0.03]\\
-\hspace{1em}effect of $\logit(f_\text{gmax})$ on $\log(\lambda)$ & 0.10 [0.08, 0.13]\\
+\hspace{1em}effect of $\logit(f_\mathrm{gmax})$ on $\log(\lambda)$ & 0.10 [0.08, 0.13]\\
 \addlinespace[0.3em]
 \multicolumn{2}{l}{\textbf{$\log(\tau)$}}\\
 \hspace{1em}intercept (shade, low light, amphi) & 5.50 [5.14, 5.84]\\
 \hspace{1em}effect of sun growth treatment on $\log(\tau)$ & 0.05 [0.01, 0.10]\\
 \hspace{1em}effect of high measurement light intensity on $\log(\tau)$ & 0.16 [0.11, 0.22]\\
 \hspace{1em}effect of pseudohypo leaf type on $\log(\tau)$ & -0.03 [-0.05, -0.00]\\
-\hspace{1em}effect of $\logit(f_\text{gmax})$ on $\log(\tau)$ & 0.19 [0.13, 0.25]\\*
+\hspace{1em}effect of $\logit(f_\mathrm{gmax})$ on $\log(\tau)$ & 0.19 [0.13, 0.25]\\*
 
 \end{longtable}
+
+\newpage{}
 
 \begin{longtable}{>{\raggedright\arraybackslash}p{3.5in}>{\raggedright\arraybackslash}p{2in}}
 
@@ -2440,13 +2456,13 @@ Download from:
 
 }
 
-\caption{\label{fig-rh-curves}: Humidity-response curves and fitted
-lines. The title provides the Tomato Genetics Resource Center accession
-number, replicate letter, and species names. The subtitle indicates the
-growth light intensity (sun or shade), measurement light intensity (low
-or high), and leaf type (amphi or pseudohypo). Points are raw data and
+\caption{\label{fig-rh-curves}Humidity-response curves and fitted lines.
+The title provides the Tomato Genetics Resource Center accession number,
+replicate letter, and species names. The subtitle indicates the growth
+light intensity (sun or shade), measurement light intensity (low or
+high), and leaf type (amphi or pseudohypo). Points are raw data and
 lines are fitted curves. The Bayesian correlation coefficient,
-\(\text{Bayes}~R^2\), is shown to the right of each curve.}
+\(\mathrm{Bayes}~R^2\), is shown to the right of each curve.}
 
 \end{figure}%
 
