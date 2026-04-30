@@ -442,3 +442,17 @@ get_posterior_epred = function(fit, newdata, resp, prefix = resp, inv) {
     ) |>
     select(variable, starts_with(prefix))
 }
+
+# Helpers with illustrations
+close_polygon <- function(x) {
+  x[nrow(x), ] <- x[1, ]
+  x
+}
+
+rescale_illustration <- function(coords) {
+  scale <- max(c(diff(range(coords$x)), diff(range(coords$y))))
+  coords |>
+    select(x, y, side, name) |>
+    mutate(x = x / scale, y = y / scale)
+}
+
