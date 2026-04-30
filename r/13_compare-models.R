@@ -51,17 +51,17 @@ map2_dfr(fits$fit, fits$model, \(.fit, .name) {
   ) |>
   full_join(tibble(
     model = rownames(looic_table),
-    `$\\Delta \\text{LOOIC}$` = -2 * looic_table[, "elpd_diff"],
+    `$\\Delta \\mathrm{LOOIC}$` = -2 * looic_table[, "elpd_diff"],
     SE = 2 * looic_table[, "se_diff"]
   ),
   by = "model") |>
   mutate(across(where(is_logical), \(.x) ifelse(.x, "\\cmark", "")),
-         plausible = abs(`$\\Delta \\text{LOOIC}$`) <= 2 * SE,
+         plausible = abs(`$\\Delta \\mathrm{LOOIC}$`) <= 2 * SE,
          selected = model == selected_model) |>
-  arrange(`$\\Delta \\text{LOOIC}$`) |>
+  arrange(`$\\Delta \\mathrm{LOOIC}$`) |>
   mutate(
-    `$\\Delta \\text{LOOIC}$` = formatC(
-      abs(`$\\Delta \\text{LOOIC}$`),
+    `$\\Delta \\mathrm{LOOIC}$` = formatC(
+      abs(`$\\Delta \\mathrm{LOOIC}$`),
       format = "f",
       digits = 2
     ),
