@@ -1,4 +1,4 @@
-# Makefile for solanum-kinetics
+# Makefile for solanum-kinetics1
 #
 # Usage:
 #   make pdf   -- render ms/ms.pdf from existing computed outputs (fastest)
@@ -83,82 +83,78 @@ $(STAMPS)/11_compare-models: r/11_compare-models.R r/header.R \
 	Rscript r/11_compare-models.R
 	touch $@
 
-$(STAMPS)/12_make-dag: r/12_make-dag.R r/header.R | $(STAMPS)
-	Rscript r/12_make-dag.R
-	touch $@
-
-$(STAMPS)/13_get-partial-cor: r/13_get-partial-cor.R r/header.R \
+$(STAMPS)/12_get-partial-cor: r/12_get-partial-cor.R r/header.R \
   $(STAMPS)/11_compare-models | $(STAMPS)
-	Rscript r/13_get-partial-cor.R
+	Rscript r/12_get-partial-cor.R
 	touch $@
 
-$(STAMPS)/14_make-tbl-estimates-curve: r/14_make-tbl-estimates-curve.R r/header.R \
+$(STAMPS)/13_make-tbl-estimates-curve: r/13_make-tbl-estimates-curve.R r/header.R \
   $(STAMPS)/11_compare-models | $(STAMPS)
-	Rscript r/14_make-tbl-estimates-curve.R
+	Rscript r/13_make-tbl-estimates-curve.R
 	touch $@
 
-$(STAMPS)/15_make-tbl-estimates-accession: r/15_make-tbl-estimates-accession.R r/header.R \
+$(STAMPS)/14_make-tbl-estimates-accession: r/14_make-tbl-estimates-accession.R r/header.R \
   $(STAMPS)/11_compare-models | $(STAMPS)
-	Rscript r/15_make-tbl-estimates-accession.R
+	Rscript r/14_make-tbl-estimates-accession.R
 	touch $@
 
-$(STAMPS)/16_plot-accession-anatomy: r/16_plot-accession-anatomy.R r/header.R \
+$(STAMPS)/15_plot-accession-anatomy: r/15_plot-accession-anatomy.R r/header.R \
   $(STAMPS)/11_compare-models | $(STAMPS)
-	Rscript r/16_plot-accession-anatomy.R
+	Rscript r/15_plot-accession-anatomy.R
 	touch $@
 
-$(STAMPS)/17_make-tbl-fit-summary: r/17_make-tbl-fit-summary.R r/header.R \
+$(STAMPS)/16_make-tbl-fit-summary: r/16_make-tbl-fit-summary.R r/header.R \
   $(STAMPS)/11_compare-models | $(STAMPS)
-	Rscript r/17_make-tbl-fit-summary.R
+	Rscript r/16_make-tbl-fit-summary.R
 	touch $@
 
-$(STAMPS)/18_plot-accession-kinetics: r/18_plot-accession-kinetics.R r/header.R \
+$(STAMPS)/17_plot-accession-kinetics: r/17_plot-accession-kinetics.R r/header.R \
   $(STAMPS)/11_compare-models | $(STAMPS)
-	Rscript r/18_plot-accession-kinetics.R
+	Rscript r/17_plot-accession-kinetics.R
 	touch $@
 
-$(STAMPS)/19_plot-variance: r/19_plot-variance.R r/header.R \
+$(STAMPS)/18_plot-variance: r/18_plot-variance.R r/header.R \
   $(STAMPS)/11_compare-models | $(STAMPS)
-	Rscript r/19_plot-variance.R
+	Rscript r/18_plot-variance.R
 	touch $@
 
-$(STAMPS)/20_plot-gcl-tau: r/20_plot-gcl-tau.R r/header.R \
+$(STAMPS)/19_plot-gcl-tau: r/19_plot-gcl-tau.R r/header.R \
   $(STAMPS)/11_compare-models | $(STAMPS)
-	Rscript r/20_plot-gcl-tau.R
+	Rscript r/19_plot-gcl-tau.R
 	touch $@
 
-$(STAMPS)/21_plot-colinear: r/21_plot-colinear.R r/header.R \
+$(STAMPS)/20_plot-colinear: r/20_plot-colinear.R r/header.R \
   $(STAMPS)/10_fit-all | $(STAMPS)
-	Rscript r/21_plot-colinear.R
+	Rscript r/20_plot-colinear.R
 	touch $@
 
-$(STAMPS)/22_plot-fgmax-kinetics: r/22_plot-fgmax-kinetics.R r/header.R \
+$(STAMPS)/21_plot-fgmax-kinetics: r/21_plot-fgmax-kinetics.R r/header.R \
   $(STAMPS)/11_compare-models | $(STAMPS)
-	Rscript r/22_plot-fgmax-kinetics.R
+	Rscript r/21_plot-fgmax-kinetics.R
 	touch $@
 
-$(STAMPS)/23_plot-mediation: r/23_plot-mediation.R r/header.R \
+$(STAMPS)/22_plot-mediation: r/22_plot-mediation.R r/header.R \
   $(STAMPS)/11_compare-models | $(STAMPS)
-	Rscript r/23_plot-mediation.R
+	Rscript r/22_plot-mediation.R
 	touch $@
 
-$(STAMPS)/24_fit-vpd: r/24_fit-vpd.R r/header.R \
+$(STAMPS)/23_fit-vpd: r/23_fit-vpd.R r/header.R \
   $(STAMPS)/08_join-summary $(STAMPS)/09_make-tbl-vpd | $(STAMPS)
-	Rscript r/24_fit-vpd.R
+	Rscript r/23_fit-vpd.R
 	touch $@
 
-$(STAMPS)/25_plot-gcl: r/25_plot-gcl.R r/header.R \
+$(STAMPS)/24_plot-gcl: r/24_plot-gcl.R r/header.R \
   $(STAMPS)/00_load-data | $(STAMPS)
-	Rscript r/25_plot-gcl.R
+	Rscript r/24_plot-gcl.R
 	touch $@
 
-$(STAMPS)/26_make-illustrations: r/26_make-illustrations.R r/header.R | $(STAMPS)
-	Rscript r/26_make-illustrations.R
+$(STAMPS)/25_make-illustrations: r/25_make-illustrations.R r/header.R | $(STAMPS)
+	Rscript r/25_make-illustrations.R
 	touch $@
 
-$(STAMPS)/27_plot-conceptual: r/27_plot-conceptual.R r/header.R \
-  $(STAMPS)/26_make-illustrations | $(STAMPS)
-	Rscript r/27_plot-conceptual.R
+$(STAMPS)/26_plot-conceptual: r/26_plot-conceptual.R r/header.R \
+  $(STAMPS)/25_make-illustrations | $(STAMPS)
+	Rscript r/26_plot-conceptual.R
 	touch $@
 
 # --------------------------------------------------------------------------
@@ -176,22 +172,21 @@ RENDER_DEPS := \
   $(STAMPS)/08_join-summary \
   $(STAMPS)/09_make-tbl-vpd \
   $(STAMPS)/11_compare-models \
-  $(STAMPS)/12_make-dag \
-  $(STAMPS)/13_get-partial-cor \
-  $(STAMPS)/14_make-tbl-estimates-curve \
-  $(STAMPS)/15_make-tbl-estimates-accession \
-  $(STAMPS)/16_plot-accession-anatomy \
-  $(STAMPS)/17_make-tbl-fit-summary \
-  $(STAMPS)/18_plot-accession-kinetics \
-  $(STAMPS)/19_plot-variance \
-  $(STAMPS)/20_plot-gcl-tau \
-  $(STAMPS)/21_plot-colinear \
-  $(STAMPS)/22_plot-fgmax-kinetics \
-  $(STAMPS)/23_plot-mediation \
-  $(STAMPS)/24_fit-vpd \
-  $(STAMPS)/25_plot-gcl \
-  $(STAMPS)/26_make-illustrations \
-  $(STAMPS)/27_plot-conceptual
+  $(STAMPS)/12_get-partial-cor \
+  $(STAMPS)/13_make-tbl-estimates-curve \
+  $(STAMPS)/14_make-tbl-estimates-accession \
+  $(STAMPS)/15_plot-accession-anatomy \
+  $(STAMPS)/16_make-tbl-fit-summary \
+  $(STAMPS)/17_plot-accession-kinetics \
+  $(STAMPS)/18_plot-variance \
+  $(STAMPS)/19_plot-gcl-tau \
+  $(STAMPS)/20_plot-colinear \
+  $(STAMPS)/21_plot-fgmax-kinetics \
+  $(STAMPS)/22_plot-mediation \
+  $(STAMPS)/23_fit-vpd \
+  $(STAMPS)/24_plot-gcl \
+  $(STAMPS)/25_make-illustrations \
+  $(STAMPS)/26_plot-conceptual
 
 # --------------------------------------------------------------------------
 # Top-level targets
@@ -213,22 +208,21 @@ fast: \
   $(STAMPS)/08_join-summary \
   $(STAMPS)/09_make-tbl-vpd \
   $(STAMPS)/11_compare-models \
-  $(STAMPS)/12_make-dag \
-  $(STAMPS)/13_get-partial-cor \
-  $(STAMPS)/14_make-tbl-estimates-curve \
-  $(STAMPS)/15_make-tbl-estimates-accession \
-  $(STAMPS)/16_plot-accession-anatomy \
-  $(STAMPS)/17_make-tbl-fit-summary \
-  $(STAMPS)/18_plot-accession-kinetics \
-  $(STAMPS)/19_plot-variance \
-  $(STAMPS)/20_plot-gcl-tau \
-  $(STAMPS)/21_plot-colinear \
-  $(STAMPS)/22_plot-fgmax-kinetics \
-  $(STAMPS)/23_plot-mediation \
-  $(STAMPS)/24_fit-vpd \
-  $(STAMPS)/25_plot-gcl \
-  $(STAMPS)/26_make-illustrations \
-  $(STAMPS)/27_plot-conceptual
+  $(STAMPS)/12_get-partial-cor \
+  $(STAMPS)/13_make-tbl-estimates-curve \
+  $(STAMPS)/14_make-tbl-estimates-accession \
+  $(STAMPS)/15_plot-accession-anatomy \
+  $(STAMPS)/16_make-tbl-fit-summary \
+  $(STAMPS)/17_plot-accession-kinetics \
+  $(STAMPS)/18_plot-variance \
+  $(STAMPS)/19_plot-gcl-tau \
+  $(STAMPS)/20_plot-colinear \
+  $(STAMPS)/21_plot-fgmax-kinetics \
+  $(STAMPS)/22_plot-mediation \
+  $(STAMPS)/23_fit-vpd \
+  $(STAMPS)/24_plot-gcl \
+  $(STAMPS)/25_make-illustrations \
+  $(STAMPS)/26_plot-conceptual
 	$(RENDER)
 
 # Run every script including brms models, then render
