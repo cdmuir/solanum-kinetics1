@@ -47,3 +47,11 @@ convergence_criteria = list(
 # inspection.
 
 logtau_threshold = 7
+
+# Color schemes
+
+col_slow <- "#0072B2"
+col_fast <- "#D55E00"
+
+col_pseudohypo <- "#009E73"  # bluish green
+col_amphi <- "#CC79A7"  # reddish purple

@@ -87,20 +87,38 @@ p = ggplot(df_acc, aes(exp(loggcl), exp(logtaumean), color = leaftype)) +
   facet_grid(lightintensity ~ lighttreatment) +
   scale_x_log10() +
   scale_y_log10(breaks = c(100, 200, 400)) +
-  scale_fill_manual(values = c("steelblue", "tomato")) +
-  scale_color_manual(values = c("steelblue", "tomato")) +
+  scale_fill_manual(values = c(col_amphi, col_pseudohypo)) +
+  scale_color_manual(values = c(col_amphi, col_pseudohypo)) +
   labs(
-    x = expression(Guard ~ cell ~ length ~ (paste(paste(mu, "m"), ", log-scale"))),
-    y = expression(paste(tau ~ (s), ", log-scale")),
+    x = "Guard cell length ($\\si{\\micro\\meter}$, log-scale)",
+    y = "$\\tau$ (s, log-scale)",
     color = "Leaf type:",
     fill = "Leaf type:"
   ) +
   theme(legend.position = "bottom")
 
-annotate_figure(
+gp1 = annotate_figure(
   p,
-  top = ggpubr::text_grob("        Growth light intensity"),
+  top = ggpubr::text_grob("       Growth light intensity"),
   right = ggpubr::text_grob("Measurement light intensity        ", rot = -90)
 )
 
-ggsave("figures/gcl-tau.pdf", width = 5, height = 5)
+# ggsave("figures/gcl-tau.pdf", width = 5, height = 5)
+
+options(
+  tikzLatexPackages = c(
+    getOption("tikzLatexPackages"),
+    "\\usepackage{siunitx}"
+  )
+)
+
+tikz(
+  "figures/gcl-tau.tex",
+  standAlone = TRUE,
+  width = 5,
+  height = 5
+)
+print(gp1)
+dev.off()
+
+system("cd figures; pdflatex gcl-tau.tex; rm gcl-tau.aux gcl-tau.log")

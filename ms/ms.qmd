@@ -424,7 +424,7 @@ tau_percent_change = post1 |>
 
 {{< pagebreak >}}
 
-## Abstract
+## Summary
 
 In fluctuating environments, the kinetics of stomatal opening and closing influence the balance between carbon gain and water loss. The rate of stomatal aperture change varies widely among plants, but the underlying causes of this variation are not well understood. One hypothesis is that smaller guard cells respond faster to fluctuating environmental conditions because of their greater surface area for osmolyte flux relative to cell volume. A related hypothesis is that operational stomatal conductance (\gop) is often well below its theoretical maximum (\gmax) because at this stomatal aperture, guard cell volume is poised to change rapidly with small changes in turgor pressure. The support for both hypotheses is limited and mixed, in part because they have not been tested together. We analyzed `r n_curve` estimates of stomatal closure kinetics in response to an abrupt increase in vapor pressure deficit (VPD) among `r n_acc` diverse wild tomato populations in the genus *Solanum*. Both smaller guard cell size and a lower \gop{} to \gmax{} ratio (\fgmax) were associated with faster stomatal closure kinetics, but at different levels of biological organization. Guard cell size had high phylogenetic heritability and varied relatively little within populations, whereas \fgmax{} varied mostly among individuals and between light intensity treatments. Together, these results indicate that smaller stomata can be speedier, but only if stomata are held at an aperture where they are responsive to changing turgor pressure. We predict that selection on stomatal speed will influence not only anatomical traits like guard cell size, but also physiological controls on \gop.
 
@@ -456,9 +456,8 @@ One factor that might complicate the relationship between size and speed is aper
 ```{r, conceptual, echo = FALSE}
 #| label: fig-conceptual
 #| fig-align: center
-#| fig-cap: "\\textbf{Conceptual overview of the two hypotheses linking stomatal anatomy to closure kinetics.} (A) Stomatal conductance (\\gsw) in response to a step increase in vapor pressure deficit (VPD) typically exhibits a transient wrong-way response (WWR), in which \\gsw{} briefly rises, followed by the right-way response (RWR), in which \\gsw{} declines to a lower steady state. The RWR is well described by a Weibull function (dashed line; @eq-weibull) with initial conductance $g_\\mathrm{i}$, final conductance $g_\\mathrm{f}$, and kinetic parameters $\\tau$ and $\\lambda$. (B) The time constant $\\tau$ (color) sets the overall speed of closure, and the lag-time $\\lambda$ (linetype) determines whether the response rate is roughly constant ($\\lambda \\approx 1$; solid) or accelerates over time ($\\lambda > 1$; dashed). (C) Smaller guard cells have a greater surface area to volume ratio (SA:V; schematic cross-sections shown at right) and are predicted to exchange solutes more quickly across the plasma membrane, yielding a faster change in guard cell turgor pressure and faster closure. (D) The relationship between guard cell turgor pressure ($P_g$) and \\gsw{} is nonlinear and saturating because guard cell walls become less elastic at higher turgor [@franks_effect_2001; @franks_guard_2001]. Consequently, the same change in turgor pressure ($\\Delta P_g$, double-headed arrows) produces a larger change in \\gsw{} when stomata are at low \\fgmax{} (blue; steep tangent slope) than at high \\fgmax{} (orange; shallow tangent slope), predicting slower closure when \\fgmax{} is high."
+#| fig-cap: "\\textbf{Conceptual overview of the two hypotheses linking stomatal anatomy to closure kinetics.} (A) Stomatal conductance (\\gsw) in response to a step increase in vapor pressure deficit (VPD) typically exhibits a transient wrong-way response (WWR), in which \\gsw{} briefly rises, followed by the right-way response (RWR), in which \\gsw{} declines to a lower steady state. The RWR is well described by a Weibull function (dashed line; @eq-weibull) with initial conductance $g_\\mathrm{i}$, final conductance $g_\\mathrm{f}$, and kinetic parameters $\\tau$ and $\\lambda$. (B) The time constant $\\tau$ sets the overall speed of closure, and the lag-time $\\lambda$ determines whether the response rate is roughly constant ($\\lambda \\approx 1$; solid) or accelerates over time ($\\lambda > 1$; dashed). (C) Smaller guard cells have a greater surface area to volume ratio (SA:V; schematic cross-sections shown at right) and are predicted to exchange osmolytes more quickly across the plasma membrane, yielding a faster change in guard cell turgor pressure and faster closure. (D) The relationship between guard cell turgor pressure ($P_g$) and \\gsw{} is nonlinear and saturating because guard cell walls become less elastic at higher turgor [@franks_effect_2001; @franks_guard_2001]. Consequently, the same change in turgor pressure ($\\Delta P_g$, double-headed arrows) produces a larger change in \\gsw{} when stomata are at low \\fgmax{} (blue; steep tangent slope) than at high \\fgmax{} (orange; shallow tangent slope), predicting slower closure when \\fgmax{} is high."
 
-## MARKER NEED to carefully read and revise caption
 knitr::include_graphics("../figures/conceptual.pdf")
 ```
 
@@ -935,6 +934,26 @@ NOT THAT USEFUL - Tinoco-Ojanguren C, Pearcy RW. (1993) Stomatal dynamics and it
 Some OG citations "Changes in stomatal aperture are driven by changes in turgor pressure of guard cells (Heath 1938) due to the accumulation of ions and/or solutes (Imamura 1943; Fujino 1967; Outlaw 1983), which increases the osmotic potential and lowers the water potential of guard cells (Weyers and Meidner 1990; Willmer and Fricker 1996)." quote from Lawson et al (2010)
 -->
  
+## Acknowledgements
+
+Sam McKlin and Tom Buckley helped with protocol development. Justin Alter, Max Gatlin, Joana Kim, Jenna Matsuyama, Brandon Najarian, Dachuan Wang, and Kai Yasuda contributed to data collection. We used Copilot, ChatGPT, and Posit Assistant (Claude) to assist with coding and writing.
+
+## Competing interests
+
+None declared.
+
+## Funding
+
+US National Science Foundation OIA-1929167 (C.D.M.)
+
+## Author contributions
+
+Conceptualization: C.D.M.; Methodology: C.D.M., W.S.L.; Investigation: C.D.M., W.S.L.; Visualization: C.D.M.; Funding acquisition: C.D.M.; Writing – original draft: C.D.M.; Writing – review & editing: C.D.M., W.S.L.
+
+## Data availability
+
+All data and code are available on GitHub (\url{https://github.com/cdmuir/solanum-kinetics}). Data will be archived on Dryad upon publication; code will be archived on Zenodo upon publication.
+
 ## References
 
 \singlespacing

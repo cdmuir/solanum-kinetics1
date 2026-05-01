@@ -56,11 +56,11 @@ gp_tau = ggplot(dat, aes(plogis(logitfgmax), exp(logtaumean), color = leaftype))
   facet_grid(lightintensity ~ lighttreatment) +
   scale_x_continuous(transform = "logit", breaks = c(0.025, 0.1, 0.4)) +
   scale_y_log10(breaks = c(50, 100, 200, 400)) +
-  scale_fill_manual(values = c("steelblue", "tomato")) +
-  scale_color_manual(values = c("steelblue", "tomato")) +
+  scale_fill_manual(values = c(col_amphi, col_pseudohypo)) +
+  scale_color_manual(values = c(col_amphi, col_pseudohypo)) +
   labs(
-    x = expression(paste(italic(f)[gmax], ", logit-scale")),
-    y = expression(paste(tau ~ (s), ", log-scale")),
+    x = "$f_\\mathrm{gmax}$ (logit-scale)",
+    y = "$\\tau$ (s, log-scale)",
     color = "Leaf type:",
     fill = "Leaf type:"
   ) +
@@ -84,38 +84,67 @@ gp_lambda = ggplot(dat, aes(plogis(logitfgmax), exp(loglambdamean), color = leaf
   facet_grid(lightintensity ~ lighttreatment) +
   scale_x_continuous(transform = "logit", breaks = c(0.025, 0.1, 0.4)) +
   scale_y_log10(breaks = c(1, 2)) +
-  scale_fill_manual(values = c("steelblue", "tomato")) +
-  scale_color_manual(values = c("steelblue", "tomato")) +
+  scale_fill_manual(values = c(col_amphi, col_pseudohypo)) +
+  scale_color_manual(values = c(col_amphi, col_pseudohypo)) +
   labs(
-    x = expression(paste(italic(f)[gmax], ", logit-scale")),
-    y = expression(paste(lambda ~ (unitless), ", log-scale")),
+    x = "$f_\\mathrm{gmax}$ (logit-scale)",
+    y = "$\\lambda$ (unitless, log-scale)",
     color = "Leaf type:",
     fill = "Leaf type:"
   ) +
   theme(legend.position = "bottom")
 
 # Annotate and write
-annotate_figure(
+gp1 = annotate_figure(
   gp_tau,
   top = ggpubr::text_grob("        Growth light intensity"),
   right = ggpubr::text_grob("Measurement light intensity        ", rot = -90)
 )
 
-ggsave(
-  filename = "figures/fgmax-tau.pdf",
+# ggsave(
+#   filename = "figures/fgmax-tau.pdf",
+#   width = 5,
+#   height = 5
+# )
+
+options(
+  tikzLatexPackages = c(
+    getOption("tikzLatexPackages"),
+    "\\usepackage{siunitx}"
+  )
+)
+
+tikz(
+  "figures/fgmax-tau.tex",
+  standAlone = TRUE,
   width = 5,
   height = 5
 )
+print(gp1)
+dev.off()
 
-annotate_figure(
+system("cd figures; pdflatex fgmax-tau.tex; rm fgmax-tau.aux fgmax-tau.log")
+
+gp2 = annotate_figure(
   gp_lambda,
   top = ggpubr::text_grob("        Growth light intensity"),
   right = ggpubr::text_grob("Measurement light intensity        ", rot = -90)
 )
 
-ggsave(
-  plot = gp_lambda,
-  filename = "figures/fgmax-lambda.pdf",
+# ggsave(
+#   plot = gp_lambda,
+#   filename = "figures/fgmax-lambda.pdf",
+#   width = 5,
+#   height = 5
+# )
+
+tikz(
+  "figures/fgmax-lambda.tex",
+  standAlone = TRUE,
   width = 5,
   height = 5
 )
+print(gp2)
+dev.off()
+
+system("cd figures; pdflatex fgmax-lambda.tex; rm fgmax-lambda.aux fgmax-lambda.log")

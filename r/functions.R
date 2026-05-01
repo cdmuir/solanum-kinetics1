@@ -456,3 +456,13 @@ rescale_illustration <- function(coords) {
     mutate(x = x / scale, y = y / scale)
 }
 
+weibull_gsw <- function(t, gi, gf, tau, lambda) {
+  gf + (gi - gf) * exp(-(t / tau)^lambda)
+}
+
+wwr_fun <- function(t) {
+  g_pre + (g_peak - g_pre) * (1 - exp(-t / (t_wwr / 3)))
+}
+rwr_fun <- function(t) {
+  weibull_gsw(t - t_wwr, gi = g_peak, gf = gf0, tau = tau_A, lambda = lambda_A)
+}
