@@ -1,5 +1,4 @@
 % Options for packages loaded elsewhere
-% Options for packages loaded elsewhere
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
 \PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
@@ -8,22 +7,21 @@
   letterpaper,
   DIV=11,
   numbers=noendperiod]{scrartcl}
-\usepackage{xcolor}
+
 \usepackage{amsmath,amssymb}
-\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
 \usepackage{iftex}
 \ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
 \else % if luatex or xetex
-  \usepackage{unicode-math} % this also loads fontspec
+  \usepackage{unicode-math}
   \defaultfontfeatures{Scale=MatchLowercase}
   \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
 \fi
 \usepackage{lmodern}
-\ifPDFTeX\else
-  % xetex/luatex font selection
+\ifPDFTeX\else  
+    % xetex/luatex font selection
   \setmainfont[]{Times New Roman}
 \fi
 % Use upquote if available, for straight quotes in verbatim environments
@@ -32,33 +30,22 @@
   \usepackage[]{microtype}
   \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
+\usepackage{xcolor}
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
 % Make \paragraph and \subparagraph free-standing
-\makeatletter
 \ifx\paragraph\undefined\else
   \let\oldparagraph\paragraph
-  \renewcommand{\paragraph}{
-    \@ifstar
-      \xxxParagraphStar
-      \xxxParagraphNoStar
-  }
-  \newcommand{\xxxParagraphStar}[1]{\oldparagraph*{#1}\mbox{}}
-  \newcommand{\xxxParagraphNoStar}[1]{\oldparagraph{#1}\mbox{}}
+  \renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
 \fi
 \ifx\subparagraph\undefined\else
   \let\oldsubparagraph\subparagraph
-  \renewcommand{\subparagraph}{
-    \@ifstar
-      \xxxSubParagraphStar
-      \xxxSubParagraphNoStar
-  }
-  \newcommand{\xxxSubParagraphStar}[1]{\oldsubparagraph*{#1}\mbox{}}
-  \newcommand{\xxxSubParagraphNoStar}[1]{\oldsubparagraph{#1}\mbox{}}
+  \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
 \fi
-\makeatother
 
 
-\usepackage{longtable,booktabs,array}
-\newcounter{none} % for unnumbered tables
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}\usepackage{longtable,booktabs,array}
 \usepackage{calc} % for calculating minipage widths
 % Correct order of tables after \paragraph or \subparagraph
 \usepackage{etoolbox}
@@ -70,21 +57,17 @@
 \makesavenoteenv{longtable}
 \usepackage{graphicx}
 \makeatletter
-\newsavebox\pandoc@box
-\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
-  \sbox\pandoc@box{#1}%
-  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
-  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
-  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
-  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
-  \else\usebox{\pandoc@box}%
-  \fi%
-}
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
 % Set default figure placement to htbp
+\makeatletter
 \def\fps@figure{htbp}
 \makeatother
-
-
 % definitions for citeproc citations
 \NewDocumentCommand\citeproctext{}{}
 \NewDocumentCommand\citeproc{mm}{%
@@ -118,18 +101,6 @@
 \newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{\strut#1\strut}}
 \newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{\strut#1\strut}}
 \newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
-
-
-
-\setlength{\emergencystretch}{3em} % prevent overfull lines
-
-\providecommand{\tightlist}{%
-  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
-
-
-
- 
-
 
 \usepackage{booktabs}
 \usepackage{longtable}
@@ -220,9 +191,13 @@
 \@ifpackageloaded{caption}{}{\usepackage{caption}}
 \@ifpackageloaded{subcaption}{}{\usepackage{subcaption}}
 \makeatother
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
 \usepackage{bookmark}
+
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
-\urlstyle{same}
+\urlstyle{same} % disable monospaced font for URLs
 \hypersetup{
   pdftitle={Guard cell size and pore aperture influence stomatal closure kinetics},
   pdfauthor={Christopher D. Muir\^{}\{1,2*\}; Wei Shen Lim\^{}\{1\}},
@@ -233,14 +208,13 @@
   urlcolor={Blue},
   pdfcreator={LaTeX via pandoc}}
 
-
 \title{Guard cell size and pore aperture influence stomatal closure
 kinetics}
 \author{Christopher D. Muir\(^{1,2*}\) \and Wei Shen Lim\(^{1}\)}
 \date{}
+
 \begin{document}
 \maketitle
-
 
 \begin{center}
 $^1$School of Life Sciences, University of Hawaiʻi; Mānoa, Hawaiʻi, USA\\
@@ -338,7 +312,7 @@ VPD are often referred to as the ``wrong-way response'' (WWR) and
 steady state, \gsw{} is negatively correlated with VPD, all else being
 equal, which is interpreted as an adaptive response to the marginal
 carbon cost of water (Givnish \& Vermeij, 1976; Cowan \& Farquhar, 1977;
-Buckley \emph{et al.}, 2017). Models built around this assumption
+Buckley \emph{et al.}, 2017b). Models built around this assumption
 generally predict steady state \gsw{} well, although the functional form
 and presumed fitness costs are areas of active research (Damour \emph{et
 al.}, 2010; Medlyn \emph{et al.}, 2011; Prentice \emph{et al.}, 2014;
@@ -395,7 +369,7 @@ al.}, 2016). A four-parameter equation describes stomatal response
 kinetics to a step change in light intensity across dozens of plant
 species (Woning \emph{et al.}, 2026):
 
-\begin{equation}\protect\phantomsection\label{eq-weibull}{
+\begin{equation}\phantomsection\label{eq-weibull}{
   g_\mathrm{sw,t} = g_\mathrm{f} + (g_\mathrm{i} - g_\mathrm{f}) e^{-\left(\frac{t}{\tau}\right)^\lambda}.
 }\end{equation}
 
@@ -451,37 +425,71 @@ well studied, but similarly equivocal.
 One factor that might complicate the relationship between size and speed
 is aperture. Stomatal aperture can vary from near 0 when guard cell
 turgor pressure is low and asymptotically approach \gmax{} as guard cell
-turgor pressure approaches \(\infty\) (Figure ?). The relationship
-between guard cell turgor pressure and stomatal aperture is nonlinear
-(Franks \& Farquhar, 2001) as cell walls become less elastic at greater
-turgor (Franks \emph{et al.}, 2001). The nonlinear relationship between
-guard cell turgor and pore aperture implies that if the rate of turgor
-change is constant (\(\dv{P}{t} = C\)), the rate of change in aperture,
-and hence stomatal conductance, will vary depending on the initial
-aperture (\(a_0\)) relative to the maximum aperture
-(\(a_\mathrm{max}\)). Hence, \(\dv{a}{t} = f(a_0 / a_\mathrm{max})\).
-When initial aperture is high, \gsw{} will respond more slowly than when
-initial aperture is low. Since we generally do not observe individual
-stomatal aperture, relating it this idea to leaf-level \gsw{} requires
-scaling by stomatal density, biophysical constants, and morphological
-constants (e.g. Sack \& Buckley, 2016). We will use the term ``fraction
-of anatomical maximum stomatal conductance'', symbolized as \fgmax{}
-(this is denoted as \(g_\mathrm{ratio}\) by Xie \emph{et al.} (2022)).
-This value should be proportional to the average aperture divided by its
-maximum aperture for any arbitrary stomatal density. Leaves operating at
-\fgmax{} closer to unity will, all else being equal, be slower to
-respond than leaves operating with a \fgmax{} close to zero, independent
-of stomatal density. Franks \emph{et al.} (2012) hypothesized that
-selection on stomatal density would maintain typical operational
-stomatal conductance (\gop) relative to \gmax{} at a sufficiently low
-value that \gsw{} would be sensitive to relatively small changes in
-guard cell turgor pressure. Consistent will this hypothesis, the
-\gop:\gmax{} ratio is often near 0.25 (McElwain \emph{et al.}, 2016;
-Murray \emph{et al.}, 2020), well below \(f_\mathrm{gmax} = 1\), and in
-a range where \gsw{} would be responsive to small changes in guard cell
-turgor pressure. There is likely variation within and among species and
-growth forms in the \gop:\gmax{} ratio (Xie \emph{et al.}, 2022; Ochoa
-\emph{et al.}, 2024).
+turgor pressure approaches \(\infty\) (Figure~\ref{fig-conceptual}D).
+The relationship between guard cell turgor pressure and stomatal
+aperture is nonlinear (Franks \& Farquhar, 2001) as cell walls become
+less elastic at greater turgor (Franks \emph{et al.}, 2001). The
+nonlinear relationship between guard cell turgor and pore aperture
+implies that if the rate of turgor change is constant
+(\(\dv{P}{t} = C\)), the rate of change in aperture, and hence stomatal
+conductance, will vary depending on the initial aperture (\(a_0\))
+relative to the maximum aperture (\(a_\mathrm{max}\)). Hence,
+\(\dv{a}{t} = f(a_0 / a_\mathrm{max})\). When initial aperture is high,
+\gsw{} will respond more slowly than when initial aperture is low. Since
+we generally do not observe individual stomatal aperture, relating it
+this idea to leaf-level \gsw{} requires scaling by stomatal density,
+biophysical constants, and morphological constants (e.g. Sack \&
+Buckley, 2016). We will use the term ``fraction of anatomical maximum
+stomatal conductance'', symbolized as \fgmax{} (this is denoted as
+\(g_\mathrm{ratio}\) by Xie \emph{et al.} (2022)). This value should be
+proportional to the average aperture divided by its maximum aperture for
+any arbitrary stomatal density. Leaves operating at \fgmax{} closer to
+unity will, all else being equal, be slower to respond than leaves
+operating with a \fgmax{} close to zero, independent of stomatal
+density. Franks \emph{et al.} (2012) hypothesized that selection on
+stomatal density would maintain typical operational stomatal conductance
+(\gop) relative to \gmax{} at a sufficiently low value that \gsw{} would
+be sensitive to relatively small changes in guard cell turgor pressure.
+Consistent will this hypothesis, the \gop:\gmax{} ratio is often near
+0.25 (McElwain \emph{et al.}, 2016; Murray \emph{et al.}, 2020), well
+below \(f_\mathrm{gmax} = 1\), and in a range where \gsw{} would be
+responsive to small changes in guard cell turgor pressure. There is
+likely variation within and among species and growth forms in the
+\gop:\gmax{} ratio (Xie \emph{et al.}, 2022; Ochoa \emph{et al.}, 2024).
+
+\begin{figure}
+
+\centering{
+
+\includegraphics{../figures/conceptual.pdf}
+
+}
+
+\caption{\label{fig-conceptual}\textbf{Conceptual overview of the two hypotheses linking stomatal anatomy to closure kinetics.}
+(A) Stomatal conductance (\gsw) in response to a step increase in vapor
+pressure deficit (VPD) typically exhibits a transient wrong-way response
+(WWR), in which \gsw{} briefly rises, followed by the right-way response
+(RWR), in which \gsw{} declines to a lower steady state. The RWR is well
+described by a Weibull function (dashed line; Equation~\ref{eq-weibull})
+with initial conductance \(g_\mathrm{i}\), final conductance
+\(g_\mathrm{f}\), and kinetic parameters \(\tau\) and \(\lambda\). (B)
+The time constant \(\tau\) (color) sets the overall speed of closure,
+and the lag-time \(\lambda\) (linetype) determines whether the response
+rate is roughly constant (\(\lambda \approx 1\); solid) or accelerates
+over time (\(\lambda > 1\); dashed). (C) Smaller guard cells have a
+greater surface area to volume ratio (SA:V; schematic cross-sections
+shown at right) and are predicted to exchange solutes more quickly
+across the plasma membrane, yielding a faster change in guard cell
+turgor pressure and faster closure. (D) The relationship between guard
+cell turgor pressure (\(P_g\)) and \gsw{} is nonlinear and saturating
+because guard cell walls become less elastic at higher turgor (Franks \&
+Farquhar, 2001; Franks \emph{et al.}, 2001). Consequently, the same
+change in turgor pressure (\(\Delta P_g\), double-headed arrows)
+produces a larger change in \gsw{} when stomata are at low \fgmax{}
+(blue; steep tangent slope) than at high \fgmax{} (orange; shallow
+tangent slope), predicting slower closure when \fgmax{} is high.}
+
+\end{figure}%
 
 Putting these two hypotheses together, we predict that both guard cell
 size and \fgmax{} will influence stomatal kinetics, but possibly at
@@ -1075,7 +1083,7 @@ exchange through adaxial stomata was blocked.
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/variance.pdf}}
+\includegraphics{../figures/variance.pdf}
 
 }
 
@@ -1093,7 +1101,7 @@ populations was low for all traits.}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/accession-anatomy.pdf}}
+\includegraphics{../figures/accession-anatomy.pdf}
 
 }
 
@@ -1107,7 +1115,7 @@ populations was low for all traits.}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{ms_files/figure-pdf/fig-accession-anatomy-cap-1.pdf}}
+\includegraphics{ms_files/figure-pdf/fig-accession-anatomy-cap-1.pdf}
 
 }
 
@@ -1158,7 +1166,7 @@ increased \(\lambda\) slightly by 1.2\% {[}95\% CI: -1.13 to 3.62\%{]}.
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/accession-kinetics.pdf}}
+\includegraphics{../figures/accession-kinetics.pdf}
 
 }
 
@@ -1277,7 +1285,7 @@ plausible causal effect of \gcl{} on \(\tau\) among populations.
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/gcl-tau.pdf}}
+\includegraphics{../figures/gcl-tau.pdf}
 
 }
 
@@ -1300,7 +1308,7 @@ section.}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/fgmax-tau.pdf}}
+\includegraphics{../figures/fgmax-tau.pdf}
 
 }
 
@@ -1343,7 +1351,7 @@ effect mediated by greater \fgmax{} increased \(\tau\) by \(4.03\)\%
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/mediation.pdf}}
+\includegraphics{../figures/mediation.pdf}
 
 }
 
@@ -1453,20 +1461,26 @@ among individuals within populations was explained by variation in
 \fgmax{} (Figure~\ref{fig-fgmax-tau}). This factor was positively
 associated with \(\tau\) among individuals in the same combination of
 light treatments, but also mediated much of the plastic effects of these
-treatments on \(\tau\) (Figure~\ref{fig-mediation}). The association
-between \fgmax{} and \(\tau\) could be explained by the hypothesis that
-guard cell wall elasticity declines at greater turgor pressure (Franks
+treatments on \(\tau\) (Figure~\ref{fig-mediation}). To our knowledge,
+this relationship has not been previously documented. However, the rate
+of stomatal opening in response to light is associated with \gop{} in a
+sample of rainforest trees (Kardiman \& Ræbild, 2018), which may
+indicate this is a more general phenomenon. The association between
+\fgmax{} and \(\tau\) could be explained by the hypothesis that guard
+cell wall elasticity declines at greater turgor pressure (Franks
 \emph{et al.}, 2012), like a rubber band that is stretched under
-tension. The impact of \fgmax{} was most pronounced when comparing
-measurement light intensity treatments. Leaves acclimated to high light
-intensity were on average 112\% more open than the same leaves at low
-light intensity in the reference treatment (shade, amphi). As a
-consequence, stomata closed more slowly in leaves acclimated to high
-light intensity, with a 17.3\% greater time-constant on average in the
-reference treatment, based on parameter estimates from the selected
-model (Table~\ref{tbl-fixed}). We did not assess whether \fgmax{} also
-affects stomatal opening and this should be measured to further test
-this hypothesis. The implication is that natural selection should favor
+tension.
+
+The impact of \fgmax{} was most pronounced when comparing measurement
+light intensity treatments. Leaves acclimated to high light intensity
+were on average 112\% more open than the same leaves at low light
+intensity in the reference treatment (shade, amphi). As a consequence,
+stomata closed more slowly in leaves acclimated to high light intensity,
+with a 17.3\% greater time-constant on average in the reference
+treatment, based on parameter estimates from the selected model
+(Table~\ref{tbl-fixed}). We did not assess whether \fgmax{} also affects
+stomatal opening and this should be measured to further test this
+hypothesis. The implication is that natural selection should favor
 \gop{} values that not only optimize instantaneous carbon gain and water
 loss in the present environment, but also carbon gain and water loss
 integrated through time in a fluctuating environment. We predict that
@@ -1476,49 +1490,70 @@ overreacting to transitory changes that are likely to revert; slower,
 temporally-correlated changes will favor lower \fgmax{} to enable close
 tracking of the environment.
 
-Outline of remaining paragraphs:
+The absence of a direct effect of leaf type on \(\tau\) suggests that
+adaxial and abaxial stomata close at similar rates when operating at
+similar apertures. The association between species with more adaxial
+stomata and faster stomatal closure (Haworth \emph{et al.}, 2018; Woning
+\emph{et al.}, 2026) may not be caused by adaxial stomata responding
+faster \emph{per se}. Instead, we hypothesize that selection may favor
+faster closure in leaves with adaxial stomata to prevent desiccation,
+causing increased abaxial stomatal speed as a byproduct. When there is
+sudden increase in evaporative demand, such as from a sunfleck, open
+adaxial stomata could cause photosynthetically active palisade mesophyll
+to desicate (Buckley \emph{et al.}, 2017a). If stomata do not close
+quickly, this will water potential and impair photosynthesis (Tezara
+\emph{et al.}, 1999). Hypostomatous leaves are less impacted because
+because the palisade are hydraulically buffered from changing VPD
+(Buckley \emph{et al.}, 2017a). If traits, such as guard cell size, that
+effect adaxial stomata kinetics similarly effect abaxial stomata, this
+could explain why leaves with greater stomatal ratio also have faster
+kinetics despite independent environmental responses on each surface
+(Mott, 2007; Wall \emph{et al.}, 2022).
 
-\begin{itemize}
-\item
-  Short paragraph describing that there is little difference in abaxial
-  and adaxial stomatal kinetic parameters
-\item
-  Paragraph discussing implications for size-density scaling.
+Our findings also suggest a novel explanation for the well-documented
+negative relationship between stomatal size and density across land
+plants (recently reviewed in Liu \emph{et al.} (2025)). Conventional
+explanations for this relationship focus on optimizing \gop{} and
+minimizing area allocated to stomata, but not on kinetics. Our results
+point to an additional, previously unrecognized constraint. Smaller
+stomata do appear to close faster, consistent with the surface area to
+volume hypothesis, but this kinetic advantage is contingent on operating
+at a moderate or low \fgmax{}. If a leaf reduced guard cell size while
+maintaining the same \gop, the reduced \gmax{} would push \fgmax{}
+higher, partially offsetting the speed benefit of smaller cells. The
+only way to simultaneously reduce guard cell size, maintain \gop{}, and
+keep \fgmax{} from rising is to increase stomatal density---raising
+\gmax{} and thereby limiting \fgmax{}. This logic predicts a coupled
+evolution of small guard cells and high stomatal density, a pattern
+observed broadly across vascular plants (Franks \& Beerling, 2009; de
+Boer \emph{et al.}, 2016; Haworth \emph{et al.}, 2023; Liu \emph{et
+al.}, 2025). Although physical constraints on pore geometry, such as
+increased resistance to diffusion at very small apertures (Leuning,
+1983; Hodgson \emph{et al.}, 2010), likely impose a lower limit on guard
+cell size, selection to prevent operating at high \fgmax{} (Franks
+\emph{et al.}, 2012) may also explain why optimal guard cell size
+varies.
 
-  \begin{itemize}
-  \tightlist
-  \item
-    Since fast speed is probably good, why aren't all stomata very
-    small? There are some lower physical limits on pore size, like
-    knudsen diffusion, but our results lead to a new explanation.
-  \item
-    If all stomata were small, a leaf would need a high stomatla density
-    for \fgmax{} to not be very high.
-  \item
-    This leads to an association between stomatal size and density
-  \item
-    Contrast between our explanation for size-density scaling and
-    previous explanations
-  \end{itemize}
-\item
-  Paragraph on caveats
-
-  \begin{itemize}
-  \tightlist
-  \item
-    The RH treatment is a hammer than exposes maximum rate of stomatal
-    closure. The factors which influence this may not explain variance
-    in kinetics in more natural conditions.
-  \item
-    VPD systematically differs between treatments
-  \end{itemize}
-\end{itemize}
+Future research is needed to determine how stomatal kinetic responses
+measured in controlled conditions impact performance in nature. Our
+experimental protocol induced stomatal closure by abruptly switching
+incoming air to near-zero humidity, a perturbation far more severe than
+the gradual or partial VPD fluctuations leaves experience in the field.
+This approach is well suited for estimating the maximum rate of stomatal
+closure and comparing it among individuals and treatments, but it need
+not follow that the same anatomical and physiological factors that
+govern \(\tau\) in our experiment also govern kinetic variation under
+more naturalistic conditions, where closure VPD may fluctuate more
+gradually. We hypothesize that ecological conditions which favor close
+tracking of fluctuating environments will select for leaves with traits
+like smaller guard cell size and low \fgmax{} that enable rapid
+kinetics.
 
 \subsection{References}\label{references}
 
 \singlespacing
 
-\protect\phantomsection\label{refs}
+\phantomsection\label{refs}
 \begin{CSLReferences}{0}{1}
 \bibitem[\citeproctext]{ref-aasamaa_stomatal_2011}
 \textbf{\textbf{Aasamaa K}, \textbf{Sõber A}}. \textbf{2011a}.
@@ -1580,6 +1615,12 @@ of physiology and the dynamic light environment influence the economic
 landscape of short-term hydraulic risk}. \emph{New Phytologist}
 \textbf{238}: 529--548.
 
+\bibitem[\citeproctext]{ref-buckley_sites_2017}
+\textbf{\textbf{Buckley TN}, \textbf{John GP}, \textbf{Scoffoni C},
+\textbf{Sack L}}. \textbf{2017a}.
+\href{https://doi.org/10.1104/pp.16.01605}{The sites of evaporation
+within leaves}. \emph{Plant Physiology} \textbf{173}: 1763--1782.
+
 \bibitem[\citeproctext]{ref-buckley_hydromechanical_2003}
 \textbf{\textbf{Buckley TN}, \textbf{Mott KA}, \textbf{Farquhar GD}}.
 \textbf{2003}. \href{https://doi.org/10.1046/j.1365-3040.2003.01094.x}{A
@@ -1588,7 +1629,7 @@ hydromechanical and biochemical model of stomatal conductance}.
 
 \bibitem[\citeproctext]{ref-buckley_optimal_2017}
 \textbf{\textbf{Buckley TN}, \textbf{Sack L}, \textbf{Farquhar GD}}.
-\textbf{2017}. \href{https://doi.org/10.1111/pce.12823}{Optimal plant
+\textbf{2017b}. \href{https://doi.org/10.1111/pce.12823}{Optimal plant
 water economy: {Optimal} plant water economy}. \emph{Plant, Cell \&
 Environment} \textbf{40}: 881--896.
 
@@ -1637,6 +1678,13 @@ conductance}. \emph{Plant, Cell \& Environment} \textbf{33}: 1419--1438.
 \href{https://doi.org/10.1098/rspl.1898.0053}{Observations on stomata}.
 \emph{Proceedings of the Royal Society of London} \textbf{63}: 413--417.
 
+\bibitem[\citeproctext]{ref-deboer_optimal_2016}
+\textbf{\textbf{de Boer HJ}, \textbf{Price CA}, \textbf{Wagner-Cremer
+F}, \textbf{Dekker SC}, \textbf{Franks PJ}, \textbf{Veneklaas EJ}}.
+\textbf{2016}. \href{https://doi.org/10.1111/nph.13929}{Optimal
+allocation of leaf epidermal area for gas exchange}. \emph{New
+Phytologist} \textbf{210}: 1219--1228.
+
 \bibitem[\citeproctext]{ref-devillemereuil_general_2014}
 \textbf{\textbf{De Villemereuil P}, \textbf{Nakagawa S}}. \textbf{2014}.
 \href{https://doi.org/10.1007/978-3-662-43550-2_11}{General
@@ -1667,6 +1715,12 @@ conductance}. \emph{Journal of Experimental Botany} \textbf{64}:
 {Stomatal Closing Rate Than Stomatal Size} in {Taxa That Diversified}
 under {Low CO}{\textsubscript{2}}}. \emph{Frontiers in Plant Science}
 \textbf{7}.
+
+\bibitem[\citeproctext]{ref-franks_maximum_2009}
+\textbf{\textbf{Franks PJ}, \textbf{Beerling DJ}}. \textbf{2009}.
+Maximum leaf conductance driven by {CO}{\textsubscript{2}} effects on
+stomatal size and density over geologic time. \emph{Proceedings of the
+National Academy of Sciences} \textbf{106}: 10343--10347.
 
 \bibitem[\citeproctext]{ref-franks_guard_2001}
 \textbf{\textbf{Franks PJ}, \textbf{Buckley TN}, \textbf{Shope JC},
@@ -1768,6 +1822,15 @@ Experimental Botany} \textbf{151}: 55--63.
 \href{https://doi.org/10.1038/nature01843}{The role of stomata in
 sensing and driving environmental change}. \emph{Nature} \textbf{424}:
 901--908.
+
+\bibitem[\citeproctext]{ref-hodgson_stomatal_2010}
+\textbf{\textbf{Hodgson JG}, \textbf{Sharafi M}, \textbf{Jalili A},
+\textbf{Díaz S}, \textbf{Montserrat-Martí G}, \textbf{Palmer C},
+\textbf{Cerabolini B}, \textbf{Pierce S}, \textbf{Hamzehee B},
+\textbf{Asri Y}, \emph{et al.}} \textbf{2010}.
+\href{https://doi.org/10.1093/aob/mcq011}{Stomatal vs. Genome size in
+angiosperms: The somatic tail wagging the genomic dog?} \emph{Annals of
+Botany} \textbf{105}: 573--584.
 
 \bibitem[\citeproctext]{ref-homann_number_2002}
 \textbf{\textbf{Homann U}, \textbf{Thiel G}}. \textbf{2002}.
@@ -1876,6 +1939,19 @@ and plant water use efficiency}. \emph{New Phytologist} \textbf{221}:
 eds. Progress in {Botany} 72. Berlin, Heidelberg: Springer Berlin
 Heidelberg, 265--304.
 
+\bibitem[\citeproctext]{ref-leuning_transport_1983}
+\textbf{\textbf{Leuning R}}. \textbf{1983}.
+\href{https://doi.org/10.1111/1365-3040.ep11587617}{Transport of gases
+into leaves}. \emph{Plant, Cell \& Environment} \textbf{6}: 181--194.
+
+\bibitem[\citeproctext]{ref-liu_bounds_2025}
+\textbf{\textbf{Liu C}, \textbf{Muir CD}, \textbf{Sack L}, \textbf{Li
+Y}, \textbf{Xu L}, \textbf{Li M}, \textbf{Zhang J}, \textbf{De Boer HJ},
+\textbf{Han X}, \textbf{Yu G}, \emph{et al.}} \textbf{2025}.
+\href{https://doi.org/10.1111/nph.70626}{Bounds on stomatal size can
+explain scaling with stomatal density in forest plants}. \emph{New
+Phytologist} \textbf{248}: 2910--2926.
+
 \bibitem[\citeproctext]{ref-lynch_methods_1991}
 \textbf{\textbf{Lynch M}}. \textbf{1991}.
 \href{https://doi.org/10.1111/j.1558-5646.1991.tb04375.x}{Methods for
@@ -1947,6 +2023,12 @@ reinterpretation of stomatal responses to humidity}. \emph{Plant, Cell
 \textbf{\textbf{Monteith JL}, \textbf{Unsworth MH}}. \textbf{2013}.
 \emph{Principles of environmental physics: Plants, animals, and the
 atmosphere}. Amsterdam ; Boston: Elsevier/Academic Press.
+
+\bibitem[\citeproctext]{ref-mott_leaf_2007}
+\textbf{\textbf{Mott KA}}. \textbf{2007}.
+\href{https://doi.org/10.1111/j.1365-3040.2007.01720.x}{Leaf hydraulic
+conductivity and stomatal responses to humidity in amphistomatous
+leaves}. \emph{Plant, Cell \& Environment} \textbf{30}: 1444--1449.
 
 \bibitem[\citeproctext]{ref-mott_stomatal_1991}
 \textbf{\textbf{Mott KA}, \textbf{Parkhurst DF}}. \textbf{1991}.
@@ -2103,6 +2185,13 @@ and {Photosynthetic Induction Between Subtropical Evergreen} and
 {Deciduous Broadleaved Tree Species}}. \emph{Physiologia Plantarum}
 \textbf{178}: e70824.
 
+\bibitem[\citeproctext]{ref-tezara_water_1999}
+\textbf{\textbf{Tezara W}, \textbf{Mitchell VJ}, \textbf{Driscoll SD},
+\textbf{Lawlor DW}}. \textbf{1999}.
+\href{https://doi.org/10.1038/44842}{Water stress inhibits plant
+photosynthesis by decreasing coupling factor and {ATP}}. \emph{Nature}
+\textbf{401}: 914--917.
+
 \bibitem[\citeproctext]{ref-uyeda_rethinking_2018}
 \textbf{\textbf{Uyeda JC}, \textbf{Zenil-Ferguson R}, \textbf{Pennell
 MW}}. \textbf{2018}.
@@ -2210,6 +2299,7 @@ calculating the mean among curves.}
 
 \centering{
 
+[H]
 \centering
 \begin{tabular}[t]{ccccc}
 \toprule
@@ -2470,7 +2560,7 @@ lines are fitted curves. The Bayesian correlation coefficient,
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/compare-gsw.pdf}}
+\includegraphics{../figures/compare-gsw.pdf}
 
 }
 
@@ -2485,7 +2575,7 @@ line for reference. Both axes are on a log-scale.}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/gcl.pdf}}
+\includegraphics{../figures/gcl.pdf}
 
 }
 
@@ -2502,7 +2592,7 @@ larger values on the adaxial surface.}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/colinear.pdf}}
+\includegraphics{../figures/colinear.pdf}
 
 }
 
@@ -2521,7 +2611,7 @@ parameter.}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/fgmax-lambda.pdf}}
+\includegraphics{../figures/fgmax-lambda.pdf}
 
 }
 
@@ -2536,7 +2626,6 @@ with 95\% confidence ribbons. The growth and measurement light intensity
 treatments are described in the Materials and Methods section.}
 
 \end{figure}%
-
 
 
 
