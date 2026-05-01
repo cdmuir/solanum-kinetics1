@@ -1,4 +1,4 @@
-# solanum-kinetics1
+# solanum-kinetics
 
 This repository contains source code associated with the manuscript:
 
@@ -47,10 +47,10 @@ cmdstanr::install_cmdstan()
 1. Download or clone this repository to your machine:
 
 ```
-git clone git@github.com:cdmuir/solanum-kinetics1.git
+git clone git@github.com:cdmuir/solanum-kinetics.git
 ```
 
-2. Open `solanum-kinetics1.Rproj` in [RStudio](https://www.posit.co/)
+2. Open `solanum-kinetics.Rproj` in [RStudio](https://www.posit.co/)
 
 ## Rendering and reproducing results
 
