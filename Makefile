@@ -138,23 +138,18 @@ $(STAMPS)/22_plot-mediation: r/22_plot-mediation.R r/header.R \
 	Rscript r/22_plot-mediation.R
 	touch $@
 
-$(STAMPS)/23_fit-vpd: r/23_fit-vpd.R r/header.R \
-  $(STAMPS)/08_join-summary $(STAMPS)/09_make-tbl-vpd | $(STAMPS)
-	Rscript r/23_fit-vpd.R
-	touch $@
-
-$(STAMPS)/24_plot-gcl: r/24_plot-gcl.R r/header.R \
+$(STAMPS)/23_plot-gcl: r/23_plot-gcl.R r/header.R \
   $(STAMPS)/00_load-data | $(STAMPS)
-	Rscript r/24_plot-gcl.R
+	Rscript r/23_plot-gcl.R
 	touch $@
 
-$(STAMPS)/25_make-illustrations: r/25_make-illustrations.R r/header.R | $(STAMPS)
-	Rscript r/25_make-illustrations.R
+$(STAMPS)/24_make-illustrations: r/24_make-illustrations.R r/header.R | $(STAMPS)
+	Rscript r/24_make-illustrations.R
 	touch $@
 
-$(STAMPS)/26_plot-conceptual: r/26_plot-conceptual.R r/header.R \
-  $(STAMPS)/25_make-illustrations | $(STAMPS)
-	Rscript r/26_plot-conceptual.R
+$(STAMPS)/25_plot-conceptual: r/25_plot-conceptual.R r/header.R \
+  $(STAMPS)/24_make-illustrations | $(STAMPS)
+	Rscript r/25_plot-conceptual.R
 	touch $@
 
 # --------------------------------------------------------------------------
@@ -183,10 +178,9 @@ RENDER_DEPS := \
   $(STAMPS)/20_plot-colinear \
   $(STAMPS)/21_plot-fgmax-kinetics \
   $(STAMPS)/22_plot-mediation \
-  $(STAMPS)/23_fit-vpd \
-  $(STAMPS)/24_plot-gcl \
-  $(STAMPS)/25_make-illustrations \
-  $(STAMPS)/26_plot-conceptual
+  $(STAMPS)/23_plot-gcl \
+  $(STAMPS)/24_make-illustrations \
+  $(STAMPS)/25_plot-conceptual
 
 # --------------------------------------------------------------------------
 # Top-level targets
@@ -219,10 +213,9 @@ fast: \
   $(STAMPS)/20_plot-colinear \
   $(STAMPS)/21_plot-fgmax-kinetics \
   $(STAMPS)/22_plot-mediation \
-  $(STAMPS)/23_fit-vpd \
-  $(STAMPS)/24_plot-gcl \
-  $(STAMPS)/25_make-illustrations \
-  $(STAMPS)/26_plot-conceptual
+  $(STAMPS)/23_plot-gcl \
+  $(STAMPS)/24_make-illustrations \
+  $(STAMPS)/25_plot-conceptual
 	$(RENDER)
 
 # Run every script including brms models, then render
