@@ -19,9 +19,6 @@ read_rds("https://github.com/cdmuir/solanum-aa/raw/refs/heads/main/data/stomata.
   select(-contains("pavement"), -contains("index")) |>
   write_rds("data/stomata.rds")
 
-file.copy("../../data/adaptive-amphistomy/processed-data/guard-cell-length.rds",
-          "data/guard-cell-length.rds", overwrite = TRUE)
-
 read_rds("https://github.com/cdmuir/solanum-aa/raw/refs/heads/main/data/df_germ_summary.rds") |>
   write_rds("data/df_germ_summary.rds")
 
