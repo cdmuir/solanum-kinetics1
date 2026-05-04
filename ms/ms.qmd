@@ -994,7 +994,7 @@ kbl(
   escape = FALSE,
   align = rep("c", 5)
 ) |>
-  kable_styling(latex_options = c("HOLD_position", "striped"))
+  kable_styling(latex_options = c("striped"))
 
 ```
 

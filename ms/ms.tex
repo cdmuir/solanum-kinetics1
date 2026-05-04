@@ -1,5 +1,4 @@
 % Options for packages loaded elsewhere
-% Options for packages loaded elsewhere
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
 \PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
@@ -8,22 +7,21 @@
   letterpaper,
   DIV=11,
   numbers=noendperiod]{scrartcl}
-\usepackage{xcolor}
+
 \usepackage{amsmath,amssymb}
-\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
 \usepackage{iftex}
 \ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
 \else % if luatex or xetex
-  \usepackage{unicode-math} % this also loads fontspec
+  \usepackage{unicode-math}
   \defaultfontfeatures{Scale=MatchLowercase}
   \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
 \fi
 \usepackage{lmodern}
-\ifPDFTeX\else
-  % xetex/luatex font selection
+\ifPDFTeX\else  
+    % xetex/luatex font selection
   \setmainfont[]{Times New Roman}
 \fi
 % Use upquote if available, for straight quotes in verbatim environments
@@ -32,33 +30,22 @@
   \usepackage[]{microtype}
   \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
+\usepackage{xcolor}
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
 % Make \paragraph and \subparagraph free-standing
-\makeatletter
 \ifx\paragraph\undefined\else
   \let\oldparagraph\paragraph
-  \renewcommand{\paragraph}{
-    \@ifstar
-      \xxxParagraphStar
-      \xxxParagraphNoStar
-  }
-  \newcommand{\xxxParagraphStar}[1]{\oldparagraph*{#1}\mbox{}}
-  \newcommand{\xxxParagraphNoStar}[1]{\oldparagraph{#1}\mbox{}}
+  \renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
 \fi
 \ifx\subparagraph\undefined\else
   \let\oldsubparagraph\subparagraph
-  \renewcommand{\subparagraph}{
-    \@ifstar
-      \xxxSubParagraphStar
-      \xxxSubParagraphNoStar
-  }
-  \newcommand{\xxxSubParagraphStar}[1]{\oldsubparagraph*{#1}\mbox{}}
-  \newcommand{\xxxSubParagraphNoStar}[1]{\oldsubparagraph{#1}\mbox{}}
+  \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
 \fi
-\makeatother
 
 
-\usepackage{longtable,booktabs,array}
-\newcounter{none} % for unnumbered tables
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}\usepackage{longtable,booktabs,array}
 \usepackage{calc} % for calculating minipage widths
 % Correct order of tables after \paragraph or \subparagraph
 \usepackage{etoolbox}
@@ -70,21 +57,17 @@
 \makesavenoteenv{longtable}
 \usepackage{graphicx}
 \makeatletter
-\newsavebox\pandoc@box
-\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
-  \sbox\pandoc@box{#1}%
-  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
-  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
-  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
-  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
-  \else\usebox{\pandoc@box}%
-  \fi%
-}
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
 % Set default figure placement to htbp
+\makeatletter
 \def\fps@figure{htbp}
 \makeatother
-
-
 % definitions for citeproc citations
 \NewDocumentCommand\citeproctext{}{}
 \NewDocumentCommand\citeproc{mm}{%
@@ -118,18 +101,6 @@
 \newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{\strut#1\strut}}
 \newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{\strut#1\strut}}
 \newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
-
-
-
-\setlength{\emergencystretch}{3em} % prevent overfull lines
-
-\providecommand{\tightlist}{%
-  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
-
-
-
- 
-
 
 \usepackage{booktabs}
 \usepackage{longtable}
@@ -220,9 +191,13 @@
 \@ifpackageloaded{caption}{}{\usepackage{caption}}
 \@ifpackageloaded{subcaption}{}{\usepackage{subcaption}}
 \makeatother
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
 \usepackage{bookmark}
+
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
-\urlstyle{same}
+\urlstyle{same} % disable monospaced font for URLs
 \hypersetup{
   pdftitle={Guard cell size and pore aperture influence stomatal closure kinetics},
   pdfauthor={Christopher D. Muir\^{}\{1,2*\}; Wei Shen Lim\^{}\{1\}},
@@ -233,14 +208,13 @@
   urlcolor={Blue},
   pdfcreator={LaTeX via pandoc}}
 
-
 \title{Guard cell size and pore aperture influence stomatal closure
 kinetics}
 \author{Christopher D. Muir\(^{1,2*}\) \and Wei Shen Lim\(^{1}\)}
 \date{}
+
 \begin{document}
 \maketitle
-
 
 \begin{center}
 $^1$School of Life Sciences, University of Hawaiʻi; Mānoa, Hawaiʻi, USA\\
@@ -395,7 +369,7 @@ al.}, 2016). A four-parameter equation describes stomatal response
 kinetics to a step change in light intensity across dozens of plant
 species (Woning \emph{et al.}, 2026):
 
-\begin{equation}\protect\phantomsection\label{eq-weibull}{
+\begin{equation}\phantomsection\label{eq-weibull}{
   g_\mathrm{sw,t} = g_\mathrm{f} + (g_\mathrm{i} - g_\mathrm{f}) e^{-\left(\frac{t}{\tau}\right)^\lambda}.
 }\end{equation}
 
@@ -487,7 +461,7 @@ likely variation within and among species and growth forms in the
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/conceptual.pdf}}
+\includegraphics{../figures/conceptual.pdf}
 
 }
 
@@ -1109,7 +1083,7 @@ exchange through adaxial stomata was blocked.
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/variance.pdf}}
+\includegraphics{../figures/variance.pdf}
 
 }
 
@@ -1127,7 +1101,7 @@ populations was low for all traits.}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/accession-anatomy.pdf}}
+\includegraphics{../figures/accession-anatomy.pdf}
 
 }
 
@@ -1141,7 +1115,7 @@ populations was low for all traits.}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{ms_files/figure-pdf/fig-accession-anatomy-cap-1.pdf}}
+\includegraphics{ms_files/figure-pdf/fig-accession-anatomy-cap-1.pdf}
 
 }
 
@@ -1192,7 +1166,7 @@ increased \(\lambda\) slightly by 1.17\% {[}95\% CI: -1.1 to 3.54\%{]}.
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/accession-kinetics.pdf}}
+\includegraphics{../figures/accession-kinetics.pdf}
 
 }
 
@@ -1311,7 +1285,7 @@ plausible causal effect of \gcl{} on \(\tau\) among populations.
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/gcl-tau.pdf}}
+\includegraphics{../figures/gcl-tau.pdf}
 
 }
 
@@ -1334,7 +1308,7 @@ section.}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/fgmax-tau.pdf}}
+\includegraphics{../figures/fgmax-tau.pdf}
 
 }
 
@@ -1377,7 +1351,7 @@ effect mediated by greater \fgmax{} increased \(\tau\) by \(4.02\)\%
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/mediation.pdf}}
+\includegraphics{../figures/mediation.pdf}
 
 }
 
@@ -1551,12 +1525,12 @@ only way to simultaneously reduce guard cell size, maintain \gop{}, and
 keep \fgmax{} from rising is to increase stomatal density---raising
 \gmax{} and thereby limiting \fgmax{}. This logic predicts a coupled
 evolution of small guard cells and high stomatal density, a pattern
-observed broadly across vascular plants (Franks \& Beerling, 2009; {de
-Boer \emph{et al.}}, 2016; Haworth \emph{et al.}, 2023; Liu \emph{et
+observed broadly across vascular plants (Franks \& Beerling, 2009; de
+Boer \emph{et al.}, 2016; Haworth \emph{et al.}, 2023; Liu \emph{et
 al.}, 2025). Although physical constraints on pore geometry, such as
 increased resistance to diffusion at very small apertures (Leuning,
-1983; {Hodgson \emph{et al.}}, 2010), likely impose a lower limit on
-guard cell size, selection to prevent operating at high \fgmax{} (Franks
+1983; Hodgson \emph{et al.}, 2010), likely impose a lower limit on guard
+cell size, selection to prevent operating at high \fgmax{} (Franks
 \emph{et al.}, 2012) may also explain why optimal guard cell size
 varies.
 
@@ -1608,7 +1582,7 @@ publication.
 
 \singlespacing
 
-\protect\phantomsection\label{refs}
+\phantomsection\label{refs}
 \begin{CSLReferences}{0}{1}
 \bibitem[\citeproctext]{ref-aasamaa_stomatal_2011}
 \textbf{\textbf{Aasamaa K}, \textbf{Sõber A}}. \textbf{2011a}.
@@ -1734,8 +1708,8 @@ conductance}. \emph{Plant, Cell \& Environment} \textbf{33}: 1419--1438.
 \emph{Proceedings of the Royal Society of London} \textbf{63}: 413--417.
 
 \bibitem[\citeproctext]{ref-deboer_optimal_2016}
-\textbf{{\textbf{de Boer HJ}, \textbf{Price CA}, \textbf{Wagner-Cremer
-F}, \textbf{Dekker SC}, \textbf{Franks PJ}, \textbf{Veneklaas EJ}}}.
+\textbf{\textbf{de Boer HJ}, \textbf{Price CA}, \textbf{Wagner-Cremer
+F}, \textbf{Dekker SC}, \textbf{Franks PJ}, \textbf{Veneklaas EJ}}.
 \textbf{2016}. \href{https://doi.org/10.1111/nph.13929}{Optimal
 allocation of leaf epidermal area for gas exchange}. \emph{New
 Phytologist} \textbf{210}: 1219--1228.
@@ -1879,10 +1853,10 @@ sensing and driving environmental change}. \emph{Nature} \textbf{424}:
 901--908.
 
 \bibitem[\citeproctext]{ref-hodgson_stomatal_2010}
-\textbf{{\textbf{Hodgson JG}, \textbf{Sharafi M}, \textbf{Jalili A},
+\textbf{\textbf{Hodgson JG}, \textbf{Sharafi M}, \textbf{Jalili A},
 \textbf{Díaz S}, \textbf{Montserrat-Martí G}, \textbf{Palmer C},
 \textbf{Cerabolini B}, \textbf{Pierce S}, \textbf{Hamzehee B},
-\textbf{Asri Y}, \emph{et al.}}} \textbf{2010}.
+\textbf{Asri Y}, \emph{et al.}} \textbf{2010}.
 \href{https://doi.org/10.1093/aob/mcq011}{Stomatal vs. Genome size in
 angiosperms: The somatic tail wagging the genomic dog?} \emph{Annals of
 Botany} \textbf{105}: 573--584.
@@ -2614,7 +2588,7 @@ lines are fitted curves. The Bayesian correlation coefficient,
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/compare-gsw.pdf}}
+\includegraphics{../figures/compare-gsw.pdf}
 
 }
 
@@ -2629,7 +2603,7 @@ line for reference. Both axes are on a log-scale.}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/gcl.pdf}}
+\includegraphics{../figures/gcl.pdf}
 
 }
 
@@ -2646,7 +2620,7 @@ larger values on the adaxial surface.}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/colinear.pdf}}
+\includegraphics{../figures/colinear.pdf}
 
 }
 
@@ -2665,7 +2639,7 @@ parameter.}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/fgmax-lambda.pdf}}
+\includegraphics{../figures/fgmax-lambda.pdf}
 
 }
 
@@ -2680,7 +2654,6 @@ with 95\% confidence ribbons. The growth and measurement light intensity
 treatments are described in the Materials and Methods section.}
 
 \end{figure}%
-
 
 
 
