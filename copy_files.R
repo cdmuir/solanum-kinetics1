@@ -14,7 +14,9 @@ if (!dir.exists(dest_dir)) {
 
 # Define all files needed based on Makefile dependencies
 files_to_copy <- c(
-  # R scripts (00_load-data.R excluded; its outputs are copied directly below)
+  # R scripts (00_load-data.R is copied but won't run; its outputs are pre-copied
+  # and its stamp is created so `make fast` skips it)
+  "r/00_load-data.R",
   "r/01_join-data.R",
   "r/02_fit-weibull.R",
   "r/03_refit-weibull.R",
