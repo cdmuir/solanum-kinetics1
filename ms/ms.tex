@@ -436,8 +436,8 @@ conductance, will vary depending on the initial aperture (\(a_0\))
 relative to the maximum aperture (\(a_\mathrm{max}\)). Hence,
 \(\dv{a}{t} = f(a_0 / a_\mathrm{max})\). When initial aperture is high,
 \gsw{} will respond more slowly than when initial aperture is low. Since
-we generally do not observe individual stomatal aperture, relating it
-this idea to leaf-level \gsw{} requires scaling by stomatal density,
+we generally do not observe individual stomatal aperture, relating this
+idea to leaf-level \gsw{} requires scaling by stomatal density,
 biophysical constants, and morphological constants (e.g. Sack \&
 Buckley, 2016). We will use the term ``fraction of anatomical maximum
 stomatal conductance'', symbolized as \fgmax{} (this is denoted as
@@ -511,10 +511,11 @@ organization, we predict that guard cell size likely explains more
 variation in stomatal kinetics among species, whereas \fgmax{} will
 explain more variation within species. Within species variation can
 arise from either genetic differences among individuals or environmental
-plasticity. We will also test faster responses of adaxial stomata
-respond (Haworth \emph{et al.}, 2018; Wall \emph{et al.}, 2022; Woning
-\emph{et al.}, 2026) can be explained differences in guard cell size
-and/or \fgmax{} between surfaces.
+plasticity. We will also test if adaxial stomata respond faster than
+abaxial stomata (Haworth \emph{et al.}, 2018; Wall \emph{et al.}, 2022;
+Woning \emph{et al.}, 2026) and, if so, whether this difference can be
+explained by variation in guard cell size and/or \fgmax{} between
+surfaces.
 
 One challenge in determining whether traits covary at higher levels of
 organization is that statistical procedures to account for phylogenetic
@@ -561,41 +562,41 @@ As noted above, we are opportunistically analyzing data from an
 experiment designed to answer different questions. Before analyzing the
 kinetic data, we planned to test whether 1) guard cell size would
 influence \(\tau\) and 2) that \(\tau\) would be greater on the
-abaxial-only leaves based on a recent metaanalysis of stomatal responses
-to light (Woning \emph{et al.}, 2026). We made the decision to test for
-an association between \fgmax{} and \(\tau\) after exploratory analyses
-revealed a potential association. Adding hypotheses after some results
-have been analyzed, also known as ``Hypothesizing After Results Known''
-(HARKing), can lead to reports of spurious associations that are not
-repeatable in later studies (Kerr, 1998; Smaldino \& McElreath, 2016).
-Therefore, our conclusions about the effect of \fgmax{} on stomatal
-kinetics should be interpreted with caution until they are replicated.
+abaxial-only leaves based on a recent meta-analysis of stomatal
+responses to light (Woning \emph{et al.}, 2026). We made the decision to
+test for an association between \fgmax{} and \(\tau\) after exploratory
+analyses revealed a potential association. Adding hypotheses after some
+results have been analyzed, also known as ``Hypothesizing After Results
+Known'' (HARKing), can lead to reports of spurious associations that are
+not repeatable in later studies (Kerr, 1998; Smaldino \& McElreath,
+2016). Therefore, our conclusions about the effect of \fgmax{} on
+stomatal kinetics should be interpreted with caution until they are
+replicated.
 
 \subsection{Materials and Methods}\label{sec-methods}
 
 \subsubsection{Populations and
 phylogeny}\label{populations-and-phylogeny}
 
-We grew 29 populations of wild tomato, including representatives of all
-described species of \emph{Solanum} sect. \emph{Lycopersicon} and sect.
-\emph{Lycopersicoides} (Peralta \emph{et al.}, 2008) and the cultivated
-tomato \emph{S. lycopersicum} var. \emph{lycopersicum}
-(Table~\ref{tbl-populations}), as described in Muir \emph{et al.}
-(2025). These populations were selected because they encompass the
-breadth of climatic variation in the wild tomato clade (Pease \emph{et
-al.}, 2016). In one case, we substituted a congeneric population of the
-species (\emph{S. galapagense}) and added a population of \emph{S.
-pennellii}. Due to constraints on growth space and time, we spread out
-measurements over 61.1 weeks from August 29, 2022 to October 31, 2023.
-Replicates within population were evenly spread out over this period to
-prevent confounding of temporal variation in growth conditions with
-variation among populations. To estimate phylogenetic effects, we used
-the RAxML whole-transcriptome concatenated phylogeny based on 2,745
-100-kb genomic windows from Pease \emph{et al.} (2016). Two of our
-populations were not in this tree. We used \emph{S. galapagense}
-accession LA1044 in place of LA3909. \emph{S. pennellii} accession
-LA0750 was added as sister to LA0716. The node separating LA0750 from
-LA0716 was placed half-way between the next deepest node.
+We grew 29 populations of wild tomato (Table~\ref{tbl-populations}),
+including representatives of all described species of \emph{Solanum}
+sect. \emph{Lycopersicon} and sect. \emph{Lycopersicoides} (Peralta
+\emph{et al.}, 2008), as described in Muir \emph{et al.} (2025). These
+populations were selected because they encompass the breadth of climatic
+variation in the wild tomato clade (Pease \emph{et al.}, 2016). In one
+case, we substituted a congeneric population of the species (\emph{S.
+galapagense}) and added a population of \emph{S. pennellii}. Due to
+constraints on growth space and time, we spread out measurements over
+61.1 weeks from August 29, 2022 to October 31, 2023. Replicates within
+population were evenly spread out over this period to prevent
+confounding of temporal variation in growth conditions with variation
+among populations. To estimate phylogenetic effects, we used the RAxML
+whole-transcriptome concatenated phylogeny based on 2,745 100-kb genomic
+windows from Pease \emph{et al.} (2016). Two of our populations were not
+in this tree. We used \emph{S. galapagense} accession LA1044 in place of
+LA3909. \emph{S. pennellii} accession LA0750 was added as sister to
+LA0716. The node separating LA0750 from LA0716 was placed half-way
+between the next deepest node.
 
 \begingroup
 \singlespacing
@@ -715,21 +716,21 @@ light-intensity (\ppfdequals{150}; 87.0:13.0 red:blue). We always
 measured high light-intensity curves first because photosynthetic
 downregulation is faster than upregulation in these species.
 Pseudohypostomatous leaves are the same as the amphistomatous leaves
-except gas exchange through the upper (adaxial) surface blocked by a
-neutral density plastic (propafilm). For brevity, we hereafter refer to
-these as ``pseudohypo'' and ``amphi'' leaf types. Comparing amphi and
-pseudohypo leaf types enabled us to test whether stomatal kinetics are
-different for ab- and adaxial stomata on the same leaf. To compensate
-for reduced transmission, we increased incident \ppfd{} for pseudohypo
-leaves by a factor 1/0.91, the inverse of the measured transmissivity of
-the propafilm. We also set the stomatal conductance ratio, for purposes
-of calculating boundary layer conductance, to 0 for pseudohypo leaves
-following manufacturer directions. To control for order effects, we
-alternated between starting with amphi or pseudohypo measurements. We
-made measurements over two days. On the first day, we measured high and
-low light-intensity curves for either amphi or pseudohypo leaves; on the
-second day, we measured high and low light-intensity curves on the other
-leaf type.
+except that gas exchange through the upper (adaxial) surface is blocked
+by a neutral density plastic (propafilm). For brevity, we hereafter
+refer to these as ``pseudohypo'' and ``amphi'' leaf types. Comparing
+amphi and pseudohypo leaf types enabled us to test whether stomatal
+kinetics are different for ab- and adaxial stomata on the same leaf. To
+compensate for reduced transmission, we increased incident \ppfd{} for
+pseudohypo leaves by a factor 1/0.91, the inverse of the measured
+transmissivity of the propafilm. We also set the stomatal conductance
+ratio, for purposes of calculating boundary layer conductance, to 0 for
+pseudohypo leaves following manufacturer directions. To control for
+order effects, we alternated between starting with amphi or pseudohypo
+measurements. We made measurements over two days. On the first day, we
+measured high and low light-intensity curves for either amphi or
+pseudohypo leaves; on the second day, we measured high and low
+light-intensity curves on the other leaf type.
 
 In all humidity-response curves, we acclimated the focal leaf ambient
 CO\(_2\) (\caequals{415}), \tleafequals{25.0}, high light
@@ -948,7 +949,7 @@ effects}\label{model-selection-and-parameter-estimation-of-individual-level-effe
 To infer whether individual-level variation in \fgmax{} and \gcl{}
 influence kinetic parameters, we used the leave-one-out cross-validation
 information criterion (LOOIC) to compare the fit of models using the
-\emph{R} package \textbf{loo} version 2.9.0 (Vehtari \emph{et al.},
+\emph{R} package \textbf{loo} version 2.8.0 (Vehtari \emph{et al.},
 2017) to calculate LOOIC values. We compared models with all
 permutations of \fgmax{} and \gcl{} influencing \(\lambda\) and
 \(\tau\). We considered all models within two \(\Delta\)LOOIC standard
@@ -977,7 +978,7 @@ estimate (median of the posterior) divided by the standard error
 \subsubsection{Variance decomposition and phylogenetic
 heritability}\label{variance-decomposition-and-phylogenetic-heritability}
 
-One explanation from why traits have effects at different levels of
+One explanation for why traits have effects at different levels of
 organization is that variance in those traits are concentrated at those
 different levels of organization. To evaluate this, we decomposed the
 variance in response variables (\(\lambda\), \(\tau\), \fgmax, \gcl)
@@ -1018,8 +1019,8 @@ leaf type (amphi vs pseudohypo) on \(\tau\) in the multiresponse model.
 \subsection{Results}\label{results}
 
 \subsubsection{\texorpdfstring{The time-constant \(\tau\) explains most
-variation stomatal closure
-kinetics}{The time-constant \textbackslash tau explains most variation stomatal closure kinetics}}\label{the-time-constant-tau-explains-most-variation-stomatal-closure-kinetics}
+variation in stomatal closure
+kinetics}{The time-constant \textbackslash tau explains most variation in stomatal closure kinetics}}\label{the-time-constant-tau-explains-most-variation-in-stomatal-closure-kinetics}
 
 Stomatal conductance (\gsw) decreased rapidly in response to a step
 change in humidity. The model in Equation~\ref{eq-weibull} fit the data
@@ -1037,7 +1038,7 @@ increasing \(\lambda\) from its median to its maximum estimated value
 among accessions increased the \(t_{50}\) by only \(\SI{7.2}{\second}\).
 In contrast, increasing \(\tau\) from its median to maximum value
 increased \(t_{50}\) by \(\SI{88}{\second}\). Hence, we primarily focus
-on treatments and anatomical parameters affect \(\tau\).
+on treatments and anatomical parameters affecting \(\tau\).
 
 \subsubsection{Variation in guard cell length and
 aperture}\label{variation-in-guard-cell-length-and-aperture}
@@ -1059,7 +1060,7 @@ to \(-5.0\)\%{]} shorter than amphi leaves
 not because of plasticity, as we measured amphi and pseudohypo curves on
 the same leaf. Rather, this was a composition effect. Adaxial stomata
 are larger than abaxial stomata in these species (Figure~\ref{fig-gcl}),
-so the average \gcl{} in pseudohypo leaves was higher than in amphi
+so the average \gcl{} in pseudohypo leaves was lower than in amphi
 leaves because the former only included abaxial stomata.
 
 The phylogenetic heritability of \fgmax{} was low, accounting for 16.9\%
@@ -1125,10 +1126,10 @@ In both panels, black points are mean trait value per population within
 a particular treatment. Gray lines connect values within populations
 across treatments. (a) Most of the variation in \gcl{} is among
 populations, but developmental plasticity to growth light intensity
-tends to increase \gcl{} in sun (left facet) compared to shade (right
+tends to increase \gcl{} in sun (right facet) compared to shade (left
 facet) grown plants. There is no plasticity to leaf type (amphi
-vs.~pseudohypo), but the average \gcl{} is slightly high in pseudohypo
-leaves because abaxial stomata tended to be larger than adaxial stomata
+vs.~pseudohypo), but the average \gcl{} is slightly lower in pseudohypo
+leaves because adaxial stomata tended to be larger than abaxial stomata
 on the same leaf. (b) Measurement light intensity has the most direct
 effect on \fgmax{} because stomatal aperture increases under high light
 intensity. To a lesser extent, \fgmax{} varies among populations, is
@@ -1148,7 +1149,7 @@ phylogenetic heritability, accounting for 42.2\% {[}95\% CI: 18.6 to
 61.2\%{]} of the variance, whereas \(\lambda\) varied more within
 populations (Figure~\ref{fig-variance}, Table~\ref{tbl-variance}). Some
 light treatments also affected kinetic parameters. In sun plants,
-\(\tau\) was on average 5.56\% {[}95\% CI: 1.05 to 10.4\%{]} lower than
+\(\tau\) was on average 5.56\% {[}95\% CI: 1.05 to 10.4\%{]} higher than
 in shade plants after accounting for other explanatory variables
 (Figure~\ref{fig-accession-kinetics}, Table~\ref{tbl-fixed}). Within the
 same leaf, increasing the measurement light intensity prior to the
@@ -1159,8 +1160,9 @@ lag \(\lambda\) responded to growth, but not measurement light intensity
 after accounting for other explanatory variables
 (Figure~\ref{fig-accession-kinetics}, Table~\ref{tbl-fixed}). In sun
 plants, \(\lambda\) was on average 12.2\% {[}95\% CI: 10.1 to 14.2\%{]}
-greater than in shade plants. Higher measurement light decreased
-increased \(\lambda\) slightly by 1.17\% {[}95\% CI: -1.1 to 3.54\%{]}.
+greater than in shade plants. Higher measurement light did not affect
+\(\lambda\), as the estimate was not significantly different from zero
+(1.17\% {[}95\% CI: -1.1 to 3.54\%{]}).
 
 \begin{figure}
 
