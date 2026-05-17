@@ -441,7 +441,8 @@ pD <- ggplot() +
 
 # ---- Combine and save ----
 gp1 <- (pA | pB) / (pC | pD) +
-  plot_annotation(tag_levels = "A")
+  plot_annotation(tag_levels = "a") &
+  theme(plot.tag = element_text(face = "bold"))
 
 # ggsave("figures/conceptual.pdf", width = 180, height = 160, units = "mm")
 
