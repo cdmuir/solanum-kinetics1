@@ -65,7 +65,8 @@ Keywords: amphistomy, leaf gas exchange, \textit{Solanum}, stomatal kinetics, st
 \end{center}
 
 \linenumbers
-\doublespacing
+% \doublespacing
+\onehalfspacing
 ```
 
 ```{r load-objects, echo=FALSE, eval=TRUE, message=FALSE, warning=FALSE}
@@ -428,13 +429,13 @@ tau_percent_change = post1 |>
 
 ## Summary
 
-* In fluctuating environments, the kinetics of stomatal opening and closing influence the balance between carbon gain and water loss. The rate of stomatal aperture change varies widely among plants, but the underlying causes of this variation are not well understood. One hypothesis is that smaller guard cells respond faster to fluctuating environmental conditions because of their greater surface area for osmolyte flux relative to cell volume. A related hypothesis is that operational stomatal conductance (\gop) is often well below its theoretical maximum (\gmax) because at this stomatal aperture, guard cell volume is poised to change rapidly with small changes in turgor pressure. The support for both hypotheses is limited and mixed, in part because they have not been tested together. 
+* In fluctuating environments, the kinetics of stomatal opening and closing influence the balance between carbon gain and water loss. Smaller guard cells may respond faster to fluctuating environmental conditions because of their greater surface area for osmolyte flux relative to cell volume. A related hypothesis is that operational stomatal conductance (\gop) is often well below its theoretical maximum (\gmax) because at this stomatal aperture, guard cell volume is poised to change rapidly with small changes in turgor pressure. 
 
 * We analyzed `r n_curve` estimates of stomatal closure kinetics in response to an abrupt increase in vapor pressure deficit (VPD) among `r n_acc` diverse wild tomato populations in the genus *Solanum*. 
 
-* Both smaller guard cell size and a lower \gop{} to \gmax{} ratio (\fgmax) were associated with faster stomatal closure kinetics, but at different levels of biological organization. Guard cell size had high phylogenetic heritability and varied relatively little within populations, whereas \fgmax{} varied mostly among individuals and between light intensity treatments. 
+* Leaves with small guard cells and a lower \gop{} to \gmax{} ratio (\fgmax) closed faster, but explained variation in kinetic parameters at different levels of biological organization. Guard cell size had high phylogenetic heritability and varied relatively little within populations, whereas \fgmax{} varied mostly among individuals and between light intensity treatments. 
 
-* Together, these results indicate that smaller stomata can be speedier, but only if stomata are held at an aperture where they are responsive to changing turgor pressure. We predict that selection on stomatal speed will influence not only anatomical traits like guard cell size, but also physiological controls on \gop.
+* Smaller stomata can be speedier, but only if stomata are held at an aperture where they are responsive to changing turgor pressure. Selection on stomatal speed may influence not only anatomical traits like guard cell size, but also physiological controls on \gop.
 
 {{< pagebreak >}}
 
@@ -442,7 +443,6 @@ tau_percent_change = post1 |>
 
 In nature, change is the only constant. One way that vascular plants (tracheophytes) cope with change is by adjusting stomatal pore aperture to optimize the trade-off between carbon gain and water loss [@cowan_stomatal_1977; @raven_selection_2002; @hetherington_role_2003]. In the absence of physical limits and energetic tradeoffs, natural selection would favor plants that could instantaneously adjust stomatal conductance (\gsw) to perfectly track dynamic environmental conditions [@lawson_photosynthesis_2010]. In reality, stomatal responses take time, creating a lag between actual and optimal stomatal aperture. For example, many species use hydroactive feedback mechanisms to precisely control stomatal responses to changing vapor pressure deficit (VPD), the driving force for evaporation [@buckley_how_2019]. Hydroactive stomatal control requires sensing a change in VPD through as-yet-unknown mechanisms, signal transduction, and efflux of osmotic solutes to alter guard cell turgor more than the surrounding epidermal cells. Abscisic acid (ABA) dependent responses require several minutes to accumulate or synthesize hormone pools *de novo* [@xie_identification_2006; @bauer_stomatal_2013; @mcadam_stomatal_2016; @desai_abscisic_2025]; ABA-independent stomatal responses require changes in gene expression and protein synthesis that take time [@jalakas_molecular_2021]. Once anion channels are activated, the rate of change in stomatal aperture depends on the rate of change in guard cell turgor ($d P_\mathrm{g} / dt$) and the sensitivity of aperture to change in turgor ($d a_\mathrm{S} / d P_\mathrm{g}$). As we discuss below, these two factors ($d P_\mathrm{g} / dt$ and $d a_\mathrm{S} / d P_\mathrm{g}$) may be influenced by guard cell size and the ratio of operational to maximum stomatal conductance (\fgmax), respectively.
 
-<!-- Need to read Cowan (1972), Monteith 1995 -->
 Over a century ago @darwin_observations_1898 observed that after an initial increase, leaf transpiration decreases in response to decreasing humidity. He correctly attributed changes in transpiration to changes in stomatal aperture and subsequent studies have confirmed that stomatal aperture responds to humidity [@lange_responses_1971] and, more specifically, transpiration rate [@mott_stomatal_1991; @monteith_reinterpretation_1995], which is the product of VPD and \gsw. The VPD is related to relative humidity (RH) but also temperature. In angiosperms and some pteridophytes, a sudden increase in VPD, usually induced by lower RH at a constant temperature, causes a transient increase in \gsw, as Darwin observed [@cowan_oscillations_1972; @buckley_role_2011; @westbrook_stomatal_2021]. After a period of several minutes, stomata close until the leaf reaches a new steady-state \gsw. These phases of stomatal response to VPD are often referred to as the "wrong-way response" (WWR) and "right-way response" (RWR), respectively. The normative 'wrong' and 'right' appellations refer to the presumed adaptive significance. At steady state, \gsw{} is negatively correlated with VPD, all else being equal, which is interpreted as an adaptive response to the marginal carbon cost of water [@givnish_sizes_1976; @cowan_stomatal_1977; @buckley_optimal_2017]. Models built around this assumption generally predict steady state \gsw{} well, although the functional form and presumed fitness costs are areas of active research [@damour_overview_2010; @medlyn_reconciling_2011; @prentice_balancing_2014; @sperry_predicting_2017; @potkay_generalized_2025].
 
 Stomatal responses are as much about the journey (kinetics) as they are about the destination (steady state). If stomatal response kinetics are too slow relative to the temporal grain size of environmental variability, then it would be futile for \gsw{} to track environmental variation since the leaf will constantly lag the environment, perpetually fighting the last war. This may explain why \gsw{} can be insensitive to short sun/shade flecks [@knapp_stomatal_1990] and shaded leaves are likely primed to cope with the hydraulic demands of sudden increases in light, temperature, and VPD [@schymanski_stomatal_2013]. If stomatal responses can track environmental variation, then minimizing the lag time can greatly improve resource-use efficiency [@lawson_photosynthesis_2010]. For example, optogenetic control of stomatal aperture in response to fluctuating light increases water-use efficiency in *Arabidopsis* compared to wild-type responses [@papanatsiou_optogenetic_2019]. Therefore the rate of stomatal opening and closing is predicted to have a major effect on how natural selection optimizes stomatal control in variable environments [@buckley_kinetic_2023].
@@ -878,10 +878,6 @@ Future research is needed to determine how stomatal kinetic responses measured i
 
 <!-- THINGS I WOULD STILL LIKE TO ADD
 
-Our tau estimates are very fast - is this noteworthy?
-
-
-
 Need to mention subsaturation. If airspace is unsaturated, then gs is underestimated. This doesn't necessarily affect kinetic parameter estimates since all measurements were done at high VPD.
 
 (not sure where this goes) It might seem that natural selection should favor faster stomatal responses to get closer to the ideal of instantaneous optimization. Under this assumption, variation in stomatal kinetics would depend on how strong directional selection for faster responses is counterbalanced by costs of faster stomata. We discuss multiple, nonmutually exclusive costs below [WHERE?]. However, once models account for inevitable time lags, natural selection can favor slower responses when this prevents overreacting to unpredictable and shortlived changes in the environment. [Review some lit] It is therefore likely that the direction of selection on stomatal response rate varies depending on the predictability and duration of environmental fluctuations, as well as the energetic costs of stomatal movements.
@@ -944,7 +940,7 @@ Some OG citations "Changes in stomatal aperture are driven by changes in turgor 
  
 ## Acknowledgements
 
-Sam McKlin and Tom Buckley helped with protocol development. Justin Alter, Max Gatlin, Joana Kim, Jenna Matsuyama, Brandon Najarian, Dachuan Wang, and Kai Yasuda contributed to data collection. We used Copilot, ChatGPT, and Posit Assistant (Claude) to assist with coding and writing.
+Sam McKlin and Tom Buckley helped with protocol development. Justin Alter, Max Gatlin, Joana Kim, Jenna Matsuyama, Brandon Najarian, Dachuan Wang, and Kai Yasuda contributed to data collection. We used Copilot, ChatGPT, and Posit Assistant (Claude) to assist with coding and proofreading text.
 
 ## Competing interests
 
@@ -956,7 +952,7 @@ US National Science Foundation OIA-1929167 (C.D.M.)
 
 ## Author contributions
 
-Conceptualization: C.D.M.; Methodology: C.D.M., W.S.L.; Investigation: C.D.M., W.S.L.; Visualization: C.D.M.; Funding acquisition: C.D.M.; Writing – original draft: C.D.M.; Writing – review & editing: C.D.M., W.S.L.
+Conceptualization: C.D.M.; Data acquisition: C.D.M., W.S.L.; Data analysis and visualization: C.D.M.; Writing – original draft: C.D.M.; Writing – review & editing: C.D.M., W.S.L.
 
 ## Data availability
 
