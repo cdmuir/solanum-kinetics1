@@ -63,6 +63,7 @@ files_to_copy <- c(
   "objects/r2.rds",
   "objects/pars-summary.rds",
   "objects/fits.rds",
+  "objects/weibull/LA0107-C_amphi_150.rds",
   "figures/compare-gsw.pdf",
   
   # Git configuration files
