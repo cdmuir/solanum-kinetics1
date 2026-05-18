@@ -17,7 +17,6 @@ This repository has the following file folders:
 - `figures`: figures generated from _R_ code
 - `ms`: manuscript input (e.g. `ms.qmd` and `solanum-kinetics.bib`) and output (`ms.pdf`) files
 - `objects`: saved _R_ objects generated from _R_ code
-- `python`: Python scripts
 - `r`: _R_ scripts for all data processing and analysis
 - `tables`: tables generated from _R_ code
 
