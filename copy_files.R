@@ -58,11 +58,13 @@ files_to_copy <- c(
   "data/rh_curves.rds",
   "data/stomata.rds",
 
-  # Pre-computed brms outputs
-  # objects/weibull/ is not copied — stamps for 02-05 and 10 are created instead
+  # Pre-computed outputs
+  # objects/weibull/ is not copied — future-dated stamps are used to skip
+  # scripts 02-06 and 10 (which either fit brms models or read from weibull/)
   "objects/r2.rds",
   "objects/pars-summary.rds",
   "objects/fits.rds",
+  "figures/compare-gsw.pdf",
   
   # Git configuration files
   ".gitignore",
@@ -122,18 +124,29 @@ cat("\n✓ Successfully copied", success_count, "items to", dest_dir, "\n")
 stamps_dir <- file.path(dest_dir, ".stamps")
 dir.create(stamps_dir, showWarnings = FALSE)
 
-stamps_to_create <- c(
-  "00_load-data",
+# 00_load-data stamp: current timestamp (just needs to exist and be newer than
+# the copied R script)
+Sys.sleep(1)
+file.create(file.path(stamps_dir, "00_load-data"))
+cat("Created stamp: 00_load-data\n")
+
+# Brms and weibull-reading stamps: far-future timestamp so they are always
+# newer than any stamp make creates during the run, preventing re-execution
+# even after 01_join-data and 08_join-summary update their stamps.
+future_stamps <- c(
   "02_fit-weibull",
   "03_refit-weibull",
   "04_calc-r2",
   "05_summarize-pars",
+  "06_compare-gsw",
   "10_fit-all"
 )
 
-for (stamp in stamps_to_create) {
-  file.create(file.path(stamps_dir, stamp))
-  cat("Created stamp:", stamp, "\n")
+for (stamp in future_stamps) {
+  stamp_path <- file.path(stamps_dir, stamp)
+  file.create(stamp_path)
+  system(paste("touch -t 203001010000", shQuote(stamp_path)))
+  cat("Created future-dated stamp:", stamp, "\n")
 }
 
-cat("\n✓ Created", length(stamps_to_create), "stamps in", stamps_dir, "\n")
+cat("\n✓ Created", 1L + length(future_stamps), "stamps in", stamps_dir, "\n")
