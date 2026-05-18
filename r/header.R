@@ -36,11 +36,7 @@ suppressPackageStartupMessages({
   library(tidyr)
   library(tikzDevice)
   library(zip)
-})Suppress warnings in header.R for cleaner make output
-
-Add options(warn = -1) to header.R to suppress all warnings during
-script execution. Since scripts are debugged and warnings are benign,
-this provides cleaner output during `make fast` and `make all` runs.
+})
 
 theme_set(theme_cowplot())
 
