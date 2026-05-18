@@ -40,8 +40,7 @@ files_to_copy <- c(
   "r/21_plot-fgmax-kinetics.R",
   "r/22_plot-mediation.R",
   "r/23_plot-gcl.R",
-  "r/24_make-illustrations.R",
-  "r/25_plot-conceptual.R",
+  "r/24_plot-conceptual.R",
   "r/header.R",
   "r/functions.R",
   

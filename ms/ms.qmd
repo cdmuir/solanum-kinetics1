@@ -61,7 +61,7 @@ $^2$Department of Botany, University of Wisconsin, Madison; Wisconsin, USA\\
 ORCID: Christopher D. Muir — \href{https://orcid.org/0000-0003-2555-3878}{0000-0003-2555-3878}\\
 ORCID: Wei Shen Lim — \href{https://orcid.org/0009-0001-1406-7957}{0009-0001-1406-7957}\\
 \medskip
-Keywords: amphistomy, leaf gas exchange, \textit{Solanum}, stomatal kinetics, stomatal size
+Keywords: guard cell size, leaf gas exchange, phylogenetic heritability, \textit{Solanum}, stomatal kinetics, vapor pressure deficit
 \end{center}
 
 \linenumbers

@@ -143,13 +143,8 @@ $(STAMPS)/23_plot-gcl: r/23_plot-gcl.R r/header.R \
 	Rscript r/23_plot-gcl.R
 	touch $@
 
-$(STAMPS)/24_make-illustrations: r/24_make-illustrations.R r/header.R | $(STAMPS)
-	Rscript r/24_make-illustrations.R
-	touch $@
-
-$(STAMPS)/25_plot-conceptual: r/25_plot-conceptual.R r/header.R \
-  $(STAMPS)/24_make-illustrations | $(STAMPS)
-	Rscript r/25_plot-conceptual.R
+$(STAMPS)/24_plot-conceptual: r/24_plot-conceptual.R r/header.R | $(STAMPS)
+	Rscript r/24_plot-conceptual.R
 	touch $@
 
 # --------------------------------------------------------------------------
@@ -179,8 +174,7 @@ RENDER_DEPS := \
   $(STAMPS)/21_plot-fgmax-kinetics \
   $(STAMPS)/22_plot-mediation \
   $(STAMPS)/23_plot-gcl \
-  $(STAMPS)/24_make-illustrations \
-  $(STAMPS)/25_plot-conceptual
+  $(STAMPS)/24_plot-conceptual
 
 # --------------------------------------------------------------------------
 # Top-level targets
@@ -214,8 +208,7 @@ fast: \
   $(STAMPS)/21_plot-fgmax-kinetics \
   $(STAMPS)/22_plot-mediation \
   $(STAMPS)/23_plot-gcl \
-  $(STAMPS)/24_make-illustrations \
-  $(STAMPS)/25_plot-conceptual
+  $(STAMPS)/24_plot-conceptual
 	$(RENDER)
 
 # Run every script including brms models, then render
