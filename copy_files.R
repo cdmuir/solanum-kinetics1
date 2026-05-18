@@ -59,13 +59,12 @@ files_to_copy <- c(
   "data/stomata.rds",
 
   # Pre-computed outputs
-  # objects/weibull/ is not copied — future-dated stamps are used to skip
   # scripts 02-06 and 10 (which either fit brms models or read from weibull/)
   "objects/r2.rds",
   "objects/pars-summary.rds",
   "objects/fits.rds",
   "objects/n_removed.rds",
-  "objects/weibull/LA0107-C_amphi_150.rds",
+  "objects/weibull/",
   "figures/compare-gsw.pdf",
   
   # Git configuration files
