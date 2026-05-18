@@ -107,6 +107,9 @@ copy_file_or_dir <- function(src, dest_base) {
   return(TRUE)
 }
 
+# Create empty subdirectories needed by scripts
+dir.create(file.path(dest_dir, "tables"), showWarnings = FALSE)
+
 # Copy all files
 cat("Copying files to", dest_dir, "...\n\n")
 
