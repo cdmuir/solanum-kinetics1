@@ -22,128 +22,153 @@ $(STAMPS):
 # --------------------------------------------------------------------------
 
 $(STAMPS)/00_load-data: r/00_load-data.R r/header.R | $(STAMPS)
+	@echo "==> r/00_load-data.R"
 	Rscript r/00_load-data.R
 	touch $@
 
 $(STAMPS)/01_join-data: r/01_join-data.R r/header.R r/functions.R \
   $(STAMPS)/00_load-data | $(STAMPS)
+	@echo "==> r/01_join-data.R"
 	Rscript r/01_join-data.R
 	touch $@
 
 # ---- brms: individual Weibull fits (slow) ----
 $(STAMPS)/02_fit-weibull: r/02_fit-weibull.R r/header.R r/functions.R \
   $(STAMPS)/01_join-data | $(STAMPS)
+	@echo "==> r/02_fit-weibull.R (slow)"
 	Rscript r/02_fit-weibull.R
 	touch $@
 
 # ---- brms: refit non-converged curves (slow) ----
 $(STAMPS)/03_refit-weibull: r/03_refit-weibull.R r/header.R r/functions.R \
   $(STAMPS)/02_fit-weibull | $(STAMPS)
+	@echo "==> r/03_refit-weibull.R (slow)"
 	Rscript r/03_refit-weibull.R
 	touch $@
 
 $(STAMPS)/04_calc-r2: r/04_calc-r2.R r/header.R \
   $(STAMPS)/03_refit-weibull | $(STAMPS)
+	@echo "==> r/04_calc-r2.R"
 	Rscript r/04_calc-r2.R
 	touch $@
 
 $(STAMPS)/05_summarize-pars: r/05_summarize-pars.R r/header.R \
   $(STAMPS)/03_refit-weibull | $(STAMPS)
+	@echo "==> r/05_summarize-pars.R"
 	Rscript r/05_summarize-pars.R
 	touch $@
 
 $(STAMPS)/06_compare-gsw: r/06_compare-gsw.R r/header.R \
   $(STAMPS)/03_refit-weibull | $(STAMPS)
+	@echo "==> r/06_compare-gsw.R"
 	Rscript r/06_compare-gsw.R
 	touch $@
 
 $(STAMPS)/07_plot-curves: r/07_plot-curves.R r/header.R \
   $(STAMPS)/04_calc-r2 | $(STAMPS)
+	@echo "==> r/07_plot-curves.R"
 	Rscript r/07_plot-curves.R
 	touch $@
 
 $(STAMPS)/08_join-summary: r/08_join-summary.R r/header.R \
   $(STAMPS)/05_summarize-pars $(STAMPS)/00_load-data | $(STAMPS)
+	@echo "==> r/08_join-summary.R"
 	Rscript r/08_join-summary.R
 	touch $@
 
 $(STAMPS)/09_make-tbl-vpd: r/09_make-tbl-vpd.R r/header.R \
   $(STAMPS)/00_load-data | $(STAMPS)
+	@echo "==> r/09_make-tbl-vpd.R"
 	Rscript r/09_make-tbl-vpd.R
 	touch $@
 
 # ---- brms: multiresponse phylogenetic model (slow) ----
 $(STAMPS)/10_fit-all: r/10_fit-all.R r/header.R r/functions.R \
   $(STAMPS)/08_join-summary | $(STAMPS)
+	@echo "==> r/10_fit-all.R (slow)"
 	Rscript r/10_fit-all.R
 	touch $@
 
 $(STAMPS)/11_compare-models: r/11_compare-models.R r/header.R \
   $(STAMPS)/10_fit-all | $(STAMPS)
+	@echo "==> r/11_compare-models.R"
 	Rscript r/11_compare-models.R
 	touch $@
 
 $(STAMPS)/12_get-partial-cor: r/12_get-partial-cor.R r/header.R \
   $(STAMPS)/11_compare-models | $(STAMPS)
+	@echo "==> r/12_get-partial-cor.R"
 	Rscript r/12_get-partial-cor.R
 	touch $@
 
 $(STAMPS)/13_make-tbl-estimates-curve: r/13_make-tbl-estimates-curve.R r/header.R \
   $(STAMPS)/11_compare-models | $(STAMPS)
+	@echo "==> r/13_make-tbl-estimates-curve.R"
 	Rscript r/13_make-tbl-estimates-curve.R
 	touch $@
 
 $(STAMPS)/14_make-tbl-estimates-accession: r/14_make-tbl-estimates-accession.R r/header.R \
   $(STAMPS)/11_compare-models | $(STAMPS)
+	@echo "==> r/14_make-tbl-estimates-accession.R"
 	Rscript r/14_make-tbl-estimates-accession.R
 	touch $@
 
 $(STAMPS)/15_plot-accession-anatomy: r/15_plot-accession-anatomy.R r/header.R \
   $(STAMPS)/11_compare-models | $(STAMPS)
+	@echo "==> r/15_plot-accession-anatomy.R"
 	Rscript r/15_plot-accession-anatomy.R
 	touch $@
 
 $(STAMPS)/16_make-tbl-fit-summary: r/16_make-tbl-fit-summary.R r/header.R \
   $(STAMPS)/11_compare-models | $(STAMPS)
+	@echo "==> r/16_make-tbl-fit-summary.R"
 	Rscript r/16_make-tbl-fit-summary.R
 	touch $@
 
 $(STAMPS)/17_plot-accession-kinetics: r/17_plot-accession-kinetics.R r/header.R \
   $(STAMPS)/11_compare-models | $(STAMPS)
+	@echo "==> r/17_plot-accession-kinetics.R"
 	Rscript r/17_plot-accession-kinetics.R
 	touch $@
 
 $(STAMPS)/18_plot-variance: r/18_plot-variance.R r/header.R \
   $(STAMPS)/11_compare-models | $(STAMPS)
+	@echo "==> r/18_plot-variance.R"
 	Rscript r/18_plot-variance.R
 	touch $@
 
 $(STAMPS)/19_plot-gcl-tau: r/19_plot-gcl-tau.R r/header.R \
   $(STAMPS)/11_compare-models | $(STAMPS)
+	@echo "==> r/19_plot-gcl-tau.R"
 	Rscript r/19_plot-gcl-tau.R
 	touch $@
 
 $(STAMPS)/20_plot-colinear: r/20_plot-colinear.R r/header.R \
   $(STAMPS)/10_fit-all | $(STAMPS)
+	@echo "==> r/20_plot-colinear.R"
 	Rscript r/20_plot-colinear.R
 	touch $@
 
 $(STAMPS)/21_plot-fgmax-kinetics: r/21_plot-fgmax-kinetics.R r/header.R \
   $(STAMPS)/11_compare-models | $(STAMPS)
+	@echo "==> r/21_plot-fgmax-kinetics.R"
 	Rscript r/21_plot-fgmax-kinetics.R
 	touch $@
 
 $(STAMPS)/22_plot-mediation: r/22_plot-mediation.R r/header.R \
   $(STAMPS)/11_compare-models | $(STAMPS)
+	@echo "==> r/22_plot-mediation.R"
 	Rscript r/22_plot-mediation.R
 	touch $@
 
 $(STAMPS)/23_plot-gcl: r/23_plot-gcl.R r/header.R \
   $(STAMPS)/00_load-data | $(STAMPS)
+	@echo "==> r/23_plot-gcl.R"
 	Rscript r/23_plot-gcl.R
 	touch $@
 
 $(STAMPS)/24_plot-conceptual: r/24_plot-conceptual.R r/header.R | $(STAMPS)
+	@echo "==> r/24_plot-conceptual.R"
 	Rscript r/24_plot-conceptual.R
 	touch $@
 
