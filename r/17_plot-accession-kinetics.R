@@ -17,24 +17,32 @@ dat = read_rds("objects/best_model.rds")$data |>
     values_to = "value"
   ) |>
   mutate(par1 = case_when(
-    parameter == "tau" ~ "tau~(s)",
-    parameter == "lambda" ~ "lambda~(unitless)"
+    parameter == "tau" ~ "$\\tau$ (s)",
+    parameter == "lambda" ~ "$\\lambda$ (unitless)"
   ))
 
-
-ggplot(dat, aes(lightintensity, value)) +
+gp <- ggplot(dat, aes(lightintensity, value)) +
   facet_grid(par1 ~ lighttreatment, scales = "free_y",
-             labeller = "label_parsed") +
-  geom_line(mapping = aes(group = accession), color = "grey") + 
+             labeller = label_value) +
+  geom_line(mapping = aes(group = accession), color = "grey") +
   geom_point() +
   labs(
     x = "measurement light intensity",
     y = "kinetic trait value (log-scale)") +
   facetted_pos_scales(
     y = list(
-      par1 == "tau~(s)" ~ scale_y_log10(breaks = c(100, 200, 400), limits = c(100, 400)),
-      par1 == "lambda~(unitless)" ~ scale_y_log10(breaks = seq(1, 1.75, by = 0.25), limits = c(0.95, 1.75))
+      par1 == "$\\tau$ (s)" ~ scale_y_log10(breaks = c(100, 200, 400), limits = c(100, 400)),
+      par1 == "$\\lambda$ (unitless)" ~ scale_y_log10(breaks = seq(1, 1.75, by = 0.25), limits = c(0.95, 1.75))
     )
   )
 
-ggsave("figures/accession-kinetics.pdf", width = 6, height = 6)
+tikz(
+  "figures/accession-kinetics.tex",
+  standAlone = TRUE,
+  width = 6,
+  height = 6
+)
+print(gp)
+dev.off()
+
+system("cd figures; pdflatex accession-kinetics.tex; rm accession-kinetics.aux accession-kinetics.log")

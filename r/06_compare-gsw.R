@@ -42,6 +42,9 @@ ggplot(df1, aes(mean, gsw_max)) +
     })
   )))
 
-ggsave("figures/compare-gsw.pdf",
-       width = 4,
-       height = 4)
+ggsave(
+  "figures/compare-gsw.pdf",
+  width = 4,
+  height = 4,
+  create.dir = TRUE
+)
