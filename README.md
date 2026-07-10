@@ -2,7 +2,7 @@
 
 This repository contains source code associated with the manuscript:
 
-Muir CD, WS Lim. Guard cell size and pore aperture influence stomatal closure kinetics. *In preparation*.
+Muir CD, WS Lim. Guard cell size and pore aperture influence stomatal closure kinetics. [*bioRxiv*](https://doi.org/10.64898/2026.05.17.725794).
 
 ## Author contributions
 
@@ -17,7 +17,6 @@ This repository has the following file folders:
 - `figures`: figures generated from _R_ code
 - `ms`: manuscript input (e.g. `ms.qmd` and `solanum-kinetics.bib`) and output (`ms.pdf`) files
 - `objects`: saved _R_ objects generated from _R_ code
-- `python`: Python scripts
 - `r`: _R_ scripts for all data processing and analysis
 - `tables`: tables generated from _R_ code
 
@@ -59,7 +58,7 @@ All steps are coordinated by `make`. Three targets are available:
 | Target | What it does |
 |--------|-------------|
 | `make pdf` | Renders `ms/ms.pdf` from existing computed outputs — no R scripts are run. Use this when outputs are already up to date. |
-| `make fast` | Reruns all R scripts **except** the slow brms model fits, then renders the manuscript. Requires brms outputs to already exist from a prior `make all`. |
+| `make fast` | Reruns all R scripts **except** the slow brms model fits, then renders the manuscript. Requires `objects/weibull/` and `objects/fits.rds` to already exist from a prior `make all`. |
 | `make all` | Runs **every** R script including the brms model fits, then renders. This will take a very long time. |
 
 > **Note:** Three scripts fit Bayesian models with [**brms**](https://paul-buerkner.github.io/brms/) and will take many hours to run: `r/02_fit-weibull.R`, `r/03_refit-weibull.R`, and `r/10_fit-all.R`. These are skipped by `make fast`.

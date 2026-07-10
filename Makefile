@@ -227,6 +227,19 @@ all: \
 	$(RENDER)
 
 # --------------------------------------------------------------------------
+# Diff: generate a tracked-changes PDF comparing submitted vs revised ms.
+# Requires latexdiff (bundled with most TeX distributions).
+# Run `make pdf` first so ms/ms.tex is up to date, then run `make diff`.
+# --------------------------------------------------------------------------
+
+.PHONY: diff
+diff: ms/ms-v1-submitted.tex ms/ms.tex
+	latexdiff --encoding=utf8 ms/ms-v1-submitted.tex ms/ms.tex > ms/ms-diff.tex
+	cd ms && latexmk -pdf -interaction=nonstopmode ms-diff.tex
+	cd ms && latexmk -c ms-diff.tex
+
+# --------------------------------------------------------------------------
 clean:
 	rm -rf $(STAMPS)
 	rm -f ms/ms.pdf
+	rm -f ms/ms-diff.tex ms/ms-diff.pdf

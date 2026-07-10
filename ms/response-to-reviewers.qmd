@@ -1,0 +1,418 @@
+---
+title: "Response to Reviewers"
+subtitle: |
+  NPH-MS-2026-57029\
+  *Guard cell size and pore aperture influence stomatal closure kinetics*\
+  Muir & Lim
+date: today
+format:
+  pdf:
+    toc: false
+    number-sections: false
+    indent: false
+    fontsize: 11pt
+    geometry: margin=1in
+header-includes: |
+  \usepackage{xcolor}
+  \usepackage{mdframed}
+  \usepackage{setspace}
+  \definecolor{responseblue}{RGB}{70, 130, 180}
+  \definecolor{commentgray}{RGB}{90, 90, 90}
+  \newenvironment{response}
+    {\color{responseblue}\setlength{\parskip}{0.5em}}
+    {}
+  \newenvironment{revcomment}
+    {\color{commentgray}\itshape\begin{mdframed}[linecolor=commentgray,linewidth=0.5pt,innerleftmargin=8pt,innerrightmargin=8pt,innertopmargin=6pt,innerbottommargin=6pt]}
+    {\end{mdframed}}
+  \newcommand{\fgmax}{$f_\mathrm{gmax}$}
+  \newcommand{\gcl}{$l_\mathrm{gc}$}
+  \newcommand{\gmax}{$g_\mathrm{max}$}
+  \newcommand{\gop}{$g_\mathrm{op}$}
+  \newcommand{\gsw}{$g_\mathrm{sw}$}
+---
+
+We thank the editor and both reviewers for their thoughtful and constructive
+comments. We address each point below. Reviewer comments appear in gray boxes;
+our responses appear in blue.
+
+---
+
+# Reviewer 1
+
+## Comment R1.1 — Realized VPD as a covariate
+
+::: revcomment
+It seems like the realized VPD stimulus reported varies systematically among
+treatments and this might needs to be treated as part of the analysis rather
+than as a supplementary caveat, as in Lines 238–249 are unusually candid and
+useful, as the authors state that scrubbing incoming water vapor "did not
+standardize chamber air humidity because leaf transpiration introduced water
+vapor," and that RH was systematically higher at high measurement light, in
+sun grown plants and in amphistomatous measurements because \gsw{} was greater
+in those conditions. Table S3 then shows that the mean VPD during measurements
+ranged from 2.50 kPa in sun/high/amphi curves to 2.92 kPa in
+shade/low/pseudohypo curves. I think this matters because the actual forcing
+variable in the experiment is not simply the experimental treatment label, but
+also is the VPD trajectory experienced by the leaf. If leaves with higher
+conductance both have higher \fgmax{} and also humidify the chamber more
+strongly, then \fgmax{} is partly entangled with the realized stimulus. I would
+love to see the authors include curve level VPD covariates in the model such as
+median VPD during the fitted interval, final VPD if available, VPD step
+magnitude, and perhaps the rate at which VPD changed. At minimum, should show
+whether the \fgmax{} → $\tau$ effect remains after accounting for actual VPD
+exposure, and ideally they should run a matched VPD sensitivity analysis
+excluding curves outside a narrow VPD range. I would be careful describing the
+VPD treatment as though the desiccant step created a common perturbation across
+treatments unless this is demonstrated. This distinction is important because
+VPD is a primary driver of stomatal conductance and plant water relations, and
+the physiologically relevant stimulus is the leaf to air evaporative gradient
+not simply the inlet humidity setting.
+:::
+
+::: response
+**Response:**
+
+[YOUR RESPONSE HERE]
+:::
+
+---
+
+## Comment R1.2 — Mislabeled VPD summary statistic
+
+::: revcomment
+Related to the previous point, the manuscript appears to call the Table S3
+values "final RH" and "final VPD," but I found the code and caption indicate
+something different. At lines 245 to 247, the text says that "the final RH"
+and "VPD" values in Table S3 elicited rapid stomatal response. However, the
+Table S3 caption says the values are calculated as the median RH and VPD
+across time points within each curve and then averaged among curves. The code
+confirms this: `r/09_make-tbl-vpd.R`, lines 7–14, calculates median RH and
+VPD per curve, and lines 32–40 average those medians across treatment
+combinations. That is not the same as final RH/VPD nor necessarily the VPD
+step magnitude. It would be great if author can correct the wording and, more
+importantly, to report the full VPD trajectory more transparently, with
+pre-step VPD, VPD at the start of logging, median VPD during the fitted RWR,
+final VPD, and ideally the change in VPD over time, because the paper
+interprets variation in $\tau$ as intrinsic closure kinetics, while the
+stimulus itself may vary across the same treatments used to explain $\tau$.
+:::
+
+::: response
+**Response:**
+
+[YOUR RESPONSE HERE]
+:::
+
+---
+
+## Comment R1.3 — \fgmax{} is not an independent aperture measurement
+
+::: revcomment
+I like \fgmax{} as a quite intriguing predictor but it is not an independent
+direct measure of stomatal aperture. The manuscript motivates \fgmax{} as
+proportional to aperture relative to maximum aperture at lines 115–133,
+defines it as $g_i / g_\mathrm{max}$ at lines 273–279 and then interprets
+higher \fgmax{} as stomata being more open at lines 397–404 and as a
+mechanistic driver of slower closure at lines 506–513. I think the hypothesis
+is interesting, but the current evidence is not enough to treat \fgmax{} as a
+direct aperture measurement. The numerator, $g_i$, is estimated from the same
+nonlinear curve that also gives $\tau$ and $\lambda$, so parameter covariance
+in the Weibull fit could generate an association between $g_i$ and $\tau$ even
+if the underlying biological relationship is weaker. The denominator
+$g_\mathrm{max}$ is also model-derived from stomatal density, guard cell
+length, assumed pore geometry, and conductance calculations. I think one paper
+by the Sack and Buckley group explicitly describes anatomical $g_\mathrm{max}$
+as a theoretical estimate of maximum stomatal diffusion capacity that cannot
+usually be reached in practice, which is useful but not identical to observed
+aperture. I would ask the authors to validate or reframe the variable.
+Specifically, they should report posterior correlations between fitted $g_i$
+and $\tau$ within individual curves, run a null simulation showing whether the
+curve fitting procedure alone can induce a $g_i$–$\tau$ association, and
+repeat the main analysis using alternative predictors such as absolute $g_i$,
+observed maximum \gsw{}, \gmax{}, and $g_i$ and \gmax{} as separate
+predictors. If no direct pore aperture measurements exist, I would also
+suggest using more cautious language such as "conductance fraction of
+anatomical maximum" rather than "aperture."
+:::
+
+::: response
+**Response:**
+
+[YOUR RESPONSE HERE]
+:::
+
+---
+
+## Comment R1.4 — Timing of $g_i$ is ambiguous
+
+::: revcomment
+I also found the timing of $g_i$ is ambiguous because the authors start
+logging after the wrong way response. Figure 1A and lines 41–45 correctly
+distinguish the WWR and RWR, but lines 248–249 state that data logging began
+after the transient WWR. Then lines 273–278 say that fitted $g_i$ is a good
+proxy for conductance "at the time of the step change in humidity." These
+statements do not seem consistent. If logging begins after the WWR, then $g_i$
+is the initial conductance of the analyzed RWR segment and therefore not
+necessarily conductance at the humidity step. Figure 1A actually illustrates
+this distinction nicely with the VPD step occurring before the orange "log
+data" interval. It would be great if author define $g_i$ throughout as the
+fitted initial conductance at the start of the analyzed RWR, unless pre-step
+conductance was recorded and used. If pre-step steady state \gsw{} exists, the
+authors could also consider computing a pre-step \fgmax{} and test whether it
+predicts $\tau$, as that would be much more convincing mechanistically than
+using a parameter estimated from the RWR itself.
+:::
+
+::: response
+**Response:**
+
+[YOUR RESPONSE HERE]
+:::
+
+---
+
+## Comment R1.5 — High vs.\ low light confounded with measurement order
+
+::: revcomment
+Another confusing point is that the current high versus low measurement light
+comparison is confounded with measurement order and prior stress history.
+Lines 224–226 say that high light curves were always measured first, and lines
+250–251 say the leaf was then acclimated to low light and high RH before
+inducing the low light closure curve. This means the largest treatment effect
+in the paper is also a fixed sequence effect with high light always first, and
+low light always following a prior high light, low humidity closure event on
+the same leaf. That matters because high measurement light strongly increases
+both \fgmax{} and $\tau$ and the mediation analysis then interprets part of
+the light effect as operating through \fgmax{}. I do not see how the current
+design separates measurement light from order, recovery state, prior VPD
+exposure, elapsed time, or time of day. It might be better to call this a
+"measurement light/order condition" unless they can show that sequence effects
+are negligible.
+:::
+
+::: response
+**Response:**
+
+[YOUR RESPONSE HERE]
+:::
+
+---
+
+## Comment R1.6 — "Causal mediation" language too strong
+
+::: revcomment
+Lines 339–347 describe "causal mediation analysis," and lines 445–455 report
+mediated effects and Figure 7 presents path diagrams implying treatment effects
+flowing through \fgmax{} to $\tau$. I understand why the authors did this but
+the causal assumptions are too strong for the current design. \fgmax{} is not
+randomized, it is estimated from the same curve as $\tau$, it is affected by
+actual VPD trajectory and measurement order and it is likely related to
+unmeasured hydraulic state. In the standard mediation literature, causal
+mediation requires strong assumptions about mediator–outcome confounding usually
+framed as sequential ignorability and sensitivity analysis is a central part of
+the approach. It could be great if authors replace "causal mediation analysis"
+with "statistical decomposition" or "path analysis" unless they add a DAG and
+sensitivity analysis. The text could still say that treatment-associated changes
+in $\tau$ are statistically consistent with an indirect path through \fgmax{},
+but I would avoid saying that \fgmax{} "mediates plasticity" as a causal
+conclusion.
+:::
+
+::: response
+**Response:**
+
+[YOUR RESPONSE HERE]
+:::
+
+---
+
+## Comment R1.7 — Model selection is more subjective than admitted
+
+::: revcomment
+I also found the model selection is more subjective than the present manuscript
+currently admits. Lines 332–337 say that models were compared using LOOIC and
+models within two $\Delta$LOOIC standard errors were considered plausible.
+Table 2 shows six plausible models and the selected model is not the minimum
+LOOIC model. Lines 430–435 then acknowledge that judgment calls were used,
+which I appreciate. However, the code is more explicit than the manuscript:
+`r/11_compare-models.R`, lines 74–84, says the top four model order changed
+across reruns and that model 6 was chosen because it was "clearest to
+interpret." That may be defensible but it should be stated plainly in the
+manuscript. It would be great if authors can present focal estimates across all
+plausible models not only the selected model, especially for \gcl{} → $\tau$,
+\fgmax{} → $\tau$, \gcl{} → $\lambda$, and \fgmax{} → $\lambda$. They could
+also consider reporting Pareto $\hat{k}$ diagnostics and Monte Carlo
+uncertainty for PSIS-LOO, because PSIS-LOO model comparison relies on those
+diagnostics. If you read the `loo` documentation where it emphasizes
+Pareto-$k$, PSIS effective sample size and MCSE as reliability checks.
+:::
+
+::: response
+**Response:**
+
+[YOUR RESPONSE HERE]
+:::
+
+---
+
+## Comment R1.8 — Single-chain Bayesian diagnostics for curve-level fits
+
+::: revcomment
+The curve-level Bayesian diagnostics are not yet convincing enough for a
+dataset built from 2,124 fitted nonlinear curves. Lines 285–289 state that
+each curve was fit using 1,000 post-warmup draws from a single chain, with
+Rhat $< 1.05$, bulk ESS $> 400$ and fewer than 10 divergent transitions. The
+code confirms the single-chain curve fitting in `r/functions.R`, lines 8–18.
+I am not fully convinced with this as the only diagnostic for thousands of
+nonlinear curve fits especially because $g_i$, $g_f$, $\tau$, and $\lambda$
+are likely correlated. Stan's diagnostics treat divergent transitions as a
+warning that HMC may not be fully exploring the posterior and the usual
+workflow relies on multiple chains to assess convergence. Perhaps no need for
+the authors to refit all 2,124 curves with four chains if that is
+computationally prohibitive, but it would be great for a stratified four-chain
+validation subset including difficult curves, high-$\tau$ curves, high-\fgmax{}
+curves, and low-$R^2$ curves. To show or supplement that the single-chain
+pipeline gives essentially the same $\tau$, $\lambda$, and $g_i$ estimates as
+a more standard multi-chain fit.
+:::
+
+::: response
+**Response:**
+
+[YOUR RESPONSE HERE]
+:::
+
+---
+
+## Comment R1.9 — Undocumented guard cell length outlier exclusions
+
+::: revcomment
+I found in `r/01_join-data.R`, three guard cell length outlier individuals are
+removed with a comment referring to `r/scratch - gcl outliers.R`. I do not see
+this exclusion described in the manuscript and the referenced scratch file is
+not included in the package. Because guard cell length is one of the two
+central anatomical predictors, it would be great to see this reported. The
+same script also uses a first-available fallback for stomatal anatomical data
+when the LICOR and stomatal leaflet do not uniquely match
+(`r/01_join-data.R`). That may be reasonable but it could be better to
+document because it might add measurement error to \gmax{}, guard cell length
+and therefore \fgmax{}.
+:::
+
+::: response
+**Response:**
+
+[YOUR RESPONSE HERE]
+:::
+
+---
+
+## Comment R1.10 — Figure 1D color labeling appears reversed
+
+::: revcomment
+In Figure 1D, the orange point is the low \fgmax{} point on the steep part of
+the curve and the blue point is the high \fgmax{} point on the shallow part of
+the curve? The figure labels themselves appear correct. However, the Figure 1
+caption says the larger change occurs at low \fgmax{} "blue; steep tangent
+slope" and high \fgmax{} is "orange; shallow tangent slope." I found that is
+reversed relative to the plotted colors?
+:::
+
+::: response
+**Response:**
+
+[YOUR RESPONSE HERE]
+:::
+
+---
+
+# Reviewer 2
+
+## Comment R2.1 — Abstract sentence unclear
+
+::: revcomment
+I am not sure this sentence reads clearly: "Leaves with small guard cells and
+a lower \gop{} to \gmax{} ratio (\fgmax{}) closed faster, but explained
+variation in kinetic parameters at different levels of biological
+organization." Perhaps it is missing 'both'? "Leaves with small guard cells
+and a lower \gop{} to \gmax{} ratio (\fgmax{}) closed faster, but both
+explained variation in kinetic parameters at different levels of biological
+organization."
+:::
+
+::: response
+**Response:**
+
+[YOUR RESPONSE HERE]
+:::
+
+---
+
+## Comment R2.2 — Mechanistic follow-up on turgor-responsive window
+
+::: revcomment
+This is really interesting and links back to early work on turgor maintenance
+and speed: "Smaller stomata can be speedier, but only if stomata are held at
+an aperture where they are responsive to changing turgor pressure." How could
+the authors mechanistically follow this up? Using anatomical measurements of
+$g_\mathrm{smax}$ as a benchmark for comparing to operational \gsw{} has some
+drawbacks — e.g.\ over-estimation. I think some of this is covered in the
+discussion.
+:::
+
+::: response
+**Response:**
+
+[YOUR RESPONSE HERE]
+:::
+
+---
+
+## Comment R2.3 — Wrong-way response magnitude and \fgmax{}
+
+::: revcomment
+The authors have chosen species with 'wrong way response' to VPD — do they
+take into account or explore the magnitude of the initial rise in \gsw{} and
+how this might relate to lag time or the \fgmax{} relationship (the magnitude
+of the 'hump' in Figure 1a)?
+:::
+
+::: response
+**Response:**
+
+[YOUR RESPONSE HERE]
+:::
+
+---
+
+## Comment R2.4 — Compensatory aperture in adaxial-blocked leaves (L403)
+
+::: revcomment
+L403 — stomatal aperture was more open in leaves where gas exchange through
+adaxial stomata was blocked — is this interesting, do the authors think it is
+compensatory?
+:::
+
+::: response
+**Response:**
+
+[YOUR RESPONSE HERE]
+:::
+
+---
+
+## Comment R2.5 — Figure 1B legend format
+
+::: revcomment
+Fig 1b — Personal preference; although I appreciate the legend is correct, it
+might be clearer to make the large and small time constants a rectangle of the
+appropriate colour or dot of the colour? When I look at the figure I focus in
+on the format of the line rather than the colour which distracts from
+understanding the figure quickly.
+:::
+
+::: response
+**Response:**
+
+[YOUR RESPONSE HERE]
+:::
