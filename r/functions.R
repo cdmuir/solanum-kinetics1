@@ -463,6 +463,70 @@ weibull_gsw <- function(t, gi, gf, tau, lambda) {
 wwr_fun <- function(t) {
   g_pre + (g_peak - g_pre) * (1 - exp(-t / (t_wwr / 3)))
 }
+
 rwr_fun <- function(t) {
   weibull_gsw(t - t_wwr, gi = g_peak, gf = gf0, tau = tau_A, lambda = lambda_A)
+}
+
+# Fit a saturating exponential to a single curve's trajectory of `yvar`,
+# using data-driven starting values so nlsLM converges regardless of
+# whether the trajectory rises (e.g. VPD, typically) or falls (e.g. H2O_s,
+# typically) over the course of the curve.
+fit_saturating = function(df, yvar) {
+  y = df[[yvar]]
+  t = df$t_sec
+  
+  R0_0 = y[which.min(t)]
+  Rend = y[which.max(t)]
+  rng = diff(range(y))
+  if (rng == 0) rng = 1e-6 # avoid a degenerate zero-range start
+  
+  increasing = Rend >= R0_0
+  Asym0 = if (increasing) max(y) + 0.01 * rng else min(y) - 0.01 * rng
+  
+  half_target = R0_0 + 0.63 * (Asym0 - R0_0)
+  t_half = max(t[which.min(abs(y - half_target))], 1)
+  lrc0 = log(1 / t_half)
+  
+  dat = tibble(y = y, t_sec = t)
+  m = tryCatch(
+    nlsLM(
+      y ~ Asym + (R0 - Asym) * exp(-exp(lrc) * t_sec),
+      data = dat,
+      start = list(Asym = Asym0, R0 = R0_0, lrc = lrc0),
+      control = nls.lm.control(maxiter = 200)
+    ),
+    error = function(e) NULL
+  )
+  
+  if (is.null(m)) {
+    return(tibble(
+      converged = FALSE,
+      r2_sat = NA_real_,
+      sat_asym = NA_real_,
+      sat_r0 = NA_real_,
+      sat_rate = NA_real_,
+      sat_rate_se = NA_real_
+    ))
+  }
+  
+  r2 = 1 - sum(residuals(m) ^ 2) / sum((y - mean(y)) ^ 2)
+  cf = summary(m)$coefficients
+  lrc_est = cf["lrc", "Estimate"]
+  lrc_se = cf["lrc", "Std. Error"]
+  rate_est = exp(lrc_est)
+  # Delta method: rate = exp(lrc), so d(rate)/d(lrc) = rate.
+  rate_se = rate_est * lrc_se
+  
+  tibble(
+    converged = TRUE,
+    r2_sat = r2,
+    sat_asym = coef(m)[["Asym"]],
+    sat_r0 = coef(m)[["R0"]],
+    # rate constant (1/s): larger = faster approach to asymptote
+    sat_rate = rate_est,
+    # SE of sat_rate via the delta method, to propagate measurement error in
+    # subsequent analyses (e.g., as `se(sat_rate) ~ 1` in a brms me() term)
+    sat_rate_se = rate_se
+  )
 }
