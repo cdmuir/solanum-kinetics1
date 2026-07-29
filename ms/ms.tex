@@ -1,5 +1,4 @@
 % Options for packages loaded elsewhere
-% Options for packages loaded elsewhere
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
 \PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
@@ -8,22 +7,21 @@
   letterpaper,
   DIV=11,
   numbers=noendperiod]{scrartcl}
-\usepackage{xcolor}
+
 \usepackage{amsmath,amssymb}
-\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
 \usepackage{iftex}
 \ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
 \else % if luatex or xetex
-  \usepackage{unicode-math} % this also loads fontspec
+  \usepackage{unicode-math}
   \defaultfontfeatures{Scale=MatchLowercase}
   \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
 \fi
 \usepackage{lmodern}
-\ifPDFTeX\else
-  % xetex/luatex font selection
+\ifPDFTeX\else  
+    % xetex/luatex font selection
   \setmainfont[]{Times New Roman}
 \fi
 % Use upquote if available, for straight quotes in verbatim environments
@@ -32,33 +30,22 @@
   \usepackage[]{microtype}
   \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
+\usepackage{xcolor}
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
 % Make \paragraph and \subparagraph free-standing
-\makeatletter
 \ifx\paragraph\undefined\else
   \let\oldparagraph\paragraph
-  \renewcommand{\paragraph}{
-    \@ifstar
-      \xxxParagraphStar
-      \xxxParagraphNoStar
-  }
-  \newcommand{\xxxParagraphStar}[1]{\oldparagraph*{#1}\mbox{}}
-  \newcommand{\xxxParagraphNoStar}[1]{\oldparagraph{#1}\mbox{}}
+  \renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
 \fi
 \ifx\subparagraph\undefined\else
   \let\oldsubparagraph\subparagraph
-  \renewcommand{\subparagraph}{
-    \@ifstar
-      \xxxSubParagraphStar
-      \xxxSubParagraphNoStar
-  }
-  \newcommand{\xxxSubParagraphStar}[1]{\oldsubparagraph*{#1}\mbox{}}
-  \newcommand{\xxxSubParagraphNoStar}[1]{\oldsubparagraph{#1}\mbox{}}
+  \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
 \fi
-\makeatother
 
 
-\usepackage{longtable,booktabs,array}
-\newcounter{none} % for unnumbered tables
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}\usepackage{longtable,booktabs,array}
 \usepackage{calc} % for calculating minipage widths
 % Correct order of tables after \paragraph or \subparagraph
 \usepackage{etoolbox}
@@ -70,21 +57,17 @@
 \makesavenoteenv{longtable}
 \usepackage{graphicx}
 \makeatletter
-\newsavebox\pandoc@box
-\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
-  \sbox\pandoc@box{#1}%
-  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
-  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
-  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
-  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
-  \else\usebox{\pandoc@box}%
-  \fi%
-}
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
 % Set default figure placement to htbp
+\makeatletter
 \def\fps@figure{htbp}
 \makeatother
-
-
 % definitions for citeproc citations
 \NewDocumentCommand\citeproctext{}{}
 \NewDocumentCommand\citeproc{mm}{%
@@ -119,18 +102,6 @@
 \newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{\strut#1\strut}}
 \newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
 
-
-
-\setlength{\emergencystretch}{3em} % prevent overfull lines
-
-\providecommand{\tightlist}{%
-  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
-
-
-
- 
-
-
 \usepackage{booktabs}
 \usepackage{longtable}
 \usepackage{array}
@@ -139,7 +110,8 @@
 \usepackage{float}
 \usepackage{colortbl}
 \usepackage{pdflscape}
-\usepackage{tabu}
+\usepackage{tabularx}
+\usepackage{xltabular}
 \usepackage{threeparttable}
 \usepackage{threeparttablex}
 \usepackage[normalem]{ulem}
@@ -220,9 +192,13 @@
 \@ifpackageloaded{caption}{}{\usepackage{caption}}
 \@ifpackageloaded{subcaption}{}{\usepackage{subcaption}}
 \makeatother
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
 \usepackage{bookmark}
+
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
-\urlstyle{same}
+\urlstyle{same} % disable monospaced font for URLs
 \hypersetup{
   pdftitle={Guard cell size and pore aperture influence stomatal closure kinetics},
   pdfauthor={Christopher D. Muir\^{}\{1,2*\}; Wei Shen Lim\^{}\{1\}},
@@ -233,14 +209,13 @@
   urlcolor={Blue},
   pdfcreator={LaTeX via pandoc}}
 
-
 \title{Guard cell size and pore aperture influence stomatal closure
 kinetics}
 \author{Christopher D. Muir\(^{1,2*}\) \and Wei Shen Lim\(^{1}\)}
 \date{}
+
 \begin{document}
 \maketitle
-
 
 \begin{center}
 $^1$School of Life Sciences, University of Hawaiʻi; Mānoa, Hawaiʻi, USA\\
@@ -399,7 +374,7 @@ al.}, 2016). A four-parameter equation describes stomatal response
 kinetics to a step change in light intensity across dozens of plant
 species (Woning \emph{et al.}, 2026):
 
-\begin{equation}\protect\phantomsection\label{eq-weibull}{
+\begin{equation}\phantomsection\label{eq-weibull}{
   g_\mathrm{sw,t} = g_\mathrm{f} + (g_\mathrm{i} - g_\mathrm{f}) e^{-\left(\frac{t}{\tau}\right)^\lambda}.
 }\end{equation}
 
@@ -455,7 +430,7 @@ al.}, 2001) and VPD (Kübarsepp \emph{et al.}, 2020; Qie \emph{et al.},
 One factor that might complicate the relationship between size and speed
 is aperture. Stomatal aperture can vary from near 0 when guard cell
 turgor pressure is low and asymptotically approach \gmax{} as guard cell
-turgor pressure approaches \(\infty\) (Figure~\ref{fig-conceptual}D).
+turgor pressure approaches \(\infty\) (Figure~\ref{fig-conceptual}d).
 The relationship between guard cell turgor pressure and stomatal
 aperture is nonlinear (Franks \& Farquhar, 2001) as cell walls become
 less elastic at greater turgor (Franks \emph{et al.}, 2001). The
@@ -491,33 +466,33 @@ likely variation within and among species and growth forms in the
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/conceptual.pdf}}
+\includegraphics{../figures/conceptual.pdf}
 
 }
 
 \caption{\label{fig-conceptual}\textbf{Conceptual overview of the two hypotheses linking stomatal anatomy to closure kinetics.}
-(A) Stomatal conductance (\gsw) in response to a step increase in vapor
-pressure deficit (VPD) typically exhibits a transient wrong-way response
-(WWR), in which \gsw{} briefly rises, followed by the right-way response
-(RWR), in which \gsw{} declines to a lower steady state. The RWR is well
-described by a Weibull function (dashed line; Equation~\ref{eq-weibull})
-with initial conductance \(g_\mathrm{i}\), final conductance
-\(g_\mathrm{f}\), and kinetic parameters \(\tau\) and \(\lambda\). (B)
-The time constant \(\tau\) sets the overall speed of closure, and the
-lag-time \(\lambda\) determines whether the response rate is roughly
-constant (\(\lambda \approx 1\); solid) or accelerates over time
-(\(\lambda > 1\); dashed). (C) Smaller guard cells have a greater
-surface area to volume ratio (SA:V; schematic cross-sections shown at
-right) and are predicted to exchange osmolytes more quickly across the
-plasma membrane, yielding a faster change in guard cell turgor pressure
-and faster closure. (D) The relationship between guard cell turgor
-pressure (\(P_g\)) and \gsw{} is nonlinear and saturating because guard
-cell walls become less elastic at higher turgor (Franks \& Farquhar,
-2001; Franks \emph{et al.}, 2001). Consequently, the same change in
-turgor pressure produces a larger change in \gsw{} when stomata are at
-low \fgmax{} (blue; steep tangent slope) than at high \fgmax{} (orange;
-shallow tangent slope), predicting slower closure when \fgmax{} is
-high.}
+\textbf{a.} Stomatal conductance (\gsw) in response to a step increase
+in vapor pressure deficit (VPD) typically exhibits a transient wrong-way
+response (WWR), in which \gsw{} briefly rises, followed by the right-way
+response (RWR), in which \gsw{} declines to a lower steady state. The
+RWR is well described by a Weibull function (dashed line;
+Equation~\ref{eq-weibull}) with initial conductance \(g_\mathrm{i}\),
+final conductance \(g_\mathrm{f}\), and kinetic parameters \(\tau\) and
+\(\lambda\). \textbf{b.} The time constant \(\tau\) sets the overall
+speed of closure, and the lag-time \(\lambda\) determines whether the
+response rate is roughly constant (\(\lambda \approx 1\); solid) or
+accelerates over time (\(\lambda > 1\); dashed). \textbf{c.} Smaller
+guard cells have a greater surface area to volume ratio (SA:V; schematic
+cross-sections shown at right) and are predicted to exchange osmolytes
+more quickly across the plasma membrane, yielding a faster change in
+guard cell turgor pressure and faster closure. \textbf{d.} The
+relationship between guard cell turgor pressure (\(P_g\)) and \gsw{} is
+nonlinear and saturating because guard cell walls become less elastic at
+higher turgor (Franks \& Farquhar, 2001; Franks \emph{et al.}, 2001).
+Consequently, the same change in turgor pressure produces a larger
+change in \gsw{} when stomata are at low \fgmax{} (blue; steep tangent
+slope) than at high \fgmax{} (orange; shallow tangent slope), predicting
+slower closure when \fgmax{} is high.}
 
 \end{figure}%
 
@@ -712,11 +687,14 @@ greater in these conditions. In all treatment conditions, the final RH
 elicited rapid stomatal response and is comparable to treatments used in
 similar experiments (Merilo \emph{et al.}, 2014; Kübarsepp \emph{et
 al.}, 2020; Hsu \emph{et al.}, 2021; Qie \emph{et al.}, 2024), but was
-not intended to mimic natural environmental variability. We started
-logging data after the transient WWR and continued logging data until
-\gsw{} reached its nadir (Figure~\ref{fig-conceptual}A). We then
-acclimated the leaf to low light (\ppfdequals{150}) and \rhequals{70}
-before inducing stomatal closure with low \rh{} and logging data again.
+not intended to mimic natural environmental variability. Because the
+realized VPD stimulus varied among treatments, we checked whether this
+could confound treatment and \fgmax{} effects on stomatal closure
+kinetics using curve-level VPD covariates (Notes S1). We started logging
+data after the transient WWR and continued logging data until \gsw{}
+reached its nadir (Figure~\ref{fig-conceptual}a). We then acclimated the
+leaf to low light (\ppfdequals{150}) and \rhequals{70} before inducing
+stomatal closure with low \rh{} and logging data again.
 
 Prior to analysis, we removed unreliable and unusable data points,
 removed points not at instrument steady state, removed the hysteretic
@@ -780,15 +758,15 @@ sampling in the probabilistic programming language \emph{Stan} (Stan
 Development Team, 2026) using the \emph{R} package \textbf{brms} version
 2.23.0 (Bürkner, 2017). We used \emph{CmdStan} version 2.38.0 and
 \textbf{cmdstanr} version 0.9.0 (Gabry \emph{et al.}, 2025) to interface
-with \emph{R} version 4.5.3 (R Core Team, 2026). We sampled 1000
-post-warmup draws from the posterior distribution on a single chain. We
-adjusted the number of sampling iterations and thinning interval for
-each curve so that the Gelman-Rubin convergence statistic (\(\hat{R}\))
-(Gelman \& Rubin, 1992) was less than 1.05 and the bulk effective sample
-size (ESS) was greater than 400 for all model parameters, and there were
-fewer than 10 divergent transitions. To answer Question 1, we assessed
-model fit using Bayesian \(R^2\) (Gelman \emph{et al.}, 2019)
-implemented in \textbf{brms}.
+with \emph{R} version 4.6.1 (R Core Team, 2026). We sampled 1000, 1000,
+1000, 1000 post-warmup draws from the posterior distribution on a single
+chain. We adjusted the number of sampling iterations and thinning
+interval for each curve so that the Gelman-Rubin convergence statistic
+(\(\hat{R}\)) (Gelman \& Rubin, 1992) was less than 1.05 and the bulk
+effective sample size (ESS) was greater than 400 for all model
+parameters, and there were fewer than 10 divergent transitions. To
+answer Question 1, we assessed model fit using Bayesian \(R^2\) (Gelman
+\emph{et al.}, 2019) implemented in \textbf{brms}.
 
 \subsubsection{Estimating effects of stomatal anatomy on kinetic
 parameters}\label{estimating-effects-of-stomatal-anatomy-on-kinetic-parameters}
@@ -886,7 +864,7 @@ effects}\label{model-selection-and-parameter-estimation-of-individual-level-effe
 To infer whether individual-level variation in \fgmax{} and \gcl{}
 influence kinetic parameters, we used the leave-one-out cross-validation
 information criterion (LOOIC) to compare the fit of models using the
-\emph{R} package \textbf{loo} version 2.9.0 (Vehtari \emph{et al.},
+\emph{R} package \textbf{loo} version 2.10.0 (Vehtari \emph{et al.},
 2017). We compared models with all permutations of \fgmax{} and \gcl{}
 influencing \(\lambda\) and \(\tau\). We considered all models within
 two \(\Delta\)LOOIC standard errors of the minimum LOOIC
@@ -966,7 +944,7 @@ kinetics}{The time-constant \textbackslash tau explains most variation in stomat
 Stomatal conductance (\gsw) decreased rapidly in response to a step
 change in humidity. The model in Equation~\ref{eq-weibull} fit the data
 extremely well (Figure~\ref{fig-rh-curves}). The mean and minimum
-Bayesian \(R^2\) across all curves was 0.9994 and 0.9802, respectively.
+Bayesian \(R^2\) across all curves was 0.9994 and 0.9803, respectively.
 Consider a typical leaf in the experiment characterized by the median
 time constant (\(\tau\)) and lag time (\(\lambda\)) among wild tomato
 populations in all treatments. After humidity decreased and the
@@ -1026,7 +1004,7 @@ exchange through adaxial stomata was blocked.
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/variance.pdf}}
+\includegraphics{../figures/variance.pdf}
 
 }
 
@@ -1044,7 +1022,7 @@ populations was low for all traits.}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/accession-anatomy.pdf}}
+\includegraphics{../figures/accession-anatomy.pdf}
 
 }
 
@@ -1058,7 +1036,7 @@ populations was low for all traits.}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{ms_files/figure-pdf/fig-accession-anatomy-cap-1.pdf}}
+\includegraphics{ms_files/figure-pdf/fig-accession-anatomy-cap-1.pdf}
 
 }
 
@@ -1110,7 +1088,7 @@ on \(\lambda\), with an estimated increase of 1.17\% {[}95\% CI: -1.1 to
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/accession-kinetics.pdf}}
+\includegraphics{../figures/accession-kinetics.pdf}
 
 }
 
@@ -1213,7 +1191,7 @@ example, increasing \fgmax{} from 20\% to 30\% resulted in a 10.7\%
 {[}95\% CI: 7.2 to 14.4\%{]} increase in \(\tau\) for a typical leaf in
 the reference treatment set (shade, low, amphi). The \fgmax{} also had a
 significant, positive, individual-level effect on \(\lambda\)
-(Table~\ref{tbl-fixed}).
+(Figure~\ref{fig-fgmax-lambda}, Table~\ref{tbl-fixed}).
 
 Populations that tended to have greater \gcl{} also tended to have
 greater \(\tau\) as evidenced by a positive phylogenetic correlation
@@ -1229,7 +1207,7 @@ plausible causal effect of \gcl{} on \(\tau\) among populations.
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/gcl-tau.pdf}}
+\includegraphics{../figures/gcl-tau.pdf}
 
 }
 
@@ -1252,7 +1230,7 @@ section.}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/fgmax-tau.pdf}}
+\includegraphics{../figures/fgmax-tau.pdf}
 
 }
 
@@ -1295,7 +1273,7 @@ CI: \(11.34\) to \(23.48\)\%{]}.
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/mediation.pdf}}
+\includegraphics{../figures/mediation.pdf}
 
 }
 
@@ -1466,12 +1444,12 @@ only way to simultaneously reduce guard cell size, maintain \gop{}, and
 keep \fgmax{} from rising is to increase stomatal density---raising
 \gmax{} and thereby limiting \fgmax{}. This logic predicts a coupled
 evolution of small guard cells and high stomatal density, a pattern
-observed broadly across vascular plants (Franks \& Beerling, 2009; {de
-Boer \emph{et al.}}, 2016; Haworth \emph{et al.}, 2023; Liu \emph{et
+observed broadly across vascular plants (Franks \& Beerling, 2009; de
+Boer \emph{et al.}, 2016; Haworth \emph{et al.}, 2023; Liu \emph{et
 al.}, 2025). Although physical constraints on pore geometry, such as
 increased resistance to diffusion at very small apertures (Leuning,
-1983; {Hodgson \emph{et al.}}, 2010), likely impose a lower limit on
-guard cell size, selection to prevent operating at high \fgmax{} (Franks
+1983; Hodgson \emph{et al.}, 2010), likely impose a lower limit on guard
+cell size, selection to prevent operating at high \fgmax{} (Franks
 \emph{et al.}, 2012) may also explain why optimal guard cell size
 varies.
 
@@ -1523,7 +1501,7 @@ publication.
 
 \singlespacing
 
-\protect\phantomsection\label{refs}
+\phantomsection\label{refs}
 \begin{CSLReferences}{0}{1}
 \bibitem[\citeproctext]{ref-aasamaa_stomatal_2011}
 \textbf{\textbf{Aasamaa K}, \textbf{Sõber A}}. \textbf{2011a}.
@@ -1649,8 +1627,8 @@ conductance}. \emph{Plant, Cell \& Environment} \textbf{33}: 1419--1438.
 \emph{Proceedings of the Royal Society of London} \textbf{63}: 413--417.
 
 \bibitem[\citeproctext]{ref-deboer_optimal_2016}
-\textbf{{\textbf{de Boer HJ}, \textbf{Price CA}, \textbf{Wagner-Cremer
-F}, \textbf{Dekker SC}, \textbf{Franks PJ}, \textbf{Veneklaas EJ}}}.
+\textbf{\textbf{de Boer HJ}, \textbf{Price CA}, \textbf{Wagner-Cremer
+F}, \textbf{Dekker SC}, \textbf{Franks PJ}, \textbf{Veneklaas EJ}}.
 \textbf{2016}. \href{https://doi.org/10.1111/nph.13929}{Optimal
 allocation of leaf epidermal area for gas exchange}. \emph{New
 Phytologist} \textbf{210}: 1219--1228.
@@ -1794,10 +1772,10 @@ sensing and driving environmental change}. \emph{Nature} \textbf{424}:
 901--908.
 
 \bibitem[\citeproctext]{ref-hodgson_stomatal_2010}
-\textbf{{\textbf{Hodgson JG}, \textbf{Sharafi M}, \textbf{Jalili A},
+\textbf{\textbf{Hodgson JG}, \textbf{Sharafi M}, \textbf{Jalili A},
 \textbf{Díaz S}, \textbf{Montserrat-Martí G}, \textbf{Palmer C},
 \textbf{Cerabolini B}, \textbf{Pierce S}, \textbf{Hamzehee B},
-\textbf{Asri Y}, \emph{et al.}}} \textbf{2010}.
+\textbf{Asri Y}, \emph{et al.}} \textbf{2010}.
 \href{https://doi.org/10.1093/aob/mcq011}{Stomatal vs. Genome size in
 angiosperms: The somatic tail wagging the genomic dog?} \emph{Annals of
 Botany} \textbf{105}: 573--584.
@@ -2344,7 +2322,7 @@ Growth light intensity & amphi & pseudohypo & amphi & pseudohypo & Total\\
 \midrule
 shade & 275 & 275 & 270 & 266 & 1,086\\
 sun & 245 & 245 & 274 & 274 & 1,038\\
-\midrule\\
+\midrule
 Total & 520 & 520 & 544 & 540 & 2,124\\
 \bottomrule
 \end{tabular}
@@ -2628,7 +2606,7 @@ lines are fitted curves. The Bayesian correlation coefficient,
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/compare-gsw.pdf}}
+\includegraphics{../figures/compare-gsw.pdf}
 
 }
 
@@ -2643,7 +2621,7 @@ line for reference. Both axes are on a log-scale.}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/gcl.pdf}}
+\includegraphics{../figures/gcl.pdf}
 
 }
 
@@ -2660,7 +2638,7 @@ larger values on the adaxial surface.}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/colinear.pdf}}
+\includegraphics{../figures/colinear.pdf}
 
 }
 
@@ -2679,7 +2657,7 @@ parameter.}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/fgmax-lambda.pdf}}
+\includegraphics{../figures/fgmax-lambda.pdf}
 
 }
 
@@ -2696,6 +2674,111 @@ and Methods section.}
 
 \end{figure}%
 
+\begin{figure}
+
+\centering{
+
+\includegraphics{../figures/vpd-pairs.pdf}
+
+}
+
+\caption{\label{fig-vpd-pairs}\textbf{Pairwise relationships among curve-level VPD covariates.}
+\textbf{a.} Median vs.~final VPD during the fitted interval; \textbf{b.}
+median VPD vs.~VPD saturation rate \(k\); \textbf{c.} final VPD vs.~VPD
+saturation rate \(k\). Each point is one humidity response curve,
+colored by leaf type; lines are ordinary least-squares fits within leaf
+type. VPD saturation rate is the rate constant of a saturating
+exponential fit to the VPD trajectory during the fitted interval (see
+Notes S1).}
+
+\end{figure}%
+
+\begin{figure}
+
+\centering{
+
+\includegraphics{../figures/tau-vpd-rate.pdf}
+
+}
+
+\caption{\label{fig-tau-vpd-rate}\textbackslash textbf\{\{The stomatal
+closure time-constant \(\tau\) (log scale) is strongly correlated with
+the inverse of the VPD saturation rate \(k^{-1}\). This is consistent
+with \(k\) being driven largely by the same \gsw{{}}-decline signal that
+determines \(\tau\), rather than an independent property of the VPD
+stimulus (see Notes S1). Each point is one humidity response curve from
+the untreated (amphi) leaves. The blue line us ordinary least-squares
+regression fit.}
+
+\end{figure}%
+
+\begin{figure}
+
+\centering{
+
+\includegraphics{../figures/vpd-h2o-rate.pdf}
+
+}
+
+\caption{\label{fig-vpd-h2o-rate}\textbf{The VPD saturation rate is driven by the sample airstream, not the reference airstream.}
+(A) VPD saturation rate vs.~the saturation rate of \(W_\mathrm{s}\)
+(sample cell water vapor concentration, which has equilibrated with the
+leaf); the dashed line is the 1:1 line. (B) VPD saturation rate vs.~the
+saturation rate of \(W_\mathrm{r}\) (reference cell water vapor
+concentration, upstream of the leaf). Each point is one humidity
+response curve; rate constants come from the same saturating-exponential
+model used for VPD (Fig. S5).}
+
+\end{figure}%
+
+\subsection{Supporting notes}\label{supporting-notes}
+
+\textbf{Notes S1} Realized VPD trajectories vary among treatments;
+robustness of the \fgmax{} \(\rightarrow\) \(\tau\) relationship
+
+Table~\ref{tbl-vpd} shows that the mean VPD realized during measurements
+differed among treatment combinations
+(\(\SI{2.5}{\kPa}\)--\(\SI{2.92}{\kPa}\)), because leaf transpiration
+itself humidifies the chamber and \gsw{} varied systematically with
+measurement light, growth light, and leaf type. Because VPD is the
+physiological driver of stomatal closure, we checked whether this
+variation in the realized stimulus could confound the treatment and
+\fgmax{} effects on the closure time-constant, \(\tau\).
+
+For every curve we extracted the leaf-to-air VPD trajectory from the
+logged humidity data and derived two curve-level covariates: final VPD
+and VPD saturation rate (\(k\)). Final VPD is the VPD at the end of the
+fitted interval; \(k\) is the rate constant of a saturating exponential,
+\(\mathrm{VPD}(t) = B + (R_0 - B)\exp(-kt)\), fit separately to each
+curve (median \(R^2 = 0.99\), \(n = 2,156\) curves; \(k\) excluded for
+15 curves with a poor saturating fit or an extreme outlier rate
+estimate). We also considered median VPD. Median and final VPD were
+highly correlated (\(r = 0.93\); Figure~\ref{fig-vpd-pairs}a), so we
+retained only final VPD.
+
+We did not include the VPD saturation rate as a covariate of \(\tau\),
+because \(k\) and \(\tau\) are themselves strongly correlated
+Figure~\ref{fig-tau-vpd-rate} for a mechanistic rather than confounding
+reason: the VPD trajectory during the analyzed interval is driven mainly
+by declining leaf transpiration as stomata close, so \(k\) largely
+tracks the same \gsw{}-decline signal that determines \(\tau\). We
+tested this by fitting the same saturating-exponential model to the
+sample-cell water vapor concentration (\(W_\mathrm{s}\)) and the
+reference-cell water vapor concentration (\(W_\mathrm{r}\), upstream of
+the leaf and largely reflecting the controlled incoming airstream). The
+VPD saturation rate closely tracked the \(W_\mathrm{s}\) saturation rate
+(\(r = 0.95\)) but not the \(W_\mathrm{r}\) saturation rate
+(\(r = 0.02\)), and the amplitude of change in \(W_\mathrm{r}\) was
+roughly 27-fold smaller than in \(W_\mathrm{s}\) (Fig. S7). Including
+\(k\) as a covariate of \(\tau\) would therefore be close to circular.
+
+We lack data on the rate of VPD change during the wrong-way response,
+because humidity logging began after this initial transient (Fig. 1A);
+this limits our ability to evaluate whether the \emph{initial} rate of
+VPD change, as opposed to the steady increase captured here, influenced
+closure kinetics. We recommend that future studies of stomatal kinetics
+log chamber humidity continuously from the onset of the humidity step to
+more fully characterize the realized VPD stimulus.
 
 
 

@@ -25,26 +25,7 @@ source("r/header.R")
 
 best_model = read_rds("objects/best_model.rds")
 curve_vpd = read_rds("objects/curve-vpd-summary.rds") |>
-  mutate(
-    lighttreatment = case_when(
-      light_treatment == "low" ~ "shade",
-      light_treatment == "high" ~ "sun"
-    ),
-    lightintensity = case_when(
-      light_intensity == "150" ~ "low",
-      light_intensity == "2000" ~ "high"
-    ),
-    leaftype = case_when(
-      curve_type == "2-sided RH" ~ "amphi",
-      curve_type == "1-sided RH" ~ "pseudohypo"
-    )
-  ) |>
-  rename(
-    accid = acc_id
-  ) |>
-  select(
-    accid, lighttreatment, lightintensity, leaftype, final_vpd
-  )
+  select(accid, lighttreatment, lightintensity, leaftype, final_vpd)
 
 # --- Build amphi-only data with VPD covariates joined on ---------------
 
@@ -91,6 +72,6 @@ fit_vpd = brm(
   seed = 2716043
 ) |> add_criterion("loo")
 
-write_rds(fit_vpd, "objects/best_model_vpd.rds")
-
 assert_true(check_convergence(fit_vpd, convergence_criteria))
+
+write_rds(fit_vpd, "objects/best_model_vpd.rds")
