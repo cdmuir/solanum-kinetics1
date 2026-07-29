@@ -43,7 +43,7 @@ curve_vpd = read_rds("objects/curve-vpd-summary.rds") |>
     accid = acc_id
   ) |>
   select(
-    accid, lighttreatment, lightintensity, leaftype, final_vpd, sat_rate, sat_rate_se
+    accid, lighttreatment, lightintensity, leaftype, final_vpd
   )
 
 # --- Build amphi-only data with VPD covariates joined on ---------------
@@ -60,10 +60,10 @@ joined_summary_amphi = best_model$data |>
 
 bf_lambda_vpd = update(best_model$formula$forms$loglambdamean,
                        . ~ . - leaftype +
-                         finalvpd)
+                         final_vpd)
 
 bf_tau_vpd = update(best_model$formula$forms$logtaumean, . ~ . - leaftype +
-                      finalvpd)
+                      final_vpd)
 
 bf_gcl_vpd = update(best_model$formula$forms$loggcl, . ~ . - leaftype)
 
