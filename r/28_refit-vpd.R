@@ -53,50 +53,17 @@ joined_summary_amphi = best_model$data |>
   left_join(curve_vpd,
             by = join_by(lighttreatment, lightintensity, leaftype, accid))
 
-# me() cannot handle missing values, so curves excluded upstream (poor
-# saturating-VPD fit or extreme outlier; see r/26_summarize-vpd.R) must be
-# dropped here.
-scale1 = function(x, ...) (x - mean(x, ...)) / sd(x, ...)
-
-n_before = nrow(joined_summary_amphi)
-joined_summary_amphi = joined_summary_amphi |>
-  filter(!is.na(sat_rate), !is.na(sat_rate_se)) |>
-  mutate(
-    finalvpd = scale1(final_vpd),
-    satrate = scale1(sat_rate)
-  )
-n_removed_missing_rate = n_before - nrow(joined_summary_amphi)
-
-write_rds(
-  list(n_removed_missing_rate = n_removed_missing_rate),
-  "objects/n_removed_vpd.rds"
-)
-
-# phy = read_rds("data/phylogeny.rds")
-# A = vcv(phy, corr = TRUE)
-
 # --- Build updated formulas ---------------------------------------------
 # Add final_vpd and me(sat_rate, sat_rate_se), each with a separate slope
 # per lighttreatment:lightintensity combination, to the tau and lambda
 # formulas only. Drop leaftype everywhere (amphi-only data).
 
-bf_lambda_vpd = update(
-  best_model$formula$forms$loglambdamean,
-  . ~ . - leaftype +
-    finalvpd
-    # satrate
-    # lighttreatment:lightintensity:final_vpd +
-    # lighttreatment:lightintensity:me(sat_rate, sat_rate_se)
-)
+bf_lambda_vpd = update(best_model$formula$forms$loglambdamean,
+                       . ~ . - leaftype +
+                         finalvpd)
 
-bf_tau_vpd = update(
-  best_model$formula$forms$logtaumean,
-  . ~ . - leaftype +
-   finalvpd
-   # satrate
-  # lighttreatment:lightintensity:final_vpd +
-  # lighttreatment:lightintensity:me(sat_rate, sat_rate_se)
-)
+bf_tau_vpd = update(best_model$formula$forms$logtaumean, . ~ . - leaftype +
+                      finalvpd)
 
 bf_gcl_vpd = update(best_model$formula$forms$loggcl, . ~ . - leaftype)
 
@@ -107,14 +74,14 @@ form_vpd = bf_lambda_vpd + bf_tau_vpd + bf_gcl_vpd + bf_fgmax_vpd +
 
 # --- Fit ------------------------------------------------------------------
 
-thin = 1
+thin = 6
 
 fit_vpd = brm(
   formula = form_vpd,
   data = joined_summary_amphi |> mutate(phy = accession),
   data2 = list(A = best_model$data2$A),
-  cores = 1,
-  chains = 1,
+  cores = 4,
+  chains = 4,
   iter = thin * 2e3,
   thin = thin,
   refresh = thin * 1e2,
@@ -124,6 +91,6 @@ fit_vpd = brm(
   seed = 2716043
 ) |> add_criterion("loo")
 
-assert_true(check_convergence(fit_vpd, convergence_criteria))
-
 write_rds(fit_vpd, "objects/best_model_vpd.rds")
+
+assert_true(check_convergence(fit_vpd, convergence_criteria))
