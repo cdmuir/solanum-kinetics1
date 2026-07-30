@@ -40,15 +40,14 @@ joined_summary_amphi = best_model$data |>
 # formulas only. Drop leaftype everywhere (amphi-only data).
 
 bf_lambda_vpd = update(best_model$formula$forms$loglambdamean,
-                       . ~ . - leaftype +
-                         final_vpd)
+                       . ~ . final_vpd)
 
-bf_tau_vpd = update(best_model$formula$forms$logtaumean, . ~ . - leaftype +
+bf_tau_vpd = update(best_model$formula$forms$logtaumean, . ~ . +
                       final_vpd)
 
-bf_gcl_vpd = update(best_model$formula$forms$loggcl, . ~ . - leaftype)
+bf_gcl_vpd = best_model$formula$forms$loggcl
 
-bf_fgmax_vpd = update(best_model$formula$forms$logitfgmax, . ~ . - leaftype)
+bf_fgmax_vpd = best_model$formula$forms$logitfgmax
 
 form_vpd = bf_lambda_vpd + bf_tau_vpd + bf_gcl_vpd + bf_fgmax_vpd +
   set_rescor(TRUE)
@@ -72,6 +71,6 @@ fit_vpd = brm(
   seed = 2716043
 ) |> add_criterion("loo")
 
-assert_true(check_convergence(fit_vpd, convergence_criteria))
-
 write_rds(fit_vpd, "objects/best_model_vpd.rds")
+
+assert_true(check_convergence(fit_vpd, convergence_criteria))

@@ -79,4 +79,4 @@ p_h2or_vs_vpd = ggplot(curve_vpd_sensitivity, aes(vpd_rate, h2or_rate)) +
 p_vpd_sensitivity = (p_h2os_vs_vpd + p_h2or_vs_vpd) +
   plot_annotation(tag_levels = "a")
 
-ggsave("figures/vpd-sensitivity.pdf", width = 6, height = 3)
+ggsave("figures/vpd-h2o-rate.pdf", width = 8, height = 4)

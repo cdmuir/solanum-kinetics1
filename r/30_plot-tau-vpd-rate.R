@@ -25,4 +25,4 @@ p_tau_vs_rate = ggplot(tau_vpd_rate, aes(1/sat_rate, exp(logtaumean))) +
   scale_y_log10() +
   coord_equal()
 
-ggsave("figures/tau-vpd-rate.pdf", width = 4, height = 3.5)
+ggsave("figures/tau-vpd-rate.pdf", width = 5, height = 4)

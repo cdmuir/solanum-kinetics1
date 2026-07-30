@@ -43,4 +43,4 @@ p_vpd_pairs = (p_median_final + p_median_rate + p_final_rate) +
   plot_annotation(tag_levels = "a") &
   theme(legend.position = "bottom")
 
-ggsave("figures/vpd-pairs.pdf", width = 6.5, height = 3)
+ggsave("figures/vpd-pairs.pdf", width = 9, height = 4)

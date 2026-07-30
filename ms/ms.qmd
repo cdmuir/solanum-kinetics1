@@ -1309,13 +1309,12 @@ cor_h2or_satrate = cor(curve_vpd_sensitivity$vpd_rate, curve_vpd_sensitivity$h2o
 h2o_amplitude_ratio = median(curve_vpd_sensitivity$h2os_amplitude, na.rm = TRUE) /
   median(curve_vpd_sensitivity$h2or_amplitude, na.rm = TRUE)
 
-tau_vpd_rate_cap = "\\textbf{{The stomatal closure time-constant $\\tau$ (log scale) is strongly correlated with the inverse of the VPD saturation rate $k^{-1}$. This is consistent with $k$ being driven largely by the same \\gsw{{}}-decline signal that determines $\\tau$, rather than an independent property of the VPD stimulus (see Notes S1). Each point is one humidity response curve from the untreated (amphi) leaves. The blue line us ordinary least-squares regression fit."
 ```
 
 ```{r, tau-vpd-rate, echo = FALSE}
 #| label: fig-tau-vpd-rate
 #| fig-align: center
-#| fig-cap: !expr tau_vpd_rate_cap
+#| fig-cap: "\\textbf{The stomatal closure time-constant $\\tau$ (log scale) is strongly correlated with the inverse of the VPD saturation rate $k^{-1}$}. This is consistent with $k$ being driven largely by the same \\gsw{{}}-decline signal that determines $\\tau$, rather than an independent property of the VPD stimulus (see Notes S1). Each point is one humidity response curve from the untreated (amphi) leaves. The blue line us ordinary least-squares regression fit."
 
 knitr::include_graphics("../figures/tau-vpd-rate.pdf")
 ```
@@ -1323,21 +1322,21 @@ knitr::include_graphics("../figures/tau-vpd-rate.pdf")
 ```{r, vpd-h2o-rate, echo = FALSE}
 #| label: fig-vpd-h2o-rate
 #| fig-align: center
-#| fig-cap: "\\textbf{The VPD saturation rate is driven by the sample airstream, not the reference airstream.} (A) VPD saturation rate vs.\\ the saturation rate of $W_\\mathrm{s}$ (sample cell water vapor concentration, which has equilibrated with the leaf); the dashed line is the 1:1 line. (B) VPD saturation rate vs.\\ the saturation rate of $W_\\mathrm{r}$ (reference cell water vapor concentration, upstream of the leaf). Each point is one humidity response curve; rate constants come from the same saturating-exponential model used for VPD (Fig. S5)."
+#| fig-cap: "\\textbf{The VPD saturation rate is driven by the sample airstream, not the reference airstream.} \\textbf{a.} VPD saturation rate vs. the saturation rate of $W_\\mathrm{s}$ (sample cell water vapor concentration); the dashed line is the 1:1 line. \\textbf{b.} VPD saturation rate vs. the saturation rate of $W_\\mathrm{r}$ (reference cell water vapor concentration, upstream of the leaf). Each point is one humidity response curve; rate constants come from the same saturating-exponential model used for VPD."
 
 knitr::include_graphics("../figures/vpd-h2o-rate.pdf")
 ```
 
 ## Supporting notes
 
-**Notes S1** Realized VPD trajectories vary among treatments; robustness of the \fgmax{} $\rightarrow$ $\tau$ relationship
+**Notes S1** Effects of \fgmax{} and \gcl{} are robust to variation in VPD stimulus
 
-[@tbl-vpd] shows that the mean VPD realized during measurements differed among treatment combinations ($\SI{`r vpd_min`}{\kPa}$--$\SI{`r vpd_max`}{\kPa}$), because leaf transpiration itself humidifies the chamber and \gsw{} varied systematically with measurement light, growth light, and leaf type. Because VPD is the physiological driver of stomatal closure, we checked whether this variation in the realized stimulus could confound the treatment and \fgmax{} effects on the closure time-constant, $\tau$.
+[@tbl-vpd] shows that the mean VPD realized during measurements differed among treatment combinations ($\SI{`r vpd_min`}{\kPa}$--$\SI{`r vpd_max`}{\kPa}$), because leaf transpiration itself humidifies the chamber and \gsw{} varied systematically with measurement light, growth light, and leaf type. Because VPD is the physiological driver of stomatal closure, we checked whether this variation in the realized stimulus could confound the effects of \fgmax{} and \gcl{} on the closure time-constant, $\tau$.
 
 For every curve we extracted the leaf-to-air VPD trajectory from the logged humidity data and derived two curve-level covariates: final VPD and VPD saturation rate ($k$). Final VPD is the VPD at the end of the fitted interval; $k$ is the rate constant of a saturating exponential, $\mathrm{VPD}(t) = B + (R_0 - B)\exp(-kt)$, fit separately to each curve (median $R^2 = `r formatC(median_vpd_sat_r2, format = "f", digits = 2)`$, $n = `r prettyNum(n_curve_vpd, big.mark = ",")`$ curves; $k$ excluded for `r n_curve_vpd_excluded_rate` curves with a poor saturating fit or an extreme outlier rate estimate). We also considered median VPD. Median and final VPD were highly correlated ($r = `r formatC(cor_median_final_vpd, format = "f", digits = 2)`$; [@fig-vpd-pairs]a), so we retained only final VPD.
 
-We did not include the VPD saturation rate as a covariate of $\tau$, because $k$ and $\tau$ are themselves strongly correlated [@fig-tau-vpd-rate] for a mechanistic rather than confounding reason: the VPD trajectory during the analyzed interval is driven mainly by declining leaf transpiration as stomata close, so $k$ largely tracks the same \gsw{}-decline signal that determines $\tau$. We tested this by fitting the same saturating-exponential model to the sample-cell water vapor concentration ($W_\mathrm{s}$) and the reference-cell water vapor concentration ($W_\mathrm{r}$, upstream of the leaf and largely reflecting the controlled incoming airstream). The VPD saturation rate closely tracked the $W_\mathrm{s}$ saturation rate ($r = `r formatC(cor_h2os_satrate, format = "f", digits = 2)`$) but not the $W_\mathrm{r}$ saturation rate ($r = `r formatC(cor_h2or_satrate, format = "f", digits = 2)`$), and the amplitude of change in $W_\mathrm{r}$ was roughly `r round(h2o_amplitude_ratio)`-fold smaller than in $W_\mathrm{s}$ (Fig. S7). Including $k$ as a covariate of $\tau$ would therefore be close to circular.
+We did not include the VPD saturation rate as a covariate of $\tau$, because $k$ and $\tau$ are themselves strongly correlated [@fig-tau-vpd-rate] for a mechanistic rather than confounding reason: the VPD trajectory during the analyzed interval is driven mainly by declining leaf transpiration as stomata close, so $k$ largely tracks the same \gsw{}-decline signal that determines $\tau$. We tested this by fitting the same saturating-exponential model to the sample-cell water vapor concentration ($W_\mathrm{s}$) and the reference-cell water vapor concentration ($W_\mathrm{r}$, upstream of the leaf and largely reflecting the controlled incoming airstream). The VPD saturation rate closely tracked the $W_\mathrm{s}$ saturation rate ($r = `r formatC(cor_h2os_satrate, format = "f", digits = 2)`$) but not the $W_\mathrm{r}$ saturation rate ($r = `r formatC(cor_h2or_satrate, format = "f", digits = 2)`$) [@fig-vpd-h2o-rate]. Including $k$ as a covariate of $\tau$ would therefore be close to circular.
 
 <!-- TODO: report results of refitting the tau/lambda model with final VPD as a curve-level covariate (objects/best_model_vpd.rds, produced by r/27_refit-vpd.R) once that model has been fit -- e.g., "After adding final VPD as a covariate of tau and lambda [restricted to amphistomatous curves], the fgmax -> tau effect was qualitatively unchanged / attenuated by X% [posterior estimate, 95% CI], indicating that the fgmax effect is not solely an artifact of variation in the realized VPD stimulus." -->
 
-We lack data on the rate of VPD change during the wrong-way response, because humidity logging began after this initial transient (Fig. 1A); this limits our ability to evaluate whether the *initial* rate of VPD change, as opposed to the steady increase captured here, influenced closure kinetics. We recommend that future studies of stomatal kinetics log chamber humidity continuously from the onset of the humidity step to more fully characterize the realized VPD stimulus.
+We lack data on the rate of VPD change during the wrong-way response, because humidity logging began after this initial transient [@fig-conceptual]a; this limits our ability to evaluate whether the *initial* rate of VPD change, as opposed to the steady increase captured here, influenced closure kinetics. We recommend that future studies of stomatal kinetics log chamber humidity continuously from the onset of the humidity step to more fully characterize the realized VPD stimulus.
