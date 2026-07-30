@@ -1,20 +1,5 @@
-# Reviewer comment R1.1: refit the tau/lambda model with curve-level VPD
-# covariates (final VPD and VPD saturation rate, with measurement error) to
-# check whether the fgmax -> tau effect survives accounting for realized VPD
-# exposure.
-#
-# Restricted to amphistomatous (amphi) curves only, because the VPD
-# covariates come from data/rh_curves.rds and we want a single, unambiguous
-# leaf-type context for interpreting them (leaftype cannot be included as a
-# fixed effect once the data are restricted to one leaf type).
-#
-# final_vpd and me(sat_rate, sat_rate_se) are each given a separate
-# coefficient within every combination of lighttreatment x lightintensity
-# (4 groups), because the realized VPD trajectory -- and its relationship to
-# tau/lambda -- may differ by treatment combination. This only changes the
-# tau and lambda formulas; the gcl and fgmax formulas are unchanged apart
-# from dropping leaftype (which is otherwise a constant in the amphi-only
-# subset and cannot be estimated).
+# Refit the tau/lambda model with curve-level VPD covariate to check whether the
+# fgmax -> tau effect is confounded by accounting for realized VPD stimulus
 #
 # brms does not support update()-ing the formula of a multivariate model
 # (see ?update.brmsfit), so the model is refit from scratch with brm() using
@@ -27,7 +12,7 @@ best_model = read_rds("objects/best_model.rds")
 curve_vpd = read_rds("objects/curve-vpd-summary.rds") |>
   select(accid, lighttreatment, lightintensity, leaftype, final_vpd)
 
-# --- Build amphi-only data with VPD covariates joined on ---------------
+# --- Build data with VPD covariates joined on ---------------------------
 
 joined_summary_amphi = best_model$data |>
   filter(leaftype == "amphi") |>
@@ -35,12 +20,8 @@ joined_summary_amphi = best_model$data |>
             by = join_by(lighttreatment, lightintensity, leaftype, accid))
 
 # --- Build updated formulas ---------------------------------------------
-# Add final_vpd and me(sat_rate, sat_rate_se), each with a separate slope
-# per lighttreatment:lightintensity combination, to the tau and lambda
-# formulas only. Drop leaftype everywhere (amphi-only data).
 
-bf_lambda_vpd = update(best_model$formula$forms$loglambdamean,
-                       . ~ . final_vpd)
+bf_lambda_vpd = update(best_model$formula$forms$loglambdamean, . ~ . + final_vpd)
 
 bf_tau_vpd = update(best_model$formula$forms$logtaumean, . ~ . +
                       final_vpd)
