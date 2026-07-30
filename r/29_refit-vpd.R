@@ -15,7 +15,6 @@ curve_vpd = read_rds("objects/curve-vpd-summary.rds") |>
 # --- Build data with VPD covariates joined on ---------------------------
 
 joined_summary_amphi = best_model$data |>
-  filter(leaftype == "amphi") |>
   left_join(curve_vpd,
             by = join_by(lighttreatment, lightintensity, leaftype, accid))
 
