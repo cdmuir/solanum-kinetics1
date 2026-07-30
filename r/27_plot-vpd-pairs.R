@@ -10,15 +10,7 @@ vpd_cor = cor(pairs_data, use = "pairwise.complete.obs")
 # Scatterplot matrix, colored by leaf type since Table S3 highlighted
 # leaf-type differences in realized VPD
 plot_data = curve_vpd |>
-  mutate(
-    leaf_type = factor(
-      case_when(
-        curve_type == "1-sided RH" ~ "pseudohypo",
-        curve_type == "2-sided RH" ~ "amphi"
-      ),
-      levels = c("amphi", "pseudohypo")
-    )
-  )
+  mutate(leaf_type = recode_leaftype(curve_type))
 
 p_median_final = ggplot(plot_data, aes(median_vpd, final_vpd, color = leaf_type)) +
   geom_point(alpha = 0.6) +

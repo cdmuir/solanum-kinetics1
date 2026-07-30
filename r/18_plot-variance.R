@@ -8,12 +8,7 @@ fit = read_rds("objects/best_model.rds")
 df_var = fit |>
   as_draws_df() |>
   select(starts_with("."), starts_with("sd_"), starts_with("sigma")) |>
-  rename_with(.fn = \(.x) {
-    str_replace(.x, "sigma_", "sd_resid__")
-  }, .cols = starts_with("sigma_")) |>
-  rename_with(.fn = \(.x) {
-    str_remove(.x, "_Intercept")
-  }, .cols = ends_with("_Intercept")) |>
+  clean_posterior_names() |>
   pivot_longer(
     cols = -starts_with("."),
     names_sep = "__",
@@ -39,25 +34,13 @@ df_var = fit |>
   mutate(across(where(is_double), ~ if_else(.x == 0, NA_real_, .x))) |>
   filter(variable != "total_var") |>
   mutate(
-    vc = fct_recode(
-      variable,
-      phylogenetic = "phy",
-      population = "accession",
-      `among-individual` = "ind"
-    ) |>
-      fct_relevel(
-        c(
-          "phylogenetic",
-          "population",
-          "among-individual"
-        )
-      ),
-    trait1 = fct_recode(
-      trait,
-      `$\\log(\\lambda)$` = "loglambdamean",
-      `$\\log(\\tau)$` = "logtaumean",
-      `$\\log(l_\\mathrm{gc})$` = "loggcl",
-      `$\\mathrm{logit}(f_\\mathrm{gmax})$` = "logitfgmax"
+    vc = factor(
+      recode_variance_component(variable),
+      levels = c("phylogenetic", "population (nonphylogenetic)", "among-individual")
+    ),
+    trait1 = factor(
+      trait_latex_label(trait),
+      levels = trait_latex_label(c("loggcl", "logitfgmax", "loglambdamean", "logtaumean"))
     )
   )
 

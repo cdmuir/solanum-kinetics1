@@ -92,6 +92,59 @@ get_parcor = function(Psi) {
     rename(p1 = row, p2 = col)
 }
 
+## Canonical LaTeX labels for model response variables (traits), used
+## consistently across tables and figures.
+trait_latex_label = function(x) {
+  case_when(
+    x == "loggcl" ~ "$\\log \\left( l_\\mathrm{gc} \\right)$",
+    x == "logitfgmax" ~ "$\\mathrm{logit} \\left( f_\\mathrm{gmax} \\right)$",
+    x == "loglambdamean" ~ "$\\log \\left( \\lambda \\right)$",
+    x == "logtaumean" ~ "$\\log \\left( \\tau \\right)$",
+    TRUE ~ NA_character_
+  )
+}
+
+## Same labels as trait_latex_label(), but matched against a raw brms
+## parameter name that contains the trait code as a substring (e.g.
+## "b_logtaumean_Intercept"), rather than requiring an exact match.
+trait_latex_from_paramname = function(param) {
+  case_when(
+    str_detect(param, "_loggcl_") ~ trait_latex_label("loggcl"),
+    str_detect(param, "_logitfgmax_") ~ trait_latex_label("logitfgmax"),
+    str_detect(param, "_loglambdamean_") ~ trait_latex_label("loglambdamean"),
+    str_detect(param, "_logtaumean_") ~ trait_latex_label("logtaumean"),
+    TRUE ~ NA_character_
+  )
+}
+
+## Canonical labels for variance-component / random-effect group codes,
+## used consistently across the fixed/random-effects table
+## (r/16_make-tbl-fit-summary.R) and the variance-decomposition figure
+## (r/18_plot-variance.R). "accid" (the raw among-individual random
+## effect SD reported in the table) and "ind" (the figure's combined
+## among-individual + residual quantity, see Results) are both labeled
+## "among-individual"; the manuscript text explains that the
+## among-individual component in the variance-decomposition figure/table
+## includes residual variance.
+recode_variance_component = function(x) {
+  case_when(
+    x == "phy" ~ "phylogenetic",
+    x == "accession" ~ "population (nonphylogenetic)",
+    x %in% c("accid", "ind") ~ "among-individual",
+    TRUE ~ NA_character_
+  )
+}
+
+## Standardize brms posterior draw column names: strip the "_Intercept"
+## suffix and rename the residual SD prefix ("sigma_") to the same
+## "sd_<component>__<resp>" naming convention used for other variance
+## components (e.g. "sd_phy__", "sd_accession__").
+clean_posterior_names = function(.data) {
+  .data |>
+    rename_with(\(.x) str_remove(.x, "_Intercept"), .cols = contains("_Intercept")) |>
+    rename_with(\(.x) str_replace(.x, "^sigma_", "sd_resid__"), .cols = starts_with("sigma_"))
+}
+
 ## Summarize the partial correlations from a brms fit
 summarize_parcor = function(fit) {
   
@@ -249,12 +302,7 @@ get_phy_h2 = function(fit) {
   fit |>
     as_draws_df() |>
     select(starts_with("."), all_of(vars)) |>
-    rename_with(\(.x) {
-      str_remove(.x, "_Intercept")
-    }, .cols = ends_with("_Intercept")) |>
-    rename_with(\(.x) {
-      str_replace(.x, "sigma_", "sd_resid__")
-    }, .cols = starts_with("sigma_")) |>
+    clean_posterior_names() |>
     pivot_longer(
       cols = -starts_with("."),
       names_to = c("component", "resp"),
@@ -348,6 +396,30 @@ ellipse_points = function(mu, Sigma, level = 0.95, n = 200) {
   A <- chol(Sigma)                           # upper-triangular
   pts <- t(circle) %*% A                     # (n x 2)
   data.frame(x = mu[1] + pts[,1], y = mu[2] + pts[,2])
+}
+
+# Recode raw treatment/leaf-type codes into the factors used throughout
+# downstream analyses, so the same labels, mapping direction, and factor
+# levels are used everywhere these codes are recoded.
+recode_lighttreatment = function(x) {
+  factor(case_when(
+    x == "high" ~ "sun",
+    x == "low" ~ "shade"
+  ), levels = c("shade", "sun"))
+}
+
+recode_lightintensity = function(x) {
+  factor(case_when(
+    x == "150" ~ "low",
+    x == "2000" ~ "high"
+  ), levels = c("low", "high"))
+}
+
+recode_leaftype = function(x) {
+  factor(case_when(
+    x == "1-sided RH" ~ "pseudohypo",
+    x == "2-sided RH" ~ "amphi"
+  ), levels = c("amphi", "pseudohypo"))
 }
 
 # Saturated vapor pressure (for RH calculation)

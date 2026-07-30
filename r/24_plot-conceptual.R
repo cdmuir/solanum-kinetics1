@@ -15,13 +15,27 @@ base_theme <- theme_classic(base_size = 11) +
 
 # ---- Panel A: Annotated example time course with WWR + RWR ----
 g_pre  <- 0.27
-g_peak <- gi0
+g_peak <- g_pre + 0.03  # subtle WWR overshoot, not the extreme bump used previously
 t_step <- 0
-t_wwr  <- 65
+t_wwr  <- 30            # short WWR duration
 
 t_pre     <- seq(-100, -1, by = 2)
 t_wwr_seq <- seq(0, t_wwr, by = 2)
 t_rwr_seq <- seq(t_wwr + 2, 400, by = 2)
+
+# Data logging did not begin at the WWR peak; it began once gsw declined
+# back down through its pre-step value (g_pre), well into the RWR decline.
+# Solve for that crossing time along the (still continuous, unlogged) true
+# RWR trajectory so Panel A can mark the actual start of logging (t = 0 on
+# the plotted axis, matching how curves are time-zeroed in the real data).
+t_log_start <- t_wwr + tau_A * (-log((g_pre - gf0) / (g_peak - gf0))) ^ (1 / lambda_A)
+t_logged_seq <- seq(t_log_start, 400, by = 2)
+
+# Annotation heights, scaled relative to the (now shorter) WWR peak
+y_bracket   <- g_peak + 0.04
+y_bracket_label <- g_peak + 0.065
+y_guide_top <- g_peak + 0.06
+y_top_lim   <- g_peak + 0.09
 
 df_A2 <- bind_rows(
   tibble(t = t_pre, gsw = g_pre, phase = "Pre-step"),
@@ -36,7 +50,7 @@ df_A2 <- bind_rows(
     phase = "RWR"
   )
 )
-df_A2_model <- tibble(t = t_rwr_seq, gsw = rwr_fun(t_rwr_seq))
+df_A2_model <- tibble(t = t_logged_seq, gsw = rwr_fun(t_logged_seq))
 
 tau_global   <- t_wwr + tau_A
 gsw_at_tau2  <- rwr_fun(tau_global)
@@ -47,7 +61,7 @@ pA <- ggplot(df_A2, aes(t, gsw)) +
     x = t_step,
     xend = t_step,
     y = 0,
-    yend = 0.41,
+    yend = y_guide_top,
     linetype = "solid",
     color = "gray70",
     linewidth = 0.6
@@ -67,10 +81,10 @@ pA <- ggplot(df_A2, aes(t, gsw)) +
     data = df_A2_model,
     aes(t, gsw),
     color = col_fast,
-    linewidth = 1,
+    linewidth = 1.1,
     inherit.aes = FALSE
   ) +
-  geom_hline(yintercept = g_peak,
+  geom_hline(yintercept = g_pre,
              linetype = "dotted",
              color = "gray55") +
   geom_hline(yintercept = gf0,
@@ -88,20 +102,20 @@ pA <- ggplot(df_A2, aes(t, gsw)) +
   ) +
   annotate(
     "segment",
-    x = t_wwr,
-    xend = t_wwr,
+    x = t_log_start,
+    xend = t_log_start,
     y = 0,
-    yend = 0.41,
+    yend = g_peak,
     color = col_fast,
     linewidth = 0.7
   ) +
   annotate(
     "text",
-    x = t_wwr,
-    y = 0,
+    x = t_log_start,
+    y = g_peak,
     label = "Log data",
-    hjust = -0.2,
-    vjust = 0,
+    hjust = 0.5,
+    vjust = -1,
     size = 2.8,
     color = col_fast
   ) +
@@ -115,7 +129,7 @@ pA <- ggplot(df_A2, aes(t, gsw)) +
   annotate(
     "text",
     x = -90,
-    y = g_peak + 0.025,
+    y = g_pre + 0.025,
     label = "$g_\\mathrm{i}$",
     size = 3.8,
     hjust = 1
@@ -130,7 +144,7 @@ pA <- ggplot(df_A2, aes(t, gsw)) +
   ) +
   annotate(
     "text",
-    x = tau_global + 8,
+    x = tau_global + 25,
     y = 0.003,
     label = "$\\tau$",
     vjust = 0,
@@ -142,8 +156,8 @@ pA <- ggplot(df_A2, aes(t, gsw)) +
     "segment",
     x = t_step + 2,
     xend = t_wwr - 2,
-    y = 0.39,
-    yend = 0.39,
+    y = y_bracket,
+    yend = y_bracket,
     color = "gray50",
     arrow = arrow(
       ends = "both",
@@ -154,19 +168,24 @@ pA <- ggplot(df_A2, aes(t, gsw)) +
   annotate(
     "text",
     x = (t_step + t_wwr) / 2,
-    y = 0.415,
+    y = y_bracket_label,
     label = "WWR",
     size = 2.8,
     color = "gray50",
-    hjust = 0.5
+    hjust = 0.1,
+    vjust = 1,
+    angle = 33
   ) +
+  # RWR begins where gsw starts to decline (the WWR peak), not where
+  # logging/the Weibull model fit begins (marked separately below by the
+  # "Log data" line at t_log_start).
   annotate(
     "segment",
     x = t_wwr + 2,
     xend = 380,
-    y = 0.39,
-    yend = 0.39,
-    color = col_fast,
+    y = y_bracket,
+    yend = y_bracket,
+    color = "gray50",
     arrow = arrow(
       ends = "both",
       length = unit(0.05, "in"),
@@ -176,23 +195,23 @@ pA <- ggplot(df_A2, aes(t, gsw)) +
   annotate(
     "text",
     x = (t_wwr + 380) / 2,
-    y = 0.415,
-    label = "RWR (Weibull model)",
+    y = y_bracket_label,
+    label = "RWR",
     size = 2.8,
-    color = col_fast,
+    color = "gray50",
     hjust = 0.5
   ) +
   annotate(
     "text",
-    x = 160,
-    y = 0.315,
+    x = 140,
+    y = g_peak - 0.05,
     label = "$g_\\mathrm{sw,t} = g_\\mathrm{f} + (g_\\mathrm{i} - g_\\mathrm{f}) e^{-\\left(\\frac{t}{\\tau}\\right)^\\lambda}$",
     size = 2.9,
     hjust = 0,
     color = col_fast
   ) +
-  scale_y_continuous(limits = c(0, 0.44), breaks = NULL) +
-  scale_x_continuous(breaks = seq(0, 400, by = 100) + t_wwr,
+  scale_y_continuous(limits = c(0, y_top_lim), breaks = NULL) +
+  scale_x_continuous(breaks = seq(0, 400, by = 100) + t_log_start,
                      labels = seq(0, 400, by = 100)) +
   labs(x = "time (s)", y = "stomatal conductance") +
   base_theme
@@ -443,8 +462,6 @@ pD <- ggplot() +
 gp1 <- (pA | pB) / (pC | pD) +
   plot_annotation(tag_levels = "a") &
   theme(plot.tag = element_text(face = "bold"))
-
-# ggsave("figures/conceptual.pdf", width = 180, height = 160, units = "mm")
 
 tikz(
   "figures/conceptual.tex",

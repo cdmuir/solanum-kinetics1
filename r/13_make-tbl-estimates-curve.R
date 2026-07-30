@@ -3,6 +3,20 @@ source("r/header.R")
 
 fit = read_rds("objects/best_model.rds")
 
+curve_vpd = read_rds("objects/curve-vpd.rds") |>
+  select(
+    accid,
+    lighttreatment,
+    lightintensity,
+    leaftype,
+    initial_RH,
+    median_RH,
+    final_RH,
+    initial_VPD = initial_VPDleaf,
+    median_VPD = median_VPDleaf,
+    final_VPD = final_VPDleaf
+  )
+
 tbl_estimates = fit$data |>
   select(
     accid,
@@ -16,6 +30,7 @@ tbl_estimates = fit$data |>
     logtaumean,
     logtausd
   ) |>
+  left_join(curve_vpd, by = join_by(accid, lighttreatment, lightintensity, leaftype)) |>
   separate_wider_delim(
     cols = accid,
     delim = "-",
@@ -48,7 +63,13 @@ dict = tibble(
       "loglambdamean",
       "loglambdasd",
       "logtaumean",
-      "logtausd"
+      "logtausd",
+      "initial_RH",
+      "median_RH",
+      "final_RH",
+      "initial_VPD",
+      "median_VPD",
+      "final_VPD"
     ),
     description = c(
       "TGRC accession",
@@ -61,7 +82,13 @@ dict = tibble(
       "Point estimate of logit-transformed lag-time parameter",
       "Standard error of logit-transformed lag-time parameter",
       "Point estimate of log-transformed time-constant parameter",
-      "Standard error of log-transformed time-constant parameter"
+      "Standard error of log-transformed time-constant parameter",
+      "Relative humidity (proportion) at the start of the fitted interval",
+      "Median relative humidity (proportion) during the fitted interval",
+      "Relative humidity (proportion) at the end of the fitted interval",
+      "Leaf-to-air vapor pressure deficit (kPa) at the start of the fitted interval",
+      "Median leaf-to-air vapor pressure deficit (kPa) during the fitted interval",
+      "Leaf-to-air vapor pressure deficit (kPa) at the end of the fitted interval"
     ),
   ), by = join_by(variable)) |>
   mutate(

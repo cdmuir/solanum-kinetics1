@@ -62,18 +62,9 @@ curve_vpd = vpd_traj |>
     exclude_sat_rate = r2_sat < 0.8 | curve %in% sat_rate_outliers,
     sat_rate = if_else(exclude_sat_rate, NA_real_, sat_rate),
     sat_rate_se = if_else(exclude_sat_rate, NA_real_, sat_rate_se),
-    lighttreatment = case_when(
-      light_treatment == "low" ~ "shade",
-      light_treatment == "high" ~ "sun"
-    ),
-    lightintensity = case_when(
-      light_intensity == "150" ~ "low",
-      light_intensity == "2000" ~ "high"
-    ),
-    leaftype = case_when(
-      curve_type == "2-sided RH" ~ "amphi",
-      curve_type == "1-sided RH" ~ "pseudohypo"
-    )
+    lighttreatment = recode_lighttreatment(light_treatment),
+    lightintensity = recode_lightintensity(light_intensity),
+    leaftype = recode_leaftype(curve_type)
   ) |>
   rename(accid = acc_id)
 

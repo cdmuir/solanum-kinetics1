@@ -3,10 +3,7 @@ source("r/header.R")
 
 stomata = read_rds("data/stomata.rds")
 plant_info = read_rds("data/plant_info.rds") |>
-  mutate(light_treatment = fct_recode(light_treatment,
-   sun = "high",
-   shade = "low"
-  )) |>
+  mutate(light_treatment = recode_lighttreatment(light_treatment)) |>
   select(accession, replicate, light_treatment)
 
 df_stomata = stomata |>

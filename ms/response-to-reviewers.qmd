@@ -4,7 +4,6 @@ subtitle: |
   NPH-MS-2026-57029\
   *Guard cell size and pore aperture influence stomatal closure kinetics*\
   Muir & Lim
-date: today
 format:
   pdf:
     toc: false
@@ -19,6 +18,9 @@ header-includes: |
   \usepackage{xcolor}
   \usepackage{mdframed}
   \usepackage{setspace}
+  \usepackage{placeins}
+  \usepackage{siunitx}
+  \renewcommand{\thefigure}{R\arabic{figure}}
   \definecolor{responseblue}{RGB}{70, 130, 180}
   \definecolor{commentgray}{RGB}{90, 90, 90}
   \newenvironment{response}
@@ -110,7 +112,7 @@ We added Notes S1 to the Supporting Information to address the potential for var
 We extracted the leaf-to-air VPD trajectory for every curve from the logged humidity data and summarized it with two curve-level covariates: the VPD at the end of the fitted interval ("final VPD") and the rate at which VPD approached that final value ("VPD saturation rate"). We considered adding
 median VPD and VPD step magnitude as well, as the reviewer suggested. However, median VPD and final VPD are highly correlated ($r = 0.93$; @fig-vpd-pairs a), so we chose to use the final VPD. This should be the same as the VPD step magnitude since all leaves were started at the same RH and Tleaf, hence starting VPD was approximately constant.
 
-We attempted to incorporate the rate of VPD change as a covariate, but determined this was not useful. Unfortunately, we did not log data during the WWR when the initial step change in VPD occurred. We instead fit a saturating exponential, $\mathrm{VPD}(t) = B + (R_0 - B)\exp(-kt)$, to each curve's VPD trajectory (median $R^2 = 0.99$) and use the rate constant $k$ ("VPD saturation rate"). This rate constant is only weakly correlated with final VPD ($r = 0.31$; @fig-vpd-pairs c). However, $k$ is strongly correlated with $\tau$ ($r = `r formatC(cor_tau_rate, format = "f", digits = 2)`$ on a log-log scale; @fig-tau-vpd-rate) because it is mostly caused by decreasing $g_\mathrm{sw}$. We can see this clearly by comparing the rate of change in the water vapor concentration of the reference airstream, upstream of the leaf ($W_\mathrm{r}$), versus that of the sample airstream, which has equilibrated with the leaf inside the chamber ($W_\mathrm{s}$). If the change in VPD is caused by $g_\mathrm{sw}$, we expect a positive correlation between the rate of VPD change and the rate of $W_\mathrm{s}$ change, which is exactly what we see (@fig-vpd-h2o-rate a). In contrast, the rate of $W_\mathrm{r}$ change is about 30x smaller in magnitude and uncorrelated with the rate of VPD change (@fig-vpd-h2o-rate b), consistent with $W_\mathrm{r}$ mostly reflecting the (largely controlled) incoming airstream rather than the leaf's response. Hence, it would not be statistically valid to include the rate of VPD change as a covariate in predicting $\tau$ since both are caused by the same underlying variable, the rate of change in $g_\mathrm{sw}$.
+We attempted to incorporate the rate of VPD change as a covariate, but determined this was not useful. Unfortunately, we did not log data during the WWR when the initial step change in VPD occurred. We instead fit a saturating exponential, $\mathrm{VPD}(t) = B + (R_0 - B)\exp(-kt)$, to each curve's VPD trajectory (median $R^2 = 0.99$) and use the rate constant $k$ ("VPD saturation rate"). This rate constant is only weakly correlated with final VPD ($r = 0.31$; @fig-vpd-pairs c). However, $k$ is strongly correlated with $\tau$ ($r = `r formatC(cor_tau_rate, format = "f", digits = 2)`$ on a log-log scale; @fig-tau-vpd-rate) because it is mostly caused by decreasing $g_\mathrm{sw}$. We can see this clearly by comparing the rate of change in the water vapor concentration of the reference airstream, upstream of the leaf ($W_\mathrm{r}$), versus that of the sample airstream, which reflects humidity inside the chamber ($W_\mathrm{s}$). If the change in VPD is caused by $g_\mathrm{sw}$, we expect a positive correlation between the rate of VPD change and the rate of $W_\mathrm{s}$ change, which is exactly what we see (@fig-vpd-h2o-rate a). In contrast, the rate of $W_\mathrm{r}$ change is uncorrelated with the rate of VPD change (@fig-vpd-h2o-rate b). Hence, it would not be statistically valid to include the rate of VPD change as a covariate in predicting $\tau$ since both are caused by the same underlying variable, the rate of change in $g_\mathrm{sw}$.
 
 To directly test whether the realized VPD stimulus confounds the \fgmax{} and \gcl{} effects on $\tau$, we refit our selected model with final VPD added as a covariate of $\tau$ and $\lambda$. As reported above, the \fgmax{} and \gcl{} effects were essentially unchanged (@fig-vpd-comparison). Final VPD itself had a negative fixed effect on $\log \tau$ (`r final_vpd_on_tau`), consistent with higher realized VPD accelerating stomatal closure.
 
@@ -151,6 +153,10 @@ knitr::include_graphics("../figures/vpd-comparison.pdf")
 ```
 :::
 
+```{=latex}
+\FloatBarrier
+```
+
 ---
 
 ## Comment R1.2 — Mislabeled VPD summary statistic
@@ -176,7 +182,8 @@ stimulus itself may vary across the same treatments used to explain $\tau$.
 ::: response
 **Response:**
 
-[YOUR RESPONSE HERE]
+We thank the reviewer for catching the discrepancy between what we reported in Table S3 versus the actual content. At noted in the response to the previous comment, the median and final RH and VPD are highly correlated, so this mistake did not affect the interpretation. We revised Table S3 to report the average RH and VPD at three time points: when logging started, when logging finished, and the median during the logging interval. We also added the curve-level values for these variables to Table S1. We did not record the pre-step VPD but it was nearly identical for every leaf because we set leaf temperature to $\SI{25}{\degreeCelsius}$ and 70% to standardize starting conditions. This is equivalent to a VPD of $\mathrm{VPD} \approx \SI{0.82}{\kPa}$, as mentioned in the Materials and Methods. As mentioned in the previous response, we also do not have data on the initial rate of VPD increase.
+
 :::
 
 ---
@@ -214,7 +221,12 @@ anatomical maximum" rather than "aperture."
 ::: response
 **Response:**
 
-[YOUR RESPONSE HERE]
+Note that figure S5 (previously figure S1) shows that estimated gi is nearly perfectly correlated with measured gsw at the initial point. Clarify that we started logging when we believed WWR was done, which was achieved by starting logging when gsw reached the gsw value before the VPD step change.
+
+We invesitgated whether using model-derived gi could introduce a spurious relationship between fgmax by simulating curves that mimic the estimated variability in lambda and tau but where gi and gmax are fixed to median values
+
+While gmax is theoretical to some extent, it does seem to be a good description of maximum gs in experimentally controlled Arabidopsis plants (Dow et al 2014).
+
 :::
 
 ---
@@ -242,7 +254,13 @@ using a parameter estimated from the RWR itself.
 ::: response
 **Response:**
 
-[YOUR RESPONSE HERE]
+The reviewer is correct that Figure 1a and the accompanying description were internally inconsistent, and we thank the reviewer for catching this. This was an unintentional error in how we illustrated and described the timing of logging relative to the WWR; our data-collection protocol, curve fitting, and downstream analyses are unchanged.
+
+To clarify: we deliberately began logging each curve once \gsw{} had declined back down to its pre-step value, rather than logging continuously from the moment of the humidity step or from the WWR peak. We used this design specifically so that the first logged value of \gsw{}, and hence the fitted $g_i$, would correspond to pre-step conductance rather than to some arbitrary point during the WWR overshoot. Consequently, $g_i$ can accurately be described both ways the reviewer suggests: it is the fitted initial conductance at the start of the analyzed RWR segment, and by design it is also our estimate of pre-step conductance. Our \fgmax{} estimates ($g_i / g_\mathrm{max}$) already reflect pre-step conductance for this reason, so a separately computed pre-step \fgmax{} would not differ meaningfully from what we already report.
+
+We revised Figure 1a and the Materials and Methods to describe this precisely, and moved the "Log data" marker in the figure to the point where \gsw{} returns to $g_i$, distinct from the start of the RWR itself, which begins where \gsw{} first starts to decline from its WWR peak. We also added a caveat to the Discussion noting this limitation.
+
+One consequence of this design is that we did not log \gsw{} at its WWR maximum, so we lack a measurement of WWR magnitude and cannot directly test how it relates to $\tau$ or $\lambda$. By the logic of our approach, we would expect a larger-magnitude WWR to be associated with a slower, not faster, subsequent response. We agree that directly testing this relationship would be a valuable direction for future work, but it is not possible with the present dataset.
 :::
 
 ---
@@ -397,7 +415,7 @@ reversed relative to the plotted colors?
 ::: response
 **Response:**
 
-[YOUR RESPONSE HERE]
+The reviewer is correct. The in-figure labels and plotted colors in Figure 1d were always consistent (low \fgmax{} = orange/steep slope, high \fgmax{} = blue/shallow slope), but we had the colors swapped in the Figure 1 caption text. We corrected the caption to match the figure.
 :::
 
 ---

@@ -10,3 +10,9 @@ loglambdamean,numeric,,Point estimate of logit-transformed lag-time parameter
 loglambdasd,numeric,,Standard error of logit-transformed lag-time parameter
 logtaumean,numeric,,Point estimate of log-transformed time-constant parameter
 logtausd,numeric,,Standard error of log-transformed time-constant parameter
+initial_RH,numeric,,Relative humidity (proportion) at the start of the fitted interval
+median_RH,numeric,,Median relative humidity (proportion) during the fitted interval
+final_RH,numeric,,Relative humidity (proportion) at the end of the fitted interval
+initial_VPD,numeric,,Leaf-to-air vapor pressure deficit (kPa) at the start of the fitted interval
+median_VPD,numeric,,Median leaf-to-air vapor pressure deficit (kPa) during the fitted interval
+final_VPD,numeric,,Leaf-to-air vapor pressure deficit (kPa) at the end of the fitted interval

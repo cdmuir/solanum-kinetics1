@@ -5,11 +5,6 @@
 
 source("r/header.R")
 
-loggcl_latex = "$\\log \\left( l_\\text{gc} \\right)$"
-logitfgmax_latex = "$\\text{logit} \\left( f_\\text{gmax} \\right)$"
-loglambda_latex = "$\\log \\left( \\lambda \\right)$"
-logtau_latex = "$\\log \\left( \\tau \\right)$"
-
 # working here
 fit = read_rds("objects/best_model.rds")
 ci_level = 0.95
@@ -39,13 +34,7 @@ df_summary1 = summarize_draws(fit,
       str_detect(variable, "^cor_") ~ "random effect correlations",
       TRUE ~ NA_character_,
     ),
-    resp = case_when(
-      str_detect(variable, "_loggcl_") ~ loggcl_latex,
-      str_detect(variable, "_logitfgmax_") ~ logitfgmax_latex,
-      str_detect(variable, "_loglambdamean_") ~ loglambda_latex,
-      str_detect(variable, "_logtaumean_") ~ logtau_latex,
-      TRUE ~ NA_character_
-    )
+    resp = trait_latex_from_paramname(variable)
   )
 
 # Fixed effects
@@ -57,8 +46,8 @@ df_fixed = df_summary1 |>
       str_detect(variable, "_lighttreatmentsun$") ~ "sun",
       str_detect(variable, "_lightintensityhigh$") ~ "high light",
       str_detect(variable, "_leaftypepseudohypo$") ~ "pseudohypo leaf type",
-      str_detect(variable, "_logitfgmax$") ~ "$\\text{logit} \\left( f_\\text{gmax} \\right)$",
-      str_detect(variable, "_loggcl$") ~ "$\\log \\left( l_\\text{gc} \\right)$",
+      str_detect(variable, "_logitfgmax$") ~ trait_latex_label("logitfgmax"),
+      str_detect(variable, "_loggcl$") ~ trait_latex_label("loggcl"),
       TRUE ~ NA_character_
     ),
     description = map2_chr(resp, explanatory, \(.r, .e) {
@@ -75,11 +64,7 @@ df_random_sd = df_summary1 |>
   filter(Type == "random effect SDs") |>
   mutate(
     group1 = str_extract(variable, "(?<=_)[^_]+(?=__)"),
-    group2 = case_when(
-      group1 == "accession" ~ "population (nonphylogenetic)",
-      group1 == "phy" ~ "phylogenetic",
-      group1 == "accid" ~ "among-individual"
-    ),
+    group2 = recode_variance_component(group1),
     description = glue("SD in {resp}")
   )
 
@@ -95,25 +80,9 @@ df_random_cor = df_summary1 |>
       mutate(name = c("group1", "resp1", "resp2")) |>
       pivot_wider()
     }),
-    group2 = case_when(
-      group1 == "cor_accession" ~ "population (nonphylogenetic)",
-      group1 == "cor_phy" ~ "phylogenetic",
-      group1 == "cor_accid" ~ "among-individual"
-    ),
-    resp1 = case_when(
-      resp1 == "loggcl" ~ loggcl_latex,
-      resp1 == "logitfgmax" ~ logitfgmax_latex,
-      resp1 == "loglambdamean" ~ loglambda_latex,
-      resp1 == "logtaumean" ~ logtau_latex,
-      TRUE ~ NA_character_
-    ),
-    resp2 = case_when(
-      resp2 == "loggcl" ~ loggcl_latex,
-      resp2 == "logitfgmax" ~ logitfgmax_latex,
-      resp2 == "loglambdamean" ~ loglambda_latex,
-      resp2 == "logtaumean" ~ logtau_latex,
-      TRUE ~ NA_character_
-    ),
+    group2 = recode_variance_component(str_remove(group1, "^cor_")),
+    resp1 = trait_latex_label(resp1),
+    resp2 = trait_latex_label(resp2),
     description = glue("correlation between in {resp1} and {resp2}")
   )
 

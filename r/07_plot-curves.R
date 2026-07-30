@@ -26,12 +26,8 @@ rh_curves = list.files(sk_dir1) |>
       select(accession, replicate, light_treatment) |>
       mutate(
         curve_type = str_extract(.x, "amphi|pseudohypo"),
-        light_treatment = light_treatment |>
-          factor(levels = c("low", "high")) |>
-          fct_recode(shade = "low", sun = "high"),
-        light_intensity = str_extract(.x, "150|2000") |>
-          factor(levels = c("150", "2000")) |>
-          fct_recode(low = "150", high = "2000")
+        light_treatment = recode_lighttreatment(light_treatment),
+        light_intensity = recode_lightintensity(str_extract(.x, "150|2000"))
       ) |>
       left_join(select(accession_info, species, accession), by = join_by(accession))
     
