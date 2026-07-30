@@ -1,0 +1,76 @@
+# Compare key posterior estimates between the original model
+# (objects/best_model.rds) and the model refit with final VPD as a
+# curve-level covariate of tau and lambda (objects/best_model_vpd.rds; see
+# r/29_refit-vpd.R), to check whether the fgmax -> tau effect and the
+# gcl-tau phylogenetic correlation are robust to accounting for realized VPD
+# exposure (Notes S1).
+
+source("r/header.R")
+library(posterior)
+
+best_model = read_rds("objects/best_model.rds")
+best_model_vpd = read_rds("objects/best_model_vpd.rds")
+
+pars_of_interest = c(
+  "b_logtaumean_logitfgmax",
+  "cor_phy__logtaumean_Intercept__loggcl_Intercept"
+)
+
+par_labels = c(
+  b_logtaumean_logitfgmax = "f[gmax]~on~log(tau)",
+  cor_phy__logtaumean_Intercept__loggcl_Intercept = "phylogenetic~corr(log(l[gc])*','~log(tau))"
+)
+
+extract_pars = function(fit, model_name) {
+  as_draws_df(fit, variable = pars_of_interest) |>
+    as_tibble() |>
+    select(all_of(pars_of_interest)) |>
+    pivot_longer(everything(), names_to = "parameter", values_to = "value") |>
+    summarize(
+      estimate = mean(value),
+      lower = quantile(value, 0.025),
+      upper = quantile(value, 0.975),
+      .by = parameter
+    ) |>
+    mutate(model = model_name)
+}
+
+comp_pars = bind_rows(
+  extract_pars(best_model, "Original"),
+  extract_pars(best_model_vpd, "VPD-adjusted")
+) |>
+  mutate(
+    parameter = factor(
+      par_labels[parameter],
+      levels = par_labels
+    ),
+    model = factor(model, levels = c("Original", "VPD-adjusted"))
+  )
+
+write_rds(comp_pars, "objects/tbl-comparison-vpd.rds")
+
+# The fixed effect of final_vpd itself on log(tau) (only defined in the
+# VPD-adjusted model, so it does not fit the two-model comparison above).
+final_vpd_effect = as_draws_df(best_model_vpd, variable = "b_logtaumean_final_vpd") |>
+  as_tibble() |>
+  summarize(
+    estimate = mean(b_logtaumean_final_vpd),
+    lower = quantile(b_logtaumean_final_vpd, 0.025),
+    upper = quantile(b_logtaumean_final_vpd, 0.975)
+  )
+
+write_rds(final_vpd_effect, "objects/tbl-final-vpd-effect.rds")
+
+p_comparison = ggplot(comp_pars, aes(x = model, y = estimate, color = model)) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "grey50") +
+  geom_pointrange(aes(ymin = lower, ymax = upper), linewidth = 0.9) +
+  facet_wrap(~ parameter, scales = "free_y", labeller = label_parsed) +
+  scale_color_manual(values = c(Original = "grey30", `VPD-adjusted` = col_amphi)) +
+  labs(x = NULL, y = "Posterior estimate (95% CI)", color = NULL) +
+  theme(
+    axis.text.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    strip.text = element_text(size = 10)
+  )
+
+ggsave("figures/vpd-comparison.pdf", p_comparison, width = 9, height = 4)

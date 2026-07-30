@@ -40,11 +40,32 @@ our responses appear in blue.
 
 ```{r setup, echo=FALSE, message=FALSE, warning=FALSE}
 library(readr)
-library(patchwork)
+library(dplyr)
+library(glue)
 
-p_vpd_pairs = read_rds("../objects/plot-vpd-pairs.rds")
-p_tau_vs_rate = read_rds("../objects/plot-tau-vpd-rate.rds")
-p_vpd_h2o_rate = read_rds("../objects/plot-vpd-h2o-rate.rds")
+comp_pars_vpd = read_rds("../objects/tbl-comparison-vpd.rds")
+final_vpd_effect = read_rds("../objects/tbl-final-vpd-effect.rds")
+cor_tau_rate = read_rds("../objects/cor-tau-vpd-rate.rds")
+
+fmt_est = function(.df, .parameter, .model) {
+  row = .df[grepl(.parameter, .df$parameter, fixed = TRUE) & .df$model == .model, ]
+  glue(
+    "{formatC(row$estimate, format = 'f', digits = 2)} ",
+    "[{formatC(row$lower, format = 'f', digits = 2)}, ",
+    "{formatC(row$upper, format = 'f', digits = 2)}]"
+  )
+}
+
+fgmax_orig = fmt_est(comp_pars_vpd, "f[gmax]", "Original")
+fgmax_vpd = fmt_est(comp_pars_vpd, "f[gmax]", "VPD-adjusted")
+gcl_orig = fmt_est(comp_pars_vpd, "phylogenetic~corr", "Original")
+gcl_vpd = fmt_est(comp_pars_vpd, "phylogenetic~corr", "VPD-adjusted")
+
+final_vpd_on_tau = glue(
+  "{formatC(final_vpd_effect$estimate, format = 'f', digits = 2)} ",
+  "[{formatC(final_vpd_effect$lower, format = 'f', digits = 2)}, ",
+  "{formatC(final_vpd_effect$upper, format = 'f', digits = 2)}]"
+)
 ```
 
 ---
@@ -84,23 +105,22 @@ not simply the inlet humidity setting.
 ::: response
 **Response:**
 
-We added an appendix to the manuscript to address the potential for variable VPD stimuli to confound our results. The main results are robust, albeit slightly weaker, once variation in VPD is incorporated into the analysis. One caveat is that we do not have data on the initial rate of change in VPD, which limits our ability to evaluate whether this influenced stomatal kinetic responses. We added a short section in the Discussion with recommendations for future research on VPD responses <!-- TODO: add this -->
+We added Notes S1 to the Supporting Information to address the potential for variable VPD stimuli to confound our results, and updated the Materials and Methods to point to it. Our main results are robust once variation in VPD is incorporated into the analysis: the fixed effect of \fgmax{} on $\log \tau$ (original: `r fgmax_orig`; VPD-adjusted: `r fgmax_vpd`) and the phylogenetic correlation between \gcl{} and $\tau$ (original: `r gcl_orig`; VPD-adjusted: `r gcl_vpd`) were both essentially unchanged after adding final VPD as a covariate of $\tau$ and $\lambda$ (@fig-vpd-comparison). One caveat is that we do not have data on the initial rate of change in VPD, which limits our ability to evaluate whether this influenced stomatal kinetic responses; we added a recommendation for future research on this point at the end of Notes S1.
 
-<!-- TODO: copy and revise this into an appendix -->
 We extracted the leaf-to-air VPD trajectory for every curve from the logged humidity data and summarized it with two curve-level covariates: the VPD at the end of the fitted interval ("final VPD") and the rate at which VPD approached that final value ("VPD saturation rate"). We considered adding
-median VPD and VPD step magnitude as well, as the reviewer suggested. However, median VPD and final VPD are highly correlated ($r = 0.93$; @fig-vpd-pairs A), so we chose to use the final VPD. This should be the same as the VPD step magnitude since all leaves were started at the same RH and Tleaf, hence starting VPD was approximately constant.
+median VPD and VPD step magnitude as well, as the reviewer suggested. However, median VPD and final VPD are highly correlated ($r = 0.93$; @fig-vpd-pairs a), so we chose to use the final VPD. This should be the same as the VPD step magnitude since all leaves were started at the same RH and Tleaf, hence starting VPD was approximately constant.
 
-We attempted to incorporate the the rate of VPD change as a covariate, but determined this was not useful. Unfortunately, we did not log data during the WWR when the initial step change in VPD occurred. We instead fit a saturating exponential, $\mathrm{VPD}(t) = B + (R_0 - B)\exp(-kt)$, to each curve VPD curve (median $R^2 = 0.99$) and use the rate constant $k$ ("VPD saturation rate"). This rate constant is only weakly correlated with final VPD ($r = 0.31$; @fig-vpd-pairs C). However, $k$ is very strong correlated with $\tau$ ($r = -0.87$; @fig-tau-vpd-rate) because it is mostly caused by decreasing $g_\mathrm{sw}$. We can see this clearly by comparing the rate of change in the water vapor concentration of the reference airstream, upstream of the leaf ($W_\mathrm{r}$), versus that of the sample airstream, which has equilibrated with the leaf inside the chamber ($W_\mathrm{s}$). If the change in VPD is caused by $g_\mathrm{sw}$, we expect a positive correlation between the rate of VPD change and the rate of $W_\mathrm{s}$ change, which is exactly what we see (@fig-vpd-h2o-rate A). In contrast, the rate of $W_\mathrm{r}$ change is about 30x smaller in magnitude and uncorrelated with the rate of VPD change (@fig-vpd-h2o-rate B), consistent with $W_\mathrm{r}$ mostly reflecting the (largely controlled) incoming airstream rather than the leaf's response. Hence, it would not be statistically valid to include the rate of VPD change as a covariate in predicting $\tau$ since both are caused by the same underlying variable, the rate of change in $g_\mathrm{sw}$.
+We attempted to incorporate the rate of VPD change as a covariate, but determined this was not useful. Unfortunately, we did not log data during the WWR when the initial step change in VPD occurred. We instead fit a saturating exponential, $\mathrm{VPD}(t) = B + (R_0 - B)\exp(-kt)$, to each curve's VPD trajectory (median $R^2 = 0.99$) and use the rate constant $k$ ("VPD saturation rate"). This rate constant is only weakly correlated with final VPD ($r = 0.31$; @fig-vpd-pairs c). However, $k$ is strongly correlated with $\tau$ ($r = `r formatC(cor_tau_rate, format = "f", digits = 2)`$ on a log-log scale; @fig-tau-vpd-rate) because it is mostly caused by decreasing $g_\mathrm{sw}$. We can see this clearly by comparing the rate of change in the water vapor concentration of the reference airstream, upstream of the leaf ($W_\mathrm{r}$), versus that of the sample airstream, which has equilibrated with the leaf inside the chamber ($W_\mathrm{s}$). If the change in VPD is caused by $g_\mathrm{sw}$, we expect a positive correlation between the rate of VPD change and the rate of $W_\mathrm{s}$ change, which is exactly what we see (@fig-vpd-h2o-rate a). In contrast, the rate of $W_\mathrm{r}$ change is about 30x smaller in magnitude and uncorrelated with the rate of VPD change (@fig-vpd-h2o-rate b), consistent with $W_\mathrm{r}$ mostly reflecting the (largely controlled) incoming airstream rather than the leaf's response. Hence, it would not be statistically valid to include the rate of VPD change as a covariate in predicting $\tau$ since both are caused by the same underlying variable, the rate of change in $g_\mathrm{sw}$.
+
+To directly test whether the realized VPD stimulus confounds the \fgmax{} and \gcl{} effects on $\tau$, we refit our selected model with final VPD added as a covariate of $\tau$ and $\lambda$. As reported above, the \fgmax{} and \gcl{} effects were essentially unchanged (@fig-vpd-comparison). Final VPD itself had a negative fixed effect on $\log \tau$ (`r final_vpd_on_tau`), consistent with higher realized VPD accelerating stomatal closure.
 
 ```{r}
 #| label: fig-vpd-pairs
 #| echo: false
 #| message: false
 #| warning: false
-#| fig-width: 9
-#| fig-height: 3.5
-#| fig-cap: "Pairwise relationships among curve-level VPD covariates: (A) median vs. final VPD, (B) median VPD vs. VPD saturation rate, (C) final VPD vs. VPD saturation rate. Each point is one humidity response curve, colored by leaf type; lines are ordinary least-squares fits within leaf type. VPD saturation rate is the rate constant of a saturating exponential fit to the VPD trajectory during the fitted interval."
-p_vpd_pairs
+#| fig-cap: "Pairwise relationships among curve-level VPD covariates: (a) median vs. final VPD, (b) median VPD vs. VPD saturation rate, (c) final VPD vs. VPD saturation rate. Each point is one humidity response curve, colored by leaf type; lines are ordinary least-squares fits within leaf type. VPD saturation rate is the rate constant of a saturating exponential fit to the VPD trajectory during the fitted interval."
+knitr::include_graphics("../figures/vpd-pairs.pdf")
 ```
 
 ```{r}
@@ -108,10 +128,8 @@ p_vpd_pairs
 #| echo: false
 #| message: false
 #| warning: false
-#| fig-width: 6
-#| fig-height: 4
-#| fig-cap: "The stomatal closure time-constant $\\tau$ (log scale) is strongly correlated with the VPD saturation rate $k$ ($r = -0.87$), consistent with $k$ being largely driven by the same $g_\\mathrm{sw}$-decline signal that determines $\\tau$, rather than an independent property of the VPD stimulus. Each point is one humidity response curve, colored by leaf type; lines are ordinary least-squares fits within leaf type."
-p_tau_vs_rate
+#| fig-cap: "The stomatal closure time-constant $\\tau$ is positively correlated with the inverse of the VPD saturation rate, $k^{-1}$ (both log scale; $r = `r formatC(cor_tau_rate, format = 'f', digits = 2)`$), consistent with $k$ being largely driven by the same $g_\\mathrm{sw}$-decline signal that determines $\\tau$, rather than an independent property of the VPD stimulus. Each point is one humidity response curve."
+knitr::include_graphics("../figures/tau-vpd-rate.pdf")
 ```
 
 ```{r}
@@ -119,10 +137,17 @@ p_tau_vs_rate
 #| echo: false
 #| message: false
 #| warning: false
-#| fig-width: 8
-#| fig-height: 4
-#| fig-cap: "The VPD saturation rate is driven by the sample airstream, not the reference airstream. (A) VPD saturation rate vs. the saturation rate of $W_\\mathrm{s}$ (sample cell water vapor concentration, which has equilibrated with the leaf); the dashed line is the 1:1 line. (B) VPD saturation rate vs. the saturation rate of $W_\\mathrm{r}$ (reference cell water vapor concentration, upstream of the leaf). Each point is one humidity response curve; rate constants come from the same saturating-exponential model used for VPD (@fig-vpd-pairs)."
-p_vpd_h2o_rate
+#| fig-cap: "The VPD saturation rate is driven by the sample airstream, not the reference airstream. (a) VPD saturation rate vs. the saturation rate of $W_\\mathrm{s}$ (sample cell water vapor concentration, which has equilibrated with the leaf); the dashed line is the 1:1 line. (b) VPD saturation rate vs. the saturation rate of $W_\\mathrm{r}$ (reference cell water vapor concentration, upstream of the leaf). Each point is one humidity response curve; rate constants come from the same saturating-exponential model used for VPD."
+knitr::include_graphics("../figures/vpd-h2o-rate.pdf")
+```
+
+```{r}
+#| label: fig-vpd-comparison
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-cap: "The \\fgmax{} effect on $\\tau$ and the phylogenetic correlation between \\gcl{} and $\\tau$ are robust to accounting for final VPD. Posterior means and 95\\% credible intervals for the fixed effect of \\fgmax{} on $\\log \\tau$ (left) and the phylogenetic correlation between $\\log$ \\gcl{} and $\\log \\tau$ (right), comparing the original model (grey) to a model refit with final VPD added as a covariate of $\\tau$ and $\\lambda$ (pink)."
+knitr::include_graphics("../figures/vpd-comparison.pdf")
 ```
 :::
 

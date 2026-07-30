@@ -2754,6 +2754,23 @@ constants come from the same saturating-exponential model used for VPD.}
 
 \end{figure}%
 
+\begin{figure}
+
+\centering{
+
+\pandocbounded{\includegraphics[keepaspectratio]{../figures/vpd-comparison.pdf}}
+
+}
+
+\caption{\label{fig-vpd-comparison}\textbf{The \fgmax{} effect on $\tau$ and the phylogenetic correlation between \gcl{} and $\tau$ are robust to accounting for final VPD.}
+Posterior means and 95\% credible intervals for the fixed effect of
+\fgmax{} on \(\log \tau\) (left) and the phylogenetic correlation
+between \(\log\) \gcl{} and \(\log \tau\) (right), comparing the
+original model (grey) to a model refit with final VPD added as a
+covariate of \(\tau\) and \(\lambda\) (pink; see Notes S1).}
+
+\end{figure}%
+
 \subsection{Supporting notes}\label{supporting-notes}
 
 \textbf{Notes S1} Effects of \fgmax{} and \gcl{} are robust to variation
@@ -2794,13 +2811,29 @@ VPD saturation rate closely tracked the \(W_\mathrm{s}\) saturation rate
 (\(r = 0.02\)) Figure~\ref{fig-vpd-h2o-rate}. Including \(k\) as a
 covariate of \(\tau\) would therefore be close to circular.
 
+To directly test whether the realized VPD stimulus confounds the
+\fgmax{} and \gcl{} effects on \(\tau\), we refit the selected model
+with final VPD added as a covariate of \(\tau\) and \(\lambda\)
+(Figure~\ref{fig-vpd-comparison}). The fixed effect of \fgmax{} on
+\(\log \tau\) was essentially unchanged (original: 0.19 {[}0.13,
+0.25{]}; VPD-adjusted: 0.19 {[}0.10, 0.27{]}), as was the phylogenetic
+correlation between \gcl{} and \(\tau\) (original: 0.64 {[}0.14,
+0.91{]}; VPD-adjusted: 0.58 {[}0.02, 0.90{]}). This indicates that
+neither effect is an artifact of systematic variation in the realized
+VPD stimulus among treatment combinations. Final VPD itself had a
+negative fixed effect on \(\log \tau\) (-0.47 {[}-0.64, -0.31{]}),
+consistent with higher realized VPD accelerating stomatal closure, but
+accounting for this effect did not change our conclusions about \fgmax{}
+or \gcl{}.
+
 We lack data on the rate of VPD change during the wrong-way response,
-because humidity logging began after this initial transient (Fig. 1A);
-this limits our ability to evaluate whether the \emph{initial} rate of
-VPD change, as opposed to the steady increase captured here, influenced
-closure kinetics. We recommend that future studies of stomatal kinetics
-log chamber humidity continuously from the onset of the humidity step to
-more fully characterize the realized VPD stimulus.
+because humidity logging began after this initial transient
+Figure~\ref{fig-conceptual}a; this limits our ability to evaluate
+whether the \emph{initial} rate of VPD change, as opposed to the steady
+increase captured here, influenced closure kinetics. We recommend that
+future studies of stomatal kinetics log chamber humidity continuously
+from the onset of the humidity step to more fully characterize the
+realized VPD stimulus.
 
 
 
