@@ -602,3 +602,97 @@ fit_saturating = function(df, yvar) {
     sat_rate_se = rate_se
   )
 }
+
+# --- Simulate one dataset: real time design/tau/lambda/sigma per curve,
+# swap gi/gf with another curve -----------------------------
+
+sim_one_dataset = function(real_pars, time_design, i, j) {
+  pars_i = real_pars |>
+    filter(id == i) |> 
+    select(curve = id, tau, lambda, sigma) 
+  pars_j = real_pars |>
+    filter(id == j) |> 
+    select(gi, gf)
+  
+  bind_cols(pars_i, pars_j) |>
+    left_join(time_design, by = join_by(curve)) |>
+    mutate(
+      gsw_true = gf + (gi - gf) * exp(-(t_sec / tau) ^ lambda),
+      gsw_sim = gsw_true + rnorm(n(), 0, sigma)
+    )
+  
+}
+
+# --- Fast re-fit of the same functional form via nls() -------------------
+
+fit_nls_one = function(df) {
+  gf0 = min(df$gsw_sim)
+  gi0 = max(df$gsw_sim)
+  m = tryCatch(
+    nls(
+      gsw_sim ~ gf + (gi - gf) * exp(-(t_sec / tau) ^ lambda),
+      data = df,
+      start = list(gf = gf0, gi = gi0, tau = 200, lambda = 1.2),
+      control = nls.control(maxiter = 200, warnOnly = TRUE)
+    ),
+    error = function(e) NULL
+  )
+  if (is.null(m) || !m$convInfo$isConv) {
+    return(tibble(converged = FALSE, gi_hat = NA_real_, gf_hat = NA_real_,
+                  tau_hat = NA_real_, lambda_hat = NA_real_))
+  }
+  cf = coef(m)
+  tibble(
+    converged = TRUE,
+    gi_hat = cf[["gi"]],
+    gf_hat = cf[["gf"]],
+    tau_hat = cf[["tau"]],
+    lambda_hat = cf[["lambda"]]
+  )
+}
+
+# --- One full replicate: simulate + refit all curves + compute correlation
+run_one_replicate = function(replicate_id, real_pars, time_design, quiet = FALSE) {
+  
+  i = sample(real_pars$id, nrow(real_pars))
+  j = sample(real_pars$id, nrow(real_pars))
+  
+  if (!quiet) {
+    cli_alert_info(glue("Simulating {n} synthetic curves...", n = prettyNum(length(i), big.mark = ",")))
+  }
+  
+  sim_data = map2(
+    i,
+    j,
+    sim_one_dataset,
+    real_pars = real_pars,
+    time_design = time_design,
+    .progress = !quiet
+  )
+  
+  if (!quiet) {
+    cli_alert_info(glue("Fitting {n} synthetic curves...", n = prettyNum(length(i), big.mark = ",")))
+  }
+  
+  fits = sim_data |>
+    map_dfr(fit_nls_one, .progress = !quiet)
+  
+  fits_valid = fits |>
+    filter(converged, gi_hat > 0, gf_hat > 0, gf_hat < gi_hat, gi_hat < 1.4,
+           tau_hat > 0, lambda_hat > 0) |>
+    mutate(logtau_hat = log(tau_hat))
+  
+  ct = suppressWarnings(cor.test(fits_valid$gi_hat, fits_valid$logtau_hat))
+  
+  tibble(
+    replicate = replicate_id,
+    n_curves = nrow(fits_valid),
+    n_converged = sum(fits$converged),
+    n_total = nrow(fits),
+    cor = unname(ct$estimate),
+    cor_lower = ct$conf.int[1],
+    cor_upper = ct$conf.int[2]
+  )
+  
+}
+

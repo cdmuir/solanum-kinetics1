@@ -9,6 +9,7 @@ suppressPackageStartupMessages({
   library(ape)
   library(brms)
   library(checkmate)
+  library(cli)
   library(cowplot)
   library(dplyr)
   library(forcats)

@@ -1,6 +1,7 @@
 install.packages("ape")
 install.packages("brms")
 install.packages("checkmate")
+install.packages("cli")
 install.packages("cowplot")
 install.packages("dplyr")
 install.packages("forcats")
