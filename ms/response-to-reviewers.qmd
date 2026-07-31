@@ -31,6 +31,7 @@ header-includes: |
     {\end{mdframed}}
   \newcommand{\fgmax}{$f_\mathrm{gmax}$}
   \newcommand{\gcl}{$l_\mathrm{gc}$}
+  \newcommand{\gi}{$g_\mathrm{i}$}
   \newcommand{\gmax}{$g_\mathrm{max}$}
   \newcommand{\gop}{$g_\mathrm{op}$}
   \newcommand{\gsw}{$g_\mathrm{sw}$}
@@ -62,6 +63,13 @@ fgmax_orig = fmt_est(comp_pars_vpd, "f[gmax]", "Original")
 fgmax_vpd = fmt_est(comp_pars_vpd, "f[gmax]", "VPD-adjusted")
 gcl_orig = fmt_est(comp_pars_vpd, "phylogenetic~corr", "Original")
 gcl_vpd = fmt_est(comp_pars_vpd, "phylogenetic~corr", "VPD-adjusted")
+
+null_sim_results = read_rds("../objects/null-sim-fgmax-tau.rds")
+real_cor_fgmax_tau = read_rds("../objects/real-cor-fgmax-tau.rds")
+null_sim_p = read_rds("../objects/null-sim-empirical-p.rds")
+nls_vs_bayes = read_rds("../objects/null-sim-nls-vs-bayes-summary.rds")
+
+fmt_cor = function(x) formatC(x, format = "f", digits = 2)
 
 final_vpd_on_tau = glue(
   "{formatC(final_vpd_effect$estimate, format = 'f', digits = 2)} ",
@@ -198,9 +206,9 @@ defines it as $g_i / g_\mathrm{max}$ at lines 273–279 and then interprets
 higher \fgmax{} as stomata being more open at lines 397–404 and as a
 mechanistic driver of slower closure at lines 506–513. I think the hypothesis
 is interesting, but the current evidence is not enough to treat \fgmax{} as a
-direct aperture measurement. The numerator, $g_i$, is estimated from the same
+direct aperture measurement. The numerator, \gi, is estimated from the same
 nonlinear curve that also gives $\tau$ and $\lambda$, so parameter covariance
-in the Weibull fit could generate an association between $g_i$ and $\tau$ even
+in the Weibull fit could generate an association between \gi and $\tau$ even
 if the underlying biological relationship is weaker. The denominator
 $g_\mathrm{max}$ is also model-derived from stomatal density, guard cell
 length, assumed pore geometry, and conductance calculations. I think one paper
@@ -208,11 +216,11 @@ by the Sack and Buckley group explicitly describes anatomical $g_\mathrm{max}$
 as a theoretical estimate of maximum stomatal diffusion capacity that cannot
 usually be reached in practice, which is useful but not identical to observed
 aperture. I would ask the authors to validate or reframe the variable.
-Specifically, they should report posterior correlations between fitted $g_i$
+Specifically, they should report posterior correlations between fitted \gi
 and $\tau$ within individual curves, run a null simulation showing whether the
-curve fitting procedure alone can induce a $g_i$–$\tau$ association, and
-repeat the main analysis using alternative predictors such as absolute $g_i$,
-observed maximum \gsw{}, \gmax{}, and $g_i$ and \gmax{} as separate
+curve fitting procedure alone can induce a \gi–$\tau$ association, and
+repeat the main analysis using alternative predictors such as absolute \gi,
+observed maximum \gsw{}, \gmax{}, and \gi and \gmax{} as separate
 predictors. If no direct pore aperture measurements exist, I would also
 suggest using more cautious language such as "conductance fraction of
 anatomical maximum" rather than "aperture."
@@ -221,29 +229,42 @@ anatomical maximum" rather than "aperture."
 ::: response
 **Response:**
 
-Note that figure S5 (previously figure S1) shows that estimated gi is nearly perfectly correlated with measured gsw at the initial point. Clarify that we started logging when we believed WWR was done, which was achieved by starting logging when gsw reached the gsw value before the VPD step change.
+We thank the reviewer for raising this point because it revealed a mistake in our explanation of the methods. Figure 1 and our description incorrectly stated that the fitted interval began as soon as the RWR began. Our actual protocol was that we recorded \gsw{} before the VPD step and starting logging when \gsw{} returned to that point. We revised Figure 1a and the Materials and Methods (lines XXX-XXX). The reason for this protocol was that preliminary experiments showed the relationship between \gsw{} and $A$ analyzed in @muir_plasticity_2025 was "off" over the interval of \gsw{} between its maximum and when it returned to the pre-step value (the interval between the start of the RWR and when we started logging as depicted in Figure 1a). Our interpretation is that during the WWR \gsw{} increases faster than photochemistry can be upregulated, such that $A$ doesn't increase as much as you would expect for that amount of change in \gsw. This point is tangential to our analysis of stomatal kinetics, but we hope it clarifies the rationale. Hence, we only have a single of estimate of \fgmax{} where \gi{} is the pre-step \gsw{}, as depicted in the revised version of Figure 1a. We do not have data on maximum \gsw{} at the end of the WWR. In principle, if the relationship between guard cell turgor and \gsw{} (Figure 1d) within a leaf is fixed then we should be able to estimate the effect of \fgmax{} on $\tau$ either way, but we cannot evaluate this in more detail with the data we have. 
 
-We invesitgated whether using model-derived gi could introduce a spurious relationship between fgmax by simulating curves that mimic the estimated variability in lambda and tau but where gi and gmax are fixed to median values
+Note that figure S5 (previously figure S1) shows that estimated \gi is nearly perfectly correlated with measured \gsw{} at the initial point. Clarify that we started logging when we believed WWR was done, which was achieved by starting logging when \gsw reached the \gsw{} value before the VPD step change.
 
-While gmax is theoretical to some extent, it does seem to be a good description of maximum gs in experimentally controlled Arabidopsis plants (Dow et al 2014).
+We investigated whether estimating \gi from the same nonlinear fit as $\tau$ and $\lambda$ could, by itself, introduce a spurious \gi-$\tau$ (and hence \fgmax{}-$\tau$) association with a null simulation. For every real curve, we simulated a synthetic \gsw{} trajectory using that curve's own measurement times and residual noise magnitude and its own fitted $\tau$ and $\lambda$, but with \gi and $g_f$ **fixed at their real median values for every curve** (so the true \fgmax{} has zero variance by construction and cannot be truly associated with $\tau$). We re-fit the same Weibull functional form to each simulated curve (via `nls()`, validated against the full Bayesian pipeline used for the real data on a 50-curve subsample: cor($\tau$) = `r fmt_cor(nls_vs_bayes$cor_tau)`, cor($\lambda$) = `r fmt_cor(nls_vs_bayes$cor_lambda)`) and computed the correlation between the *estimated* \fgmax{} and $\tau$. We repeated this 200 times to build a null distribution of this correlation. Because \gi and $g_f$ have no true variation in this simulation, any such correlation must be an artifact of the fitting procedure rather than biology.
+
+The null-simulation correlations ranged from `r fmt_cor(min(null_sim_results$cor))` to `r fmt_cor(max(null_sim_results$cor))` (median `r fmt_cor(median(null_sim_results$cor))`) across the 200 replicates -- indistinguishable from zero -- whereas the real, observed correlation between \fgmax{} and $\tau$ is `r fmt_cor(real_cor_fgmax_tau$cor)` [`r fmt_cor(real_cor_fgmax_tau$cor_lower)`, `r fmt_cor(real_cor_fgmax_tau$cor_upper)`] (@fig-null-sim-fgmax-tau), far outside the null range (empirical $p$ = `r formatC(null_sim_p, format = "f", digits = 3)`). This indicates that the curve-fitting procedure alone cannot explain the observed \fgmax{}-$\tau$ association, and that it more plausibly reflects a real relationship in the data.
+
+```{r}
+#| label: fig-null-sim-fgmax-tau
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-cap: "Null distribution of the correlation between estimated \\fgmax{} and estimated $\\tau$ across 200 simulated datasets in which the true \gi and $g_f$ are fixed at their real median values for every curve (so \\fgmax{} has no true relationship with $\\tau$ by construction), compared to the observed correlation in the real data (red line)."
+knitr::include_graphics("../figures/null-sim-fgmax-tau.pdf")
+```
+
+While \gmax{} is theoretical to some extent, it does seem to be a good description of maximum \gsw{} in experimentally controlled *Arabidopsis* plants (Dow et al. 2014).
 
 :::
 
 ---
 
-## Comment R1.4 — Timing of $g_i$ is ambiguous
+## Comment R1.4 — Timing of \gi is ambiguous
 
 ::: revcomment
-I also found the timing of $g_i$ is ambiguous because the authors start
+I also found the timing of \gi is ambiguous because the authors start
 logging after the wrong way response. Figure 1A and lines 41–45 correctly
 distinguish the WWR and RWR, but lines 248–249 state that data logging began
-after the transient WWR. Then lines 273–278 say that fitted $g_i$ is a good
+after the transient WWR. Then lines 273–278 say that fitted \gi is a good
 proxy for conductance "at the time of the step change in humidity." These
-statements do not seem consistent. If logging begins after the WWR, then $g_i$
+statements do not seem consistent. If logging begins after the WWR, then \gi
 is the initial conductance of the analyzed RWR segment and therefore not
 necessarily conductance at the humidity step. Figure 1A actually illustrates
 this distinction nicely with the VPD step occurring before the orange "log
-data" interval. It would be great if author define $g_i$ throughout as the
+data" interval. It would be great if author define \gi throughout as the
 fitted initial conductance at the start of the analyzed RWR, unless pre-step
 conductance was recorded and used. If pre-step steady state \gsw{} exists, the
 authors could also consider computing a pre-step \fgmax{} and test whether it
@@ -256,9 +277,9 @@ using a parameter estimated from the RWR itself.
 
 The reviewer is correct that Figure 1a and the accompanying description were internally inconsistent, and we thank the reviewer for catching this. This was an unintentional error in how we illustrated and described the timing of logging relative to the WWR; our data-collection protocol, curve fitting, and downstream analyses are unchanged.
 
-To clarify: we deliberately began logging each curve once \gsw{} had declined back down to its pre-step value, rather than logging continuously from the moment of the humidity step or from the WWR peak. We used this design specifically so that the first logged value of \gsw{}, and hence the fitted $g_i$, would correspond to pre-step conductance rather than to some arbitrary point during the WWR overshoot. Consequently, $g_i$ can accurately be described both ways the reviewer suggests: it is the fitted initial conductance at the start of the analyzed RWR segment, and by design it is also our estimate of pre-step conductance. Our \fgmax{} estimates ($g_i / g_\mathrm{max}$) already reflect pre-step conductance for this reason, so a separately computed pre-step \fgmax{} would not differ meaningfully from what we already report.
+To clarify: we deliberately began logging each curve once \gsw{} had declined back down to its pre-step value, rather than logging continuously from the moment of the humidity step or from the WWR peak. We used this design specifically so that the first logged value of \gsw{}, and hence the fitted \gi, would correspond to pre-step conductance rather than to some arbitrary point during the WWR overshoot. Consequently, \gi can accurately be described both ways the reviewer suggests: it is the fitted initial conductance at the start of the analyzed RWR segment, and by design it is also our estimate of pre-step conductance. Our \fgmax{} estimates ($g_i / g_\mathrm{max}$) already reflect pre-step conductance for this reason, so a separately computed pre-step \fgmax{} would not differ meaningfully from what we already report.
 
-We revised Figure 1a and the Materials and Methods to describe this precisely, and moved the "Log data" marker in the figure to the point where \gsw{} returns to $g_i$, distinct from the start of the RWR itself, which begins where \gsw{} first starts to decline from its WWR peak. We also added a caveat to the Discussion noting this limitation.
+We revised Figure 1a and the Materials and Methods to describe this precisely, and moved the "Log data" marker in the figure to the point where \gsw{} returns to \gi, distinct from the start of the RWR itself, which begins where \gsw{} first starts to decline from its WWR peak. We also added a caveat to the Discussion noting this limitation.
 
 One consequence of this design is that we did not log \gsw{} at its WWR maximum, so we lack a measurement of WWR magnitude and cannot directly test how it relates to $\tau$ or $\lambda$. By the logic of our approach, we would expect a larger-magnitude WWR to be associated with a slower, not faster, subsequent response. We agree that directly testing this relationship would be a valuable direction for future work, but it is not possible with the present dataset.
 :::
@@ -358,7 +379,7 @@ each curve was fit using 1,000 post-warmup draws from a single chain, with
 Rhat $< 1.05$, bulk ESS $> 400$ and fewer than 10 divergent transitions. The
 code confirms the single-chain curve fitting in `r/functions.R`, lines 8–18.
 I am not fully convinced with this as the only diagnostic for thousands of
-nonlinear curve fits especially because $g_i$, $g_f$, $\tau$, and $\lambda$
+nonlinear curve fits especially because \gi, $g_f$, $\tau$, and $\lambda$
 are likely correlated. Stan's diagnostics treat divergent transitions as a
 warning that HMC may not be fully exploring the posterior and the usual
 workflow relies on multiple chains to assess convergence. Perhaps no need for
@@ -366,7 +387,7 @@ the authors to refit all 2,124 curves with four chains if that is
 computationally prohibitive, but it would be great for a stratified four-chain
 validation subset including difficult curves, high-$\tau$ curves, high-\fgmax{}
 curves, and low-$R^2$ curves. To show or supplement that the single-chain
-pipeline gives essentially the same $\tau$, $\lambda$, and $g_i$ estimates as
+pipeline gives essentially the same $\tau$, $\lambda$, and \gi estimates as
 a more standard multi-chain fit.
 :::
 
