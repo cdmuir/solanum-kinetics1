@@ -135,9 +135,10 @@ df_forms = crossing(
   )
 
 future_walk2(
-  df_forms$form,
-  df_forms$file,
+  df_forms$form[1:32],
+  df_forms$file[1:32],
   \(.form, .file) {
+    
     fit = brm(
       formula = .form,
       data = joined_summary |>
@@ -151,7 +152,7 @@ future_walk2(
       control = list(adapt_delta = 0.9),
       backend = "cmdstanr",
       family = student(),
-      seed = 613135062 + as.numeric(str_extract(file, "[0-9]+"))
+      seed = 613135062 + as.numeric(str_extract(.file, "[0-9]+"))
     ) |> add_criterion("loo")
     
     write_rds(fit, .file)
