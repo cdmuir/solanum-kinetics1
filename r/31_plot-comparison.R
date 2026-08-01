@@ -6,7 +6,6 @@
 # exposure (Notes S1).
 
 source("r/header.R")
-library(posterior)
 
 best_model = read_rds("objects/best_model.rds")
 best_model_vpd = read_rds("objects/best_model_vpd.rds")

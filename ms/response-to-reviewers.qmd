@@ -119,14 +119,14 @@ not simply the inlet humidity setting.
 ::: response
 **Response:**
 
-We added Notes S1 to the Supporting Information to address the potential for variable VPD stimuli to confound our results, and updated the Materials and Methods to point to it. Our main results are robust once variation in VPD is incorporated into the analysis: the fixed effect of \fgmax{} on $\log \tau$ (original: `r fgmax_orig`; VPD-adjusted: `r fgmax_vpd`) and the phylogenetic correlation between \gcl{} and $\tau$ (original: `r gcl_orig`; VPD-adjusted: `r gcl_vpd`) were both essentially unchanged after adding final VPD as a covariate of $\tau$ and $\lambda$ (@fig-vpd-comparison). One caveat is that we do not have data on the initial rate of change in VPD, which limits our ability to evaluate whether this influenced stomatal kinetic responses; we added a recommendation for future research on this point at the end of Notes S1.
+We added Notes S1 to the Supporting Information to address the potential for variable VPD stimuli to confound our results, and updated the Materials and Methods to point to it. Our main results are robust once variation in VPD is incorporated into the analysis: the fixed effect of \fgmax{} on $\log \tau$ (original: `r fgmax_orig`; VPD-adjusted: `r fgmax_vpd`) and the phylogenetic correlation between \gcl{} and $\tau$ (original: `r gcl_orig`; VPD-adjusted: `r gcl_vpd`) were both slightly weaker after adding final VPD as a covariate of $\tau$ and $\lambda$ (@fig-vpd-comparison). One caveat is that we do not have data on the initial rate of change in VPD, which limits our ability to evaluate whether this influenced stomatal kinetic responses; we added a recommendation for future research on this point at the end of Notes S1.
 
 We extracted the leaf-to-air VPD trajectory for every curve from the logged humidity data and summarized it with two curve-level covariates: the VPD at the end of the fitted interval ("final VPD") and the rate at which VPD approached that final value ("VPD saturation rate"). We considered adding
 median VPD and VPD step magnitude as well, as the reviewer suggested. However, median VPD and final VPD are highly correlated ($r = 0.93$; @fig-vpd-pairs a), so we chose to use the final VPD. This should be the same as the VPD step magnitude since all leaves were started at the same RH and Tleaf, hence starting VPD was approximately constant.
 
 We attempted to incorporate the rate of VPD change as a covariate, but determined this was not useful. Unfortunately, we did not log data during the WWR when the initial step change in VPD occurred. We instead fit a saturating exponential, $\mathrm{VPD}(t) = B + (R_0 - B)\exp(-kt)$, to each curve's VPD trajectory (median $R^2 = 0.99$) and use the rate constant $k$ ("VPD saturation rate"). This rate constant is only weakly correlated with final VPD ($r = 0.31$; @fig-vpd-pairs c). However, $k$ is strongly correlated with $\tau$ ($r = `r formatC(cor_tau_rate, format = "f", digits = 2)`$ on a log-log scale; @fig-tau-vpd-rate) because it is mostly caused by decreasing $g_\mathrm{sw}$. We can see this clearly by comparing the rate of change in the water vapor concentration of the reference airstream, upstream of the leaf ($W_\mathrm{r}$), versus that of the sample airstream, which reflects humidity inside the chamber ($W_\mathrm{s}$). If the change in VPD is caused by $g_\mathrm{sw}$, we expect a positive correlation between the rate of VPD change and the rate of $W_\mathrm{s}$ change, which is exactly what we see (@fig-vpd-h2o-rate a). In contrast, the rate of $W_\mathrm{r}$ change is uncorrelated with the rate of VPD change (@fig-vpd-h2o-rate b). Hence, it would not be statistically valid to include the rate of VPD change as a covariate in predicting $\tau$ since both are caused by the same underlying variable, the rate of change in $g_\mathrm{sw}$.
 
-To directly test whether the realized VPD stimulus confounds the \fgmax{} and \gcl{} effects on $\tau$, we refit our selected model with final VPD added as a covariate of $\tau$ and $\lambda$. As reported above, the \fgmax{} and \gcl{} effects were essentially unchanged (@fig-vpd-comparison). Final VPD itself had a negative fixed effect on $\log \tau$ (`r final_vpd_on_tau`), consistent with higher realized VPD accelerating stomatal closure.
+To directly test whether the realized VPD stimulus confounds the \fgmax{} and \gcl{} effects on $\tau$, we refit our selected model with final VPD added as a covariate of $\tau$ and $\lambda$. As reported above, the \fgmax{} and \gcl{} effects were slightly weaker when final VPD was included as a covariate (@fig-vpd-comparison). Final VPD itself had a negative fixed effect on $\log \tau$ (`r final_vpd_on_tau`), consistent with higher realized VPD accelerating stomatal closure.
 
 ```{r}
 #| label: fig-vpd-pairs
@@ -287,7 +287,7 @@ Please see response to Comment R1.3 above.
 
 ---
 
-## Comment R1.5 — High vs.\ low light confounded with measurement order
+## Comment R1.5 — High vs. low light confounded with measurement order
 
 ::: revcomment
 Another confusing point is that the current high versus low measurement light
