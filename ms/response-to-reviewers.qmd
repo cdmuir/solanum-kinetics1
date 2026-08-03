@@ -80,6 +80,39 @@ final_vpd_on_tau = glue(
   "[{formatC(final_vpd_effect$lower, format = 'f', digits = 2)}, ",
   "{formatC(final_vpd_effect$upper, format = 'f', digits = 2)}]"
 )
+
+mediation_sens = read_rds("../objects/mediation-sensitivity-rhostar.rds")
+
+fmt_rho = function(param) {
+  row = mediation_sens$rho_summary[mediation_sens$rho_summary$parameter == param, ]
+  glue(
+    "{formatC(row$estimate, format = 'f', digits = 2)} ",
+    "[{formatC(row$lower, format = 'f', digits = 2)}, ",
+    "{formatC(row$upper, format = 'f', digits = 2)}]"
+  )
+}
+
+rho_hat_fmt = fmt_rho("rho_hat (estimated)")
+rho_star_fmt = fmt_rho("rho_star (breakdown)")
+prob_below_breakdown_fmt = formatC(100 * mediation_sens$prob_below_breakdown, format = "f", digits = 0)
+
+gcl_fallback = read_rds("../objects/gcl-fallback-summary.rds")
+gcl_fallback_pct_fmt = formatC(gcl_fallback$pct_fallback, format = "f", digits = 1)
+
+gcl_leaflet_effects = read_rds("../objects/gcl-leaflet-effect-summary.rds")
+
+fmt_leaflet_effect = function(ct) {
+  row = gcl_leaflet_effects[gcl_leaflet_effects$curve_type == ct, ]
+  glue(
+    "{formatC(100 * (exp(row$estimate) - 1), format = 'f', digits = 1)}% ",
+    "($p$ = {formatC(row$p.value, format = 'f', digits = 3)}, $n$ = {row$n})"
+  )
+}
+
+gcl_leaflet_effect_amphi = fmt_leaflet_effect("2-sided RH")
+gcl_leaflet_effect_pseudohypo = fmt_leaflet_effect("1-sided RH")
+
+gcl_correction = read_rds("../objects/gcl-correction-summary.rds")
 ```
 
 ---
@@ -309,7 +342,33 @@ are negligible.
 ::: response
 **Response:**
 
-[YOUR RESPONSE HERE]
+We decided on this design because the primary goals of the study were to compare amphi and pseudohypo curves on the same leaf within the same treatment to estimate "amphistomy advantange" [@muir_plasticity_2025]. Preliminary studies indicated the order did not affect amphistomy advantange but that it was much faster to go from the high light to low light compared to the reverse. Therefore, we opted to increase our throughput and sample size at the potential cost of some confounding between measurement order and treatment effect. Unfortunately, we did not observe whether the measurement order affected stomatal kinetics. Hence, we cannot say for sure whether order, recovery state, or prior VPD exposure confounds measurement light intensity. We controlled for time of day by running curves throughout the day and randomizing the order among accessions and growth light treatments. However, we think the bias induced by measurement order is likely small compared to the very large effect of measurement light intensity on $g_\mathrm{i}$ (+77% for shade plants; +139% for sun plants):
+
+| Growth light | Measurement: low | Measurement: high |
+| --- | --- | --- |
+| shade | 0.209 | 0.370 |
+| sun | 0.265 | 0.634 |
+
+Table: Average $g_\mathrm{i}$ in different treatment combinations across the amphi leaf type curves.
+
+We have already mentioned that this analysis is opportunistic and therefore some of the experimental design choices are sub-optimal for the purpose of study stomatal kinetics. We addressed the reviewer's concerns about measurement order more specifically by:
+
+1. Mentioning the potential for measurement order to confound effects of measurement light treatments (Materials and Methods lines XXX-XXX).
+
+> "As a consequence, measurement light intensity is confounded with measurement order in our design: low light-intensity curves were always measured after high light-intensity curves on the same leaf, following a preceding low-humidity closure event, so we cannot fully separate an effect of light intensity per se from order, recovery state, or prior VPD exposure (see Discussion)."
+
+2. Advising caution in interpreting effects of measurement light treatment and mediation analysis (Discussion lines XXX-XXX).
+
+> "This comparison should be interpreted cautiously, however, because measurement light intensity was confounded with measurement order: high light curves always preceded low light curves on the same leaf, following a prior low-humidity closure event (see Materials and Methods). We cannot rule out that some of the apparent effect of measurement light intensity on \fgmax{} and $\tau$, and the corresponding indirect path through \fgmax{} in our mediation analysis ([@fig-mediation]), reflects order, incomplete recovery, or prior VPD exposure rather than measurement light intensity itself. This concern applies specifically to the measurement light comparison and not to growth light intensity or leaf type, which were randomized or alternated, respectively."
+
+3. Advising that future studies randomize or alternate measurement order to avoid this issue (Discussion lines XXX).
+
+> "Future studies should also randomize or alternate the order in which repeated within-leaf treatments (such as measurement light intensity) are applied, so that treatment effects can be separated from measurement order, recovery state, and prior stress history, which were confounded in our design."
+
+4. Adding that the average time between high and low measurement light intensity curves was 48.9 minutes (lines XXX).
+
+> "...on average 48.9 minutes after the start of the high-light curve."
+
 :::
 
 ---
@@ -337,7 +396,44 @@ conclusion.
 ::: response
 **Response:**
 
-[YOUR RESPONSE HERE]
+<!-- TODO: Response is AI-generated. I need to revisit this once new models with gi/gmax separate are finished and decide whether to retain and check whether sensitivity analysis was done correctly. -->
+
+We agree and have replaced "causal mediation analysis" with "path analysis" throughout the manuscript, and we no longer say that \fgmax{} "mediates plasticity" as a causal conclusion. We now state only that treatment-associated changes in $\tau$ are statistically consistent with an indirect path through \fgmax{}, alongside a direct path, exactly as the reviewer suggested.
+
+We also drew the DAG you requested (@fig-mediation-dag), showing the assumed causal structure (treatment $\to$ \fgmax{} $\to$ $\tau$ and treatment $\to$ $\tau$ directly) alongside an unmeasured confounder $U$ representing exactly the kind of variable you raised (hydraulic status, measurement order, realized VPD trajectory) that would violate sequential ignorability if it affected both \fgmax{} and $\tau$.
+
+```{r}
+#| label: fig-mediation-dag
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-cap: "Assumed causal structure of the \\fgmax{}-$\\tau$ path analysis. Treatment has a direct effect on $\\tau$ (bottom arrow) and an indirect effect acting through \\fgmax{} (upper path). An unmeasured confounder $U$ (dashed arrows) affecting both \\fgmax{} and $\\tau$ would violate the sequential ignorability assumption required to interpret the indirect path causally."
+knitr::include_graphics("../figures/mediation-dag.pdf")
+```
+
+To directly address sequential ignorability, we ran a sensitivity analysis following the general framework of Imai, Keele & Yamamoto (2010, *Statistical Science*), parameterized by $\rho = \mathrm{Cor}(e_{f_\mathrm{gmax}}, e_\tau)$, the residual correlation between the \fgmax{} and $\tau$ equations. Under a violation of sequential ignorability with residual correlation $\rho$, the bias-adjusted mediator-on-outcome coefficient is $\beta_2(\rho) = \hat\beta_2 - \rho \cdot \sigma_\tau / \sigma_{f_\mathrm{gmax}}$, so the average causal mediation effect (ACME) is $\mathrm{ACME}(\rho) = \gamma_1 \cdot \beta_2(\rho)$, and the "breakdown point" $\rho^*$ at which the ACME is exactly zero is $\rho^* = \hat\beta_2 \cdot \sigma_{f_\mathrm{gmax}} / \sigma_\tau$.
+
+Conveniently, our selected model already estimates a free residual correlation between the \fgmax{} and $\tau$ equations ($\rho_\mathrm{estimated}$, from `set_rescor(TRUE)`), because we fit all four responses (\fgmax, \gcl, $\tau$, $\lambda$) jointly. Because the \fgmax{} equation's predictors are a strict subset of $\tau$'s, jointly estimating this correlation does not change the point estimate of $\hat\beta_2$ relative to a model that assumes $\rho = 0$ (a standard SUR-equivalence result), so we can treat $\hat\beta_2$ as the "naive" coefficient in the sensitivity framework above, and the model's own estimated residual correlation as a genuine, data-driven estimate of $\rho$ -- not just a hypothetical value to sweep over.
+
+We found $\rho_\mathrm{estimated}$ = `r rho_hat_fmt` and $\rho^*$ = `r rho_star_fmt` (@fig-mediation-sensitivity, @fig-mediation-rho-compare). These posteriors substantially overlap: the posterior probability that the estimated residual correlation is smaller in magnitude than the breakdown point is only `r prob_below_breakdown_fmt`%. In other words, if a meaningful fraction of the residual correlation we estimate between the \fgmax{} and $\tau$ equations were due to an unmeasured confounder (e.g., hydraulic state, measurement order, or unmeasured VPD trajectory effects) rather than a direct effect of \fgmax{} on $\tau$, our estimated indirect path could be substantially attenuated or eliminated. We do not think this sensitivity analysis is reassuring enough to support a causal claim, which is why we have adopted the reviewer's suggested language throughout.
+
+```{r}
+#| label: fig-mediation-sensitivity
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-cap: "Sensitivity of the average causal mediation effect (ACME) of each treatment on $\\log \\tau$, acting through \\fgmax{}, to an assumed residual correlation $\\rho$ between the \\fgmax{} and $\\tau$ equations. The vertical dotted line is the model's own estimated residual correlation ($\\rho_\\mathrm{estimated}$, shaded band = 95\\% credible interval); the vertical solid line is the breakdown point $\\rho^*$ at which the ACME is zero."
+knitr::include_graphics("../figures/mediation-sensitivity.pdf")
+```
+
+```{r}
+#| label: fig-mediation-rho-compare
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-cap: "Posterior distributions of the model's estimated residual correlation between the \\fgmax{} and $\\tau$ equations ($\\rho_\\mathrm{estimated}$) and the breakdown point ($\\rho^*$) at which the mediated effect of \\fgmax{} on $\\tau$ is exactly zero. Substantial overlap between these distributions indicates the mediated effect is not robust to plausible levels of unmeasured confounding."
+knitr::include_graphics("../figures/mediation-sensitivity-rho-compare.pdf")
+```
 :::
 
 ---
@@ -366,7 +462,10 @@ Pareto-$k$, PSIS effective sample size and MCSE as reliability checks.
 ::: response
 **Response:**
 
-[YOUR RESPONSE HERE]
+<!-- TODO: Revisit this once new models with gi/gmax separate are finished. -->
+
+The note "clearest to interpret" was my (CDM) shorthand for the more complete explanation given in the text, so there is no discrepancy to correct.
+
 :::
 
 ---
@@ -395,7 +494,8 @@ a more standard multi-chain fit.
 ::: response
 **Response:**
 
-[YOUR RESPONSE HERE]
+We refit all curves with 4 chains instead of 1 and updated the Materials and Methods accordingly. As far as we can tell, this did not meaningfully impact any downstream analyses.
+
 :::
 
 ---
@@ -418,7 +518,22 @@ and therefore \fgmax{}.
 ::: response
 **Response:**
 
-[YOUR RESPONSE HERE]
+We unintentionally neglected to explain why these three individuals were considered outliers. In the Materials and Methods (lines XXX) we clarified that:
+
+> "We excluded three individuals with extreme outlying guard cell length values. Preliminary analysis of variation in guard cell length among growth treatments, leaf types, and accessions identified these outliers based on a residual value greater than 0.45, which visually appeared as a clear break in the residual distribution."
+
+Regarding the leaflet-matching fallback: when a leaflet was measured for stomatal anatomy but did not match the leaflet used for the LI-6800 humidity-response curve, we used the first available anatomical measurement from a different leaflet on the same leaf as a proxy, rather than discarding the individual.  This fallback was triggered for `r gcl_fallback$n_fallback` of `r gcl_fallback$n_total` individual-by-leaf-type combinations (`r gcl_fallback_pct_fmt`%). We agree this could add measurement error to \gmax{}, guard cell length, and \fgmax{} for those individuals, and we have added this frequency and a caveat to the Materials and Methods.
+
+Rather than simply flagging this as a caveat, we now correct for it directly in `r/01_join-data.R`. For each curve type (amphistomatous and pseudohypostomatous), we fit $\log(l_\mathrm{gc}) \sim \mathrm{leaflet} + \mathrm{light\ treatment} + \mathrm{accession}$ among individuals with an RH curve of that type (accession as a fixed effect, so the leaflet coefficient reflects only within-accession differences: terminal vs.\ lateral leaflets differed by `r gcl_leaflet_effect_amphi` for amphistomatous curves and `r gcl_leaflet_effect_pseudohypo` for pseudohypostomatous curves; @fig-gcl-leaflet-type). When the substituted leaflet's type did not match the LI-6800 leaflet, we used this fitted difference to project \gcl{} (and, proportionally, \gmax{}, which is linear in \gcl{} for fixed stomatal density) onto what it would be expected to be on the matching leaflet type. This correction was applied to `r gcl_correction$n_corrected` of `r gcl_correction$n_total` individual-by-leaf-type combinations in the final dataset, each adjusted by a modest ~2% on average. This is a small correction given the leaflet effect itself is only marginal/non-significant, but it is now applied systematically rather than left as unadjusted measurement error.
+
+```{r}
+#| label: fig-gcl-leaflet-type
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-cap: "\\gcl{} for lateral vs. terminal leaflets, among individuals with an amphistomatous curve."
+knitr::include_graphics("../figures/gcl-leaflet-type.pdf")
+```
 :::
 
 ---
