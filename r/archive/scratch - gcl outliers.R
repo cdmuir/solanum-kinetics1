@@ -6,7 +6,7 @@ fit = read_rds("objects/best_model.rds")
 
 hist(fit$data$loggcl)
 
-fit1 = lm(loggcl ~ lighttreatment + curve_type + phy, data = fit$data)
+fit1 = lm(loggcl ~ lighttreatment + leaftype + phy, data = fit$data)
 anova(fit1)
 qqnorm(resid(fit1))
 qqline(resid(fit1))

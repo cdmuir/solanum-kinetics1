@@ -15,7 +15,34 @@ rh_over5 = rhair |>
   pull(curve)
 
 rh_curves = rh_curves |>
-  filter(!(curve %in% rh_over5)) |>
+  filter(!(curve %in% rh_over5))
+
+# Average time between the start of the high- and low-light-intensity
+# curves logged for the same leaf. Curves for the same leaf are typically
+# logged within the same file (high light first, then low light after
+# re-acclimation); `elapsed` is a continuous absolute time within a file,
+# so the gap is the difference in `elapsed` at the start (t_sec == 0) of
+# each curve. Exported for use in the Materials and Methods (ms/ms.qmd).
+
+light_intensity_gap = rh_curves |>
+  filter(t_sec == 0) |>
+  distinct(file, curve, light_intensity, elapsed) |>
+  add_count(file) |>
+  filter(n == 2) |>
+  select(-n) |>
+  summarize(start_high = elapsed[light_intensity == "2000"],
+            start_low = elapsed[light_intensity == "150"],
+            .by = file) |>
+  mutate(gap_sec = start_low - start_high) |>
+  # filter those that needed to be restarted
+  filter(gap_sec > 1000)
+
+mean_light_intensity_gap_min = mean(light_intensity_gap$gap_sec) / 60
+
+write_rds(mean_light_intensity_gap_min,
+          "objects/mean-light-intensity-gap-min.rds")
+
+rh_curves = rh_curves |>
   select(acc, id, curve_type, t_sec, gsw, H2O_r, rh_air, curve)
 
 plant_info = read_rds("data/plant_info.rds") |>
@@ -23,10 +50,11 @@ plant_info = read_rds("data/plant_info.rds") |>
   select(
     acc = accession,
     id = replicate,
-    leaflet_licor = leaflet
+    leaflet_licor = leaflet,
+    light_treatment
   )
 
-stomata = read_rds("data/stomata.rds") |>
+stomata_long = read_rds("data/stomata.rds") |>
   select(
     acc = accession,
     id = replicate,
@@ -50,15 +78,14 @@ stomata = read_rds("data/stomata.rds") |>
     names_to = c("curve_type", "trait"),
     names_pattern = "(lower|upper|total)_(.*)"
   ) |>
-  mutate(
-    curve_type = case_when(
-      curve_type == "lower" ~ "1-sided RH",
-      curve_type == "total" ~ "2-sided RH"
-    )
-  ) |>
+  mutate(curve_type = case_when(
+    curve_type == "lower" ~ "1-sided RH",
+    curve_type == "total" ~ "2-sided RH"
+  )) |>
   pivot_wider(names_from = trait, values_from = value) |>
-  full_join(plant_info, by = join_by(acc,  id)) |>
-  group_by(acc, id, curve_type) |>
+  full_join(plant_info, by = join_by(acc, id))
+
+stomata = stomata_long |>
   summarise(
     gmax = {
       idx_match = which(leaflet_stomata == leaflet_licor & !is.na(gmax))
@@ -69,28 +96,46 @@ stomata = read_rds("data/stomata.rds") |>
       }
     },
     guard_cell_length_um = {
-      idx_match = which(leaflet_stomata == leaflet_licor & !is.na(guard_cell_length_um))
+      idx_match = which(leaflet_stomata == leaflet_licor &
+                          !is.na(guard_cell_length_um))
       if (length(idx_match) == 1) {
         guard_cell_length_um[idx_match[1]] # take the (first) matching value
       } else {
         guard_cell_length_um[which(!is.na(guard_cell_length_um))[1]] # otherwise take first available
       }
     },
-    .groups = "drop"
-  ) 
-     
-# Join and write
-left_join(
-  rh_curves,
-  stomata,
-  by = join_by(acc, id, curve_type)
-) |>
+    # Was alternate leaflet used for stomatal anatomy?
+    leaflet_switched = {
+      idx_match = which(leaflet_stomata == leaflet_licor &
+                          !is.na(guard_cell_length_um))
+      length(idx_match) != 1
+    },
+    .by = c(acc, id, curve_type)
+  )
+
+joined_data_full = left_join(rh_curves, stomata, by = join_by(acc, id, curve_type)) |>
   # Remove those without stomatal anatomy data
   filter(!is.na(gmax)) |>
-  # Remove guard cell length outliers (see r/scratch - gcl outliers.R)
-  filter(
-    !((acc == "LA0407" & id == "P") | 
-      (acc == "LA4116" & id == "I") |
-      (acc == "LA0429" & id == "F"))
-    ) |>
+  # Remove guard cell length outliers (residual greater than 0.45 in lm(loggcl ~ lighttreatment + leaftype + phy))
+  filter(!((acc == "LA0407" & id == "P") |
+             (acc == "LA4116" & id == "I") |
+             (acc == "LA0429" & id == "F")
+  ))
+
+# Number of individual-by-curve-type combinations in the final dataset whose
+# guard cell length/gmax were actually leaflet-type-switched (i.e., the
+# leaflet substituted for stomatal anatomy did not match the LI-6800
+# leaflet).
+gcl_switch_summary = list(
+  n_switched = joined_data_full |>
+    distinct(acc, id, leaflet_switched) |>
+    filter(leaflet_switched) |>
+    nrow(),
+  n_total = joined_data_full |> distinct(acc, id) |> nrow()
+)
+
+write_rds(gcl_switch_summary, "objects/gcl_switch_summary.rds")
+
+joined_data_full |>
+  select(-leaflet_switched) |>
   write_rds("data/joined-data.rds")
