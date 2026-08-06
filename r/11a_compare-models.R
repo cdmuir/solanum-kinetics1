@@ -1,7 +1,7 @@
 # Compare models using LOOIC
 source("r/header.R")
 
-# selected_model = "model6" # see note at bottom
+selected_model = "model6" # see note at bottom
 
 plan(multisession, workers = 9)
 
@@ -22,7 +22,7 @@ fits = read_rds("objects/df_forms.rds") |>
   filter(!is.na(fit)) |>
   mutate(loo = map(fit, \(.x) .x$criteria$loo))
 
-converged = df_forms$fit |>
+converged = fits$fit |>
   future_map_lgl(check_convergence, convergence_criteria)
 
 assert_true(all(converged))
@@ -31,7 +31,7 @@ looic_table = fits$loo |>
   set_names(fits$model) |>
   loo_compare() 
 
-tmp = map2_dfr(fits$fit, fits$model, \(.fit, .name) {
+map2_dfr(fits$fit, fits$model, \(.fit, .name) {
   tibble(par = .fit |>
            as_draws_df() |>
            select(contains("b_")) |>
@@ -68,7 +68,7 @@ tmp = map2_dfr(fits$fit, fits$model, \(.fit, .name) {
   by = join_by(model)) |>
   mutate(across(where(is_logical), \(.x) ifelse(.x, "\\cmark", "")),
          plausible = abs(`$\\Delta \\mathrm{LOOIC}$`) <= 2 * SE,
-         # selected = model == selected_model
+         selected = model == selected_model
          ) |>
   arrange(`$\\Delta \\mathrm{LOOIC}$`) |>
   mutate(
@@ -84,7 +84,7 @@ tmp = map2_dfr(fits$fit, fits$model, \(.fit, .name) {
 
 
 # Write "best" model
-# Note: I reran the models several times and the order of the top four models
+# Note: I reran the models several times and the order of the top models
 # changed, consistent with the difference in LOOIC being caused by sampling 
 # variability. After reviewing model estimates, I determined that model 6 is the
 # clearest to interpret.
