@@ -243,7 +243,8 @@ prepare_tau_anatomy_data = function(joined_summary, logtau_threshold) {
   out = joined_summary |>
     filter(logtau_mean < logtau_threshold) |>
     mutate(loggcl = log(guard_cell_length_um),
-           logitfgmax = qlogis(f_gmax)) |>
+           loggi = log(ginit_mean), 
+           loggmax = log(gmax)) |>
     rename(
       logtaumean = logtau_mean,
       logtausd = logtau_sd,

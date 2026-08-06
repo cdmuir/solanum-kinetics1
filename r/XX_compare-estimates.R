@@ -1,10 +1,15 @@
-# Compare estimates of focal parameters across plausible models
+# Select "best_model" for parameter estimation and inference
 source("r/header.R")
+
+tmp = read_rds("objects/fit_01.rds") |>
+  loo_moment_match()
 
 # Plausible models
 plausible_models = read_rds("objects/tbl-comparison.rds") |>
   filter(plausible) |>
   pull(model)
+
+tbl_comparison = read_rds("objects/tbl-comparison.rds")
 
 # Focal variables
 # Phylo effect of gcl, gi, gmax on tau/lambda
@@ -13,7 +18,10 @@ plausible_models = read_rds("objects/tbl-comparison.rds") |>
 focal_variables = crossing(
   type = c("b", "cor_phy"),
   response = c("logtaumean", "loglambdamean"),
-  explanatory = c("loggcl", "loggi", "loggmax")
+  nesting(
+    explanatory = c("loggcl", "loggi", "loggmax"),
+    sign_expected = c(1, 1, -1)
+  )
 ) |>
   mutate(
     response = case_when(
@@ -47,4 +55,51 @@ estimates_by_model2 = full_join(
   expand(estimates_by_model1, variable, model),
   by = join_by(variable, model)
 ) |>
-  mutate(model = factor(model, levels = model))
+  mutate(
+    model = factor(model, levels = plausible_models),
+    overlaps_zero = sign(`q2.5`) != sign(`q97.5`),
+    sign_observed = ifelse(overlaps_zero, 0, sign(estimate))
+  )
+
+tmp = estimates_by_model2 |>
+  full_join(focal_variables, by = join_by("variable" == "var")) |>
+  mutate(prediction_correct = sign_observed == sign_expected) |>
+  filter(!is.na(estimate)) 
+
+tmp |>
+  filter(model == "model_14") |> 
+  select(response, explanatory, estimate, `q2.5`, `q97.5`, prediction_correct)
+
+tmp |>
+  summarize(
+    n_focal_par = n(),
+    n_signif = sum(!overlaps_zero),
+    n_correct = sum(prediction_correct),
+    .by = model
+  )
+
+selected_model = ?
+  
+tbl_comparison |> 
+  mutate(selected = model == selected_model) |>
+  write_rds("objects/tbl-comparison.rds")
+
+
+write_rds(fits$fit[[as.numeric(str_remove(selected_model, "model"))]], "objects/best_model.rds")
+
+
+
+
+# Write "best" model
+# Note: I reran the models several times and the order of the top models
+# changed, consistent with the difference in LOOIC being caused by sampling 
+# variability. After reviewing model estimates, I determined that model 6 is the
+# clearest to interpret.
+
+# Previous version (lowest LOOIC)
+# write_rds(fits$fit[[as.numeric(str_extract(rownames(looic_table)[1], "\\d+"))]], "objects/best_model.rds")
+
+# Current version (model 6)
+write_rds(fits$fit[[as.numeric(str_remove(selected_model, "model"))]], "objects/best_model.rds")
+
+
