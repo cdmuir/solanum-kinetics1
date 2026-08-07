@@ -1,8 +1,8 @@
-# Select "best_model" for parameter estimation and inference
+# Select model for parameter estimation and inference
+# Criteria:
+# 1. Model is among plausible models based on LOOIC
+# 2. Highest proportion of "significant" focal parameters based on 95% CIs
 source("r/header.R")
-
-tmp = read_rds("objects/fit_01.rds") |>
-  loo_moment_match()
 
 # Plausible models
 plausible_models = read_rds("objects/tbl-comparison.rds") |>
@@ -59,58 +59,35 @@ estimates_by_model2 = full_join(
     model = factor(model, levels = plausible_models),
     overlaps_zero = sign(`q2.5`) != sign(`q97.5`),
     sign_observed = ifelse(overlaps_zero, 0, sign(estimate))
-  )
-
-tmp = estimates_by_model2 |>
+  ) |>
   full_join(focal_variables, by = join_by("variable" == "var")) |>
-  mutate(prediction_correct = sign_observed == sign_expected) |>
-  filter(!is.na(estimate)) 
+  mutate(prediction_correct = sign_observed == sign_expected)
 
-tmp |>
-  filter(model == "model_14") |> 
-  select(response, explanatory, estimate, `q2.5`, `q97.5`, prediction_correct)
-
-tmp |>
+# Select model
+selected_model = estimates_by_model2 |>
+  filter(!is.na(estimate)) |>
   summarize(
     n_focal_par = n(),
     n_signif = sum(!overlaps_zero),
     n_correct = sum(prediction_correct),
     .by = model
-  )
+  ) |>
+  # Sort by proportion significant, tie break by n_focal_par
+  arrange(desc(n_signif / n_focal_par), n_focal_par) |>
+  pull(model) |>
+  first() |>
+  as.character()
 
-ggplot(filter(estimates_by_model2, type == "b"), aes(estimate, model, xmin = `q2.5`, xmax = `q97.5`, color = overlap_zero)) +
-  facet_grid(explanatory ~ response, scales = "free_x") +
-  geom_vline(xintercept = 0, color = "grey", linetype = "dashed") +
-  geom_pointinterval()
+# Write estimates_by_model2 for plotting
+write_rds(estimates_by_model2, "objects/estimates_by_model.rds")
 
-ggplot(filter(estimates_by_model2, type == "cor_phy"), aes(estimate, model, xmin = `q2.5`, xmax = `q97.5`, color = overlap_zero)) +
-  facet_grid(explanatory ~ response, scales = "free_x") +
-  geom_vline(xintercept = 0, color = "grey", linetype = "dashed") +
-  geom_pointinterval()
-
-selected_model = ?
-  
-tbl_comparison |> 
+# Update tbl_comparison
+tbl_comparison |>
   mutate(selected = model == selected_model) |>
   write_rds("objects/tbl-comparison.rds")
 
-
-write_rds(fits$fit[[as.numeric(str_remove(selected_model, "model"))]], "objects/best_model.rds")
-
-
-
-
-# Write "best" model
-# Note: I reran the models several times and the order of the top models
-# changed, consistent with the difference in LOOIC being caused by sampling 
-# variability. After reviewing model estimates, I determined that model 6 is the
-# clearest to interpret.
-
-# Previous version (lowest LOOIC)
-# write_rds(fits$fit[[as.numeric(str_extract(rownames(looic_table)[1], "\\d+"))]], "objects/best_model.rds")
-
-# Current version (model 6)
-write_rds(fits$fit[[as.numeric(str_remove(selected_model, "model"))]], "objects/best_model.rds")
-
-
->>>>>>> 0548a7c1dbc02eb00ed7be320cf0b4877978dda5
+# Write selected model
+selected_model |>
+  str_replace("^model", "objects/fits/fit") |>
+  str_c(".rds") |>
+  file.copy("objects/selected_model.rds")

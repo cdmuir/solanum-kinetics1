@@ -16,21 +16,11 @@ fits = read_rds("objects/df_forms.rds") |>
 converged = fits$fit |>
   future_map_lgl(check_convergence, convergence_criteria, .progress = TRUE)
 
-fit_01 = fits$fit[[1]]
-fit_02 = fits$fit[[2]]
-
-pa = posterior_average(fit_01, fit_02, variable = focal_variables$var,
-                       weights = "stacking", missing = 0)
-
-
-
-assert_true(all(converged))
-
 looic_table = fits$loo |>
   set_names(fits$model) |>
   loo_compare() 
 
-w_stack = loo_model_weights(fits$loo)
+write_rds(looic_table, "objects/looic_table.rds")
 
 map2_dfr(fits$fit, fits$model, \(.fit, .name) {
   tibble(par = .fit |>
@@ -81,5 +71,3 @@ map2_dfr(fits$fit, fits$model, \(.fit, .name) {
     mutate(across(everything(), \(.x) replace_na(.x, "")))
   ) |>
   write_rds("objects/tbl-comparison.rds")
-
-write_rds(looic_table, "objects/looic_table.rds")

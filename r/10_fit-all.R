@@ -129,7 +129,7 @@ df_forms = crossing(
       bf_tau,
       ~ .x + .y + bf_gcl + bf_gi + bf_gmax + set_rescor(TRUE)
     ),
-    file = glue("objects/fit_{n}.rds", n = str_pad(row_number(), 2, "left", 0))
+    file = glue("objects/fits/fit_{n}.rds", n = str_pad(row_number(), 2, "left", 0))
   )
 
 future_walk2(
