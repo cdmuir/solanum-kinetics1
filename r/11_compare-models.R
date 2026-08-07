@@ -1,24 +1,36 @@
 # Compare models using LOOIC
 source("r/header.R")
 
-selected_model = "model6" # see note at bottom
-
 plan(multisession, workers = 19)
 
-fits = read_rds("objects/fits.rds") |>
+fits = read_rds("objects/df_forms.rds") |>
+  mutate(
+    fit = future_map(file, read_rds),
+    model = file |>
+      str_replace("objects/fit", "model") |>
+      str_remove(".rds")
+  ) |>
+  filter(!is.na(fit)) |>
   mutate(loo = map(fit, \(.x) .x$criteria$loo))
 
 converged = fits$fit |>
-  future_map_lgl(check_convergence, convergence_criteria)
+  future_map_lgl(check_convergence, convergence_criteria, .progress = TRUE)
+
+fit_01 = fits$fit[[1]]
+fit_02 = fits$fit[[2]]
+
+pa = posterior_average(fit_01, fit_02, variable = focal_variables$var,
+                       weights = "stacking", missing = 0)
+
+
 
 assert_true(all(converged))
 
 looic_table = fits$loo |>
-  set_names(paste0("model", seq_along(fits$loo))) |>
+  set_names(fits$model) |>
   loo_compare() 
 
-fits = fits |>
-  mutate(model = paste0("model", row_number()))
+w_stack = loo_model_weights(fits$loo)
 
 map2_dfr(fits$fit, fits$model, \(.fit, .name) {
   tibble(par = .fit |>
@@ -32,11 +44,11 @@ map2_dfr(fits$fit, fits$model, \(.fit, .name) {
                          names = c("response", "explanatory")) |>
     filter(
       str_detect(response, "^log(lambda|tau)mean$"),
-      explanatory %in% c("logitfgmax", "loggcl")
+      explanatory %in% c("loggcl", "loggi", "loggmax")
     ) |>
     mutate(
       response = fct_recode(response, `$\\lambda$` = "loglambdamean", `$\\tau$` = "logtaumean"),
-      explanatory = fct_recode(explanatory, `\\gcl` = "loggcl", `\\fgmax` = "logitfgmax"),
+      explanatory = fct_recode(explanatory, `\\gcl` = "loggcl", `\\gi` = "loggi", `\\gmax` = "loggmax"),
       model = .name
     )
   
@@ -46,18 +58,18 @@ map2_dfr(fits$fit, fits$model, \(.fit, .name) {
   pivot_wider(
     id_cols = model,
     names_from = response,
-    values_from = c(`\\gcl`, `\\fgmax`),
+    values_from = c(`\\gcl`, `\\gi`, `\\gmax`),
     names_glue = "{response}__{.value}"
   ) |>
   full_join(tibble(
-    model = rownames(looic_table),
+    model = looic_table$model,
     `$\\Delta \\mathrm{LOOIC}$` = -2 * looic_table[, "elpd_diff"],
     SE = 2 * looic_table[, "se_diff"]
   ),
-  by = "model") |>
+  by = join_by(model)) |>
   mutate(across(where(is_logical), \(.x) ifelse(.x, "\\cmark", "")),
-         plausible = abs(`$\\Delta \\mathrm{LOOIC}$`) <= 2 * SE,
-         selected = model == selected_model) |>
+         plausible = abs(`$\\Delta \\mathrm{LOOIC}$`) <= 2 * SE
+         ) |>
   arrange(`$\\Delta \\mathrm{LOOIC}$`) |>
   mutate(
     `$\\Delta \\mathrm{LOOIC}$` = formatC(
@@ -70,15 +82,4 @@ map2_dfr(fits$fit, fits$model, \(.fit, .name) {
   ) |>
   write_rds("objects/tbl-comparison.rds")
 
-
-# Write "best" model
-# Note: I reran the models several times and the order of the top four models
-# changed, consistent with the difference in LOOIC being caused by sampling 
-# variability. After reviewing model estimates, I determined that model 6 is the
-# clearest to interpret.
-
-# Previous version (lowest LOOIC)
-# write_rds(fits$fit[[as.numeric(str_extract(rownames(looic_table)[1], "\\d+"))]], "objects/best_model.rds")
-
-# Current version (model 6)
-write_rds(fits$fit[[as.numeric(str_remove(selected_model, "model"))]], "objects/best_model.rds")
+write_rds(looic_table, "objects/looic_table.rds")

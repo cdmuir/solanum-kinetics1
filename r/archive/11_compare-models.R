@@ -3,23 +3,9 @@ source("r/header.R")
 
 selected_model = "model6" # see note at bottom
 
-plan(multisession, workers = 9)
+plan(multisession, workers = 19)
 
-# TODO: REDO AND MAKE COMPACT ONCE ALL FITS ARE DONE
-fits = read_rds("objects/df_forms.rds") |>
-  mutate(
-    fit = map(file, \(.x) {
-      if (file.exists(.x)) {
-        read_rds(.x)
-      } else {
-        NA
-      }
-    }),
-    model = file |>
-      str_replace("objects/fit", "model") |>
-      str_remove(".rds")
-  ) |>
-  filter(!is.na(fit)) |>
+fits = read_rds("objects/fits.rds") |>
   mutate(loo = map(fit, \(.x) .x$criteria$loo))
 
 converged = fits$fit |>
@@ -28,8 +14,11 @@ converged = fits$fit |>
 assert_true(all(converged))
 
 looic_table = fits$loo |>
-  set_names(fits$model) |>
+  set_names(paste0("model", seq_along(fits$loo))) |>
   loo_compare() 
+
+fits = fits |>
+  mutate(model = paste0("model", row_number()))
 
 map2_dfr(fits$fit, fits$model, \(.fit, .name) {
   tibble(par = .fit |>
@@ -43,11 +32,11 @@ map2_dfr(fits$fit, fits$model, \(.fit, .name) {
                          names = c("response", "explanatory")) |>
     filter(
       str_detect(response, "^log(lambda|tau)mean$"),
-      explanatory %in% c("loggcl", "loggi", "loggmax")
+      explanatory %in% c("logitfgmax", "loggcl")
     ) |>
     mutate(
       response = fct_recode(response, `$\\lambda$` = "loglambdamean", `$\\tau$` = "logtaumean"),
-      explanatory = fct_recode(explanatory, `\\gcl` = "loggcl", `\\gi` = "loggi", `\\gmax` = "loggmax"),
+      explanatory = fct_recode(explanatory, `\\gcl` = "loggcl", `\\fgmax` = "logitfgmax"),
       model = .name
     )
   
@@ -57,19 +46,18 @@ map2_dfr(fits$fit, fits$model, \(.fit, .name) {
   pivot_wider(
     id_cols = model,
     names_from = response,
-    values_from = c(`\\gcl`, `\\gi`, `\\gmax`),
+    values_from = c(`\\gcl`, `\\fgmax`),
     names_glue = "{response}__{.value}"
   ) |>
   full_join(tibble(
-    model = looic_table$model,
+    model = rownames(looic_table),
     `$\\Delta \\mathrm{LOOIC}$` = -2 * looic_table[, "elpd_diff"],
     SE = 2 * looic_table[, "se_diff"]
   ),
-  by = join_by(model)) |>
+  by = "model") |>
   mutate(across(where(is_logical), \(.x) ifelse(.x, "\\cmark", "")),
          plausible = abs(`$\\Delta \\mathrm{LOOIC}$`) <= 2 * SE,
-         selected = model == selected_model
-         ) |>
+         selected = model == selected_model) |>
   arrange(`$\\Delta \\mathrm{LOOIC}$`) |>
   mutate(
     `$\\Delta \\mathrm{LOOIC}$` = formatC(
@@ -84,7 +72,7 @@ map2_dfr(fits$fit, fits$model, \(.fit, .name) {
 
 
 # Write "best" model
-# Note: I reran the models several times and the order of the top models
+# Note: I reran the models several times and the order of the top four models
 # changed, consistent with the difference in LOOIC being caused by sampling 
 # variability. After reviewing model estimates, I determined that model 6 is the
 # clearest to interpret.
