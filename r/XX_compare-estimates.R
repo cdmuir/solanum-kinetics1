@@ -47,4 +47,17 @@ estimates_by_model2 = full_join(
   expand(estimates_by_model1, variable, model),
   by = join_by(variable, model)
 ) |>
-  mutate(model = factor(model, levels = model))
+  mutate(
+    overlap_zero = sign(`q2.5`) == sign(`q97.5`),
+    model = factor(model, levels = plausible_models)) |>
+  left_join(focal_variables, by = join_by("variable" == "var"))
+
+ggplot(filter(estimates_by_model2, type == "b"), aes(estimate, model, xmin = `q2.5`, xmax = `q97.5`, color = overlap_zero)) +
+  facet_grid(explanatory ~ response, scales = "free_x") +
+  geom_vline(xintercept = 0, color = "grey", linetype = "dashed") +
+  geom_pointinterval()
+
+ggplot(filter(estimates_by_model2, type == "cor_phy"), aes(estimate, model, xmin = `q2.5`, xmax = `q97.5`, color = overlap_zero)) +
+  facet_grid(explanatory ~ response, scales = "free_x") +
+  geom_vline(xintercept = 0, color = "grey", linetype = "dashed") +
+  geom_pointinterval()
