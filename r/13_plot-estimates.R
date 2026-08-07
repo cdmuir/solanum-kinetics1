@@ -7,13 +7,13 @@ selected_model = read_rds("objects/tbl-comparison.rds") |>
 estimates_by_model = read_rds("objects/estimates_by_model.rds") |>
   mutate(
     explanatory1 = case_when(
-      str_detect(explanatory, "loggcl") ~ "$\\log \\left(g_\\mathrm{cl}\\right)$",
-      str_detect(explanatory, "loggi") ~ "$\\log \\left(g_\\mathrm{i}\\right)$",
-      str_detect(explanatory, "loggmax") ~ "$\\log \\left(g_\\mathrm{max}\\right)$"
+      str_detect(explanatory, "loggcl") ~ trait_latex_label("loggcl"),
+      str_detect(explanatory, "loggi") ~ trait_latex_label("loggi"),
+      str_detect(explanatory, "loggmax") ~ trait_latex_label("loggmax")
     ),
     response1 = case_when(
-      str_detect(response, "logtaumean") ~ "$\\log \\left(\\tau\\right)$",
-      str_detect(response, "loglambdamean") ~ "$\\log \\left(\\lambda\\right)$"
+      str_detect(response, "logtaumean") ~ trait_latex_label("logtaumean"),
+      str_detect(response, "loglambdamean") ~ trait_latex_label("loglambdamean")
     ),
     `significant?` = case_when(
       overlaps_zero | is.na(overlaps_zero) ~ "no/NA",

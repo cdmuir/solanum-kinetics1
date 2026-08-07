@@ -1,7 +1,7 @@
 # Make table of parameter estimates for each accession
 source("r/header.R")
 
-fit = read_rds("objects/best_model.rds")
+selected_model = read_rds("objects/selected_model.rds")
 
 curve_vpd = read_rds("objects/curve-vpd.rds") |>
   select(
@@ -17,14 +17,15 @@ curve_vpd = read_rds("objects/curve-vpd.rds") |>
     final_VPD = final_VPDleaf
   )
 
-tbl_estimates = fit$data |>
+tbl_estimates = selected_model$data |>
   select(
     accid,
     lighttreatment,
     lightintensity,
     leaftype,
     loggcl,
-    logitfgmax,
+    loggi,
+    loggmax,
     loglambdamean,
     loglambdasd,
     logtaumean,
@@ -59,7 +60,8 @@ dict = tibble(
       "lightintensity",
       "leaftype",
       "loggcl",
-      "logitfgmax",
+      "loggi",
+      "loggmax",
       "loglambdamean",
       "loglambdasd",
       "logtaumean",
@@ -78,7 +80,8 @@ dict = tibble(
       "Measurement light intensity treatment",
       "Leaf type treatment",
       "Estimate of log-transformed guard cell length (um)",
-      "Estimate of logit-transformed stomatal conductance as a fraction of maximum conductance",
+      "Estimate of log-transformed initial stomatal conductance (mol m^-2 s^-1)",
+      "Estimate of log-transformed anatomical maximum conductance (mol m^-2 s^-1)",
       "Point estimate of logit-transformed lag-time parameter",
       "Standard error of logit-transformed lag-time parameter",
       "Point estimate of log-transformed time-constant parameter",

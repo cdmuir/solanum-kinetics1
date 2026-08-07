@@ -4,45 +4,54 @@ source("r/header.R")
 phy = read_rds("data/phylogeny.rds")
 A = vcv(phy, corr = TRUE)
 
-fit = read_rds("objects/best_model.rds")
+selected_model = read_rds("objects/selected_model.rds")
 
 # Sample sizes
-sample_sizes = fit$data |>
+sample_sizes = selected_model$data |>
   summarize(
     n_plant = n(),
     .by = c(phy, lighttreatment, lightintensity, leaftype)
   )
 
 df_new = crossing(
-  phy = unique(fit$data$phy),
-  lighttreatment = unique(fit$data$lighttreatment),
-  lightintensity = unique(fit$data$lightintensity),
-  leaftype = unique(fit$data$leaftype),
+  phy = unique(selected_model$data$phy),
+  lighttreatment = unique(selected_model$data$lighttreatment),
+  lightintensity = unique(selected_model$data$lightintensity),
+  leaftype = unique(selected_model$data$leaftype),
   logtausd = 0,
   loglambdasd = 0
 ) |>
   mutate(accession = phy,
          variable = paste0("...", row_number()))
 
-# Predictions for fgmax and gcl
-df_pred_fgmax = get_posterior_epred(fit, df_new, "logitfgmax", "fgmax", inv = plogis)
-df_pred_gcl = get_posterior_epred(fit, df_new, "loggcl", "gcl", inv = exp)
+# Predictions for gcl, gi, and gmax
+df_pred_gcl = get_posterior_epred(selected_model, df_new, "loggcl", "gcl", inv = exp)
+df_pred_gi = get_posterior_epred(selected_model, df_new, "loggi", "gi", inv = exp)
+df_pred_gmax = get_posterior_epred(selected_model, df_new, "loggmax", "gmax", inv = exp)
 
-# Add predictions for fgmax and gcl to make predictions for tau and lambda
+# Add predictions for gcl, gi, and gmax to make predictions for tau and lambda
 df_new1 = df_new |>
-  left_join(df_pred_fgmax, by = join_by(variable)) |>
   left_join(df_pred_gcl, by = join_by(variable)) |>
-  mutate(logitfgmax = qlogis(fgmax_estimate),
-         loggcl = log(gcl_estimate))
+  left_join(df_pred_gi, by = join_by(variable)) |>
+  left_join(df_pred_gmax, by = join_by(variable)) |>
+  mutate(
+    fgmax_estimate = exp(log(gi_estimate) - log(gmax_estimate)),
+    logfgmax = log(fgmax_estimate),
+    # logitfgmax = qlogis(fgmax_estimate),
+    loggcl = log(gcl_estimate),
+    loggi = log(gi_estimate),
+    loggmax = log(gmax_estimate)
+  )
 
-df_pred_lambda = get_posterior_epred(fit, df_new1, "loglambdamean", "lambda", inv = exp)
-df_pred_tau = get_posterior_epred(fit, df_new1, "logtaumean", "tau", inv = exp)
+df_pred_lambda = get_posterior_epred(selected_model, df_new1, "loglambdamean", "lambda", inv = exp)
+df_pred_tau = get_posterior_epred(selected_model, df_new1, "logtaumean", "tau", inv = exp)
 
 # Join and write
 df_pred = df_pred_tau |>
   full_join(df_pred_lambda, by = join_by(variable)) |>
   full_join(df_pred_gcl, by = join_by(variable)) |>
-  full_join(df_pred_fgmax, by = join_by(variable)) |>
+  left_join(df_pred_gi, by = join_by(variable)) |>
+  left_join(df_pred_gmax, by = join_by(variable)) |>
   full_join(df_new, by = join_by(variable)) |>
   select(-variable, -logtausd, -loglambdasd)
 

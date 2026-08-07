@@ -96,8 +96,10 @@ get_parcor = function(Psi) {
 ## consistently across tables and figures.
 trait_latex_label = function(x) {
   case_when(
-    x == "loggcl" ~ "$\\log \\left( l_\\mathrm{gc} \\right)$",
     x == "logitfgmax" ~ "$\\mathrm{logit} \\left( f_\\mathrm{gmax} \\right)$",
+    x == "loggcl" ~ "$\\log \\left( l_\\mathrm{gc} \\right)$",
+    x == "loggi" ~ "$\\log \\left( g_\\mathrm{i} \\right)$",
+    x == "loggmax" ~ "$\\log \\left( g_\\mathrm{max} \\right)$",
     x == "loglambdamean" ~ "$\\log \\left( \\lambda \\right)$",
     x == "logtaumean" ~ "$\\log \\left( \\tau \\right)$",
     TRUE ~ NA_character_
@@ -109,8 +111,10 @@ trait_latex_label = function(x) {
 ## "b_logtaumean_Intercept"), rather than requiring an exact match.
 trait_latex_from_paramname = function(param) {
   case_when(
-    str_detect(param, "_loggcl_") ~ trait_latex_label("loggcl"),
     str_detect(param, "_logitfgmax_") ~ trait_latex_label("logitfgmax"),
+    str_detect(param, "_loggcl_") ~ trait_latex_label("loggcl"),
+    str_detect(param, "_loggi_") ~ trait_latex_label("loggi"),
+    str_detect(param, "_loggmax_") ~ trait_latex_label("loggmax"),
     str_detect(param, "_loglambdamean_") ~ trait_latex_label("loglambdamean"),
     str_detect(param, "_logtaumean_") ~ trait_latex_label("logtaumean"),
     TRUE ~ NA_character_
@@ -333,7 +337,8 @@ make_precision_phy <- function(draws_df) {
     "loglambdamean_Intercept",
     "logtaumean_Intercept",
     "loggcl_Intercept",
-    "logitfgmax_Intercept"
+    "loggi_Intercept",
+    "loggmax_Intercept"
   )
   
   # SD columns

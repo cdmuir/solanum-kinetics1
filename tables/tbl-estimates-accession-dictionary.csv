@@ -4,7 +4,7 @@ lighttreatment,factor,shade; sun,Growth light intensity treatment
 lightintensity,factor,low; high,Measurement light intensity treatment
 leaftype,factor,amphi; pseudohypo,Leaf type treatment
 n_plant,integer,,Number of replicate plants
-trait,character,fgmax; gcl; lambda; tau,Trait name
+trait,character,gcl; gi; gmax; lambda; tau,Trait name
 estimate,numeric,,Posterior estimate
 lowerCI,numeric,,Lower 95% CI
 upperCI,numeric,,Upper 95% CI

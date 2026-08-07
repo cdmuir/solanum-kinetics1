@@ -5,12 +5,11 @@
 
 source("r/header.R")
 
-# working here
-fit = read_rds("objects/best_model.rds")
+selected_model = read_rds("objects/selected_model.rds")
 ci_level = 0.95
 digits = 2 
 
-df_summary1 = summarize_draws(fit,
+df_summary1 = summarize_draws(selected_model,
                               estimate = median,
                               quantile2,
                               .args = list(probs = c((1 - ci_level) / 2, 1 - (1 - ci_level) / 2), names = FALSE)) |>
@@ -46,8 +45,9 @@ df_fixed = df_summary1 |>
       str_detect(variable, "_lighttreatmentsun$") ~ "sun",
       str_detect(variable, "_lightintensityhigh$") ~ "high light",
       str_detect(variable, "_leaftypepseudohypo$") ~ "pseudohypo leaf type",
-      str_detect(variable, "_logitfgmax$") ~ trait_latex_label("logitfgmax"),
       str_detect(variable, "_loggcl$") ~ trait_latex_label("loggcl"),
+      str_detect(variable, "_loggi$") ~ trait_latex_label("loggi"),
+      str_detect(variable, "_loggmax$") ~ trait_latex_label("loggmax"),
       TRUE ~ NA_character_
     ),
     description = map2_chr(resp, explanatory, \(.r, .e) {

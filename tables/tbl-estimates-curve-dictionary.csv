@@ -5,7 +5,8 @@ lighttreatment,factor,shade; sun,Growth light intensity treatment
 lightintensity,factor,low; high,Measurement light intensity treatment
 leaftype,factor,amphi; pseudohypo,Leaf type treatment
 loggcl,numeric,,Estimate of log-transformed guard cell length (um)
-logitfgmax,numeric,,Estimate of logit-transformed stomatal conductance as a fraction of maximum conductance
+loggi,numeric,,Estimate of log-transformed initial stomatal conductance (mol m^-2 s^-1)
+loggmax,numeric,,Estimate of log-transformed anatomical maximum conductance (mol m^-2 s^-1)
 loglambdamean,numeric,,Point estimate of logit-transformed lag-time parameter
 loglambdasd,numeric,,Standard error of logit-transformed lag-time parameter
 logtaumean,numeric,,Point estimate of log-transformed time-constant parameter
