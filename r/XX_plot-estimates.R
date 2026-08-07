@@ -1,59 +1,80 @@
-write_rds(estimates_by_model2, "objects/estimates_by_model.rds")
+source("r/header.R")
 
-ggplot(
-  filter(estimates_by_model2, type == "b"),
+selected_model = read_rds("objects/tbl-comparison.rds") |>
+  filter(selected) |>
+  pull(model)
+
+estimates_by_model = read_rds("objects/estimates_by_model.rds") |>
+  mutate(
+    explanatory1 = case_when(
+      str_detect(explanatory, "loggcl") ~ "$\\log \\left(g_\\mathrm{cl}\\right)$",
+      str_detect(explanatory, "loggi") ~ "$\\log \\left(g_\\mathrm{i}\\right)$",
+      str_detect(explanatory, "loggmax") ~ "$\\log \\left(g_\\mathrm{max}\\right)$"
+    ),
+    response1 = case_when(
+      str_detect(response, "logtaumean") ~ "$\\log \\left(\\tau\\right)$",
+      str_detect(response, "loglambdamean") ~ "$\\log \\left(\\lambda\\right)$"
+    ),
+    `significant?` = case_when(
+      overlaps_zero | is.na(overlaps_zero) ~ "no/NA",
+      !overlaps_zero ~ "yes"
+    ),
+    s = ifelse(model == selected_model, "*", ""),
+    model1 = factor(
+      str_c(str_replace(model, "_", " "), 
+            ifelse(model == selected_model, "*", "")), 
+      levels = str_c(str_replace(levels(model), "_", " "), 
+      ifelse(levels(model) == selected_model, "*", ""))
+    )
+  ) |>
+  replace_na(list(estimate = 0, q2.5 = 0, q97.5 = 0))
+
+gp1 = ggplot(
+  filter(estimates_by_model, type == "b"),
   aes(
     estimate,
-    model,
+    model1,
     xmin = `q2.5`,
     xmax = `q97.5`,
-    color = overlap_zero
+    color = `significant?`
   )
 ) +
-  facet_grid(explanatory ~ response, scales = "free_x") +
+  facet_grid(explanatory1 ~ response1, scales = "free_x") +
+  geom_hline(aes(yintercept = model1), color = "grey70", linetype = "dotted") +
   geom_vline(xintercept = 0,
              color = "grey",
              linetype = "dashed") +
-  geom_pointinterval()
-
-ggplot(
-  filter(estimates_by_model2, type == "cor_phy"),
-  aes(
-    estimate,
-    model,
-    xmin = `q2.5`,
-    xmax = `q97.5`,
-    color = overlap_zero
+  geom_pointinterval(linewidth = 2) +
+  scale_color_manual(values = c("grey", "black")) +
+  labs(
+    x = "fixed effect ($\\pm 95$\\% CIs)"
+  ) +
+  theme(
+    axis.title.y = element_blank(),
+    legend.position = "bottom"
   )
-) +
-  facet_grid(explanatory ~ response, scales = "free_x") +
-  geom_vline(xintercept = 0,
-             color = "grey",
-             linetype = "dashed") +
-  geom_pointinterval()
 
-selected_model = ?
-  
-  tbl_comparison |>
-  mutate(selected = model == selected_model) |>
-  write_rds("objects/tbl-comparison.rds")
+gp2 = gp1 %+% filter(estimates_by_model, type == "cor_phy") +
+  labs(x = "phylogenetic correlation ($\\pm 95$\\% CIs)") +
+  xlim(-1, 1) +
+  theme(axis.text.x = element_text(angle = 45, vjust = 0.5))
 
+tikz(
+  "figures/estimates-b.tex",
+  standAlone = TRUE,
+  width = 4,
+  height = 6
+)
+print(gp1)
+dev.off()
 
-write_rds(fits$fit[[as.numeric(str_remove(selected_model, "model"))]], "objects/best_model.rds")
+tikz(
+  "figures/estimates-phy.tex",
+  standAlone = TRUE,
+  width = 4,
+  height = 6
+)
+print(gp2)
+dev.off()
 
-
-
-
-# Write "best" model
-# Note: I reran the models several times and the order of the top models
-# changed, consistent with the difference in LOOIC being caused by sampling
-# variability. After reviewing model estimates, I determined that model 6 is the
-# clearest to interpret.
-
-# Previous version (lowest LOOIC)
-# write_rds(fits$fit[[as.numeric(str_extract(rownames(looic_table)[1], "\\d+"))]], "objects/best_model.rds")
-
-# Current version (model 6)
-write_rds(fits$fit[[as.numeric(str_remove(selected_model, "model"))]], "objects/best_model.rds")
-
-
+system("cd figures; pdflatex estimates-b.tex; pdflatex estimates-phy.tex; rm estimates-b.aux estimates-b.log estimates-phy.aux estimates-phy.log")

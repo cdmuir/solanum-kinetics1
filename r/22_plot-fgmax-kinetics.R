@@ -131,13 +131,6 @@ gp2 = annotate_figure(
   right = ggpubr::text_grob("Measurement light intensity        ", rot = -90)
 )
 
-# ggsave(
-#   plot = gp_lambda,
-#   filename = "figures/fgmax-lambda.pdf",
-#   width = 5,
-#   height = 5
-# )
-
 tikz(
   "figures/fgmax-lambda.tex",
   standAlone = TRUE,

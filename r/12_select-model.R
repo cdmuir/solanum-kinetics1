@@ -38,7 +38,7 @@ focal_variables = crossing(
 
 # Get focal parameter estimates and 95% CIs from each plausible model
 estimates_by_model1 = map_dfr(plausible_models, \(.m) {
-  fit = glue("objects/fit_{n}.rds", n = str_extract(.m, "[0-9]+")) |>
+  fit = glue("objects/fits/fit_{n}.rds", n = str_extract(.m, "[0-9]+")) |>
     read_rds() |>
     as_draws_df()
   
