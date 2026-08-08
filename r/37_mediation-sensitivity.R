@@ -8,15 +8,15 @@
 #
 # Key insight: the selected joint multivariate model (objects/best_model.rds)
 # already estimates this residual correlation freely
-# (rescor__logtaumean__logitfgmax, from set_rescor(TRUE) in r/10_fit-all.R).
+# (rescor__logtaumean__loggi, from set_rescor(TRUE) in r/10_fit-all.R).
 # Because the fgmax equation's predictors (lighttreatment + lightintensity +
 # leaftype + the same 3 group-level terms) are a strict subset of tau's
-# (... + loggcl + logitfgmax + the same group-level terms), the classic
+# (... + loggcl + loggi + the same group-level terms), the classic
 # Zellner SUR-equivalence result means jointly estimating this correlation
-# does not change the point estimate of b_logtaumean_logitfgmax relative to
+# does not change the point estimate of b_logtaumean_loggi relative to
 # a naive model that assumes rho = 0 (sequential ignorability). This lets us
-# treat b_logtaumean_logitfgmax as the "naive" beta2 in the sensitivity
-# framework, and rescor__logtaumean__logitfgmax as a genuine, data-driven
+# treat b_logtaumean_loggi as the "naive" beta2 in the sensitivity
+# framework, and rescor__logtaumean__loggi as a genuine, data-driven
 # estimate of rho -- not just a hypothetical value to sweep over.
 #
 # For a linear mediator model M = ... + e_M (Var = sigma_M^2) and outcome
@@ -32,25 +32,25 @@
 
 source("r/header.R")
 
-best_model = read_rds("objects/best_model.rds")
+selected_model = read_rds("objects/selected_model.rds")
 
-draws = as_draws_df(best_model, variable = c(
-  "b_logtaumean_logitfgmax",
-  "b_logitfgmax_lighttreatmentsun",
-  "b_logitfgmax_lightintensityhigh",
-  "b_logitfgmax_leaftypepseudohypo",
+draws = as_draws_df(selected_model, variable = c(
+  "b_logtaumean_loggi",
+  "b_loggi_lighttreatmentsun",
+  "b_loggi_lightintensityhigh",
+  "b_loggi_leaftypepseudohypo",
   "b_logtaumean_lighttreatmentsun",
   "b_logtaumean_lightintensityhigh",
   "b_logtaumean_leaftypepseudohypo",
-  "sigma_logitfgmax",
+  "sigma_loggi",
   "sigma_logtaumean",
-  "rescor__logtaumean__logitfgmax"
+  "rescor__logtaumean__loggi"
 ))
 
-beta2 = draws$b_logtaumean_logitfgmax
-sigma_M = draws$sigma_logitfgmax
+beta2 = draws$b_logtaumean_loggi
+sigma_M = draws$sigma_loggi
 sigma_Y = draws$sigma_logtaumean
-rho_hat = draws$rescor__logtaumean__logitfgmax
+rho_hat = draws$rescor__logtaumean__loggi
 
 # Breakdown point: value of rho at which ACME = 0. Identical across
 # treatments because ACME(rho) = gamma1 * beta2(rho), and gamma1 does not
@@ -91,15 +91,15 @@ rho_grid = seq(-0.9, 0.9, by = 0.02)
 
 treatments = list(
   `Growth light (sun)` = list(
-    gamma1 = draws$b_logitfgmax_lighttreatmentsun,
+    gamma1 = draws$b_loggi_lighttreatmentsun,
     direct = draws$b_logtaumean_lighttreatmentsun
   ),
   `Measurement light (high)` = list(
-    gamma1 = draws$b_logitfgmax_lightintensityhigh,
+    gamma1 = draws$b_loggi_lightintensityhigh,
     direct = draws$b_logtaumean_lightintensityhigh
   ),
   `Leaf type (pseudohypo)` = list(
-    gamma1 = draws$b_logitfgmax_leaftypepseudohypo,
+    gamma1 = draws$b_loggi_leaftypepseudohypo,
     direct = draws$b_logtaumean_leaftypepseudohypo
   )
 )
@@ -141,7 +141,7 @@ p_sens = ggplot(sens_curve, aes(rho, acme_median, color = treatment, fill = trea
   geom_vline(xintercept = rho_star_ci[2], linetype = "solid", color = "black") +
   labs(
     x = expression("Assumed residual correlation, " * rho),
-    y = "Indirect effect on log(tau)\n(through fgmax)",
+    y = "Indirect effect on log(tau)\n(through gi)",
     color = "Treatment", fill = "Treatment"
   ) +
   guides(color = guide_legend(nrow = 2), fill = guide_legend(nrow = 2)) +

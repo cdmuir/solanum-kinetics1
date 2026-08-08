@@ -45,23 +45,6 @@ write_rds(fallback_summary, "objects/gcl-fallback-summary.rds")
 
 # --- Report on the leaflet-type correction model fit in r/01_join-data.R --
 
-leaflet_correction = read_rds("objects/gcl-leaflet-correction.rds")
-
-leaflet_effect_summary = map_dfr(names(leaflet_correction), function(ct) {
-  m = leaflet_correction[[ct]]$model
-  if (is.null(m)) return(tibble())
-  broom::tidy(m) |>
-    filter(str_starts(term, "leaflet_stomata")) |>
-    mutate(
-      curve_type = ct,
-      leaf_type = if_else(ct == "2-sided RH", "amphi", "pseudohypo"),
-      n = leaflet_correction[[ct]]$n,
-      .before = 1
-    )
-})
-
-write_rds(leaflet_effect_summary, "objects/gcl-leaflet-effect-summary.rds")
-
 # --- Figure: guard cell length by leaflet type, for the curve type (amphi)
 # most relevant to the fgmax/gcl analyses. The fitted lm object stores its
 # own model frame (leaflet_correction[[ct]]$model$model), so we reuse that
