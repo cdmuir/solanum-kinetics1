@@ -1,17 +1,19 @@
-# Plot effects of fgmax on tau and lambda - WORK IN PROGRESS
+# Plot effects of gi on tau and lambda
 source("r/header.R")
 
-fit = read_rds("objects/best_model.rds")
-dat = fit$data
+selected_model = read_rds("objects/selected_model.rds")
+dat = selected_model$data
 
 df_new = dat |>
   summarize(
-    min_logitfgmax = min(logitfgmax),
-    max_logitfgmax = max(logitfgmax),
+    min_loggi = min(loggi),
+    max_loggi = max(loggi),
+    loggmax = median(loggmax),
     .by = c(lighttreatment, lightintensity, leaftype)
   ) |>
   reframe(
-    logitfgmax = seq(min_logitfgmax, max_logitfgmax, length.out = 100),
+    loggi = seq(min_loggi, max_loggi, length.out = 100),
+    loggmax = first(loggmax),
     .by = c(lighttreatment, lightintensity, leaftype)
   ) |>
   mutate(
@@ -20,7 +22,7 @@ df_new = dat |>
     variable = glue("...{row_number()}")
   )
 
-df_pred_tau = posterior_epred(fit,
+df_pred_tau = posterior_epred(selected_model,
                               newdata = df_new,
                               re_formula = NA,
                               resp = "logtaumean") |>
@@ -29,7 +31,7 @@ df_pred_tau = posterior_epred(fit,
   full_join(df_new, by = join_by(variable)) |>
   rename(logtaumean = median)
 
-df_pred_lambda = posterior_epred(fit,
+df_pred_lambda = posterior_epred(selected_model,
                                  newdata = df_new,
                                  re_formula = NA,
                                  resp = "loglambdamean") |>
@@ -38,13 +40,13 @@ df_pred_lambda = posterior_epred(fit,
   full_join(df_new, by = join_by(variable)) |>
   rename(loglambdamean = median)
 
-# fgmax vs. tau
-gp_tau = ggplot(dat, aes(plogis(logitfgmax), exp(logtaumean), color = leaftype)) +
+# gi vs. tau
+gp_tau = ggplot(dat, aes(exp(loggi), exp(logtaumean), color = leaftype)) +
   geom_point(alpha = 0.5) +
   geom_ribbon(
     data = df_pred_tau,
     aes(
-      x = plogis(logitfgmax),
+      x = exp(loggi),
       ymin = exp(`q2.5`),
       ymax = exp(`q97.5`),
       fill = leaftype,
@@ -52,27 +54,27 @@ gp_tau = ggplot(dat, aes(plogis(logitfgmax), exp(logtaumean), color = leaftype))
     ),
     alpha = 0.3
   ) +
-  geom_line(data = df_pred_tau, aes(x = plogis(logitfgmax))) +
+  geom_line(data = df_pred_tau, aes(x = exp(loggi))) +
   facet_grid(lightintensity ~ lighttreatment) +
-  scale_x_continuous(transform = "logit", breaks = c(0.025, 0.1, 0.4)) +
+  scale_x_log10(breaks = c(0.01, 0.1, 1)) +
   scale_y_log10(breaks = c(50, 100, 200, 400)) +
   scale_fill_manual(values = c(col_amphi, col_pseudohypo)) +
   scale_color_manual(values = c(col_amphi, col_pseudohypo)) +
   labs(
-    x = "$f_\\mathrm{gmax}$ (logit-scale)",
+    x = "$g_\\mathrm{i}$ ($\\SI{}{\\mole\\per\\meter\\squared\\per\\second}$, log-scale)",
     y = "$\\tau$ (s, log-scale)",
     color = "Leaf type:",
     fill = "Leaf type:"
   ) +
   theme(legend.position = "bottom")
 
-# fgmax vs. lambda
-gp_lambda = ggplot(dat, aes(plogis(logitfgmax), exp(loglambdamean), color = leaftype)) +
+# gi vs. lambda
+gp_lambda = ggplot(dat, aes(exp(loggi), exp(loglambdamean), color = leaftype)) +
   geom_point(alpha = 0.5) +
   geom_ribbon(
     data = df_pred_lambda,
     aes(
-      x = plogis(logitfgmax),
+      x = exp(loggi),
       ymin = exp(`q2.5`),
       ymax = exp(`q97.5`),
       fill = leaftype,
@@ -80,9 +82,9 @@ gp_lambda = ggplot(dat, aes(plogis(logitfgmax), exp(loglambdamean), color = leaf
     ),
     alpha = 0.3
   ) +
-  geom_line(data = df_pred_lambda, aes(x = plogis(logitfgmax))) +
+  geom_line(data = df_pred_lambda, aes(x = exp(loggi))) +
   facet_grid(lightintensity ~ lighttreatment) +
-  scale_x_continuous(transform = "logit", breaks = c(0.025, 0.1, 0.4)) +
+  scale_x_log10(breaks = c(0.01, 0.1, 1)) +
   scale_y_log10(breaks = c(1, 2)) +
   scale_fill_manual(values = c(col_amphi, col_pseudohypo)) +
   scale_color_manual(values = c(col_amphi, col_pseudohypo)) +
@@ -101,12 +103,6 @@ gp1 = annotate_figure(
   right = ggpubr::text_grob("Measurement light intensity        ", rot = -90)
 )
 
-# ggsave(
-#   filename = "figures/fgmax-tau.pdf",
-#   width = 5,
-#   height = 5
-# )
-
 options(
   tikzLatexPackages = c(
     getOption("tikzLatexPackages"),
@@ -115,7 +111,7 @@ options(
 )
 
 tikz(
-  "figures/fgmax-tau.tex",
+  "figures/gi-tau.tex",
   standAlone = TRUE,
   width = 5,
   height = 5
@@ -123,7 +119,7 @@ tikz(
 print(gp1)
 dev.off()
 
-system("cd figures; pdflatex fgmax-tau.tex; rm fgmax-tau.aux fgmax-tau.log")
+system("cd figures; pdflatex gi-tau.tex; rm gi-tau.aux gi-tau.log")
 
 gp2 = annotate_figure(
   gp_lambda,
@@ -132,7 +128,7 @@ gp2 = annotate_figure(
 )
 
 tikz(
-  "figures/fgmax-lambda.tex",
+  "figures/gi-lambda.tex",
   standAlone = TRUE,
   width = 5,
   height = 5
@@ -140,4 +136,5 @@ tikz(
 print(gp2)
 dev.off()
 
-system("cd figures; pdflatex fgmax-lambda.tex; rm fgmax-lambda.aux fgmax-lambda.log")
+system("cd figures; pdflatex gi-lambda.tex; rm gi-lambda.aux gi-lambda.log")
+

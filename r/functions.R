@@ -459,6 +459,7 @@ prepare_edges = function(.x) {
         logtaumean = "$\\tau$",
         logitfgmax = "$f_\\mathrm{gmax}$",
         loggcl = "$l_\\mathrm{gc}$",
+        loggi = "$g_\\mathrm{i}$",
         lighttreatmentsun = "sun treatment",
         lightintensityhigh = "high light",
         leaftypepseudohypo = "pseudohypo"

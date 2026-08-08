@@ -13,44 +13,41 @@
 
 source("r/header.R")
 
-post = read_rds("objects/best_model.rds") |>
+post = read_rds("objects/selected_model.rds") |>
   as_draws_df() |>
   select(starts_with("."), starts_with("b_")) 
 
 # List of tables of direct and indirect effects for text output
 mediation = list(
   # total effect = direct effect of sun on tau +
-  #   mediated effect of sun on tau through fgmax +
+  #   mediated effect of sun on tau through gi +
   #   mediated effect of sun on tau through gcl
   lighttreatment = post |>
     mutate(
       direct_effect = b_logtaumean_lighttreatmentsun,
-      mediated_effect_fgmax = b_logitfgmax_lighttreatmentsun * b_logtaumean_logitfgmax,
-      # mediated_effect_gcl = b_loggcl_lighttreatmentsun * b_logtaumean_loggcl,
-      proportion_mediated = mediated_effect_fgmax / (direct_effect + mediated_effect_fgmax),
+      mediated_effect_gi = b_loggi_lighttreatmentsun * b_logtaumean_loggi,
+      proportion_mediated = mediated_effect_gi / (direct_effect + mediated_effect_gi),
       .keep = "none"
     ),
   
   # total effect = direct effect of high light on tau +
-  #   mediated effect of high light on tau through fgmax
-  # GCL did not change between measurement light intensity treatments
+  #   mediated effect of high light on tau through gi
   lightintensity = post |>
     mutate(
       direct_effect = b_logtaumean_lightintensityhigh,
-      mediated_effect_fgmax = b_logitfgmax_lightintensityhigh * b_logtaumean_logitfgmax,
-      proportion_mediated = mediated_effect_fgmax / (direct_effect + mediated_effect_fgmax),
+      mediated_effect_gi = b_loggi_lightintensityhigh * b_logtaumean_loggi,
+      proportion_mediated = mediated_effect_gi / (direct_effect + mediated_effect_gi),
       .keep = "none"
     ),
   
   # total effect = direct effect of pseudohypo on tau +
-  #   mediated effect of pseudohypo on tau through fgmax +
+  #   mediated effect of pseudohypo on tau through gi +
   #   mediated effect of pseudohypo on tau through gcl
   leaftype = post |>
     mutate(
       direct_effect = b_logtaumean_leaftypepseudohypo,
-      mediated_effect_fgmax = b_logitfgmax_leaftypepseudohypo * b_logtaumean_logitfgmax,
-      # mediated_effect_gcl = b_loggcl_leaftypepseudohypo * b_logtaumean_loggcl,
-      proportion_mediated = mediated_effect_fgmax / (direct_effect + mediated_effect_fgmax),
+      mediated_effect_gi = b_loggi_leaftypepseudohypo * b_logtaumean_loggi,
+      proportion_mediated = mediated_effect_gi / (direct_effect + mediated_effect_gi),
       .keep = "none"
     )
   
@@ -75,21 +72,21 @@ post_summary = post |>
 
 ### Growth light intensity
 df_edges_sun = post_summary |>
-  filter(to %in% c("logtaumean", "logitfgmax"), !(
+  filter(to %in% c("logtaumean", "loggi"), !(
     from %in% c("Intercept", "lightintensityhigh", "leaftypepseudohypo")
   )) |>
   prepare_edges() 
 
 ### Measurement light intensity
 df_edges_high = post_summary |>
-  filter(to %in% c("logtaumean", "logitfgmax"), !(
+  filter(to %in% c("logtaumean", "loggi"), !(
     from %in% c("Intercept", "lighttreatmentsun", "leaftypepseudohypo")
   )) |>
   prepare_edges()
 
 ### Pseudohypo leaf type
 df_edges_pseudohypo = post_summary |>
-  filter(to %in% c("logtaumean", "logitfgmax"), !(
+  filter(to %in% c("logtaumean", "loggi"), !(
     from %in% c("Intercept", "lightintensityhigh", "lighttreatmentsun")
   )) |>
   prepare_edges()
@@ -101,8 +98,7 @@ df_nodes = crossing(
   y = 0.5,
   explanatory = TRUE
 ) |>
-  add_row(name = "$f_\\mathrm{gmax}$", x = 0.4, y = 0.75, explanatory = FALSE) |>
-  # add_row(name = "$l_\\mathrm{gc}$", x = 0.4, y = 0.25, explanatory = FALSE) |>
+  add_row(name = "$g_\\mathrm{i}$", x = 0.4, y = 0.75, explanatory = FALSE) |>
   add_row(name = "$\\tau$", x = 0.8, y = 0.5, explanatory = FALSE)
 
 df_node_labels = df_nodes |>
@@ -127,9 +123,9 @@ edge_plot = join_nodes_edges(df_edges_sun, df_nodes) |>
   full_join(
     tribble(
       ~from, ~to, ~pstart, ~pend,
-      "sun treatment", "$f_\\mathrm{gmax}$", 0.2, 0.8,
+      "sun treatment", "$g_\\mathrm{i}$", 0.2, 0.8,
       "sun treatment", "$\\tau$", 0.25, 0.9,
-      "$f_\\mathrm{gmax}$", "$\\tau$", 0.15, 0.9
+      "$g_\\mathrm{i}$", "$\\tau$", 0.15, 0.9
     ), by = join_by(to, from)
   ) |>
   mutate(
@@ -144,9 +140,9 @@ edge_plot = join_nodes_edges(df_edges_sun, df_nodes) |>
       full_join(
         tribble(
           ~from, ~to, ~pstart, ~pend,
-          "high light", "$f_\\mathrm{gmax}$", 0.2, 0.8,
+          "high light", "$g_\\mathrm{i}$", 0.2, 0.8,
           "high light", "$\\tau$", 0.2, 0.9,
-          "$f_\\mathrm{gmax}$", "$\\tau$", 0.15, 0.9
+          "$g_\\mathrm{i}$", "$\\tau$", 0.15, 0.9
         ), by = join_by(to, from)
       ) |>
       mutate(
@@ -162,9 +158,9 @@ edge_plot = join_nodes_edges(df_edges_sun, df_nodes) |>
       full_join(
         tribble(
           ~from, ~to, ~pstart, ~pend,
-          "pseudohypo", "$f_\\mathrm{gmax}$", 0.2, 0.8,
+          "pseudohypo", "$g_\\mathrm{i}$", 0.2, 0.8,
           "pseudohypo", "$\\tau$", 0.2, 0.9,
-          "$f_\\mathrm{gmax}$", "$\\tau$", 0.15, 0.9
+          "$g_\\mathrm{i}$", "$\\tau$", 0.15, 0.9
         ), by = join_by(to, from)
       ) |>
       mutate(
@@ -238,7 +234,6 @@ p <- ggplot(data = edge_plot) +
     legend.key.spacing.y = unit(0.5, "cm"),
     legend.key.width = unit(2, "cm"),
     strip.text = element_blank())
-print(p)
 
 tikz(
   "figures/mediation.tex",

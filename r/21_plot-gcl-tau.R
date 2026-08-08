@@ -1,38 +1,41 @@
 # Plot accession-level gcl against tau
 source("r/header.R")
 
-fit = read_rds("objects/best_model.rds")
+selected_model = read_rds("objects/selected_model.rds")
 
 df_new = crossing(
-  phy = unique(fit$data$phy),
-  leaftype = unique(fit$data$leaftype),
-  lightintensity = unique(fit$data$lightintensity),
-  lighttreatment = unique(fit$data$lighttreatment),
+  phy = unique(selected_model$data$phy),
+  leaftype = unique(selected_model$data$leaftype),
+  lightintensity = unique(selected_model$data$lightintensity),
+  lighttreatment = unique(selected_model$data$lighttreatment),
   logtausd = 0
 ) |>
   mutate(accession = phy,
          variable = paste0("...", row_number())) |> full_join(
-           fit$data |>
+           selected_model$data |>
+             mutate(logfgmax = loggi - loggmax) |>
              summarize(
-               logitfgmax = median(logitfgmax),
+               logfgmax = median(logfgmax),
+               loggi = median(loggi),
+               loggmax = median(loggmax),
                .by = c(leaftype, lightintensity, lighttreatment)
              ),
            by = join_by(leaftype, lightintensity, lighttreatment)
          )
 
-df_pred_loggcl = posterior_epred(fit, newdata = df_new, re_formula = ~ phy, resp = "loggcl") |>
+df_pred_loggcl = posterior_epred(selected_model, newdata = df_new, re_formula = ~ phy, resp = "loggcl") |>
   as_draws_df() |>
   summarize_draws() |>
   full_join(df_new, by = "variable") |>
   select(accession, leaftype, lightintensity, lighttreatment, loggcl = median)
 
-df_pred_logtau = posterior_epred(fit, newdata = df_new, re_formula = ~ phy, resp = "logtaumean") |>
+df_pred_logtau = posterior_epred(selected_model, newdata = df_new, re_formula = ~ phy, resp = "logtaumean") |>
   as_draws_df() |>
   summarize_draws() |>
   full_join(df_new, by = "variable") |>
   select(accession, leaftype, lightintensity, lighttreatment, logtau = median)
 
-Sigma_median = fit |>
+Sigma_median = selected_model |>
   as_draws_df() |>
   select(
     starts_with("."),
@@ -55,7 +58,7 @@ Sigma_median = fit |>
     )
   }
 
-df_acc = fit$data |>
+df_acc = selected_model$data |>
   summarize(
     loggcl = median(loggcl),
     logtaumean = median(logtaumean), 
@@ -102,8 +105,6 @@ gp1 = annotate_figure(
   top = ggpubr::text_grob("       Growth light intensity"),
   right = ggpubr::text_grob("Measurement light intensity        ", rot = -90)
 )
-
-# ggsave("figures/gcl-tau.pdf", width = 5, height = 5)
 
 options(
   tikzLatexPackages = c(

@@ -3,7 +3,7 @@
 
 source("r/header.R")
 
-fit = read_rds("objects/fits.rds")$fit[[5]] |>
+fit = read_rds("objects/fits/fit_01.rds") |>
   as_draws_df() |>
   select(cor_phy__logtaumean_Intercept__loggcl_Intercept,
          b_logtaumean_loggcl)

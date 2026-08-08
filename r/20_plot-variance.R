@@ -2,10 +2,10 @@
 # individual components
 source("r/header.R")
 
-fit = read_rds("objects/best_model.rds")
+selected_model = read_rds("objects/selected_model.rds")
 
 # Variance decomposition
-df_var = fit |>
+df_var = selected_model |>
   as_draws_df() |>
   select(starts_with("."), starts_with("sd_"), starts_with("sigma")) |>
   clean_posterior_names() |>
@@ -40,7 +40,7 @@ df_var = fit |>
     ),
     trait1 = factor(
       trait_latex_label(trait),
-      levels = trait_latex_label(c("loggcl", "logitfgmax", "loglambdamean", "logtaumean"))
+      levels = trait_latex_label(c("loggcl", "loggi", "loggmax", "loglambdamean", "logtaumean"))
     )
   )
 
@@ -52,8 +52,6 @@ gp1 = df_var |>
   scale_fill_viridis_d() +
   labs(x = "proportion of variance", fill = "variance component") +
   theme(axis.title.y = element_blank())
-
-# ggsave("figures/variance.pdf", plot = gp1, width = 6, height = 4)
 
 tikz(
   "figures/variance.tex",
