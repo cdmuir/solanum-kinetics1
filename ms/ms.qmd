@@ -106,19 +106,6 @@ joined_data = read_rds("../data/joined-data.rds")
 mean_light_intensity_gap_min = read_rds("../objects/mean-light-intensity-gap-min.rds")
 
 gcl_fallback = read_rds("../objects/gcl-fallback-summary.rds")
-gcl_leaflet_effects = read_rds("../objects/gcl-leaflet-effect-summary.rds")
-gcl_correction = read_rds("../objects/gcl-correction-summary.rds")
-
-fmt_leaflet_effect = function(ct) {
-  row = gcl_leaflet_effects[gcl_leaflet_effects$curve_type == ct, ]
-  glue::glue(
-    "{formatC(100 * (exp(row$estimate) - 1), format = 'f', digits = 1)}% ",
-    "($p$ = {formatC(row$p.value, format = 'f', digits = 3)}, $n$ = {row$n})"
-  )
-}
-
-gcl_leaflet_effect_amphi = fmt_leaflet_effect("2-sided RH")
-gcl_leaflet_effect_pseudohypo = fmt_leaflet_effect("1-sided RH")
 
 response_vars = tibble(
   definition = c(
@@ -242,12 +229,12 @@ header[(which(str_detect(header, "start convergence_criteria")) + 1):(which(str_
 n_removed = read_rds("../objects/n_removed.rds")
 
 # Results
-fit = read_rds("../objects/best_model.rds")
+selected_model = read_rds("../objects/selected_model.rds")
 
-n_acc = length(unique(fit$data$accession))
-n_curve = prettyNum(nrow(fit$data), big.mark = ',')
+n_acc = length(unique(selected_model$data$accession))
+n_curve = prettyNum(nrow(selected_model$data), big.mark = ',')
 
-median_curves_per_population = fit$data |>
+median_curves_per_population = selected_model$data |>
   summarize(n = n(),
             .by = c(phy, lighttreatment, lightintensity, leaftype)) |>
   pull(n) |>
@@ -274,7 +261,7 @@ vpd_min = min(as.numeric(df_vpd$VPD_final))
 vpd_max = max(as.numeric(df_vpd$VPD_final))
 
 # Effect of growth light treatment on log(tau)
-post_summary = posterior_summary(fit)
+post_summary = posterior_summary(selected_model)
 post_tau_sun = post_summary["b_logtaumean_lighttreatmentsun", ]
 post_tau_high = post_summary["b_logtaumean_lightintensityhigh", ]
 post_lambda_sun = post_summary["b_loglambdamean_lighttreatmentsun", ]
@@ -303,29 +290,30 @@ max_lambda = tbl_estimates_accession |>
   max()
 
 # Effect of light treatments and leaf type on gcl and fgmax
-post_gcl_sun = fit |>
+post_gcl_sun = selected_model |>
   as_draws_df() |>
   select(b_loggcl_lighttreatmentsun) |>
   summarize_draws(estimate = median, quantile2, .args= list(probs = c(0.025, 0.975))) |>
   mutate(across(where(is.numeric), log_to_percent))
 
-post_gcl_curvetype = fit |>
+post_gcl_curvetype = selected_model |>
   as_draws_df() |>
   select(b_loggcl_leaftypepseudohypo) |>
   summarize_draws(estimate = median, quantile2, .args= list(probs = c(0.025, 0.975))) |>
   mutate(across(where(is.numeric), log_to_percent))
 
-post_fgmax_high = fit |>
+# TODO: SEPARATE POST OBJECTS FOR GI AND GMAX
+post_fgmax_high = selected_model |>
   as_draws_df() |>
   select(b_logitfgmax_lightintensityhigh) |>
   summarize_draws(estimate = median, quantile2, .args= list(probs = c(0.025, 0.975)))
 
-post_fgmax_sun = fit |>
+post_fgmax_sun = selected_model |>
   as_draws_df() |>
   select(b_logitfgmax_lighttreatmentsun) |>
   summarize_draws(estimate = median, quantile2, .args= list(probs = c(0.025, 0.975)))
 
-post_fgmax_pseudohypo = fit |>
+post_fgmax_pseudohypo = selected_model |>
   as_draws_df() |>
   select(b_logitfgmax_leaftypepseudohypo) |>
   summarize_draws(estimate = median, quantile2, .args= list(probs = c(0.025, 0.975)))
@@ -367,9 +355,9 @@ df_comparison = read_rds("../objects/tbl-comparison.rds")
 example_fgmax = c(0.2, 0.3)
 
 example_trt = list(
-  lighttreatment = levels(fit$data$lighttreatment)[1],
-  lightintensity = levels(fit$data$lightintensity)[1],
-  leaftype = levels(fit$data$leaftype)[1]
+  lighttreatment = levels(selected_model$data$lighttreatment)[1],
+  lightintensity = levels(selected_model$data$lightintensity)[1],
+  leaftype = levels(selected_model$data$leaftype)[1]
 )
 
 df_new = tibble(
@@ -380,7 +368,7 @@ df_new = tibble(
   logtausd = 0
 )
 
-df_example1 = posterior_epred(fit,
+df_example1 = posterior_epred(selected_model,
                               newdata = df_new,
                               resp = "logtaumean",
                               re_formula = NA) |>
@@ -413,7 +401,7 @@ rho_upper = partial_cor$upper
 
 # Percent change in fgmax and tau from low to high light intensity in reference treatment (low growth light intensity, amphi leaf type)
 
-post1 = fit |>
+post1 = selected_model |>
   as_draws_df() |>
   select(starts_with("."),
          b_logitfgmax_Intercept,
@@ -601,12 +589,11 @@ We inferred that traits covary among populations if the 95% confidence intervals
 
 #### Model selection and parameter estimation of individual-level effects
 
-To infer whether individual-level variation in \gcl{} and \fgmax{} influence kinetic parameters, we used the leave-one-out cross-validation information criterion (LOOIC) to compare the fit of models using the *R* package **loo** version `r packageVersion("loo")` [@vehtari_practical_2017]. We compared models with all permutations of \gcl, \gi, and \gmax{} influencing $\lambda$ and $\tau$. We considered all models within two $\Delta$LOOIC standard errors of the minimum LOOIC (@tbl-comparison) to be in the set of plausible models to generate posterior predictions for hypothesis testing. Within each plausible model, we assessed whether a fixed effect was significantly different from zero based on the 95% confidence intervals. 
+To infer whether individual-level variation in \gcl{} and \fgmax{} influence kinetic parameters, we used the leave-one-out cross-validation information criterion (LOOIC) to compare the fit of models using the *R* package **loo** version `r packageVersion("loo")` [@vehtari_practical_2017]. We compared models with all permutations of \gcl, \gi, and \gmax{} influencing $\lambda$ and $\tau$. We considered all models within two $\Delta$LOOIC standard errors of the minimum LOOIC (@tbl-comparison) to be in the set of plausible models to generate posterior predictions for hypothesis testing. Within each plausible model, we assessed whether a fixed effect was significantly different from zero based on the 95% confidence intervals. Among the set of plausible models, we selected the model with the highest proportion of significant focal parameters for further analysis. Focal parameters are the fixed and phylogenetic effects of \gcl, \gi, and \gmax{} on $\lambda$ and $\tau$. While there is some subjectivity, we chose this approach for interpretability because it favors simpler models that do include additional nonsignificant parameters. Because this choice is somewhat arbitrary, we discuss alternative interpretations based on the other plausible models.
 
 #### Path analysis to test for plastic effects
 
-<!-- TODO: Revisit path analysis with updated model structure -->
-We used path analysis [@pearl_causality_2022] to test whether treatment-associated plasticity in $\tau$ was statistically consistent with an indirect path through plasticity in \fgmax{} or \gcl{}, in response to measurement light intensity, growth light intensity, and curve-type treatments. We do not treat this as a randomized-treatment causal mediation analysis: \fgmax{} is not randomized, is estimated from the same curve as $\tau$, and could share unmeasured confounders (e.g., hydraulic status, measurement order, realized VPD trajectory) with $\tau$, violating the sequential ignorability assumption required for a causal interpretation. We assessed the plausibility of this assumption directly with a sensitivity analysis (Notes S3). We inferred the direct effect of treatments on $\tau$ from model coefficients. We estimated the indirect effect of treatments as the product of the effect of treatment on \fgmax{} or \gcl{} and the effect of that trait on $\tau$ [@imai_general_2010]. We determined significant direct and indirect effects based on whether the 95% confidence intervals of the effects were different from zero. We calculated effect sizes as the point estimate (median of the posterior) divided by the standard error (standard deviation of the posterior).
+We used path analysis [@pearl_causality_2022] to test whether treatment-associated plasticity in $\tau$ was statistically consistent with an indirect path through plasticity in stomatal traits, in response to measurement light intensity, growth light intensity, and curve-type treatments. We focused on \gi{} because it was the only individual-level trait significantly associated with $\tau$ in the selected model (see Results). We do not treat this as a randomized-treatment causal mediation analysis: \gi{} is not randomized, is estimated from the same curve as $\tau$, and could share unmeasured confounders (e.g., hydraulic status, measurement order, realized VPD trajectory) with $\tau$, violating the sequential ignorability assumption required for a causal interpretation. We assessed the plausibility of this assumption directly with a sensitivity analysis (Notes S3). We inferred the direct effect of treatments on $\tau$ from model coefficients. We estimated the indirect effect of treatments as the product of the effect of treatment on \gi{} and the effect of that trait on $\tau$ [@imai_general_2010]. We determined significant direct and indirect effects based on whether the 95% confidence intervals of the effects were different from zero. We calculated effect sizes as the point estimate (median of the posterior) divided by the standard error (standard deviation of the posterior).
 
 ### Variance decomposition and phylogenetic heritability
 
@@ -1101,7 +1088,7 @@ accession_info |>
 #| message: false
 #| warning: false
 
-df1 = fit$data |>
+df1 = selected_model$data |>
   summarize(
     n = n(),
     .by = c(lightintensity, lighttreatment, leaftype)
@@ -1293,7 +1280,7 @@ describe_effect = function(explanatory, response) {
   }
 }
 
-fx1 = fixef(fit, summary = TRUE) |>
+fx1 = fixef(selected_model, summary = TRUE) |>
   as.data.frame() |>
   rownames_to_column("par") |>
   mutate(across(where(is_double), ~ formatC(., format = "f", digits = 2)),
