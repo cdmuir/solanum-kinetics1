@@ -1,0 +1,6 @@
+downloaded_fits/
+logs/*.log
+logs/*.out
+logs/*.err
+*.sif
+fit_*.rds

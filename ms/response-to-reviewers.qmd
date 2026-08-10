@@ -43,9 +43,11 @@ comments. We address each point below. Reviewer comments appear in gray boxes;
 our responses appear in blue.
 
 ```{r setup, echo=FALSE, message=FALSE, warning=FALSE}
-library(readr)
+library(cowplot)
 library(dplyr)
+library(ggplot2)
 library(glue)
+library(readr)
 
 comp_pars_vpd = read_rds("../objects/tbl-comparison-vpd.rds")
 final_vpd_effect = read_rds("../objects/tbl-final-vpd-effect.rds")
@@ -96,23 +98,6 @@ rho_hat_fmt = fmt_rho("rho_hat (estimated)")
 rho_star_fmt = fmt_rho("rho_star (breakdown)")
 prob_below_breakdown_fmt = formatC(100 * mediation_sens$prob_below_breakdown, format = "f", digits = 0)
 
-gcl_fallback = read_rds("../objects/gcl-fallback-summary.rds")
-gcl_fallback_pct_fmt = formatC(gcl_fallback$pct_fallback, format = "f", digits = 1)
-
-gcl_leaflet_effects = read_rds("../objects/gcl-leaflet-effect-summary.rds")
-
-fmt_leaflet_effect = function(ct) {
-  row = gcl_leaflet_effects[gcl_leaflet_effects$curve_type == ct, ]
-  glue(
-    "{formatC(100 * (exp(row$estimate) - 1), format = 'f', digits = 1)}% ",
-    "($p$ = {formatC(row$p.value, format = 'f', digits = 3)}, $n$ = {row$n})"
-  )
-}
-
-gcl_leaflet_effect_amphi = fmt_leaflet_effect("2-sided RH")
-gcl_leaflet_effect_pseudohypo = fmt_leaflet_effect("1-sided RH")
-
-gcl_correction = read_rds("../objects/gcl-correction-summary.rds")
 ```
 
 ---
@@ -462,10 +447,30 @@ Pareto-$k$, PSIS effective sample size and MCSE as reliability checks.
 ::: response
 **Response:**
 
-<!-- TODO: Revisit this once new models with gi/gmax separate are finished. -->
+The phrase "clearest to interpret" was informal shorthand (CDM) for the fuller explanation in the text, so there is no discrepancy to correct. To make model selection less subjective, we now describe explicit criteria in the revised "Model selection and parameter estimation of individual-level effects" section. We first narrowed the candidate set using LOOIC, then evaluated the remaining models on the focal parameters addressing our hypotheses — individual-level and phylogenetic effects of anatomical traits on kinetic traits. Among these, we selected the model with the highest proportion of significant focal parameters (95% CIs excluding 0), regardless of whether the direction matched our hypotheses. This criterion favors more parsimonious models, particularly ones without additional non-significant terms, and makes the selected model easier to interpret. This criterion is somewhat arbitrary and not based on formal statistical inference. We therefore also discuss alternative interpretations supported by other plausible models.
 
-The note "clearest to interpret" was my (CDM) shorthand for the more complete explanation given in the text, so there is no discrepancy to correct.
+To address the second half of the comment, we changed the candidate set of models. In the original manuscript, we tested individual-level and phylogenetic effects of the composite variable \fgmax{} on a logit-scale. We realized we could achieve the same goals by modeling the effects of component traits (\gi{} and \gmax) on kinetic traits directly. We reasoned that if \fgmax{} *per se* effects kinetics, then both \gi{} and \gmax{} should be retained in candidate models and have significant effects on kinetic traits. Conversely, if only of the component traits effects kinetics, then it should be retained in the selected model, while the other is dropped. Our new approach is described in the "Model selection and parameter estimation of individual-level effects" section.
 
+One minor discrepancy between or former and current approaches is that the current approach models the \fgmax{} on a log rather than logit-scale, since $\log \left( f_\mathrm{gmax} \right) = \log \left( g_\mathrm{i} \right) - \log \left( g_\mathrm{max} \right)$. However, the two transformations of \fgmax{} are highly correlated in our data:
+
+```{r, echo = FALSE}
+
+dat = read_rds("../objects/selected_model.rds")$data |>
+  mutate(fgmax = exp(loggi - loggmax))
+
+ggplot(dat, aes(qlogis(fgmax), log(fgmax))) +
+  geom_point() +
+  labs(
+    x = expression(italic(f)[gmax]~(logit-scale)),
+    y = expression(italic(f)[gmax]~(log-scale))
+  ) +
+  geom_abline(intercept = 0, slope = 1, color = "grey", linetype = "dashed") +
+  coord_equal() +
+  theme_cowplot()
+
+```
+
+The new modeling approach changed our interpretation somewhat and these changes are reflected in the revised Results and Discussion <!-- TODO: cite specific instances -->. Overall, individual-level variation in \gi{} explained much more of the variation in kinetics than \gmax{}. The \gmax{} still had a significant negative effect on $\lambda$, but not $\tau$. We therefore revised the figures and mediation analyses to emphasize the role of \gi{} rather than \fgmax{}.
 :::
 
 ---
@@ -522,18 +527,9 @@ We unintentionally neglected to explain why these three individuals were conside
 
 > "We excluded three individuals with extreme outlying guard cell length values. Preliminary analysis of variation in guard cell length among growth treatments, leaf types, and accessions identified these outliers based on a residual value greater than 0.45, which visually appeared as a clear break in the residual distribution."
 
-Regarding the leaflet-matching fallback: when a leaflet was measured for stomatal anatomy but did not match the leaflet used for the LI-6800 humidity-response curve, we used the first available anatomical measurement from a different leaflet on the same leaf as a proxy, rather than discarding the individual.  This fallback was triggered for `r gcl_fallback$n_fallback` of `r gcl_fallback$n_total` individual-by-leaf-type combinations (`r gcl_fallback_pct_fmt`%). We agree this could add measurement error to \gmax{}, guard cell length, and \fgmax{} for those individuals, and we have added this frequency and a caveat to the Materials and Methods.
+<!-- TODO: fill in values here -->
+Regarding the leaflet-matching fallback: when a leaflet was measured for stomatal anatomy but did not match the leaflet used for the LI-6800 humidity-response curve, we used the first available anatomical measurement from a different leaflet on the same leaf as a proxy, rather than discarding the individual.  This fallback was triggered for XXX of XXX individual-by-leaf-type combinations XXX%). We agree this could add measurement error to \gmax{}, guard cell length, and \fgmax{} for those individuals, and we have added this frequency and a caveat to the Materials and Methods.
 
-Rather than simply flagging this as a caveat, we now correct for it directly in `r/01_join-data.R`. For each curve type (amphistomatous and pseudohypostomatous), we fit $\log(l_\mathrm{gc}) \sim \mathrm{leaflet} + \mathrm{light\ treatment} + \mathrm{accession}$ among individuals with an RH curve of that type (accession as a fixed effect, so the leaflet coefficient reflects only within-accession differences: terminal vs.\ lateral leaflets differed by `r gcl_leaflet_effect_amphi` for amphistomatous curves and `r gcl_leaflet_effect_pseudohypo` for pseudohypostomatous curves; @fig-gcl-leaflet-type). When the substituted leaflet's type did not match the LI-6800 leaflet, we used this fitted difference to project \gcl{} (and, proportionally, \gmax{}, which is linear in \gcl{} for fixed stomatal density) onto what it would be expected to be on the matching leaflet type. This correction was applied to `r gcl_correction$n_corrected` of `r gcl_correction$n_total` individual-by-leaf-type combinations in the final dataset, each adjusted by a modest ~2% on average. This is a small correction given the leaflet effect itself is only marginal/non-significant, but it is now applied systematically rather than left as unadjusted measurement error.
-
-```{r}
-#| label: fig-gcl-leaflet-type
-#| echo: false
-#| message: false
-#| warning: false
-#| fig-cap: "\\gcl{} for lateral vs. terminal leaflets, among individuals with an amphistomatous curve."
-knitr::include_graphics("../figures/gcl-leaflet-type.pdf")
-```
 :::
 
 ---

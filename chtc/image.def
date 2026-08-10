@@ -1,0 +1,106 @@
+Bootstrap: docker
+From: rocker/r-ver:4.4.1
+
+%labels
+    Author solanum-kinetics1
+    Description R + brms + cmdstanr image for fitting r/10_fit-all.R models on CHTC
+
+%post
+    # Fail loudly and immediately on ANY error in this script -- this is the
+    # key fix after several silent failures (a failed apt-get, or an
+    # install.packages() call that doesn't itself return non-zero even when
+    # a package fails to compile) let earlier build attempts limp forward
+    # into a broken image instead of aborting the build.
+    #
+    # NOTE: Apptainer runs %post with /bin/sh (dash on this image), which
+    # does NOT support bash's `pipefail` option -- an earlier attempt at a
+    # `#!/bin/bash` shebang here was NOT honored by this Apptainer version
+    # (it still ran under dash and errored on `set -o pipefail`). We don't
+    # rely on pipefail semantics anywhere below (no pipelines whose exit
+    # status matters), so plain POSIX `set -eu` gives us everything we need
+    # and is guaranteed to work under dash.
+    set -eu
+
+    export DEBIAN_FRONTEND=noninteractive
+
+    # Build tools needed to compile CmdStan / Stan models, plus libraries
+    # used by ape/brms dependencies. Retry apt-get update once in case of a
+    # transient mirror/network hiccup (seen intermittently on build nodes).
+    # NOTE: -o Acquire::AllowInsecureRepositories=true works around a
+    # persistent "Couldn't create temporary file ... for passing config to
+    # apt-key" error seen on this CHTC build node even in a brand-new
+    # interactive job (apt-key's GPG-verification step can't write its temp
+    # file inside %post's build sandbox here). This skips repository
+    # signature verification for this build-time step only; reported to
+    # chtc@cs.wisc.edu as a possible build-node issue.
+    apt-get -o Acquire::AllowInsecureRepositories=true -o Acquire::AllowDowngradeToInsecureRepositories=true update \
+      || (sleep 5 && apt-get -o Acquire::AllowInsecureRepositories=true -o Acquire::AllowDowngradeToInsecureRepositories=true update)
+    apt-get install -y --no-install-recommends --allow-unauthenticated \
+        build-essential \
+        g++ \
+        gfortran \
+        make \
+        cmake \
+        git \
+        libcurl4-openssl-dev \
+        libssl-dev \
+        libxml2-dev \
+        liblapack-dev \
+        libblas-dev \
+        pkg-config
+    rm -rf /var/lib/apt/lists/*
+
+    # Sanity check: fail the build now, with a clear message, if any of
+    # these didn't actually get installed (rather than finding out later
+    # from a confusing downstream R compile error).
+    for tool in gcc g++ gfortran cmake make git; do
+      command -v "$tool" >/dev/null || { echo "FATAL: $tool not found after apt-get install"; exit 1; }
+    done
+
+    # CRAN packages needed ONLY for model fitting (deliberately a much
+    # smaller set than r/header.R, which also loads plotting/GIS packages
+    # irrelevant to fitting and not worth bloating this image with).
+    # install.packages() does NOT make Rscript exit non-zero on a failed
+    # package build, so we explicitly verify every package installed and
+    # exit 1 (failing the build) if any did not.
+    Rscript -e '
+      pkgs <- c("ape", "brms", "checkmate", "cli", "dplyr", "tidyr", "purrr", "glue", "readr", "stringr")
+      install.packages(pkgs, repos = "https://cloud.r-project.org")
+      missing <- setdiff(pkgs, rownames(installed.packages()))
+      if (length(missing) > 0) {
+        stop("FATAL: failed to install: ", paste(missing, collapse = ", "))
+      }
+    '
+
+    # cmdstanr from the Stan R-universe (recommended install method)
+    Rscript -e '
+      install.packages("cmdstanr", repos = c("https://stan-dev.r-universe.dev", "https://cloud.r-project.org"))
+      if (!"cmdstanr" %in% rownames(installed.packages())) stop("FATAL: failed to install cmdstanr")
+    '
+
+    # Build CmdStan itself inside the image, in a fixed location, so jobs
+    # don't need to compile it (or have internet access) at run time.
+    mkdir -p /opt/cmdstan
+    Rscript -e '
+      cmdstanr::install_cmdstan(dir = "/opt/cmdstan", cores = 4, overwrite = TRUE)
+    '
+    ls -d /opt/cmdstan/cmdstan-* >/dev/null || { echo "FATAL: cmdstan install did not produce /opt/cmdstan/cmdstan-*"; exit 1; }
+
+%environment
+    # fit_model.R calls cmdstanr::set_cmdstan_path(Sys.getenv("CMDSTAN"))
+    export CMDSTAN=$(ls -d /opt/cmdstan/cmdstan-* 2>/dev/null | head -n1)
+
+%test
+    R -e 'library(brms); library(cmdstanr); cmdstanr::set_cmdstan_path(Sys.getenv("CMDSTAN")); cmdstanr::cmdstan_path()'
+
+%help
+    Container for fitting the 64 brms models defined in r/10_fit-all.R
+    (solanum-kinetics1 project) on CHTC.
+
+    Build (from a CHTC interactive build job):
+        apptainer build solanum-fit.sif image.def
+
+    Test:
+        apptainer shell -e solanum-fit.sif
+        # inside the container:
+        R -e 'cmdstanr::cmdstan_version()'

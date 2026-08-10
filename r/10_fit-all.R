@@ -6,7 +6,7 @@ source("r/header.R")
 plan(multisession, workers = 16)
 
 joined_summary = read_rds("data/joined-summary.rds") |>
-  prepare_tau_anatomy_data(logtau_threshold) 
+  prepare_tau_anatomy_data(logtau_threshold)
 
 write_rds(
   list(
@@ -91,15 +91,11 @@ bf_gi = bf(
     (1 | b | gr(phy, cov = A))
 )
 
-bf_gmax = bf(
-  loggmax ~
-    lighttreatment +
-    lightintensity +
-    leaftype +
-    (1 | accid) +
-    (1 | a | accession) +
-    (1 | b | gr(phy, cov = A))
-)
+bf_gmax = bf(loggmax ~
+               lighttreatment +
+               leaftype +
+               (1 | a | accession) +
+               (1 | b | gr(phy, cov = A)))
 
 df_forms = crossing(
   bf_lambda = list(
@@ -136,7 +132,6 @@ future_walk2(
   df_forms$form,
   df_forms$file,
   \(.form, .file) {
-    
     fit = brm(
       formula = .form,
       data = joined_summary |>

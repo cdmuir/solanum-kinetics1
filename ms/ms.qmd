@@ -302,20 +302,29 @@ post_gcl_curvetype = selected_model |>
   summarize_draws(estimate = median, quantile2, .args= list(probs = c(0.025, 0.975))) |>
   mutate(across(where(is.numeric), log_to_percent))
 
-# TODO: SEPARATE POST OBJECTS FOR GI AND GMAX
-post_fgmax_high = selected_model |>
+post_gi_high = selected_model |>
   as_draws_df() |>
-  select(b_logitfgmax_lightintensityhigh) |>
+  select(b_loggi_lightintensityhigh) |>
   summarize_draws(estimate = median, quantile2, .args= list(probs = c(0.025, 0.975)))
 
-post_fgmax_sun = selected_model |>
+post_gi_sun = selected_model |>
   as_draws_df() |>
-  select(b_logitfgmax_lighttreatmentsun) |>
+  select(b_loggi_lighttreatmentsun) |>
   summarize_draws(estimate = median, quantile2, .args= list(probs = c(0.025, 0.975)))
 
-post_fgmax_pseudohypo = selected_model |>
+post_gi_pseudohypo = selected_model |>
   as_draws_df() |>
-  select(b_logitfgmax_leaftypepseudohypo) |>
+  select(b_loggi_leaftypepseudohypo) |>
+  summarize_draws(estimate = median, quantile2, .args= list(probs = c(0.025, 0.975)))
+
+post_gmax_sun = selected_model |>
+  as_draws_df() |>
+  select(b_loggmax_lighttreatmentsun) |>
+  summarize_draws(estimate = median, quantile2, .args= list(probs = c(0.025, 0.975)))
+
+post_gmax_pseudohypo = selected_model |>
+  as_draws_df() |>
+  select(b_loggmax_leaftypepseudohypo) |>
   summarize_draws(estimate = median, quantile2, .args= list(probs = c(0.025, 0.975)))
 
 # Variance decomposition values
@@ -330,8 +339,17 @@ gcl_phylo_var = tbl_variance |>
     s = glue("{s1}% {s2}", s1 = `\\% variance`)) |>
   pull(s)
 
-fgmax_phylo_var = tbl_variance |>
-  filter(Trait == "$\\mathrm{logit}(f_\\mathrm{gmax})$", component == "phylogenetic") |>
+gi_phylo_var = tbl_variance |>
+  filter(Trait == "$\\mathrm{log}(g_\\mathrm{i})$", component == "phylogenetic") |>
+  mutate(
+    s2 = str_replace(`95\\% CI`, "\\[", "[95% CI: ") |>
+      str_replace(", ", " to " ) |>
+      str_replace("\\]", "%]"),
+    s = glue("{s1}% {s2}", s1 = `\\% variance`)) |>
+  pull(s)
+
+gmax_phylo_var = tbl_variance |>
+  filter(Trait == "$\\mathrm{log}(g_\\mathrm{max})$", component == "phylogenetic") |>
   mutate(
     s2 = str_replace(`95\\% CI`, "\\[", "[95% CI: ") |>
       str_replace(", ", " to " ) |>
@@ -351,8 +369,8 @@ tau_phylo_var = tbl_variance |>
 # Model comparison table
 df_comparison = read_rds("../objects/tbl-comparison.rds")
 
-# Example effect of fgmax on tau
-example_fgmax = c(0.2, 0.3)
+# Example effect of gi on tau
+example_gi = c(0.2, 0.4)
 
 example_trt = list(
   lighttreatment = levels(selected_model$data$lighttreatment)[1],
@@ -361,7 +379,7 @@ example_trt = list(
 )
 
 df_new = tibble(
-  logitfgmax = qlogis(example_fgmax),
+  loggi = log(example_gi),
   lighttreatment = example_trt$lighttreatment,
   lightintensity = example_trt$lightintensity,
   leaftype = example_trt$leaftype,
@@ -399,22 +417,21 @@ rho_upper = partial_cor$upper
 
 # Discussion
 
-# Percent change in fgmax and tau from low to high light intensity in reference treatment (low growth light intensity, amphi leaf type)
+# Percent change in gi and tau from low to high light intensity in reference treatment (low growth light intensity, amphi leaf type)
 
 post1 = selected_model |>
   as_draws_df() |>
   select(starts_with("."),
-         b_logitfgmax_Intercept,
-         b_logitfgmax_lightintensityhigh,
+         b_loggi_Intercept,
+         b_loggi_lightintensityhigh,
          b_logtaumean_Intercept,
-         b_logtaumean_logitfgmax) 
+         b_logtaumean_loggi) 
 
-
-fgmax_percent_change = post1 |>
+gi_percent_change = post1 |>
   mutate(
-    fgmax0 = plogis(b_logitfgmax_Intercept),
-    fgmax1 = plogis(b_logitfgmax_Intercept + b_logitfgmax_lightintensityhigh),
-    percent_change = 100 * (fgmax1 - fgmax0) / fgmax0,
+    gi0 = exp(b_loggi_Intercept),
+    gi1 = exp(b_loggi_Intercept + b_loggi_lightintensityhigh),
+    percent_change = 100 * (gi1 - gi0) / gi0,
     .keep = "unused"
   ) |>
   summarize(percent_change = median(percent_change)) |>
@@ -424,10 +441,10 @@ fgmax_percent_change = post1 |>
 tau_percent_change = post1 |>
   mutate(
     tau0 = exp(
-      b_logtaumean_Intercept + b_logitfgmax_Intercept * b_logtaumean_logitfgmax
+      b_logtaumean_Intercept + b_loggi_Intercept * b_logtaumean_loggi
     ),
     tau1 = exp(
-      b_logtaumean_Intercept + (b_logitfgmax_Intercept + b_logitfgmax_lightintensityhigh) * b_logtaumean_logitfgmax
+      b_logtaumean_Intercept + (b_loggi_Intercept + b_loggi_lightintensityhigh) * b_logtaumean_loggi
     ),
     percent_change = 100 * (tau1 - tau0) / tau0
   ) |>
@@ -593,11 +610,11 @@ To infer whether individual-level variation in \gcl{} and \fgmax{} influence kin
 
 #### Path analysis to test for plastic effects
 
-We used path analysis [@pearl_causality_2022] to test whether treatment-associated plasticity in $\tau$ was statistically consistent with an indirect path through plasticity in stomatal traits, in response to measurement light intensity, growth light intensity, and curve-type treatments. We focused on \gi{} because it was the only individual-level trait significantly associated with $\tau$ in the selected model (see Results). We do not treat this as a randomized-treatment causal mediation analysis: \gi{} is not randomized, is estimated from the same curve as $\tau$, and could share unmeasured confounders (e.g., hydraulic status, measurement order, realized VPD trajectory) with $\tau$, violating the sequential ignorability assumption required for a causal interpretation. We assessed the plausibility of this assumption directly with a sensitivity analysis (Notes S3). We inferred the direct effect of treatments on $\tau$ from model coefficients. We estimated the indirect effect of treatments as the product of the effect of treatment on \gi{} and the effect of that trait on $\tau$ [@imai_general_2010]. We determined significant direct and indirect effects based on whether the 95% confidence intervals of the effects were different from zero. We calculated effect sizes as the point estimate (median of the posterior) divided by the standard error (standard deviation of the posterior).
+We used path analysis [@pearl_causality_2022] to test whether treatment-associated plasticity in $\tau$ was statistically consistent with an indirect path through plasticity in stomatal traits, in response to measurement light intensity, growth light intensity, and curve-type treatments. We focused on \gi{} because it was the only individual-level trait significantly associated with $\tau$ in the selected model (see Results). We do not treat this as a randomized-treatment causal mediation analysis because \gi{} is not randomized, is estimated from the same curve as $\tau$, and could share unmeasured confounders (e.g., hydraulic status, measurement order, realized VPD trajectory) with $\tau$, violating the sequential ignorability assumption required for a causal interpretation. We assessed the plausibility of this assumption directly with a sensitivity analysis (Notes S3). We inferred the direct effect of treatments on $\tau$ from model coefficients. We estimated the indirect effect of treatments as the product of the effect of treatment on \gi{} and the effect of that trait on $\tau$ [@imai_general_2010]. We determined significant direct and indirect effects based on whether the 95% confidence intervals of the effects were different from zero. We calculated effect sizes as the point estimate (median of the posterior) divided by the standard error (standard deviation of the posterior).
 
 ### Variance decomposition and phylogenetic heritability
 
-One explanation for why traits have effects at different levels of organization is that variance in those traits is concentrated at those different levels of organization. To evaluate this, we decomposed the variance in response variables ($\lambda$, $\tau$, \fgmax, \gcl) into phylogenetic, population (nonphylogenetic), and individual levels. The phylogenetic variance component quantifies trait evolution between populations congruent with the phylogenetic relationships, whereas the population (nonphylogenetic) component quantifies variance among populations independent of phylogenetic relationships [@lynch_methods_1991; @devillemereuil_general_2014]. We estimated these components from the associated random-effect standard deviations for each response variable. The among-individual variance components quantify variance among individuals within the same population and treatment. We estimated the among-individual component as the sum of the individual random-effect and residual standard deviations. It was not possible to estimate individual random-effect in \gcl{} with our study design because we only measured average guard cell length once per leaf. The among-individual component is biased upwards because it also includes measurement error, which cannot be separately estimated with our experimental design. The phylogenetic heritability is equivalent to the phylogenetic variance component and is estimated following @lynch_methods_1991 and @devillemereuil_general_2014 as:
+One explanation for why traits have effects at different levels of organization is that variance in those traits is concentrated at those different levels of organization. To evaluate this, we decomposed the variance in response variables ($\lambda$, $\tau$, \gcl, \gi, \gmax) into phylogenetic, population (nonphylogenetic), and individual levels. The phylogenetic variance component quantifies trait evolution between populations congruent with the phylogenetic relationships, whereas the population (nonphylogenetic) component quantifies variance among populations independent of phylogenetic relationships [@lynch_methods_1991; @devillemereuil_general_2014]. We estimated these components from the associated random-effect standard deviations for each response variable. The among-individual variance components quantify variance among individuals within the same population and treatment. We estimated the among-individual component as the sum of the individual random-effect and residual standard deviations. It was not possible to estimate individual random-effects in \gcl{} or \gmax{} with our study design because we only measured average guard cell length and \gmax{} once per leaf. The among-individual component is biased upwards because it also includes measurement error, which cannot be separately estimated with our experimental design. The phylogenetic heritability is equivalent to the phylogenetic variance component and is estimated following @lynch_methods_1991 and @devillemereuil_general_2014 as:
 
 $$h^2_{\mathrm{phy}} = \frac{\sigma^2_\mathrm{phy}}{\sigma^2_\mathrm{phy} + \sigma^2_\mathrm{pop} + \sigma^2_\mathrm{ind}},$$
 
@@ -609,33 +626,20 @@ If adaxial stomata respond faster than abaxial stomata (Question 4), we predicte
 
 ## Results
 
-```{r, echo = FALSE, eval = FALSE}
-# ACTUALLY, i think just get rid of t50 because if you use 1 / e instead of 1 / 2, then tau is all that matters
-# Derivation of t_50 for CD Weibull model:
-# gf + dg / 2 = gf + dg * exp(-(t_sec / tau)^lambda)
-# dg / 2 = dg * exp(-(t_sec / tau)^lambda)
-# 1 / 2 = exp(-(t_sec / tau)^lambda)
-# log(1 / 2) = -(t_sec / tau)^lambda
-# -log(1 / 2) = (t_sec / tau)^lambda
-# log(2) = (t_sec / tau)^lambda
-# log(2) ^ (1 / lambda) = t_sec / tau
-# tau * log(2) ^ (1 / lambda) = t_sec
-```
-
 ### The time-constant $\tau$ explains most variation in stomatal closure kinetics
 
-Stomatal conductance (\gsw) decreased rapidly in response to a step change in humidity. The model in @eq-weibull fit the data extremely well ([@fig-rh-curves]). The mean and minimum Bayesian $R^2$ across all curves was `r formatC(mean_r2, format = "f", digits = 4)` and `r formatC(min_r2, format = "f", digits = 4)`, respectively. Consider a typical leaf in the experiment characterized by the median time constant ($\tau$) and lag time ($\lambda$) among wild tomato populations in all treatments. After humidity decreased and the transient WWR elapsed, it took on average `r prettyNum(round(median_tau * log(2) ^ (1 / median_lambda)))` s for \gsw{} to decrease half-way ($t_{50}$) from its initial (\gi) to final (\gf) steady state value. In terms of the kinetic model parameters, most variation among leaves was due to difference in the time constant rather than the lag time. In the previous example, increasing $\lambda$ from its median to its maximum estimated value among populations increased the $t_{50}$ by only $\SI{`r prettyNum(round(median_tau * log(2) ^ (1 / max_lambda) - median_tau * log(2) ^ (1 / median_lambda), 1))`}{\second}$. In contrast, increasing $\tau$ from its median to maximum value increased $t_{50}$ by $\SI{`r prettyNum(round(max_tau * log(2) ^ (1 / median_lambda) - median_tau * log(2) ^ (1 / median_lambda)))`}{\second}$. Hence, we primarily focus on treatments and anatomical parameters affecting $\tau$.
+Stomatal conductance (\gsw) decreased rapidly in response to a step change in humidity. The model in @eq-weibull fit the data extremely well ([@fig-rh-curves]). The mean and minimum Bayesian $R^2$ across all curves was `r formatC(mean_r2, format = "f", digits = 4)` and `r formatC(min_r2, format = "f", digits = 4)`, respectively. Consider a typical leaf in the experiment characterized by the median time constant ($\tau$) and lag time ($\lambda$) among wild tomato populations in all treatments. After humidity decreased, the transient WWR elapsed, and \gsw{} returned to the initial value \gi, it took on average `r prettyNum(round(median_tau * log(2) ^ (1 / median_lambda)))` s for \gsw{} to decrease half-way ($t_{50}$) from its initial to final (\gf) steady state value. In terms of the kinetic model parameters, most variation among leaves was due to difference in the time constant rather than the lag time. In the previous example, increasing $\lambda$ from its median to its maximum estimated value among populations increased the $t_{50}$ by only $\SI{`r prettyNum(round(median_tau * log(2) ^ (1 / max_lambda) - median_tau * log(2) ^ (1 / median_lambda), 1))`}{\second}$. In contrast, increasing $\tau$ from its median to maximum value increased $t_{50}$ by $\SI{`r prettyNum(round(max_tau * log(2) ^ (1 / median_lambda) - median_tau * log(2) ^ (1 / median_lambda)))`}{\second}$. Hence, we primarily focus on treatments and anatomical parameters affecting $\tau$.
 
 ### Variation in guard cell length and aperture
 
 Guard cell length (\gcl) differed among populations and varied to a lesser extent between growth light intensity treatments and leaf surfaces. In contrast, stomatal conductance as a fraction of maximum conductance (\fgmax) was most strongly determined by measurement light intensity. Excluding treatment effects, phylogenetically structured differences among populations (i.e., phylogenetic heritability) accounted for `r gcl_phylo_var` of the variance in \gcl{} ([@fig-variance; @tbl-variance]). There was also developmental plasticity in \gcl. On average, \gcl{} increased by $`r formatC(post_gcl_sun[['estimate']], format = 'f', digits = 1)`$% [95% CI: $`r formatC(post_gcl_sun[['q2.5']], format = 'f', digits = 1)`$ to $`r formatC(post_gcl_sun[['q97.5']], format = 'f', digits = 1)`$%] in the sun treatment ([@fig-accession-anatomy]a; [@tbl-fixed]). The average \gcl{} of pseudohypo leaves was $`r formatC(post_gcl_curvetype[['estimate']], format = 'f', digits = 1)`$% [95% CI: $`r formatC(post_gcl_curvetype[['q2.5']], format = 'f', digits = 1)`$ to $`r formatC(post_gcl_curvetype[['q97.5']], format = 'f', digits = 1)`$%] shorter than amphi leaves ([@fig-accession-anatomy]a; [@tbl-fixed]). This was not because of plasticity, as we measured amphi and pseudohypo curves on the same leaf. Rather, this was a composition effect. Adaxial stomata are larger than abaxial stomata in these species ([@fig-gcl]), so the average \gcl{} in pseudohypo leaves was lower than in amphi leaves because the former only included abaxial stomata. 
 
-The phylogenetic heritability of \fgmax{} was low, accounting for `r fgmax_phylo_var` of the variance ([@fig-variance; @tbl-variance]). High measurement light intensity increased \fgmax{} by an average of $`r formatC(post_fgmax_high[['estimate']], format = 'f', digits = 2)`$ logit units [95% CI: $`r formatC(post_fgmax_high[['q2.5']], format = 'f', digits = 2)`$ to $`r formatC(post_fgmax_high[['q97.5']], format = 'f', digits = 2)`$] ([@fig-accession-anatomy]b; [@tbl-fixed]). For example, if $f_\mathrm{gmax} = 0.1$ in low light, the typical \fgmax{} for the same leaf acclimated to high light was `r formatC(plogis(qlogis(0.1) + post_fgmax_high[['estimate']]), format = 'f', digits = 2)`. Sun leaves had on average $`r formatC(post_fgmax_sun[['estimate']], format = 'f', digits = 2)`$ logit units [95% CI: $`r formatC(post_fgmax_sun[['q2.5']], format = 'f', digits = 2)`$ to $`r formatC(post_fgmax_sun[['q97.5']], format = 'f', digits = 2)`$] lower \fgmax{} than shade-grown plants ([@fig-accession-anatomy]b; [@tbl-fixed]). The pseudohypo leaf type had on average $`r formatC(post_fgmax_pseudohypo[['estimate']], format = 'f', digits = 2)`$ logit units [95% CI: $`r formatC(post_fgmax_pseudohypo[['q2.5']], format = 'f', digits = 2)`$ to $`r formatC(post_fgmax_pseudohypo[['q97.5']], format = 'f', digits = 2)`$] higher \fgmax{} than untreated, amphistomatous leaves ([@fig-accession-anatomy]b; [@tbl-fixed]). This indicates that stomatal aperture was more open in leaves where gas exchange through adaxial stomata was blocked.
+The phylogenetic heritability of \fgmax{} components was low (\gi) to moderate (\gmax), accounting for `r gi_phylo_var` and `r gmax_phylo_var` of the variance, respectively ([@fig-variance; @tbl-variance]). High measurement light intensity increased \gi{} by an average of $`r formatC(log_to_percent(post_gi_high[['estimate']]), format = 'f', digits = 1)`$%  [95% CI: $`r formatC(log_to_percent(post_gi_high[['q2.5']]), format = 'f', digits = 1)`$% to $`r formatC(log_to_percent(post_gi_high[['q97.5']]), format = 'f', digits = 1)`$] ([@fig-accession-anatomy]b; [@tbl-fixed]). Sun leaves had on average $`r formatC(log_to_percent(post_gi_sun[['estimate']]), format = 'f', digits = 1)`$%  [95% CI: $`r formatC(log_to_percent(post_gi_sun[['q2.5']]), format = 'f', digits = 1)`$% to $`r formatC(log_to_percent(post_gi_sun[['q97.5']]), format = 'f', digits = 1)`$%] greater \gmax{} than shade-grown plants ([@fig-accession-anatomy]b; [@tbl-fixed]). The pseudohypo leaf type had on average $`r formatC(log_to_percent(post_gi_pseudohypo[['estimate']]), format = 'f', digits = 1)`$% [95% CI: $`r formatC(log_to_percent(post_gi_pseudohypo[['q2.5']]), format = 'f', digits = 1)`$ to $`r formatC(log_to_percent(post_gi_pseudohypo[['q97.5']]), format = 'f', digits = 1)`$] lower \gi{} than untreated, amphistomatous leaves ([@fig-accession-anatomy]b; [@tbl-fixed]). This is presumably because a large fraction of stomata were blocked by the pseudohypo treatment and increased aperture of the abaxial stomata did not fully compensate.
 
 ```{r, variance, echo = FALSE}
 #| label: fig-variance
 #| fig-align: center
-#| fig-cap: "\\textbf{Traits vary at different levels of biological organization}. A preponderance of the variation in guard cell length (\\gcl) and the time-constant $\\tau$ is phylogenetically structured among populations. In contrast, most of the variance in stomatal conductance as a fraction of anatomical maximum stomatal conductance (\\fgmax) and the lag-time ($\\lambda$) is among individuals. Nonphylogenetic variation among populations was low for all traits."
+#| fig-cap: "\\textbf{Traits vary at different levels of biological organization}. A preponderance of the variation in guard cell length (\\gcl), anatomical maximum stomatal conductance (\\gmax), and the time-constant $\\tau$ is phylogenetically structured among populations. In contrast, most of the variance in initial stomatal conductance (\\gi) and the lag-time ($\\lambda$) is among individuals. Nonphylogenetic variation among populations was low for all traits."
 
 knitr::include_graphics("../figures/variance.pdf")
 ```
@@ -699,10 +703,12 @@ df_comparison1 = df_comparison |>
   select(
     `$\\Delta \\mathrm{LOOIC}$`,
     SE,
-    `$\\lambda$__\\fgmax`,
     `$\\lambda$__\\gcl`,
-    `$\\tau$__\\fgmax`,
-    `$\\tau$__\\gcl`
+    `$\\lambda$__\\gi`,
+    `$\\lambda$__\\gmax`,
+    `$\\tau$__\\gcl`,
+    `$\\tau$__\\gi`,
+    `$\\tau$__\\gmax`,
   )
 
 tbl_comparison = df_comparison1 |>
@@ -739,7 +745,7 @@ tbl_comparison
 
 ```
 
-Leaves with stomatal apertures closer to their maximum aperture closed more slowly than those less open (@fig-fgmax-tau). For example, increasing \fgmax{} from `r formatC(100 * example_fgmax[1], format = "f", digits = 0)`% to `r formatC(100 * example_fgmax[2], format = "f", digits = 0)`% resulted in a `r df_example1[['median']]`% [95% CI: `r df_example1[['q2.5']]` to `r df_example1[['q97.5']]`%] increase in $\tau$ for a typical leaf in the reference treatment set (`r str_c(unlist(example_trt), collapse = ", ")`). The \fgmax{} also had a significant, positive, individual-level effect on $\lambda$ ([@fig-fgmax-lambda; @tbl-fixed]).
+Leaves with greater \gi{} closed more slowly than those which were less open (@fig-gi-tau). For example, increasing \gi{} from `r formatC(100 * example_gi[1], format = "f", digits = 0)`% to `r formatC(100 * example_gi[2], format = "f", digits = 0)`% resulted in a `r df_example1[['median']]`% [95% CI: `r df_example1[['q2.5']]` to `r df_example1[['q97.5']]`%] increase in $\tau$ for a typical leaf in the reference treatment set (`r str_c(unlist(example_trt), collapse = ", ")`). We found no evidence that \gmax{} affected $\tau$ (@fig-gmax-tau). Leaves with stomatal aperture closer to their theoretical maximum (greater \fgmax{}) also had a significantly greater lag-time, $\lambda$ ([@fig-gi-lambda; @fig-gmax-lambda]). We inferred an effect of \fgmax{} based on the significant positive and negative estimates for \gi{} and \gmax, respectively ([@tbl-fixed]).
 
 Populations that tended to have greater \gcl{} also tended to have greater $\tau$ as evidenced by a positive phylogenetic correlation ([@tbl-random; @fig-gcl-tau]). However, we found little evidence that variation in \gcl{} explained $\tau$ or $\lambda$ within populations. There were no other significant phylogenetic correlations ([@tbl-random]). The only marginally significant partial correlation was between \gcl{} and $\tau$ ($\rho = `r signif(rho, 2)`$ [95% CI: $`r signif(rho_lower, 2)`$ to $`r signif(rho_upper, 2)`$]), indicating a plausible causal effect of \gcl{} on $\tau$ among populations.
 
@@ -752,11 +758,11 @@ knitr::include_graphics("../figures/gcl-tau.pdf")
 ```
 
 ```{r, fgmax-tau, echo = FALSE}
-#| label: fig-fgmax-tau
+#| label: fig-gi-tau
 #| fig-align: center
-#| fig-cap: "\\textbf{Individual-level variation in stomatal apertures influences stomatal closures kinetics.} As the stomatal conductance as a fraction of anatomical maximum stomatal conductance (\\fgmax, $x$-axis) increase, the stomatal closure time-constant ($\\tau$, $y$-axis) increases. The overall pattern was consistent across grow light intensity treatments (left and right facets), measurement light intensity treatments (top and bottom facets), and leaf types (point colors). Lines are estimated using linear regression along with 95\\% confidence ribbons. The growth and measurement light intensity treatments are described in the Materials and Methods section."
+#| fig-cap: "\\textbf{Individual-level variation in initial stomatal conductance (\\gi) influences stomatal closures kinetics.} As \\gi{} ($x$-axis) increases, the stomatal closure time-constant ($\\tau$, $y$-axis) increases. The overall pattern was consistent across grow light intensity treatments (left and right facets), measurement light intensity treatments (top and bottom facets), and leaf types (point colors). Lines are estimated using linear regression along with 95\\% confidence ribbons. The growth and measurement light intensity treatments are described in the Materials and Methods section."
 
-knitr::include_graphics("../figures/fgmax-tau.pdf")
+knitr::include_graphics("../figures/gi-tau.pdf")
 ```
 
 ### An indirect path through stomatal aperture is associated with plasticity in $\tau$
@@ -785,7 +791,9 @@ The positive association between \gcl{} and $\tau$ ([@fig-gcl-tau]) is consisten
 
 A consequence of greater stomatal aperture is that the pore closes more slowly when the environment changes. Much of the variation in $\tau$ among individuals within populations was explained by variation in \fgmax{} ([@fig-fgmax-tau]). This factor was positively associated with $\tau$ among individuals within light treatments, and treatment-associated plasticity in $\tau$ was statistically consistent with an indirect path through \fgmax{} ([@fig-mediation]; but see Notes S3 for a sensitivity analysis of the assumption that this indirect path is unconfounded). The rate of stomatal opening in response to light is associated with \gop{} in a sample of rainforest trees [@kardiman_relationship_2018], which may indicate this is a more general phenomenon. The association between \fgmax{} and $\tau$ could be explained by the hypothesis that guard cell wall elasticity declines at greater turgor pressure [@franks_physiological_2012], like a rubber band that is stretched under tension. 
 
-The impact of \fgmax{} was most pronounced when comparing measurement light intensity treatments. Leaves acclimated to high light intensity were on average `r fgmax_percent_change`% more open than the same leaves at low light intensity in the reference treatment (shade, amphi). As a consequence, stomata closed more slowly in leaves acclimated to high light intensity, with a `r tau_percent_change`% greater time-constant on average in the reference treatment, based on parameter estimates from the selected model ([@tbl-fixed]). We did not assess whether \fgmax{} also affects stomatal opening and this should be measured to further test this hypothesis. The implication is that natural selection should favor \gop{} values that not only optimize instantaneous carbon gain and water loss in the present environment, but also carbon gain and water loss integrated through time in a fluctuating environment. We predict that rapid, temporally-uncorrelated fluctuating environments will favor leaves with greater \fgmax{} to slow kinetic responses and prevent overreacting to transitory changes that are likely to revert; slower, temporally-correlated changes will favor lower \fgmax{} to enable close tracking of the environment.
+#### MARKER REVISING HERE - change fgmax_percent_change to gi_percent_change
+
+The impact of \gi{} was most pronounced when comparing measurement light intensity treatments. Leaves acclimated to high light intensity were on average `r fgmax_percent_change`% more open than the same leaves at low light intensity in the reference treatment (shade, amphi). As a consequence, stomata closed more slowly in leaves acclimated to high light intensity, with a `r tau_percent_change`% greater time-constant on average in the reference treatment, based on parameter estimates from the selected model ([@tbl-fixed]). We did not assess whether \fgmax{} also affects stomatal opening and this should be measured to further test this hypothesis. The implication is that natural selection should favor \gop{} values that not only optimize instantaneous carbon gain and water loss in the present environment, but also carbon gain and water loss integrated through time in a fluctuating environment. We predict that rapid, temporally-uncorrelated fluctuating environments will favor leaves with greater \fgmax{} to slow kinetic responses and prevent overreacting to transitory changes that are likely to revert; slower, temporally-correlated changes will favor lower \fgmax{} to enable close tracking of the environment.
 
 The comparison between measurement light intensity treatments should be interpreted cautiously, however, because it was confounded with measurement order: high light curves always preceded low light curves on the same leaf, following a prior low-humidity closure event (see Materials and Methods). We cannot rule out that some of the apparent effect of measurement light intensity on \fgmax{} and $\tau$, and the corresponding indirect path through \fgmax{} in our mediation analysis ([@fig-mediation]), reflects order, incomplete recovery, or prior VPD exposure rather than measurement light intensity itself. This concern applies specifically to the measurement light comparison and not to growth light intensity or leaf type, which were randomized or alternated, respectively.
 
@@ -1486,10 +1494,26 @@ knitr::include_graphics("../figures/gcl.pdf")
 knitr::include_graphics("../figures/colinear.pdf")
 ```
 
-```{r, fgmax-lambda, echo = FALSE}
-#| label: fig-fgmax-lambda
+```{r, gmax-tau, echo = FALSE}
+#| label: fig-gmax-tau
 #| fig-align: center
-#| fig-cap: "\\textbf{Individual-level variation in stomatal apertures influences stomatal closures kinetics.} As the stomatal conductance as a fraction of anatomical maximum stomatal conductance (\\fgmax, $x$-axis) increases, the stomatal closure lag-time ($\\lambda$, $y$-axis) increases. The overall pattern was consistent across growth light intensity treatments (left and right facets), measurement light intensity treatments (top and bottom facets), and leaf types (point colors). Lines are estimated using linear regression along with 95\\% confidence ribbons. The growth and measurement light intensity treatments are described in the Materials and Methods section."
+#| fig-cap: "\\textbf{Individual-level variation in anatomical maximum stomatal conductance (\\gmax) does not influence the stomatal closures time constant $\\tau$} Individual-level variation in \\gmax{} ($x$-axis) did not significantly covary with $\\tau$ ($y$-axis). The overall pattern was consistent across growth light intensity treatments (left and right facets), measurement light intensity treatments (top and bottom facets), and leaf types (point colors). The growth and measurement light intensity treatments are described in the Materials and Methods section."
 
-knitr::include_graphics("../figures/fgmax-lambda.pdf")
+knitr::include_graphics("../figures/gmax-lambda.pdf")
+```
+
+```{r, gi-lambda, echo = FALSE}
+#| label: fig-gi-lambda
+#| fig-align: center
+#| fig-cap: "\\textbf{Individual-level variation in initial stomatal conductance (\\gi) influences stomatal closures kinetics.} As \\gi{} ($x$-axis) increases, the stomatal closure lag-time ($\\lambda$, $y$-axis) increases. The overall pattern was consistent across growth light intensity treatments (left and right facets), measurement light intensity treatments (top and bottom facets), and leaf types (point colors). Lines are estimated using linear regression along with 95\\% confidence ribbons. The growth and measurement light intensity treatments are described in the Materials and Methods section."
+
+knitr::include_graphics("../figures/gi-lambda.pdf")
+```
+
+```{r, gmax-lambda, echo = FALSE}
+#| label: fig-gmax-lambda
+#| fig-align: center
+#| fig-cap: "\\textbf{Individual-level variation in anatomical maximum stomatal conductance (\\gmax) influences stomatal closures kinetics.} As \\gmax{} ($x$-axis) increases, the stomatal closure lag-time ($\\lambda$, $y$-axis) decreases. The overall pattern was consistent across growth light intensity treatments (left and right facets), measurement light intensity treatments (top and bottom facets), and leaf types (point colors). Lines are estimated using linear regression along with 95\\% confidence ribbons. The growth and measurement light intensity treatments are described in the Materials and Methods section."
+
+knitr::include_graphics("../figures/gmax-lambda.pdf")
 ```

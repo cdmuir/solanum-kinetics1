@@ -1,0 +1,38 @@
+# chtc/fit_all.sub
+# Submits all 64 models from r/10_fit-all.R as independent HTCondor jobs.
+# Run chtc/test_one.sub FIRST and adjust request_memory/request_disk below
+# based on the resulting .log file before submitting this file.
+#
+# EDIT <user> below to your CHTC username / staging path before submitting.
+
+container_image = osdf:///chtc/staging/cdmuir/solanum-fit.sif
+
+executable = fit_model.R
+arguments  = "$(Process)"
+
+transfer_input_files = joined-summary.rds, phylogeny.rds
+
+log    = logs/fit_$(Process).log
+output = logs/fit_$(Process).out
+error  = logs/fit_$(Process).err
+
+should_transfer_files   = YES
+when_to_transfer_output = ON_EXIT
+# fit_<NN>.rds is written to the job's top-level working directory; since it
+# is a new file there, HTCondor transfers it back automatically -- no need
+# to list it explicitly in transfer_output_files.
+
+requirements = (HasCHTCStaging == true)
+
+# --- Resource requests -----------------------------------------------
+# Based on a successful chtc/test_one.sub run: ~2.3GB memory, ~0.8GB disk,
+# ~17 hour runtime (well under CHTC's 72hr default limit). Values below add
+# roughly 2.5-5x headroom since the other 63 models vary slightly in the
+# number of predictors. If a real batch job holds for exceeding these,
+# increase and resubmit just that job (condor_qedit / condor_release, or
+# resubmit that one $(Process) via `queue 1` with the same arguments).
+request_cpus   = 3
+request_memory = 6GB
+request_disk   = 4GB
+
+queue 64
