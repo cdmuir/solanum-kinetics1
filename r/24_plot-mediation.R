@@ -20,8 +20,7 @@ post = read_rds("objects/selected_model.rds") |>
 # List of tables of direct and indirect effects for text output
 mediation = list(
   # total effect = direct effect of sun on tau +
-  #   mediated effect of sun on tau through gi +
-  #   mediated effect of sun on tau through gcl
+  #   mediated effect of sun on tau through gi 
   lighttreatment = post |>
     mutate(
       direct_effect = b_logtaumean_lighttreatmentsun,
@@ -41,8 +40,7 @@ mediation = list(
     ),
   
   # total effect = direct effect of pseudohypo on tau +
-  #   mediated effect of pseudohypo on tau through gi +
-  #   mediated effect of pseudohypo on tau through gcl
+  #   mediated effect of pseudohypo on tau through gi 
   leaftype = post |>
     mutate(
       direct_effect = b_logtaumean_leaftypepseudohypo,

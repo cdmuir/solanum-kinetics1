@@ -1,34 +1,16 @@
-# Reviewer comment R1.6: the fgmax path analysis (r/22_plot-mediation.R) is
-# not a randomized-treatment causal mediation analysis, and its "sequential
-# ignorability" assumption (no unmeasured confounder of the fgmax-tau
-# relationship) may not hold. This script implements an Imai, Keele &
-# Yamamoto (2010)-style sensitivity analysis for a linear mediation model,
-# parameterized by rho = Cor(e_M, e_Y), the residual correlation between the
-# mediator (fgmax) and outcome (tau) equations.
-#
-# Key insight: the selected joint multivariate model (objects/best_model.rds)
-# already estimates this residual correlation freely
-# (rescor__logtaumean__loggi, from set_rescor(TRUE) in r/10_fit-all.R).
-# Because the fgmax equation's predictors (lighttreatment + lightintensity +
-# leaftype + the same 3 group-level terms) are a strict subset of tau's
-# (... + loggcl + loggi + the same group-level terms), the classic
-# Zellner SUR-equivalence result means jointly estimating this correlation
-# does not change the point estimate of b_logtaumean_loggi relative to
-# a naive model that assumes rho = 0 (sequential ignorability). This lets us
-# treat b_logtaumean_loggi as the "naive" beta2 in the sensitivity
-# framework, and rescor__logtaumean__loggi as a genuine, data-driven
-# estimate of rho -- not just a hypothetical value to sweep over.
-#
+# Test whether the "sequential ignorability" assumption (no unmeasured 
+# confounder of the gi-tau relationship). This script implements an Imai, 
+# Keele & Yamamoto (2010)-style sensitivity analysis for a linear mediation 
+# model, parameterized by rho = Cor(e_M, e_Y), the residual correlation between 
+# the mediator (gi) and outcome (tau) equations. The selected joint multivariate 
+# model (objects/selected_model.rds) already estimates this residual correlation (rescor__logtaumean__loggi, from set_rescor(TRUE) in r/10_fit-all.R). 
+
 # For a linear mediator model M = ... + e_M (Var = sigma_M^2) and outcome
 # model Y = ... + beta2*M + e_Y (Var = sigma_Y^2) with Cor(e_M, e_Y) = rho,
 # the bias-adjusted mediator effect is:
 #   beta2(rho) = beta2_hat - rho * sigma_Y / sigma_M
 # so ACME(rho) = gamma1 * beta2(rho), and the breakdown point (ACME = 0) is:
 #   rho* = beta2_hat * sigma_M / sigma_Y
-# (derived from the standard omitted-variable-bias formula for endogenous
-# regressors under joint normality; verified against a small hand derivation
-# -- see plan notes -- rather than a package implementation, since our model
-# is not a simple two-equation OLS setup that `mediation::medsens()` expects.)
 
 source("r/header.R")
 
@@ -74,16 +56,6 @@ write_rds(
   list(rho_summary = rho_summary, prob_below_breakdown = prob_below_breakdown),
   "objects/mediation-sensitivity-rhostar.rds"
 )
-
-message(glue::glue(
-  "rho_hat = {formatC(median(rho_hat), format = 'f', digits = 2)} ",
-  "[{formatC(quantile(rho_hat, 0.025), format = 'f', digits = 2)}, ",
-  "{formatC(quantile(rho_hat, 0.975), format = 'f', digits = 2)}]; ",
-  "rho* = {formatC(median(rho_star), format = 'f', digits = 2)} ",
-  "[{formatC(quantile(rho_star, 0.025), format = 'f', digits = 2)}, ",
-  "{formatC(quantile(rho_star, 0.975), format = 'f', digits = 2)}]; ",
-  "P(rho_hat < rho*) = {formatC(prob_below_breakdown, format = 'f', digits = 2)}"
-))
 
 # --- Sensitivity curves: ACME and proportion mediated vs. rho -------------
 
@@ -140,23 +112,20 @@ p_sens = ggplot(sens_curve, aes(rho, acme_median, color = treatment, fill = trea
   geom_vline(xintercept = rho_hat_ci[2], linetype = "dotted", color = "black") +
   geom_vline(xintercept = rho_star_ci[2], linetype = "solid", color = "black") +
   labs(
-    x = expression("Assumed residual correlation, " * rho),
-    y = "Indirect effect on log(tau)\n(through gi)",
+    x = "Assumed residual correlation, $\\rho$",
+    y = "Indirect effect on $\\log \\left( \\tau \\right)$ through $\\log \\left( g_\\mathrm{i} \\right)$",
     color = "Treatment", fill = "Treatment"
   ) +
   guides(color = guide_legend(nrow = 2), fill = guide_legend(nrow = 2)) +
   theme(legend.position = "bottom")
 
-ggsave("figures/mediation-sensitivity.pdf", p_sens, width = 7, height = 5.5)
-
-rho_compare = bind_rows(
-  tibble(value = rho_hat, type = "Estimated (rescor in model)"),
-  tibble(value = rho_star, type = "Breakdown point (rho*)")
+tikz(
+  "figures/mediation-sensitivity.tex",
+  standAlone = TRUE,
+  width = 7,
+  height = 5.5
 )
+print(p_sens)
+dev.off()
 
-p_rho_compare = ggplot(rho_compare, aes(value, fill = type)) +
-  geom_density(alpha = 0.5, color = NA) +
-  labs(x = expression(rho), y = "Posterior density", fill = NULL) +
-  theme(legend.position = "bottom")
-
-ggsave("figures/mediation-sensitivity-rho-compare.pdf", p_rho_compare, width = 6, height = 4)
+system("cd figures; pdflatex mediation-sensitivity.tex; rm mediation-sensitivity.aux mediation-sensitivity.log")

@@ -1,20 +1,14 @@
-# Reviewer comment R1.6: draw a simple DAG illustrating the assumed causal
-# structure behind the gi path analysis (r/22_plot-mediation.R) and the
-# sequential-ignorability assumption tested by the sensitivity analysis in
-# r/38_mediation-sensitivity.R: Treatment -> gi -> tau, Treatment -> tau
-# (direct path), and an unmeasured confounder U with arrows into both gi
-# and tau (representing, e.g., hydraulic status, measurement order, or
-# realized VPD trajectory) -- exactly what the sensitivity parameter rho
-# parameterizes.
-#
-# Built manually with ggplot2 (geom_segment/geom_label), matching the
-# hand-rolled path-diagram style already used in r/22_plot-mediation.R,
-# rather than adding a new dependency (ggdag/dagitty are not installed).
+# Plot a simple DAG illustrating the assumed causal structure behind the gi path 
+# analysis (r/22_plot-mediation.R) and the sequential-ignorability assumption 
+# tested by the sensitivity analysis in r/38_mediation-sensitivity.R: 
+# Treatment -> gi -> tau, Treatment -> tau (direct path), and an unmeasured 
+# confounder U with arrows into both gi and tau (representing, e.g., hydraulic 
+# status, measurement order, or realized VPD trajectory)
 
 source("r/header.R")
 
 nodes = tibble(
-  label = c("Treatment", "italic(f)[i]", "tau", "italic(U)"),
+  label = c("Treatment", "$g_\\mathrm{i}$", "$\\tau$", "$U$"),
   x = c(0, 0.5, 1, 0.75),
   y = c(0.15, 0.55, 0.15, 1),
   unmeasured = c(FALSE, FALSE, FALSE, TRUE)
@@ -83,10 +77,10 @@ p_dag = ggplot() +
       label = label,
       color = unmeasured
     ),
-    parse = TRUE,
     size = 5,
     fontface = 2,
-    label.padding = unit(0.4, "lines")
+    label.padding = unit(0.4, "lines"),
+    fill = "white"
   ) +
   scale_color_manual(values = c(`FALSE` = "black", `TRUE` = "grey50"),
                      guide = "none") +
@@ -94,7 +88,14 @@ p_dag = ggplot() +
   scale_y_continuous(limits = c(0, 1.15)) +
   theme_void()
 
-ggsave("figures/mediation-dag.pdf",
-       p_dag,
-       width = 6,
-       height = 4.5)
+
+tikz(
+  "figures/mediation-dag.tex",
+  standAlone = TRUE,
+  width = 6,
+  height = 4.5
+)
+print(p_dag)
+dev.off()
+
+system("cd figures; pdflatex mediation-dag.tex; rm mediation-dag.aux mediation-dag.log")

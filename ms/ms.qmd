@@ -765,14 +765,14 @@ knitr::include_graphics("../figures/gcl-tau.pdf")
 knitr::include_graphics("../figures/gi-tau.pdf")
 ```
 
-### Plasticity in $\tau$ is an indirect effect of initial stomatal conductance
+### Plasticity in $\tau$ is an indirect effect of plasticity in initial stomatal conductance
 
-We imposed three treatments that influenced stomatal kinetics: growth light intensity, measurement light intensity, and leaf type. All three treatments directly affected $\tau$ and had indirect effects mediated by \gi{} ([@fig-mediation]). We did not estimate effects mediated by \gcl{} because the selected model did not retain direct effects of \gcl{} on $\tau$ ([@tbl-comparison]). The direct effect of the sun growth treatment changed $\tau$ by $`r formatC(log_to_percent(de_sun[['estimate']]), format = 'f', digits = 2)`$% [95% CI: $`r formatC(log_to_percent(de_sun[['q2.5']]), format = 'f', digits = 2)`$ to $`r formatC(log_to_percent(de_sun[['q97.5']]), format = 'f', digits = 2)`$%], but the indirect effect of lower \gi{} counteracted it by $`r formatC(log_to_percent(me_sun[['estimate']]), format = 'f', digits = 2)`$% [95% CI: $`r formatC(log_to_percent(me_sun[['q2.5']]), format = 'f', digits = 2)`$ to $`r formatC(log_to_percent(me_sun[['q97.5']]), format = 'f', digits = 2)`$%]. The direct effect of the pseudohypo treatment decreased $\tau$ slightly by $`r formatC(log_to_percent(de_pseudo[['estimate']]), format = 'f', digits = 2)`$% [95% CI: $`r formatC(log_to_percent(de_pseudo[['q2.5']]), format = 'f', digits = 2)`$ to $`r formatC(log_to_percent(de_pseudo[['q97.5']]), format = 'f', digits = 2)`$%], but the indirect effect mediated by greater \fgmax{} increased $\tau$ by $`r formatC(log_to_percent(me_pseudo[['estimate']]), format = 'f', digits = 2)`$% [95% CI: $`r formatC(log_to_percent(me_pseudo[['q2.5']]), format = 'f', digits = 2)`$ to $`r formatC(log_to_percent(me_pseudo[['q97.5']]), format = 'f', digits = 2)`$%]. In contrast, direct and indirect effects of high measurement light intensity increased $\tau$. The direct effect increased $\tau$ by $`r formatC(log_to_percent(de_high[['estimate']]), format = 'f', digits = 2)`$% [95% CI: $`r formatC(log_to_percent(de_high[['q2.5']]), format = 'f', digits = 2)`$ to $`r formatC(log_to_percent(de_high[['q97.5']]), format = 'f', digits = 2)`$%] and the indirect effect mediated by \fgmax{} increased $\tau$ by $`r formatC(log_to_percent(me_high[['estimate']]), format = 'f', digits = 2)`$% [95% CI: $`r formatC(log_to_percent(me_high[['q2.5']]), format = 'f', digits = 2)`$ to $`r formatC(log_to_percent(me_high[['q97.5']]), format = 'f', digits = 2)`$%]. 
+We imposed three treatments that influenced stomatal kinetics: growth light intensity, measurement light intensity, and leaf type. All three treatments directly affected $\tau$ and had indirect effects mediated by \gi{} ([@fig-mediation]). We did not estimate effects mediated by \gcl{} because the selected model did not retain direct effects of \gcl{} on $\tau$ ([@tbl-comparison]). The direct effect of the sun growth treatment changed $\tau$ by $`r formatC(log_to_percent(de_sun[['estimate']]), format = 'f', digits = 2)`$% [95% CI: $`r formatC(log_to_percent(de_sun[['q2.5']]), format = 'f', digits = 2)`$ to $`r formatC(log_to_percent(de_sun[['q97.5']]), format = 'f', digits = 2)`$%], but the indirect effect of greater \gi{} counteracted it by $`r formatC(log_to_percent(me_sun[['estimate']]), format = 'f', digits = 2)`$% [95% CI: $`r formatC(log_to_percent(me_sun[['q2.5']]), format = 'f', digits = 2)`$ to $`r formatC(log_to_percent(me_sun[['q97.5']]), format = 'f', digits = 2)`$%]. The direct effect of the pseudohypo treatment increased $\tau$ by $`r formatC(log_to_percent(de_pseudo[['estimate']]), format = 'f', digits = 2)`$% [95% CI: $`r formatC(log_to_percent(de_pseudo[['q2.5']]), format = 'f', digits = 2)`$ to $`r formatC(log_to_percent(de_pseudo[['q97.5']]), format = 'f', digits = 2)`$%], but the indirect effect mediated by lower \gi{} changed $\tau$ by $`r formatC(log_to_percent(me_pseudo[['estimate']]), format = 'f', digits = 2)`$% [95% CI: $`r formatC(log_to_percent(me_pseudo[['q2.5']]), format = 'f', digits = 2)`$ to $`r formatC(log_to_percent(me_pseudo[['q97.5']]), format = 'f', digits = 2)`$%]. In contrast, direct and indirect effects of high measurement light intensity increased $\tau$. The direct effect increased $\tau$ by $`r formatC(log_to_percent(de_high[['estimate']]), format = 'f', digits = 2)`$% [95% CI: $`r formatC(log_to_percent(de_high[['q2.5']]), format = 'f', digits = 2)`$ to $`r formatC(log_to_percent(de_high[['q97.5']]), format = 'f', digits = 2)`$%] and the indirect effect mediated by \gi{} increased $\tau$ by $`r formatC(log_to_percent(me_high[['estimate']]), format = 'f', digits = 2)`$% [95% CI: $`r formatC(log_to_percent(me_high[['q2.5']]), format = 'f', digits = 2)`$ to $`r formatC(log_to_percent(me_high[['q97.5']]), format = 'f', digits = 2)`$%]. 
 
 ```{r, mediation, echo = FALSE}
 #| label: fig-mediation
 #| fig-align: center
-#| fig-cap: "\\textbf{Treatment-associated plasticity in the time constant $\\tau$ is statistically consistent with an indirect path through stomatal aperture as a fraction of anatomical maximum stomatal conductance (\\fgmax).} The three treatments are growth light intensity (top facet; shade vs. sun), leaf type (middle facet; amphi vs. pseudohypo), and measurement light intensity (bottom facet; low vs. high). Horizontal arrows at the bottom of each graph indicate the direct effect of the treatment level on $\\tau$; slanted arrows leading to or from \\fgmax{} indicate indirect effects of the treatment on $\\tau$ through \\fgmax{}. Line thickness is proportional to the effect size and line color indicates whether the effects are negative (red) or positive (blue). Parameter estimates of the effect and 95\\% confidence intervals are above each line. The selected model did not retain direct effects of \\gcl{} on $\\tau$ and hence this variable could not be included in this analysis. This path analysis assumes sequential ignorability (no unmeasured confounder of the \\fgmax{}-$\\tau$ relationship); see Notes S3 for a sensitivity analysis of this assumption."
+#| fig-cap: "\\textbf{Treatment-associated plasticity in the time constant $\\tau$ is statistically consistent with an indirect path through initial stomatal conductance (\\gi).} The three treatments are growth light intensity (top facet; shade vs. sun), leaf type (middle facet; amphi vs. pseudohypo), and measurement light intensity (bottom facet; low vs. high). Horizontal arrows at the bottom of each graph indicate the direct effect of the treatment level on $\\tau$; slanted arrows leading to or from \\gi{} indicate indirect effects of the treatment on $\\tau$ through \\gi{}. Line thickness is proportional to the effect size and line color indicates whether the effects are negative (red) or positive (blue). Parameter estimates of the effect and 95\\% confidence intervals are above each line. The selected model did not retain direct effects of \\gcl{} on $\\tau$ and hence this variable could not be included in this analysis. This path analysis assumes sequential ignorability (no unmeasured confounder of the \\gi{}-$\\tau$ relationship); see Notes S3 for a sensitivity analysis of this assumption."
 
 knitr::include_graphics("../figures/mediation.pdf")
 ```
@@ -911,149 +911,6 @@ All data and code are available on GitHub (\url{https://github.com/cdmuir/solanu
 \setcounter{equation}{0}
 \setcounter{page}{1}
 \FloatBarrier
-```
-
-## Supporting notes
-
-**Notes S1** Effects of \fgmax{} and \gcl{} are robust to variation in VPD stimulus
-
-```{r, vpd-notes-stats, echo = FALSE}
-curve_vpd_summary = read_rds("../objects/curve-vpd-summary.rds")
-curve_vpd_sensitivity = read_rds("../objects/curve-vpd-sensitivity.rds")
-
-n_curve_vpd = nrow(curve_vpd_summary)
-n_curve_vpd_excluded_rate = sum(curve_vpd_summary$exclude_sat_rate, na.rm = TRUE)
-median_vpd_sat_r2 = median(curve_vpd_summary$r2_sat, na.rm = TRUE)
-
-cor_median_final_vpd = cor(curve_vpd_summary$median_vpd, curve_vpd_summary$final_vpd,
-                            use = "complete.obs")
-cor_final_vpd_satrate = cor(curve_vpd_summary$final_vpd, curve_vpd_summary$sat_rate,
-                             use = "complete.obs")
-
-cor_h2os_satrate = cor(curve_vpd_sensitivity$vpd_rate, curve_vpd_sensitivity$h2os_rate,
-                        use = "complete.obs")
-cor_h2or_satrate = cor(curve_vpd_sensitivity$vpd_rate, curve_vpd_sensitivity$h2or_rate,
-                        use = "complete.obs")
-h2o_amplitude_ratio = median(curve_vpd_sensitivity$h2os_amplitude, na.rm = TRUE) /
-  median(curve_vpd_sensitivity$h2or_amplitude, na.rm = TRUE)
-
-cor_tau_rate = read_rds("../objects/cor-tau-vpd-rate.rds")
-
-comp_pars_vpd = read_rds("../objects/tbl-comparison-vpd.rds")
-final_vpd_effect = read_rds("../objects/tbl-final-vpd-effect.rds")
-
-fmt_est = function(.df, .parameter, .model) {
-  row = .df[grepl(.parameter, .df$parameter, fixed = TRUE) & .df$model == .model, ]
-  glue::glue(
-    "{formatC(row$estimate, format = 'f', digits = 2)} ",
-    "[{formatC(row$lower, format = 'f', digits = 2)}, ",
-    "{formatC(row$upper, format = 'f', digits = 2)}]"
-  )
-}
-
-fgmax_par = "f[gmax]"
-gcl_par = "phylogenetic~corr"
-
-fgmax_orig = fmt_est(comp_pars_vpd, fgmax_par, "Original")
-fgmax_vpd = fmt_est(comp_pars_vpd, fgmax_par, "VPD-adjusted")
-gcl_orig = fmt_est(comp_pars_vpd, gcl_par, "Original")
-gcl_vpd = fmt_est(comp_pars_vpd, gcl_par, "VPD-adjusted")
-
-final_vpd_on_tau = glue::glue(
-  "{formatC(final_vpd_effect$estimate, format = 'f', digits = 2)} ",
-  "[{formatC(final_vpd_effect$lower, format = 'f', digits = 2)}, ",
-  "{formatC(final_vpd_effect$upper, format = 'f', digits = 2)}]"
-)
-```
-
-[@tbl-vpd] shows that the mean VPD realized during measurements differed among treatment combinations ($\SI{`r vpd_min`}{\kPa}$--$\SI{`r vpd_max`}{\kPa}$), because leaf transpiration itself humidifies the chamber and \gsw{} varied systematically with measurement light, growth light, and leaf type. Because VPD is the physiological driver of stomatal closure, we checked whether this variation in the realized stimulus could confound the effects of \fgmax{} and \gcl{} on the closure time-constant, $\tau$.
-
-For every curve we extracted the leaf-to-air VPD trajectory from the logged humidity data and derived two curve-level covariates: final VPD and VPD saturation rate ($k$). Final VPD is the VPD at the end of the fitted interval; $k$ is the rate constant of a saturating exponential, $\mathrm{VPD}(t) = B + (R_0 - B)\exp(-kt)$, fit separately to each curve (median $R^2 = `r formatC(median_vpd_sat_r2, format = "f", digits = 2)`$, $n = `r prettyNum(n_curve_vpd, big.mark = ",")`$ curves; $k$ excluded for `r n_curve_vpd_excluded_rate` curves with a poor saturating fit or an extreme outlier rate estimate). We also considered median VPD. Median and final VPD were highly correlated ($r = `r formatC(cor_median_final_vpd, format = "f", digits = 2)`$; [@fig-vpd-pairs]a), so we retained only final VPD.
-
-We did not include the VPD saturation rate as a covariate of $\tau$, because $k$ and $\tau$ are themselves strongly correlated ($r = `r formatC(cor_tau_rate, format = "f", digits = 2)`$; [@fig-tau-vpd-rate]) for a mechanistic rather than confounding reason: the VPD trajectory during the analyzed interval is driven mainly by declining leaf transpiration as stomata close, so $k$ largely tracks the same \gsw{}-decline signal that determines $\tau$. We tested this by fitting the same saturating-exponential model to the sample-cell water vapor concentration ($W_\mathrm{s}$) and the reference-cell water vapor concentration ($W_\mathrm{r}$, upstream of the leaf and largely reflecting the controlled incoming airstream). The VPD saturation rate closely tracked the $W_\mathrm{s}$ saturation rate ($r = `r formatC(cor_h2os_satrate, format = "f", digits = 2)`$) but not the $W_\mathrm{r}$ saturation rate ($r = `r formatC(cor_h2or_satrate, format = "f", digits = 2)`$) [@fig-vpd-h2o-rate]. Including $k$ as a covariate of $\tau$ would therefore be close to circular.
-
-To directly test whether the realized VPD stimulus confounds the \fgmax{} and \gcl{} effects on $\tau$, we refit the selected model with final VPD added as a covariate of $\tau$ and $\lambda$ ([@fig-vpd-comparison]). The fixed effect of \fgmax{} on $\log \tau$ was slightly weaker (original: `r fgmax_orig`; VPD-adjusted: `r fgmax_vpd`), as was the phylogenetic correlation between \gcl{} and $\tau$ (original: `r gcl_orig`; VPD-adjusted: `r gcl_vpd`). This indicates that variation in VPD slightly amplified the apparent effects of \fgmax{} and \gcl{} on stomatal closure kinetics, but does not qualitatively change the main conclusions. Final VPD itself had a negative fixed effect on $\log \tau$ (`r final_vpd_on_tau`), consistent with higher realized VPD accelerating stomatal closure.
-
-We lack data on the rate of VPD change during the wrong-way response and the earliest part of the right-way response, because humidity logging did not begin until \gsw{} had already declined back to its pre-step value ([@fig-conceptual]a); this limits our ability to evaluate whether the *initial* rate of VPD change, as opposed to the final realized VPD, influenced closure kinetics. We recommend that future studies of stomatal kinetics log chamber humidity continuously from the onset of the humidity step to more fully characterize the realized VPD stimulus and adjust the incoming airstream to keep VPD constant as stomatal close.
-
-**Notes S2** The \fgmax{}-$\tau$ association is not an artifact of the curve-fitting procedure
-
-```{r, null-sim-stats, echo = FALSE}
-null_sim_results = read_rds("../objects/null-sim-fgmax-tau.rds")
-real_cor_fgmax_tau = read_rds("../objects/real-cor-fgmax-tau.rds")
-null_sim_p = read_rds("../objects/null-sim-empirical-p.rds")
-nls_vs_bayes = read_rds("../objects/nls_vs_bayes.rds")
-
-ct_tau = cor.test(nls_vs_bayes$logtau_brms, nls_vs_bayes$logtau_nls)
-ct_lambda = cor.test(nls_vs_bayes$loglambda_brms, nls_vs_bayes$loglambda_nls)
-
-fmt_cor = function(x) formatC(x, format = "f", digits = 2)
-```
-
-The initial conductance \gi{} used to calculate \fgmax{} is estimated from the same nonlinear fit ([@eq-weibull]) that also estimates $\tau$ and $\lambda$ for each curve. This raises the possibility that parameter covariance within the curve fit itself, rather than a true biological relationship, could generate an association between \gi{} and $\tau$ (and hence \fgmax{} and $\tau$, since the denominator $g_\mathrm{max}$ is estimated independently from stomatal anatomy and cannot itself introduce a fitting artifact). To test this, we ran a null simulation in which any true association between \gi/\gf{} and the kinetic parameters was removed by construction. For every real curve $i$, we simulated a synthetic \gsw{} trajectory using curve $i$'s own measurement times, residual noise magnitude, and fitted $\tau$ and $\lambda$, but with \gi{} and \gf{} taken from a different, randomly chosen curve $j$. Because $i$ and $j$ were chosen independently at random, the synthetic curves retain realistic variability in both $\tau$/$\lambda$ and \gi/\gf, but there is no true association between \gi{} and the kinetic parameters. We re-fit the same Weibull functional form to each synthetic curve using nonlinear least squares (`nls()`), which closely approximated the full Bayesian pipeline used for the real data when compared directly on the real curves (cor($\tau$) = `r fmt_cor(ct_tau$estimate)`, cor($\lambda$) = `r fmt_cor(ct_lambda$estimate)`), and computed the correlation between the *estimated* \gi{} and $\log(\tau)$. We repeated this `r prettyNum(nrow(null_sim_results), big.mark = ",")` times to build a null distribution of this correlation.
-
-The null-simulation correlations ranged from `r fmt_cor(min(null_sim_results$cor))` to `r fmt_cor(max(null_sim_results$cor))` (median `r fmt_cor(median(null_sim_results$cor))`) across the `r prettyNum(nrow(null_sim_results), big.mark = ",")` replicates, indistinguishable from zero (@fig-null-sim-fgmax-tau). In contrast, the real, observed correlation between \gi{} and $\log(\tau)$ is `r fmt_cor(real_cor_fgmax_tau$cor)` [`r fmt_cor(real_cor_fgmax_tau$cor_lower)`, `r fmt_cor(real_cor_fgmax_tau$cor_upper)`], far outside the null range (empirical $p$ = `r formatC(null_sim_p, format = "f", digits = 3)`). This indicates that the curve-fitting procedure alone cannot explain the observed \fgmax{}-$\tau$ association, supporting our interpretation that it reflects a real relationship in the data rather than a statistical artifact of estimating \gi, $\tau$, and $\lambda$ from the same nonlinear fit.
-
-```{r, null-sim-fgmax-tau, echo = FALSE}
-#| label: fig-null-sim-fgmax-tau
-#| fig-align: center
-#| fig-cap: "\\textbf{The curve-fitting procedure alone does not induce a $g_\\mathrm{i}$-$\\tau$ association.} Null distribution of the correlation between estimated $g_\\mathrm{i}$ and estimated $\\log(\\tau)$ across simulated datasets in which each curve's fitted $g_\\mathrm{i}$/$g_\\mathrm{f}$ were randomly swapped with those of an independently chosen curve (so there is no true association between $g_\\mathrm{i}$ and the kinetic parameters by construction; see Notes S2), compared to the observed correlation in the real data (red line)."
-
-knitr::include_graphics("../figures/null-sim-fgmax-tau.pdf")
-```
-
-**Notes S3** Sensitivity analysis of the \fgmax{}-$\tau$ path analysis to unmeasured confounding
-
-The path analysis linking treatment, \fgmax{}, and $\tau$ assumes the causal structure in @fig-mediation-dag: each treatment has a direct effect on $\tau$ and an indirect effect acting through \fgmax{}. This structure is only identified as causal under sequential ignorability, i.e., that no unmeasured confounder $U$ (e.g., hydraulic status, measurement order, realized VPD trajectory) affects both \fgmax{} and $\tau$. If such a $U$ exists (dashed arrows), the correlation it induces between the \fgmax{} and $\tau$ equations' residuals is exactly the sensitivity parameter $\rho$ examined below.
-
-```{r, mediation-dag, echo = FALSE}
-#| label: fig-mediation-dag
-#| fig-align: center
-#| fig-width: 4
-#| fig-cap: "\\textbf{Assumed causal structure of the \\fgmax{}-$\\tau$ path analysis.} Treatment has a direct effect on $\\tau$ (bottom arrow) and an indirect effect acting through \\fgmax{} (upper path). An unmeasured confounder $U$ (dashed arrows) affecting both \\fgmax{} and $\\tau$ -- e.g., hydraulic status, measurement order, or realized VPD trajectory -- would violate the sequential ignorability assumption required to interpret the indirect path causally."
-
-knitr::include_graphics("../figures/mediation-dag.pdf")
-```
-
-```{r, mediation-sensitivity-stats, echo = FALSE}
-mediation_sens = read_rds("../objects/mediation-sensitivity-rhostar.rds")
-
-rho_hat_row = mediation_sens$rho_summary[mediation_sens$rho_summary$parameter == "rho_hat (estimated)", ]
-rho_star_row = mediation_sens$rho_summary[mediation_sens$rho_summary$parameter == "rho_star (breakdown)", ]
-
-fmt_ci = function(row) {
-  glue::glue(
-    "{formatC(row$estimate, format = 'f', digits = 2)} ",
-    "[{formatC(row$lower, format = 'f', digits = 2)}, ",
-    "{formatC(row$upper, format = 'f', digits = 2)}]"
-  )
-}
-
-rho_hat_fmt = fmt_ci(rho_hat_row)
-rho_star_fmt = fmt_ci(rho_star_row)
-prob_below_breakdown_fmt = formatC(100 * mediation_sens$prob_below_breakdown, format = "f", digits = 0)
-```
-
-The path analysis linking \fgmax{} to $\tau$ (see Materials and Methods, "Path analysis to test for plastic effects") assumes sequential ignorability: that there is no unmeasured confounder of the \fgmax{}-$\tau$ relationship after conditioning on treatment and the random effects already in the model. Because \fgmax{} is not randomized, is estimated from the same curve as $\tau$, and could share unmeasured confounders (e.g., hydraulic status, measurement order, realized VPD trajectory) with $\tau$, we assessed this assumption directly with a sensitivity analysis following the general framework of @imai_general_2010, parameterized by $\rho = \mathrm{Cor}(e_{f_\mathrm{gmax}}, e_\tau)$, the residual correlation between the \fgmax{} and $\tau$ equations. Under a violation of sequential ignorability with residual correlation $\rho$, the bias-adjusted mediator-on-outcome coefficient is $\beta_2(\rho) = \hat\beta_2 - \rho \cdot \sigma_\tau / \sigma_{f_\mathrm{gmax}}$, so the indirect effect of a treatment acting through \fgmax{} is $\gamma_1 \cdot \beta_2(\rho)$ (where $\gamma_1$ is the effect of treatment on \fgmax{}), and the "breakdown point" $\rho^*$ at which this indirect effect is exactly zero is $\rho^* = \hat\beta_2 \cdot \sigma_{f_\mathrm{gmax}} / \sigma_\tau$.
-
-Our selected model already estimates a free residual correlation between the \fgmax{} and $\tau$ equations, because we fit all four responses (\fgmax, \gcl, $\tau$, $\lambda$) jointly with `set_rescor(TRUE)`. Because the \fgmax{} equation's predictors are a strict subset of $\tau$'s, jointly estimating this correlation does not change the point estimate of $\hat\beta_2$ relative to a model that assumes $\rho = 0$ (a standard result for seemingly unrelated regression models), so we can treat $\hat\beta_2$ as the "naive" coefficient in the sensitivity framework above, and the model's own estimated residual correlation as a genuine, data-driven estimate of $\rho$ -- not just a hypothetical value to sweep over.
-
-We found $\rho_\mathrm{estimated}$ = `r rho_hat_fmt` and $\rho^*$ = `r rho_star_fmt` (@fig-mediation-sensitivity, @fig-mediation-rho-compare). These posteriors substantially overlap: the posterior probability that the estimated residual correlation is smaller in magnitude than the breakdown point is only `r prob_below_breakdown_fmt`%. In other words, if a meaningful fraction of the residual correlation we estimate between the \fgmax{} and $\tau$ equations were due to an unmeasured confounder rather than a direct effect of \fgmax{} on $\tau$, our estimated indirect path could be substantially attenuated or eliminated. We therefore do not interpret this path analysis as establishing a causal mediation effect of \fgmax{} on $\tau$.
-
-```{r, mediation-sensitivity, echo = FALSE}
-#| label: fig-mediation-sensitivity
-#| fig-align: center
-#| fig-cap: "\\textbf{Sensitivity of the indirect effect of each treatment on $\\log \\tau$, acting through \\fgmax{}, to an assumed residual correlation $\\rho$ between the \\fgmax{} and $\\tau$ equations.} The vertical dotted line is the model's own estimated residual correlation ($\\rho_\\mathrm{estimated}$, shaded band = 95\\% credible interval); the vertical solid line is the breakdown point $\\rho^*$ at which the indirect effect is zero."
-
-knitr::include_graphics("../figures/mediation-sensitivity.pdf")
-```
-
-```{r, mediation-rho-compare, echo = FALSE}
-#| label: fig-mediation-rho-compare
-#| fig-align: center
-#| fig-cap: "\\textbf{The model's estimated residual correlation between the \\fgmax{} and $\\tau$ equations overlaps substantially with the breakdown point at which the indirect effect of \\fgmax{} on $\\tau$ is exactly zero.} Posterior distributions of the estimated residual correlation ($\\rho_\\mathrm{estimated}$) and the breakdown point ($\\rho^*$)."
-
-knitr::include_graphics("../figures/mediation-sensitivity-rho-compare.pdf")
 ```
 
 ## Supporting tables
@@ -1506,4 +1363,147 @@ knitr::include_graphics("../figures/gi-lambda.pdf")
 #| fig-cap: "\\textbf{Individual-level variation in anatomical maximum stomatal conductance (\\gmax) influences stomatal closures kinetics.} As \\gmax{} ($x$-axis) increases, the stomatal closure lag-time ($\\lambda$, $y$-axis) decreases. The overall pattern was consistent across growth light intensity treatments (left and right facets), measurement light intensity treatments (top and bottom facets), and leaf types (point colors). Lines are estimated using linear regression along with 95\\% confidence ribbons. The growth and measurement light intensity treatments are described in the Materials and Methods section."
 
 knitr::include_graphics("../figures/gmax-lambda.pdf")
+```
+
+\clearpage
+
+{{< pagebreak >}}
+
+## Supporting notes
+
+### Notes S1: Effects of \gi{} and \gcl{} are robust to variation in VPD stimulus
+
+```{r, vpd-notes-stats, echo = FALSE}
+curve_vpd_summary = read_rds("../objects/curve-vpd-summary.rds")
+curve_vpd_sensitivity = read_rds("../objects/curve-vpd-sensitivity.rds")
+
+n_curve_vpd = nrow(curve_vpd_summary)
+n_curve_vpd_excluded_rate = sum(curve_vpd_summary$exclude_sat_rate, na.rm = TRUE)
+median_vpd_sat_r2 = median(curve_vpd_summary$r2_sat, na.rm = TRUE)
+
+cor_median_final_vpd = cor(curve_vpd_summary$median_vpd, curve_vpd_summary$final_vpd,
+                            use = "complete.obs")
+cor_final_vpd_satrate = cor(curve_vpd_summary$final_vpd, curve_vpd_summary$sat_rate,
+                             use = "complete.obs")
+
+cor_h2os_satrate = cor(curve_vpd_sensitivity$vpd_rate, curve_vpd_sensitivity$h2os_rate,
+                        use = "complete.obs")
+cor_h2or_satrate = cor(curve_vpd_sensitivity$vpd_rate, curve_vpd_sensitivity$h2or_rate,
+                        use = "complete.obs")
+h2o_amplitude_ratio = median(curve_vpd_sensitivity$h2os_amplitude, na.rm = TRUE) /
+  median(curve_vpd_sensitivity$h2or_amplitude, na.rm = TRUE)
+
+cor_tau_rate = read_rds("../objects/cor-tau-vpd-rate.rds")
+
+comp_pars_vpd = read_rds("../objects/tbl-comparison-vpd.rds")
+final_vpd_effect = read_rds("../objects/tbl-final-vpd-effect.rds")
+
+fmt_est = function(.df, .parameter, .model) {
+  row = .df[grepl(.parameter, .df$parameter, fixed = TRUE) & .df$model == .model, ]
+  glue::glue(
+    "{formatC(row$estimate, format = 'f', digits = 2)} ",
+    "[{formatC(row$lower, format = 'f', digits = 2)}, ",
+    "{formatC(row$upper, format = 'f', digits = 2)}]"
+  )
+}
+
+fgmax_par = "f[gmax]"
+gcl_par = "phylogenetic~corr"
+
+fgmax_orig = fmt_est(comp_pars_vpd, fgmax_par, "Original")
+fgmax_vpd = fmt_est(comp_pars_vpd, fgmax_par, "VPD-adjusted")
+gcl_orig = fmt_est(comp_pars_vpd, gcl_par, "Original")
+gcl_vpd = fmt_est(comp_pars_vpd, gcl_par, "VPD-adjusted")
+
+final_vpd_on_tau = glue::glue(
+  "{formatC(final_vpd_effect$estimate, format = 'f', digits = 2)} ",
+  "[{formatC(final_vpd_effect$lower, format = 'f', digits = 2)}, ",
+  "{formatC(final_vpd_effect$upper, format = 'f', digits = 2)}]"
+)
+```
+
+[@tbl-vpd] shows that the mean VPD realized during measurements differed among treatment combinations ($\SI{`r vpd_min`}{\kPa}$--$\SI{`r vpd_max`}{\kPa}$), because leaf transpiration itself humidifies the chamber and \gsw{} varied systematically with measurement light, growth light, and leaf type. Because VPD is the physiological driver of stomatal closure, we checked whether this variation in the realized stimulus could confound the effects of \fgmax{} and \gcl{} on the closure time-constant, $\tau$.
+
+For every curve we extracted the leaf-to-air VPD trajectory from the logged humidity data and derived two curve-level covariates: final VPD and VPD saturation rate ($k$). Final VPD is the VPD at the end of the fitted interval; $k$ is the rate constant of a saturating exponential, $\mathrm{VPD}(t) = B + (R_0 - B)\exp(-kt)$, fit separately to each curve (median $R^2 = `r formatC(median_vpd_sat_r2, format = "f", digits = 2)`$, $n = `r prettyNum(n_curve_vpd, big.mark = ",")`$ curves; $k$ excluded for `r n_curve_vpd_excluded_rate` curves with a poor saturating fit or an extreme outlier rate estimate). We also considered median VPD. Median and final VPD were highly correlated ($r = `r formatC(cor_median_final_vpd, format = "f", digits = 2)`$; [@fig-vpd-pairs]a), so we retained only final VPD.
+
+We did not include the VPD saturation rate as a covariate of $\tau$, because $k$ and $\tau$ are themselves strongly correlated ($r = `r formatC(cor_tau_rate, format = "f", digits = 2)`$; [@fig-tau-vpd-rate]) for a mechanistic rather than confounding reason: the VPD trajectory during the analyzed interval is driven mainly by declining leaf transpiration as stomata close, so $k$ largely tracks the same \gsw{}-decline signal that determines $\tau$. We tested this by fitting the same saturating-exponential model to the sample-cell water vapor concentration ($W_\mathrm{s}$) and the reference-cell water vapor concentration ($W_\mathrm{r}$, upstream of the leaf and largely reflecting the controlled incoming airstream). The VPD saturation rate closely tracked the $W_\mathrm{s}$ saturation rate ($r = `r formatC(cor_h2os_satrate, format = "f", digits = 2)`$) but not the $W_\mathrm{r}$ saturation rate ($r = `r formatC(cor_h2or_satrate, format = "f", digits = 2)`$) [@fig-vpd-h2o-rate]. Including $k$ as a covariate of $\tau$ would therefore be close to circular.
+
+To directly test whether the realized VPD stimulus confounds the \fgmax{} and \gcl{} effects on $\tau$, we refit the selected model with final VPD added as a covariate of $\tau$ and $\lambda$ ([@fig-vpd-comparison]). The fixed effect of \fgmax{} on $\log \tau$ was slightly weaker (original: `r fgmax_orig`; VPD-adjusted: `r fgmax_vpd`), as was the phylogenetic correlation between \gcl{} and $\tau$ (original: `r gcl_orig`; VPD-adjusted: `r gcl_vpd`). This indicates that variation in VPD slightly amplified the apparent effects of \fgmax{} and \gcl{} on stomatal closure kinetics, but does not qualitatively change the main conclusions. Final VPD itself had a negative fixed effect on $\log \tau$ (`r final_vpd_on_tau`), consistent with higher realized VPD accelerating stomatal closure.
+
+We lack data on the rate of VPD change during the wrong-way response and the earliest part of the right-way response, because humidity logging did not begin until \gsw{} had already declined back to its pre-step value ([@fig-conceptual]a); this limits our ability to evaluate whether the *initial* rate of VPD change, as opposed to the final realized VPD, influenced closure kinetics. We recommend that future studies of stomatal kinetics log chamber humidity continuously from the onset of the humidity step to more fully characterize the realized VPD stimulus and adjust the incoming airstream to keep VPD constant as stomatal close.
+
+{{< pagebreak >}}
+
+### Notes S2: The \fgmax{}-$\tau$ association is not an artifact of the curve-fitting procedure
+
+```{r, null-sim-stats, echo = FALSE}
+null_sim_results = read_rds("../objects/null-sim-fgmax-tau.rds")
+real_cor_fgmax_tau = read_rds("../objects/real-cor-fgmax-tau.rds")
+null_sim_p = read_rds("../objects/null-sim-empirical-p.rds")
+nls_vs_bayes = read_rds("../objects/nls_vs_bayes.rds")
+
+ct_tau = cor.test(nls_vs_bayes$logtau_brms, nls_vs_bayes$logtau_nls)
+ct_lambda = cor.test(nls_vs_bayes$loglambda_brms, nls_vs_bayes$loglambda_nls)
+
+fmt_cor = function(x) formatC(x, format = "f", digits = 2)
+```
+
+The initial conductance \gi{} used to calculate \fgmax{} is estimated from the same nonlinear fit ([@eq-weibull]) that also estimates $\tau$ and $\lambda$ for each curve. This raises the possibility that parameter covariance within the curve fit itself, rather than a true biological relationship, could generate an association between \gi{} and $\tau$ (and hence \fgmax{} and $\tau$, since the denominator $g_\mathrm{max}$ is estimated independently from stomatal anatomy and cannot itself introduce a fitting artifact). To test this, we ran a null simulation in which any true association between \gi/\gf{} and the kinetic parameters was removed by construction. For every real curve $i$, we simulated a synthetic \gsw{} trajectory using curve $i$'s own measurement times, residual noise magnitude, and fitted $\tau$ and $\lambda$, but with \gi{} and \gf{} taken from a different, randomly chosen curve $j$. Because $i$ and $j$ were chosen independently at random, the synthetic curves retain realistic variability in both $\tau$/$\lambda$ and \gi/\gf, but there is no true association between \gi{} and the kinetic parameters. We re-fit the same Weibull functional form to each synthetic curve using nonlinear least squares (`nls()`), which closely approximated the full Bayesian pipeline used for the real data when compared directly on the real curves (cor($\tau$) = `r fmt_cor(ct_tau$estimate)`, cor($\lambda$) = `r fmt_cor(ct_lambda$estimate)`), and computed the correlation between the *estimated* \gi{} and $\log(\tau)$. We repeated this `r prettyNum(nrow(null_sim_results), big.mark = ",")` times to build a null distribution of this correlation.
+
+The null-simulation correlations ranged from `r fmt_cor(min(null_sim_results$cor))` to `r fmt_cor(max(null_sim_results$cor))` (median `r fmt_cor(median(null_sim_results$cor))`) across the `r prettyNum(nrow(null_sim_results), big.mark = ",")` replicates, indistinguishable from zero (@fig-null-sim-fgmax-tau). In contrast, the real, observed correlation between \gi{} and $\log(\tau)$ is `r fmt_cor(real_cor_fgmax_tau$cor)` [`r fmt_cor(real_cor_fgmax_tau$cor_lower)`, `r fmt_cor(real_cor_fgmax_tau$cor_upper)`], far outside the null range (empirical $p$ = `r formatC(null_sim_p, format = "f", digits = 3)`). This indicates that the curve-fitting procedure alone cannot explain the observed \fgmax{}-$\tau$ association, supporting our interpretation that it reflects a real relationship in the data rather than a statistical artifact of estimating \gi, $\tau$, and $\lambda$ from the same nonlinear fit.
+
+```{r, null-sim-fgmax-tau, echo = FALSE}
+#| label: fig-null-sim-fgmax-tau
+#| fig-align: center
+#| fig-cap: "\\textbf{The curve-fitting procedure alone does not induce a $g_\\mathrm{i}$-$\\tau$ association.} Null distribution of the correlation between estimated $g_\\mathrm{i}$ and estimated $\\log(\\tau)$ across simulated datasets in which each curve's fitted $g_\\mathrm{i}$/$g_\\mathrm{f}$ were randomly swapped with those of an independently chosen curve (so there is no true association between $g_\\mathrm{i}$ and the kinetic parameters by construction; see Notes S2), compared to the observed correlation in the real data (red line)."
+
+knitr::include_graphics("../figures/null-sim-fgmax-tau.pdf")
+```
+
+{{< pagebreak >}}
+
+### Notes S3: Sensitivity analysis of the \gi{}-$\tau$ path analysis to unmeasured confounding
+
+The path analysis linking treatment, \gi{}, and $\tau$ assumes the causal structure in @fig-mediation-dag: each treatment has a direct effect on $\tau$ and an indirect effect acting through \gi{}. This structure is only identified as causal under sequential ignorability, i.e., that no unmeasured confounder $U$ (e.g., hydraulic status, measurement order, realized VPD trajectory) affects both \gi{} and $\tau$. If such a $U$ exists (dashed arrows), the correlation it induces between the \gi{} and $\tau$ equations' residuals is exactly the sensitivity parameter $\rho$ examined below.
+
+```{r, mediation-dag, echo = FALSE}
+#| label: fig-mediation-dag
+#| fig-align: center
+#| fig-width: 4
+#| fig-cap: "\\textbf{Assumed causal structure of the \\gi{}-$\\tau$ path analysis.} Treatment has a direct effect on $\\tau$ (bottom arrow) and an indirect effect acting through \\gi{} (upper path). An unmeasured confounder $U$ (dashed arrows) affecting both \\gi{} and $\\tau$ -- e.g., hydraulic status, measurement order, or realized VPD trajectory -- would violate the sequential ignorability assumption required to interpret the indirect path causally."
+
+knitr::include_graphics("../figures/mediation-dag.pdf")
+```
+
+```{r, mediation-sensitivity-stats, echo = FALSE}
+mediation_sens = read_rds("../objects/mediation-sensitivity-rhostar.rds")
+
+rho_hat_row = mediation_sens$rho_summary[mediation_sens$rho_summary$parameter == "rho_hat (estimated)", ]
+rho_star_row = mediation_sens$rho_summary[mediation_sens$rho_summary$parameter == "rho_star (breakdown)", ]
+
+fmt_ci = function(row) {
+  glue::glue(
+    "{formatC(row$estimate, format = 'f', digits = 2)} ",
+    "[{formatC(row$lower, format = 'f', digits = 2)}, ",
+    "{formatC(row$upper, format = 'f', digits = 2)}]"
+  )
+}
+
+rho_hat_fmt = fmt_ci(rho_hat_row)
+rho_star_fmt = fmt_ci(rho_star_row)
+prob_below_breakdown_fmt = formatC(100 * mediation_sens$prob_below_breakdown, format = "f", digits = 0)
+```
+
+The path analysis linking \gi{} to $\tau$ (see Materials and Methods, "Path analysis to test for plastic effects") assumes sequential ignorability: that there is no unmeasured confounder of the \gi{}-$\tau$ relationship after conditioning on treatment and the random effects already in the model. Because \gi{} is not randomized, is estimated from the same curve as $\tau$, and could share unmeasured confounders (e.g., hydraulic status, measurement order, realized VPD trajectory) with $\tau$, we assessed this assumption directly with a sensitivity analysis following the general framework of @imai_general_2010, parameterized by $\rho = \mathrm{Cor}(e_{g_\mathrm{i}}, e_\tau)$, the residual correlation between the \gi{} and $\tau$ equations. Under a violation of sequential ignorability with residual correlation $\rho$, the bias-adjusted mediator-on-outcome coefficient is $\beta_2(\rho) = \hat\beta_2 - \rho \cdot \sigma_\tau / \sigma_{g_\mathrm{i}}$, so the indirect effect of a treatment acting through \gi{} is $\gamma_1 \cdot \beta_2(\rho)$ (where $\gamma_1$ is the effect of treatment on \gi), and the "breakdown point" $\rho^*$ at which this indirect effect is exactly zero is $\rho^* = \hat\beta_2 \cdot \sigma_{g_\mathrm{i}} / \sigma_\tau$.
+
+Our selected model already estimates a free residual correlation between the \gi{} and $\tau$ equations, because we fit all five responses (\gcl, \gi, \gmax, $\tau$, $\lambda$) jointly. Because the \gi{} equation's predictors are a strict subset of $\tau$'s, jointly estimating this correlation does not change the point estimate of $\hat\beta_2$ relative to a model that assumes $\rho = 0$ (a standard result for seemingly unrelated regression models), so we can treat $\hat\beta_2$ as the "naive" coefficient in the sensitivity framework above, and the model's own estimated residual correlation as a data-driven estimate of $\rho$.
+
+We found $\rho_\mathrm{estimated}$ = `r rho_hat_fmt` and $\rho^*$ = `r rho_star_fmt` (@fig-mediation-sensitivity). These posterior distributions do not substantially overlap and the posterior probability that the estimated residual correlation is smaller in magnitude than the breakdown point is nearly `r prob_below_breakdown_fmt`%. In other words, the plastic mediation effects of \gi{} on $\tau$ are probably not explained by unmeasured confounders.
+
+```{r, mediation-sensitivity, echo = FALSE}
+#| label: fig-mediation-sensitivity
+#| fig-align: center
+#| fig-cap: "\\textbf{Sensitivity of the indirect effect of each treatment on $\\log \\tau$, acting through \\fgmax{}, to an assumed residual correlation $\\rho$ between the \\fgmax{} and $\\tau$ equations.} The vertical dotted line is the model's own estimated residual correlation ($\\rho_\\mathrm{estimated}$, shaded band = 95\\% credible interval); the vertical solid line is the breakdown point $\\rho^*$ at which the indirect effect is zero."
+
+knitr::include_graphics("../figures/mediation-sensitivity.pdf")
 ```

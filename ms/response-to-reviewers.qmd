@@ -214,7 +214,7 @@ stimulus itself may vary across the same treatments used to explain $\tau$.
 ::: response
 **Response:**
 
-We thank the reviewer for catching the discrepancy between what we reported in Table S3 versus the actual content. At noted in the response to the previous comment, the median and final RH and VPD are highly correlated, so this mistake did not affect the interpretation. We revised Table S3 to report the average RH and VPD at three time points: when logging started, when logging finished, and the median during the logging interval. We also added the curve-level values for these variables to Table S1. We did not record the pre-step VPD but it was nearly identical for every leaf because we set leaf temperature to $\SI{25}{\degreeCelsius}$ and 70% to standardize starting conditions. This is equivalent to a VPD of $\mathrm{VPD} \approx \SI{0.82}{\kPa}$, as mentioned in the Materials and Methods. As mentioned in the previous response, we also do not have data on the initial rate of VPD increase.
+We thank the reviewer for catching the discrepancy between what we reported in Table S3 versus the actual content. At noted in the response to the previous comment, the median and final RH and VPD are highly correlated, so this mistake did not affect the interpretation. We revised Table S3 to report the average RH and VPD at three time points: when logging started, when logging finished, and the median during the logging interval. We also added the curve-level values for these variables to Table S1. We did not record the pre-step VPD but it was nearly identical for every leaf because we set leaf temperature to $\SI{25}{\degreeCelsius}$ and RH to 70% to standardize starting conditions. This is equivalent to a VPD of $\mathrm{VPD} \approx \SI{0.82}{\kPa}$, as mentioned in the Materials and Methods. As mentioned in the previous response, we also do not have data on the initial rate of VPD increase.
 
 :::
 
@@ -253,7 +253,6 @@ anatomical maximum" rather than "aperture."
 ::: response
 **Response:**
 
-
 We thank the reviewer for raising this point because it revealed a mistake in our explanation of the methods that is also relevant to Comment R1.4 below. Figure 1a and parts of the written description incorrectly stated that the fitted interval began as soon as the RWR began. To clarify, we deliberately began logging each curve once \gsw{} had declined back down to its pre-step value. We did this by recording the pre-step \gsw{} and starting the log protocol when \gsw{} returned to value after the WWR. The reason for this protocol was that preliminary experiments showed the relationship between \gsw{} and $A$ analyzed in @muir_plasticity_2025 was "off" over the interval of \gsw{} between its maximum and when it returned to the pre-step value (the interval between the start of the RWR and when we started logging as depicted in Figure 1a). Our interpretation is that during the WWR \gsw{} increases faster than photochemistry can be upregulated, such that $A$ doesn't increase as much as you would expect for that amount of change in \gsw. This point is tangential to our analysis of stomatal kinetics, but we hope it clarifies the rationale. Hence, we only have a single of estimate of \fgmax{} where \gi{} is the pre-step \gsw{}, as depicted in the revised version of Figure 1a. We do not have data on maximum \gsw{} at the end of the WWR. In principle, if the relationship between guard cell turgor and \gsw{} (Figure 1d) within a leaf is fixed then we should be able to estimate the effect of \fgmax{} on $\tau$ either way, but we cannot evaluate this in more detail with the data we have. 
 
 We revised Figure 1a and the Materials and Methods (lines XXX-XXX) to describe this precisely, and moved the "Log data" marker in the figure to the point where \gsw{} returns to \gi, distinct from the start of the RWR itself, which begins where \gsw{} first starts to decline from its WWR peak. We also added a caveat to the Discussion noting this limitation.
@@ -267,7 +266,7 @@ The null-simulation correlations ranged from `r fmt_cor(min(null_sim_results$cor
 #| echo: false
 #| message: false
 #| warning: false
-#| fig-cap: "Null distribution of the correlation between estimated \\fgmax{} and estimated $\\tau$ across 200 simulated datasets in which the true \\gi{} and $g_f$ are fixed at their real median values for every curve (so \\fgmax{} has no true relationship with $\\tau$ by construction), compared to the observed correlation in the real data (red line)."
+#| fig-cap: "Null distribution of the correlation between estimated \\fgmax{} and estimated $\\tau$ across 200 simulated datasets in which the true \\gi{} and \\g{} are fixed at their real median values for every curve (so \\fgmax{} has no true relationship with $\\tau$ by construction), compared to the observed correlation in the real data (red line)."
 #| 
 knitr::include_graphics("../figures/null-sim-fgmax-tau.pdf")
 ```
@@ -329,14 +328,14 @@ are negligible.
 ::: response
 **Response:**
 
-We decided on this design because the primary goals of the study were to compare amphi and pseudohypo curves on the same leaf within the same treatment to estimate "amphistomy advantange" [@muir_plasticity_2025]. Preliminary studies indicated the order did not affect amphistomy advantange but that it was much faster to go from the high light to low light compared to the reverse. Therefore, we opted to increase our throughput and sample size at the potential cost of some confounding between measurement order and treatment effect. Unfortunately, we did not observe whether the measurement order affected stomatal kinetics. Hence, we cannot say for sure whether order, recovery state, or prior VPD exposure confounds measurement light intensity. We controlled for time of day by running curves throughout the day and randomizing the order among accessions and growth light treatments. However, we think the bias induced by measurement order is likely small compared to the very large effect of measurement light intensity on $g_\mathrm{i}$ (+77% for shade plants; +139% for sun plants):
+We choose this design because the primary goals of the study were to compare amphi and pseudohypo curves on the same leaf within the same treatment to estimate "amphistomy advantange" [@muir_plasticity_2025]. Preliminary studies indicated the order did not affect amphistomy advantange but that it was much faster to go from the high light to low light compared to the reverse. Therefore, we opted to increase our throughput and sample size at the potential cost of some confounding between measurement order and treatment effect. Unfortunately, we did not observe whether the measurement order affected stomatal kinetics. Hence, we cannot say for sure whether order, recovery state, or prior VPD exposure confounds measurement light intensity. We controlled for time of day by running curves throughout the day and randomizing the order among accessions and growth light treatments. However, we think the bias induced by measurement order is likely small compared to the very large effect of measurement light intensity on \gi{} (+77% for shade plants; +139% for sun plants):
 
 | Growth light | Measurement: low | Measurement: high |
 | --- | --- | --- |
 | shade | 0.209 | 0.370 |
 | sun | 0.265 | 0.634 |
 
-Table: Average $g_\mathrm{i}$ in different treatment combinations across the amphi leaf type curves.
+Table: Average \gi{} in different treatment combinations across the amphi leaf type curves.
 
 We have already mentioned that this analysis is opportunistic and therefore some of the experimental design choices are sub-optimal for the purpose of study stomatal kinetics. We addressed the reviewer's concerns about measurement order more specifically by:
 
@@ -383,26 +382,24 @@ conclusion.
 ::: response
 **Response:**
 
-<!-- TODO: Response is AI-generated. I need to revisit this once new models with gi/gmax separate are finished and decide whether to retain and check whether sensitivity analysis was done correctly. -->
+We agree and have replaced "causal mediation analysis" with "path analysis" throughout the manuscript. Note that in response to Comment R1.3, we found stronger evidence for \gi{} rather than \fgmax{} affecting $\tau$. Therefore, we reran path analysis using \gi{} in place of \fgmax{} as described in the revised "Path analysis to test for plastic effects" section. We no longer say that \gi{} "mediates plasticity" as a causal conclusion. We now state only that treatment-associated changes in $\tau$ are statistically consistent with an indirect path through \gi, alongside a direct path, exactly as the reviewer suggested.
 
-We agree and have replaced "causal mediation analysis" with "path analysis" throughout the manuscript, and we no longer say that \fgmax{} "mediates plasticity" as a causal conclusion. We now state only that treatment-associated changes in $\tau$ are statistically consistent with an indirect path through \fgmax{}, alongside a direct path, exactly as the reviewer suggested.
-
-We also drew the DAG you requested (@fig-mediation-dag), showing the assumed causal structure (treatment $\to$ \fgmax{} $\to$ $\tau$ and treatment $\to$ $\tau$ directly) alongside an unmeasured confounder $U$ representing exactly the kind of variable you raised (hydraulic status, measurement order, realized VPD trajectory) that would violate sequential ignorability if it affected both \fgmax{} and $\tau$.
+We also drew the DAG you requested (@fig-mediation-dag; Figure XXX in the manuscript), showing the assumed causal structure (treatment $\to$ \gi{} $\to$ $\tau$ and treatment $\to$ $\tau$ directly) alongside an unmeasured confounder $U$ representing exactly the kind of variable the reviewer raised (hydraulic status, measurement order, realized VPD trajectory) that would violate sequential ignorability if it affected both \gi{} and $\tau$.
 
 ```{r}
 #| label: fig-mediation-dag
 #| echo: false
 #| message: false
 #| warning: false
-#| fig-cap: "Assumed causal structure of the \\fgmax{}-$\\tau$ path analysis. Treatment has a direct effect on $\\tau$ (bottom arrow) and an indirect effect acting through \\fgmax{} (upper path). An unmeasured confounder $U$ (dashed arrows) affecting both \\fgmax{} and $\\tau$ would violate the sequential ignorability assumption required to interpret the indirect path causally."
+#| fig-cap: "Assumed causal structure of the \\gi{}-$\\tau$ path analysis. Treatment has a direct effect on $\\tau$ (bottom arrow) and an indirect effect acting through \\gi{} (upper path). An unmeasured confounder $U$ (dashed arrows) affecting both \\gi{} and $\\tau$ would violate the sequential ignorability assumption required to interpret the indirect path causally."
 knitr::include_graphics("../figures/mediation-dag.pdf")
 ```
 
-To directly address sequential ignorability, we ran a sensitivity analysis following the general framework of Imai, Keele & Yamamoto (2010, *Statistical Science*), parameterized by $\rho = \mathrm{Cor}(e_{f_\mathrm{gmax}}, e_\tau)$, the residual correlation between the \fgmax{} and $\tau$ equations. Under a violation of sequential ignorability with residual correlation $\rho$, the bias-adjusted mediator-on-outcome coefficient is $\beta_2(\rho) = \hat\beta_2 - \rho \cdot \sigma_\tau / \sigma_{f_\mathrm{gmax}}$, so the average causal mediation effect (ACME) is $\mathrm{ACME}(\rho) = \gamma_1 \cdot \beta_2(\rho)$, and the "breakdown point" $\rho^*$ at which the ACME is exactly zero is $\rho^* = \hat\beta_2 \cdot \sigma_{f_\mathrm{gmax}} / \sigma_\tau$.
+To directly address sequential ignorability, we ran a sensitivity analysis in Notes S3 following the general framework of @imai_general_2010, parameterized by $\rho = \mathrm{Cor}(e_{f_\mathrm{gmax}}, e_\tau)$, the residual correlation between the \gi{} and $\tau$ equations. Under a violation of sequential ignorability with residual correlation $\rho$, the bias-adjusted mediator-on-outcome coefficient is $\beta_2(\rho) = \hat\beta_2 - \rho \cdot \sigma_\tau / \sigma_{f_\mathrm{gmax}}$, so the average causal mediation effect (ACME) is $\mathrm{ACME}(\rho) = \gamma_1 \cdot \beta_2(\rho)$, and the "breakdown point" $\rho^*$ at which the ACME is exactly zero is $\rho^* = \hat\beta_2 \cdot \sigma_{f_\mathrm{gmax}} / \sigma_\tau$. In these equations, $\beta_2$ is the effect of \gi{} on $\tau$ and $\gamma_1$ is the effect of treatments on \gi.
 
-Conveniently, our selected model already estimates a free residual correlation between the \fgmax{} and $\tau$ equations ($\rho_\mathrm{estimated}$, from `set_rescor(TRUE)`), because we fit all four responses (\fgmax, \gcl, $\tau$, $\lambda$) jointly. Because the \fgmax{} equation's predictors are a strict subset of $\tau$'s, jointly estimating this correlation does not change the point estimate of $\hat\beta_2$ relative to a model that assumes $\rho = 0$ (a standard SUR-equivalence result), so we can treat $\hat\beta_2$ as the "naive" coefficient in the sensitivity framework above, and the model's own estimated residual correlation as a genuine, data-driven estimate of $\rho$ -- not just a hypothetical value to sweep over.
+Our selected model already estimates the residual correlation between the \gi{} and $\tau$ equations ($\rho_\mathrm{estimated}$, from `set_rescor(TRUE)`), because we fit all five responses (\gcl, \gi, \gmax, $\tau$, $\lambda$) jointly. We treat $\hat\beta_2$ as the "naive" coefficient in the sensitivity framework above, and the model's own estimated residual correlation as an estimate of $\rho.
 
-We found $\rho_\mathrm{estimated}$ = `r rho_hat_fmt` and $\rho^*$ = `r rho_star_fmt` (@fig-mediation-sensitivity, @fig-mediation-rho-compare). These posteriors substantially overlap: the posterior probability that the estimated residual correlation is smaller in magnitude than the breakdown point is only `r prob_below_breakdown_fmt`%. In other words, if a meaningful fraction of the residual correlation we estimate between the \fgmax{} and $\tau$ equations were due to an unmeasured confounder (e.g., hydraulic state, measurement order, or unmeasured VPD trajectory effects) rather than a direct effect of \fgmax{} on $\tau$, our estimated indirect path could be substantially attenuated or eliminated. We do not think this sensitivity analysis is reassuring enough to support a causal claim, which is why we have adopted the reviewer's suggested language throughout.
+We found $\rho_\mathrm{estimated}$ = `r rho_hat_fmt` and $\rho^*$ = `r rho_star_fmt` (@fig-mediation-sensitivity, Figure XXX in the revised manuscript). These posteriors do not substantially overlap and the posterior probability that the estimated residual correlation is smaller in magnitude than the breakdown point is nearly `r prob_below_breakdown_fmt`%. In other words, the plastic mediation effects of \gi{} on $\tau$ are probably not explained by unmeasured confounders. Nevertheless, we took the reviewer's suggestion to avoid strong causal claims because the mediator variable \gi{} was not experimentally controlled and could plausibly be related to $\tau$ through confounding variables, though our analysis does not support this conclusion.
 
 ```{r}
 #| label: fig-mediation-sensitivity
@@ -413,14 +410,6 @@ We found $\rho_\mathrm{estimated}$ = `r rho_hat_fmt` and $\rho^*$ = `r rho_star_
 knitr::include_graphics("../figures/mediation-sensitivity.pdf")
 ```
 
-```{r}
-#| label: fig-mediation-rho-compare
-#| echo: false
-#| message: false
-#| warning: false
-#| fig-cap: "Posterior distributions of the model's estimated residual correlation between the \\fgmax{} and $\\tau$ equations ($\\rho_\\mathrm{estimated}$) and the breakdown point ($\\rho^*$) at which the mediated effect of \\fgmax{} on $\\tau$ is exactly zero. Substantial overlap between these distributions indicates the mediated effect is not robust to plausible levels of unmeasured confounding."
-knitr::include_graphics("../figures/mediation-sensitivity-rho-compare.pdf")
-```
 :::
 
 ---
