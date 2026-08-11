@@ -20,7 +20,7 @@
 # actually sampled in parallel once you have a saved fit (see fit$fit$time()
 # for per-chain start/end times) before assuming request_cpus = 3 is helping.
 
-container_image = osdf:///chtc/staging/cdmuir/solanum-fit.sif
+container_image = osdf:///chtc/staging/cdmuir/solanum-fit-v2.sif
 
 executable = fit_model.R
 arguments  = "0"

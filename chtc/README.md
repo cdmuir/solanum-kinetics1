@@ -47,19 +47,19 @@ Containers must be built on a CHTC build node via an interactive job.
    ```
 3. Inside the interactive job:
    ```
-   apptainer build solanum-fit.sif image.def
+   apptainer build solanum-fit-v2.sif image.def
    ```
    This installs R, brms, cmdstanr, and compiles CmdStan — expect this to
    take a while (mostly CmdStan compilation).
 4. Test it:
    ```
-   apptainer shell -e solanum-fit.sif
+   apptainer shell -e solanum-fit-v2.sif
    R -e 'library(brms); library(cmdstanr); cmdstanr::set_cmdstan_path(Sys.getenv("CMDSTAN")); cmdstanr::cmdstan_version()'
    exit
    ```
 5. Move the image to staging and exit the interactive job:
    ```
-   mv solanum-fit.sif /staging/$USER/
+   mv solanum-fit-v2.sif /staging/$USER/
    exit
    ```
 
@@ -78,7 +78,7 @@ Create a `logs/` subdirectory there too (`mkdir logs`).
 
 Edit `test_one.sub` and `fit_all.sub`: replace `<user>` in the
 `container_image` path with your CHTC username (or wherever you placed
-`solanum-fit.sif` under `/staging`).
+`solanum-fit-v2.sif` under `/staging`).
 
 ## Step 3: Test with ONE job first
 

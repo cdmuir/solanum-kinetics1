@@ -5,7 +5,7 @@
 #
 # EDIT <user> below to your CHTC username / staging path before submitting.
 
-container_image = osdf:///chtc/staging/cdmuir/solanum-fit.sif
+container_image = osdf:///chtc/staging/cdmuir/solanum-fit-v2.sif
 
 executable = fit_model.R
 arguments  = "$(Process)"
