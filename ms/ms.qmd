@@ -33,7 +33,7 @@ header-includes: |
   \newcommand{\gop}{$g_\mathrm{op}$}
   \newcommand{\gsw}{$g_\mathrm{sw}$}
   \newcommand{\loggi}{$\log(g_\mathrm{i})$}
-  \newcommand{\loggi}{$\log(g_\mathrm{max})$}
+  \newcommand{\loggmax}{$\log(g_\mathrm{max})$}
   \newcommand{\loggsw}{$\log(g_\mathrm{sw})$}
   \newcommand{\logA}{$\log(A)$}
   \newcommand{\ppfd}{$\mathrm{PPFD}$}
@@ -105,7 +105,7 @@ joined_data = read_rds("../data/joined-data.rds")
 
 mean_light_intensity_gap_min = read_rds("../objects/mean-light-intensity-gap-min.rds")
 
-gcl_fallback = read_rds("../objects/gcl-fallback-summary.rds")
+gcl_switch_summary = read_rds("../objects/gcl_switch_summary.rds")
 
 response_vars = tibble(
   definition = c(
@@ -400,13 +400,13 @@ df_example1 = posterior_epred(selected_model,
 mediation = read_rds("../objects/mediation.rds")
 
 de_sun = filter(mediation$lighttreatment, variable == "direct_effect")
-me_sun = filter(mediation$lighttreatment, variable == "mediated_effect_fgmax")
+me_sun = filter(mediation$lighttreatment, variable == "mediated_effect_gi")
 
 de_high = filter(mediation$lightintensity, variable == "direct_effect")
-me_high = filter(mediation$lightintensity, variable == "mediated_effect_fgmax")
+me_high = filter(mediation$lightintensity, variable == "mediated_effect_gi")
 
 de_pseudo = filter(mediation$leaftype, variable == "direct_effect")
-me_pseudo = filter(mediation$leaftype, variable == "mediated_effect_fgmax")
+me_pseudo = filter(mediation$leaftype, variable == "mediated_effect_gi")
 
 # Partial correlation
 partial_cor = read_rds("../objects/partial-cor.rds") |>
@@ -546,7 +546,7 @@ Prior to analysis, we removed unreliable and unusable data points, removed point
 
 ### Stomatal anatomical traits \gcl{} and \fgmax{}
 
-We estimated the stomatal density and \gcl{} on ab- and adaxial surfaces from all leaves used for humidity response curves. We used standard methods described fully in @muir_plasticity_2025. We excluded three individuals with extreme outlying guard cell length values. Preliminary analysis of variation in guard cell length among growth treatments, leaf types, and accessions identified these outliers based on a residual value greater than 0.45, which visually appeared as a clear break in the residual distribution. When the leaflet used for the LI-6800 humidity-response curve did not have a matching leaflet-level anatomical measurement, we<!-- TODO: revisit and verify these numbers --> used the first available anatomical measurement from a different leaflet on the same plant as a proxy; this fallback was used for `r gcl_fallback$n_fallback` of `r gcl_fallback$n_total` individual-by-leaf-type combinations (`r formatC(gcl_fallback$pct_fallback, format = "f", digits = 1)`%). For each surface we calculated the anatomical maximum stomatal conductance (\gmax) at a reference leaf temperature of $\SI{25}{\degreeCelsius}$ following @sack_developmental_2016 as:
+We estimated the stomatal density and \gcl{} on ab- and adaxial surfaces from all leaves used for humidity response curves. We used standard methods described fully in @muir_plasticity_2025. We excluded three individuals with extreme outlying guard cell length values. Preliminary analysis of variation in guard cell length among growth treatments, leaf types, and accessions identified these outliers based on a residual value greater than 0.45, which visually appeared as a clear break in the residual distribution. When the leaflet used for the LI-6800 humidity-response curve did not have a matching leaflet-level anatomical measurement, we used the first available anatomical measurement from a different leaflet on the same plant as a proxy; this fallback was used for `r gcl_switch_summary$n_switched` of `r gcl_switch_summary$n_total` individual-by-leaf-type combinations (`r formatC(100 * gcl_switch_summary$n_switched / gcl_switch_summary$n_total, format = "f", digits = 1)`%). For each surface we calculated the anatomical maximum stomatal conductance (\gmax) at a reference leaf temperature of $\SI{25}{\degreeCelsius}$ following @sack_developmental_2016 as:
 
 $$g_\mathrm{max} = b m d l_\mathrm{gc} / \sqrt{2}.$$
 
@@ -721,8 +721,8 @@ tbl_comparison = df_comparison1 |>
   ) |>
   add_header_above(c(
     " " = 2,
-    "$\\\\lambda$" = 2,
-    "$\\\\tau$" = 2
+    "$\\\\lambda$" = 3,
+    "$\\\\tau$" = 3
   ), escape = FALSE) 
 
 # grey out implausible models
@@ -765,9 +765,9 @@ knitr::include_graphics("../figures/gcl-tau.pdf")
 knitr::include_graphics("../figures/gi-tau.pdf")
 ```
 
-### An indirect path through stomatal aperture is associated with plasticity in $\tau$
+### Plasticity in $\tau$ is an indirect effect of initial stomatal conductance
 
-We imposed three treatments that influenced stomatal kinetics: growth light intensity, measurement light intensity, and leaf type. All three treatments directly affected $\tau$ and had indirect effects mediated by \fgmax{} ([@fig-mediation]). We did not estimate effects mediated by \gcl{} because the selected model did not retain direct effects of \gcl{} on $\tau$ ([@tbl-comparison]). The direct effect of the sun growth treatment increased $\tau$ by $`r formatC(log_to_percent(de_sun[['estimate']]), format = 'f', digits = 2)`$% [95% CI: $`r formatC(log_to_percent(de_sun[['q2.5']]), format = 'f', digits = 2)`$ to $`r formatC(log_to_percent(de_sun[['q97.5']]), format = 'f', digits = 2)`$%], but the indirect effect of lower \fgmax{} counteracted it by $`r formatC(log_to_percent(me_sun[['estimate']]), format = 'f', digits = 2)`$% [95% CI: $`r formatC(log_to_percent(me_sun[['q2.5']]), format = 'f', digits = 2)`$ to $`r formatC(log_to_percent(me_sun[['q97.5']]), format = 'f', digits = 2)`$%]. The direct effect of the pseudohypo treatment decreased $\tau$ slightly by $`r formatC(log_to_percent(de_pseudo[['estimate']]), format = 'f', digits = 2)`$% [95% CI: $`r formatC(log_to_percent(de_pseudo[['q2.5']]), format = 'f', digits = 2)`$ to $`r formatC(log_to_percent(de_pseudo[['q97.5']]), format = 'f', digits = 2)`$%], but the indirect effect mediated by greater \fgmax{} increased $\tau$ by $`r formatC(log_to_percent(me_pseudo[['estimate']]), format = 'f', digits = 2)`$% [95% CI: $`r formatC(log_to_percent(me_pseudo[['q2.5']]), format = 'f', digits = 2)`$ to $`r formatC(log_to_percent(me_pseudo[['q97.5']]), format = 'f', digits = 2)`$%]. In contrast, direct and indirect effects of high measurement light intensity increased $\tau$. The direct effect increased $\tau$ by $`r formatC(log_to_percent(de_high[['estimate']]), format = 'f', digits = 2)`$% [95% CI: $`r formatC(log_to_percent(de_high[['q2.5']]), format = 'f', digits = 2)`$ to $`r formatC(log_to_percent(de_high[['q97.5']]), format = 'f', digits = 2)`$%] and the indirect effect mediated by \fgmax{} increased $\tau$ by $`r formatC(log_to_percent(me_high[['estimate']]), format = 'f', digits = 2)`$% [95% CI: $`r formatC(log_to_percent(me_high[['q2.5']]), format = 'f', digits = 2)`$ to $`r formatC(log_to_percent(me_high[['q97.5']]), format = 'f', digits = 2)`$%]. 
+We imposed three treatments that influenced stomatal kinetics: growth light intensity, measurement light intensity, and leaf type. All three treatments directly affected $\tau$ and had indirect effects mediated by \gi{} ([@fig-mediation]). We did not estimate effects mediated by \gcl{} because the selected model did not retain direct effects of \gcl{} on $\tau$ ([@tbl-comparison]). The direct effect of the sun growth treatment changed $\tau$ by $`r formatC(log_to_percent(de_sun[['estimate']]), format = 'f', digits = 2)`$% [95% CI: $`r formatC(log_to_percent(de_sun[['q2.5']]), format = 'f', digits = 2)`$ to $`r formatC(log_to_percent(de_sun[['q97.5']]), format = 'f', digits = 2)`$%], but the indirect effect of lower \gi{} counteracted it by $`r formatC(log_to_percent(me_sun[['estimate']]), format = 'f', digits = 2)`$% [95% CI: $`r formatC(log_to_percent(me_sun[['q2.5']]), format = 'f', digits = 2)`$ to $`r formatC(log_to_percent(me_sun[['q97.5']]), format = 'f', digits = 2)`$%]. The direct effect of the pseudohypo treatment decreased $\tau$ slightly by $`r formatC(log_to_percent(de_pseudo[['estimate']]), format = 'f', digits = 2)`$% [95% CI: $`r formatC(log_to_percent(de_pseudo[['q2.5']]), format = 'f', digits = 2)`$ to $`r formatC(log_to_percent(de_pseudo[['q97.5']]), format = 'f', digits = 2)`$%], but the indirect effect mediated by greater \fgmax{} increased $\tau$ by $`r formatC(log_to_percent(me_pseudo[['estimate']]), format = 'f', digits = 2)`$% [95% CI: $`r formatC(log_to_percent(me_pseudo[['q2.5']]), format = 'f', digits = 2)`$ to $`r formatC(log_to_percent(me_pseudo[['q97.5']]), format = 'f', digits = 2)`$%]. In contrast, direct and indirect effects of high measurement light intensity increased $\tau$. The direct effect increased $\tau$ by $`r formatC(log_to_percent(de_high[['estimate']]), format = 'f', digits = 2)`$% [95% CI: $`r formatC(log_to_percent(de_high[['q2.5']]), format = 'f', digits = 2)`$ to $`r formatC(log_to_percent(de_high[['q97.5']]), format = 'f', digits = 2)`$%] and the indirect effect mediated by \fgmax{} increased $\tau$ by $`r formatC(log_to_percent(me_high[['estimate']]), format = 'f', digits = 2)`$% [95% CI: $`r formatC(log_to_percent(me_high[['q2.5']]), format = 'f', digits = 2)`$ to $`r formatC(log_to_percent(me_high[['q97.5']]), format = 'f', digits = 2)`$%]. 
 
 ```{r, mediation, echo = FALSE}
 #| label: fig-mediation
@@ -791,9 +791,7 @@ The positive association between \gcl{} and $\tau$ ([@fig-gcl-tau]) is consisten
 
 A consequence of greater stomatal aperture is that the pore closes more slowly when the environment changes. Much of the variation in $\tau$ among individuals within populations was explained by variation in \fgmax{} ([@fig-fgmax-tau]). This factor was positively associated with $\tau$ among individuals within light treatments, and treatment-associated plasticity in $\tau$ was statistically consistent with an indirect path through \fgmax{} ([@fig-mediation]; but see Notes S3 for a sensitivity analysis of the assumption that this indirect path is unconfounded). The rate of stomatal opening in response to light is associated with \gop{} in a sample of rainforest trees [@kardiman_relationship_2018], which may indicate this is a more general phenomenon. The association between \fgmax{} and $\tau$ could be explained by the hypothesis that guard cell wall elasticity declines at greater turgor pressure [@franks_physiological_2012], like a rubber band that is stretched under tension. 
 
-#### MARKER REVISING HERE - change fgmax_percent_change to gi_percent_change
-
-The impact of \gi{} was most pronounced when comparing measurement light intensity treatments. Leaves acclimated to high light intensity were on average `r fgmax_percent_change`% more open than the same leaves at low light intensity in the reference treatment (shade, amphi). As a consequence, stomata closed more slowly in leaves acclimated to high light intensity, with a `r tau_percent_change`% greater time-constant on average in the reference treatment, based on parameter estimates from the selected model ([@tbl-fixed]). We did not assess whether \fgmax{} also affects stomatal opening and this should be measured to further test this hypothesis. The implication is that natural selection should favor \gop{} values that not only optimize instantaneous carbon gain and water loss in the present environment, but also carbon gain and water loss integrated through time in a fluctuating environment. We predict that rapid, temporally-uncorrelated fluctuating environments will favor leaves with greater \fgmax{} to slow kinetic responses and prevent overreacting to transitory changes that are likely to revert; slower, temporally-correlated changes will favor lower \fgmax{} to enable close tracking of the environment.
+The impact of \gi{} was most pronounced when comparing measurement light intensity treatments. Leaves acclimated to high light intensity were on average `r gi_percent_change`% more open than the same leaves at low light intensity in the reference treatment (shade, amphi). As a consequence, stomata closed more slowly in leaves acclimated to high light intensity, with a `r tau_percent_change`% greater time-constant on average in the reference treatment, based on parameter estimates from the selected model ([@tbl-fixed]). We did not assess whether \fgmax{} also affects stomatal opening and this should be measured to further test this hypothesis. The implication is that natural selection should favor \gop{} values that not only optimize instantaneous carbon gain and water loss in the present environment, but also carbon gain and water loss integrated through time in a fluctuating environment. We predict that rapid, temporally-uncorrelated fluctuating environments will favor leaves with greater \fgmax{} to slow kinetic responses and prevent overreacting to transitory changes that are likely to revert; slower, temporally-correlated changes will favor lower \fgmax{} to enable close tracking of the environment.
 
 The comparison between measurement light intensity treatments should be interpreted cautiously, however, because it was confounded with measurement order: high light curves always preceded low light curves on the same leaf, following a prior low-humidity closure event (see Materials and Methods). We cannot rule out that some of the apparent effect of measurement light intensity on \fgmax{} and $\tau$, and the corresponding indirect path through \fgmax{} in our mediation analysis ([@fig-mediation]), reflects order, incomplete recovery, or prior VPD exposure rather than measurement light intensity itself. This concern applies specifically to the measurement light comparison and not to growth light intensity or leaf type, which were randomized or alternated, respectively.
 
@@ -1422,14 +1420,6 @@ rx1 |>
 {{< pagebreak >}}
 
 ## Supporting figures
-
-```{r, gcl-leaflet-type, echo = FALSE}
-#| label: fig-gcl-leaflet-type
-#| fig-align: center
-#| fig-cap: "\\textbf{Lateral and terminal leaflets show at most a small, marginally detectable difference in \\gcl{}.} \\gcl{} for lateral vs.\\ terminal leaflets, among individuals with an amphistomatous curve; the fitted difference between leaflet types (accounting for accession and growth light treatment) is used to correct \\gcl{} and \\gmax{} when the anatomy leaflet did not match the LI-6800 leaflet (see Materials and Methods)."
-
-knitr::include_graphics("../figures/gcl-leaflet-type.pdf")
-```
 
 ```{r, vpd-pairs, echo = FALSE}
 #| label: fig-vpd-pairs

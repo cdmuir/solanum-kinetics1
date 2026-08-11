@@ -98,6 +98,8 @@ rho_hat_fmt = fmt_rho("rho_hat (estimated)")
 rho_star_fmt = fmt_rho("rho_star (breakdown)")
 prob_below_breakdown_fmt = formatC(100 * mediation_sens$prob_below_breakdown, format = "f", digits = 0)
 
+gcl_switch_summary = read_rds("../objects/gcl_switch_summary.rds")
+
 ```
 
 ---
@@ -527,8 +529,7 @@ We unintentionally neglected to explain why these three individuals were conside
 
 > "We excluded three individuals with extreme outlying guard cell length values. Preliminary analysis of variation in guard cell length among growth treatments, leaf types, and accessions identified these outliers based on a residual value greater than 0.45, which visually appeared as a clear break in the residual distribution."
 
-<!-- TODO: fill in values here -->
-Regarding the leaflet-matching fallback: when a leaflet was measured for stomatal anatomy but did not match the leaflet used for the LI-6800 humidity-response curve, we used the first available anatomical measurement from a different leaflet on the same leaf as a proxy, rather than discarding the individual.  This fallback was triggered for XXX of XXX individual-by-leaf-type combinations XXX%). We agree this could add measurement error to \gmax{}, guard cell length, and \fgmax{} for those individuals, and we have added this frequency and a caveat to the Materials and Methods.
+Regarding the leaflet-matching fallback: when a leaflet was measured for stomatal anatomy but did not match the leaflet used for the LI-6800 humidity-response curve, we used the first available anatomical measurement from a different leaflet on the same leaf as a proxy, rather than discarding the individual. This fallback was triggered for `r gcl_switch_summary$n_switched` of `r gcl_switch_summary$n_total` individual-by-leaf-type combinations (`r formatC(100 * gcl_switch_summary$n_switched / gcl_switch_summary$n_total, format = 'f', digits = 2)`%). We agree this could add measurement error to \gmax{}, guard cell length, and \fgmax{} for those individuals, and we have added this frequency and a caveat to the Materials and Methods.
 
 :::
 
