@@ -68,9 +68,4 @@ curve_vpd = vpd_traj |>
   ) |>
   rename(accid = acc_id)
 
-message(glue::glue(
-  "Set sat_rate/sat_rate_se to NA for {sum(curve_vpd$exclude_sat_rate, na.rm = TRUE)} ",
-  "of {nrow(curve_vpd)} curves (poor fit or extreme outlier)."
-))
-
 write_rds(curve_vpd, "objects/curve-vpd-summary.rds")

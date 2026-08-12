@@ -287,8 +287,9 @@ anatomical maximum" rather than "aperture."
 - check final numbers once vpd model is run a final time
 - put in correct Figure numbers for main text
 - Make sure that text and figures here align with main text
-- Do final edit on Figure R5
 - More point about Dow et al 2014 more incorporated into the response.
+- Address new model here - is it mentioned response R1.7??
+- Address issue about "aperture" language throughout
  -->
 
 We thank the reviewer for raising this point because it revealed a mistake in our explanation of the methods that is also relevant to Comment R1.4 below. Figure 1a and parts of the written description incorrectly stated that the fitted interval began as soon as the RWR began. To clarify, we deliberately began logging each curve once \gsw{} had declined back down to its pre-step value. We did this by recording the pre-step \gsw{} and starting the log protocol when \gsw{} returned to value after the WWR. The reason for this protocol was that preliminary experiments showed the relationship between \gsw{} and $A$ analyzed in @muir_plasticity_2025 was "off" over the interval of \gsw{} between its maximum and when it returned to the pre-step value (the interval between the start of the RWR and when we started logging as depicted in Figure 1a). Our interpretation is that during the WWR \gsw{} increases faster than photochemistry can be upregulated, such that $A$ doesn't increase as much as you would expect for that amount of change in \gsw. This point is tangential to our analysis of stomatal kinetics, but we hope it clarifies the rationale. Hence, we only have a single of estimate of \fgmax{} where \gi{} is the pre-step \gsw{}, as depicted in the revised version of Figure 1a. We do not have data on maximum \gsw{} at the end of the WWR. In principle, if the relationship between guard cell turgor and \gsw{} (Figure 1d) within a leaf is fixed then we should be able to estimate the effect of \fgmax{} on $\tau$ either way, but we cannot evaluate this in more detail with the data we have. 
@@ -297,8 +298,6 @@ We revised Figure 1a and the Materials and Methods (lines XXX-XXX) to describe t
 
 We also added simulations demonstrating that the association between \gi, \fgmax{}, and $\tau$ is unlikely to be an artifact of simultaneously estimating \gi{} and $\tau$. For every real curve, we simulated a synthetic \gsw{} trajectory using that curve's own measurement times, residual variance, and fitted $\tau$ and $\lambda$ values, but with fitted values of \gi{} and \gf{} randomly swapped with another curve. Hence, synthetic curves retain the observed associations between $\tau$ and $\lambda$ from curve $i$ and the observed associations between \gi{} and \gf{} from curve $j$. Since $i$ and $j$ are chosen at random, there is no actual association between \gi{} and kinetic parameters among the synthetic curves. Since the denominator in \fgmax{} is estimated independently from stomatal anatomy, it is sufficient to evaluate a spurious association between \gi{} and $\tau$. For each synthetic curve, we re-fit the same Weibull functional form to each simulated curve (via `nls()`, validated against the full Bayesian pipeline used for the real data: cor($\tau$) = `r fmt_cor(ct_tau$estimate)`, cor($\lambda$) = `r fmt_cor(ct_lambda$estimate)`) and computed the correlation between the *estimated* \gi{} and $\log \left( \tau \right)$. We repeated this `r prettyNum(nrow(null_sim_results), big.mark = ",")` times to build a null distribution of this correlation. 
 
-### MARKER
-
 The null-simulation correlations ranged from `r fmt_cor(min(null_sim_results$cor))` to `r fmt_cor(max(null_sim_results$cor))` (median `r fmt_cor(median(null_sim_results$cor))`) across the `r prettyNum(nrow(null_sim_results), big.mark = ",")` synthetic curves -- indistinguishable from zero -- whereas the real, observed correlation between $\log \left( g_\mathrm{i} \right)$ and $\log \left( \tau \right)$ is `r fmt_cor(real_cor_fgmax_tau$cor)` [`r fmt_cor(real_cor_fgmax_tau$cor_lower)`, `r fmt_cor(real_cor_fgmax_tau$cor_upper)`] (@fig-null-sim-fgmax-tau; Figure SXXX in the Supporting Information), far outside the null range (`r null_sim_p`). This indicates that the curve-fitting procedure alone cannot explain the observed \gi-$\tau$ association, and that it more plausibly reflects a real relationship in the data.
 
 ```{r}
@@ -306,12 +305,12 @@ The null-simulation correlations ranged from `r fmt_cor(min(null_sim_results$cor
 #| echo: false
 #| message: false
 #| warning: false
-#| fig-cap: !expr paste("Null distribution of the correlation between estimated \\fgmax{} and estimated $\\tau$ across", prettyNum(nrow(null_sim_results), big.mark = ","), "simulated datasets in which the true \\gi{} and \\gf{} are fixed at their real median values for every curve (so \\fgmax{} has no true relationship with $\\tau$ by construction), compared to the observed correlation in the real data (red line).")
+#| fig-cap: !expr paste("Null distribution of the correlation between estimated \\gi{} and estimated $\\tau$ across", prettyNum(nrow(null_sim_results), big.mark = ","), "simulated datasets in which the true \\gi{} and \\gf{} are fixed at their real median values for every curve (so \\gi{} has no true relationship with $\\tau$ by construction), compared to the observed correlation in the real data (red line).")
 #| 
 knitr::include_graphics("../figures/null-sim-fgmax-tau.pdf")
 ```
 
-While \gmax{} is theoretical to some extent, it does seem to be a good description of maximum \gsw{} in experimentally controlled *Arabidopsis* plants (Dow et al. 2014).
+While \gmax{} is theoretical to some extent, it does seem to be a good description of maximum \gsw{} in experimentally controlled *Arabidopsis* plants [@dow_integrated_2014]. We added this in the Materials and Methods on lines XXX.
 
 :::
 

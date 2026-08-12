@@ -36,8 +36,8 @@ p_null_sim = ggplot(null_sim_results, aes(cor)) +
   ) +
   scale_x_continuous(limits = range(c(null_sim_results$cor, real_cor_summary$cor)) + c(-0.02, 0.02)) +
   labs(
-    x = expression("Null-simulation correlation: " * italic(g)[i] * " vs. log(" * tau * ")"),
+    x = expression("Null-simulation correlation: log(" * italic(g)[i] * ") vs. log(" * tau * ")"),
     y = "Frequency"
   )
 
-ggsave("figures/null-sim-fgmax-tau.pdf", p_null_sim, width = 4, height = 4)
+ggsave("figures/null-sim-fgmax-tau.pdf", p_null_sim, width = 4.5, height = 4)
