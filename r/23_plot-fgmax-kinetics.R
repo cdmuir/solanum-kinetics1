@@ -175,18 +175,18 @@ gi_lambda = ggplot(dat, aes(exp(loggi), exp(loglambdamean), color = leaftype)) +
 # gmax vs. lambda
 gmax_lambda = ggplot(dat, aes(exp(loggmax), exp(loglambdamean), color = leaftype)) +
   geom_point(alpha = 0.5) +
-  geom_ribbon(
-    data = df_gmax_lambda,
-    aes(
-      x = exp(loggmax),
-      ymin = exp(`q2.5`),
-      ymax = exp(`q97.5`),
-      fill = leaftype,
-      color = NULL
-    ),
-    alpha = 0.3
-  ) +
-  geom_line(data = df_gmax_lambda, aes(x = exp(loggmax))) +
+  # geom_ribbon(
+  #   data = df_gmax_lambda,
+  #   aes(
+  #     x = exp(loggmax),
+  #     ymin = exp(`q2.5`),
+  #     ymax = exp(`q97.5`),
+  #     fill = leaftype,
+  #     color = NULL
+  #   ),
+  #   alpha = 0.3
+  # ) +
+  # geom_line(data = df_gmax_lambda, aes(x = exp(loggmax))) +
   facet_grid(lightintensity ~ lighttreatment) +
   scale_x_log10(breaks = c(0.01, 0.1, 1)) +
   scale_y_log10(breaks = c(1, 2)) +

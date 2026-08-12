@@ -1,7 +1,7 @@
 # Compare models using LOOIC
 source("r/header.R")
 
-plan(multisession, workers = 19)
+plan(multisession, workers = 9)
 
 fits = read_rds("objects/df_forms.rds") |>
   mutate(
@@ -25,7 +25,7 @@ write_rds(looic_table, "objects/looic_table.rds")
 map2_dfr(fits$fit, fits$model, \(.fit, .name) {
   tibble(par = .fit |>
            as_draws_df() |>
-           select(contains("b_")) |>
+           dplyr::select(contains("b_")) |>
            colnames()) |>
     mutate(par = str_remove(par, "b_") |>
              str_replace("curve_type", "curvetype")) |>

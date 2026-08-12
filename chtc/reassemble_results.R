@@ -132,7 +132,7 @@ df_forms = tibble(i = 1:64) |>
     ),
     file = glue("objects/fits/fit_{n}.rds", n = str_pad(i, 2, "left", "0"))
   ) |>
-  select(-i, -lambda_idx, -tau_idx)
+  dplyr::select(-i, -lambda_idx, -tau_idx)
 
 # ---- Copy files into objects/fits/ and write objects/df_forms.rds --------
 

@@ -23,8 +23,8 @@ estimates_by_model = read_rds("objects/estimates_by_model.rds") |>
     model1 = factor(
       str_c(str_replace(model, "_", " "), 
             ifelse(model == selected_model, "*", "")), 
-      levels = str_c(str_replace(levels(model), "_", " "), 
-      ifelse(levels(model) == selected_model, "*", ""))
+      levels = rev(str_c(str_replace(levels(model), "_", " "), 
+      ifelse(levels(model) == selected_model, "*", "")))
     )
   ) |>
   replace_na(list(estimate = 0, q2.5 = 0, q97.5 = 0))

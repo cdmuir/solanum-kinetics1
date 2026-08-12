@@ -45,7 +45,7 @@ estimates_by_model1 = map_dfr(plausible_models, \(.m) {
   vars_in_model = colnames(fit)[colnames(fit) %in% focal_variables$var]
   
   fit |>
-    select(vars_in_model) |>
+    dplyr::select(vars_in_model) |>
     summarize_draws(estimate = median, ~ quantile2(.x, probs = c(0.025, 0.975))) |>
     mutate(model = .m)
 })
