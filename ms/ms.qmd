@@ -107,6 +107,8 @@ mean_light_intensity_gap_min = read_rds("../objects/mean-light-intensity-gap-min
 
 gcl_switch_summary = read_rds("../objects/gcl_switch_summary.rds")
 
+tbl_loo_diagnostics = read_rds("../objects/tbl-loo-diagnostics.rds")
+
 response_vars = tibble(
   definition = c(
     fgmax = "stomatal conductance as a fraction of anatomical maximum stomatal conductance",
@@ -463,11 +465,13 @@ tau_percent_change = post1 |>
 
 * We analyzed `r n_curve` estimates of stomatal closure kinetics in response to an abrupt increase in vapor pressure deficit (VPD) among `r n_acc` diverse wild tomato populations in the genus *Solanum*. 
 
-* Leaves with small guard cells and a lower \gop{} to \gmax{} ratio (\fgmax) closed faster, but explained variation in kinetic parameters at different levels of biological organization. Guard cell size had high phylogenetic heritability and varied relatively little within populations, whereas \fgmax{} varied mostly among individuals and between light intensity treatments. 
+* Leaves with small guard cells and a lower \gop{} closed faster, but each explained variation in kinetic parameters at different levels of biological organization. Guard cell size had high phylogenetic heritability and varied relatively little within populations, whereas \fgmax{} varied mostly among individuals and between light intensity treatments. 
 
 * Smaller stomata can be speedier, but only if stomata are held at an aperture where they are responsive to changing turgor pressure. Selection on stomatal speed may influence not only anatomical traits like guard cell size, but also physiological controls on \gop.
 
 {{< pagebreak >}}
+
+<!-- TDOD; cite this paper [@oren_survey_1999] -->
 
 ## Introduction
 
@@ -606,7 +610,7 @@ We inferred that traits covary among populations if the 95% confidence intervals
 
 #### Model selection and parameter estimation of individual-level effects
 
-To infer whether individual-level variation in \gcl{} and \fgmax{} influence kinetic parameters, we used the leave-one-out cross-validation information criterion (LOOIC) to compare the fit of models using the *R* package **loo** version `r packageVersion("loo")` [@vehtari_practical_2017]. We compared models with all permutations of \gcl, \gi, and \gmax{} influencing $\lambda$ and $\tau$. We considered all models within two $\Delta$LOOIC standard errors of the minimum LOOIC (@tbl-comparison) to be in the set of plausible models to generate posterior predictions for hypothesis testing. Within each plausible model, we assessed whether a fixed effect was significantly different from zero based on the 95% confidence intervals. Among the set of plausible models, we selected the model with the highest proportion of significant focal parameters for further analysis. Focal parameters are the fixed and phylogenetic effects of \gcl, \gi, and \gmax{} on $\lambda$ and $\tau$. While there is some subjectivity, we chose this approach for interpretability because it favors simpler models that do include additional nonsignificant parameters. Because this choice is somewhat arbitrary, we discuss alternative interpretations based on the other plausible models.
+To infer whether individual-level variation in \gcl{} and \fgmax{} influence kinetic parameters, we used the leave-one-out cross-validation information criterion (LOOIC) to compare the fit of models using the *R* package **loo** version `r packageVersion("loo")` [@vehtari_practical_2017]. We compared models with all permutations of \gcl, \gi, and \gmax{} influencing $\lambda$ and $\tau$. We considered all models within two $\Delta$LOOIC standard errors of the minimum LOOIC (@tbl-comparison) to be in the set of plausible models to generate posterior predictions for hypothesis testing. Within each plausible model, we assessed whether a fixed effect was significantly different from zero based on the 95% confidence intervals. Among the set of plausible models, we selected the model with the highest proportion of significant focal parameters for further analysis. Focal parameters are the fixed and phylogenetic effects of \gcl, \gi, and \gmax{} on $\lambda$ and $\tau$. While there is some subjectivity, we chose this approach for interpretability because it favors simpler models that do include additional nonsignificant parameters. Because this choice is somewhat arbitrary, we discuss alternative interpretations based on the other plausible models. We report Pareto $\hat{k}$, PSIS effective sample size, and Monte Carlo standard error diagnostics for the plausible models in [@tbl-loo-diagnostics]. The large majority of curves ($`r formatC(min(tbl_loo_diagnostics$pct_good), format = 'f', digits = 1)`$-$`r formatC(max(tbl_loo_diagnostics$pct_good), format = 'f', digits = 1)`\%$) had good Pareto $\hat{k}$ ($\le 0.7$), but the minimum PSIS effective sample size per curve was sometimes low (as low as `r round(min(tbl_loo_diagnostics$min_psis_ess))` draws for some models), so the PSIS-LOO estimates for a small number of individual curves, and by extension the model-level Monte Carlo standard error, should be interpreted with some caution.
 
 #### Path analysis to test for plastic effects
 
@@ -1098,6 +1102,47 @@ Download from: \url{https://github.com/cdmuir/solanum-kinetics/raw/refs/heads/ma
 
 Raw data file in CSV format containing estimates of stomatal anatomy and kinetic variables associated with each population based on multiresponse model predictions. A final version will be deposited on Dryad after acceptance. This version is available for reviewers.
 :::
+
+\clearpage
+
+```{r, loo-diagnostics}
+#| label: tbl-loo-diagnostics
+#| results: asis
+#| echo: false
+#| message: false
+#| warning: false
+#| tbl-cap: "Pareto $\\hat{k}$, PSIS effective sample size (ESS), and Monte Carlo standard error (MCSE) diagnostics for the six plausible models identified by LOOIC ([@tbl-comparison]). The selected model is in bold. Good/bad/very bad refer to the conventional Pareto $\\hat{k}$ thresholds of 0.7 and 1. MCSE(elpd\\textsubscript{loo}) is left blank ('--') for models with at least one curve with $\\hat{k} \\ge 1$, for which the MCSE estimate is undefined."
+
+tbl_loo_diagnostics |>
+  mutate(
+    model = str_replace(model, "_", "\\\\_"),
+    model = ifelse(selected, paste0("\\textbf{", model, "}"), model),
+    across(
+      c(pct_good, pct_bad, pct_very_bad),
+      \(.x) formatC(.x, format = "f", digits = 2)
+    ),
+    mcse_elpd_loo = ifelse(
+      is.na(mcse_elpd_loo),
+      "--",
+      formatC(mcse_elpd_loo, format = "f", digits = 2)
+    ),
+    min_psis_ess = round(min_psis_ess)
+  ) |>
+  select(-selected) |>
+  kbl(
+    format = "latex",
+    booktabs = TRUE,
+    escape = FALSE,
+    col.names = c(
+      "Model", "$\\Delta$LOOIC", "SE", "$n$ curves",
+      "Good $\\hat{k}$ (\\%)", "Bad $\\hat{k}$ (\\%)", "Very bad $\\hat{k}$ (\\%)",
+      "Min. PSIS ESS", "MCSE(elpd\\textsubscript{loo})"
+    ),
+    align = c("l", rep("c", 8))
+  ) |>
+  kable_styling(latex_options = c("scale_down"))
+
+```
 
 \clearpage
 

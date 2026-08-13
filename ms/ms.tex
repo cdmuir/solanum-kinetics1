@@ -1,5 +1,4 @@
 % Options for packages loaded elsewhere
-% Options for packages loaded elsewhere
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
 \PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
@@ -8,22 +7,21 @@
   letterpaper,
   DIV=11,
   numbers=noendperiod]{scrartcl}
-\usepackage{xcolor}
+
 \usepackage{amsmath,amssymb}
-\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
 \usepackage{iftex}
 \ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
 \else % if luatex or xetex
-  \usepackage{unicode-math} % this also loads fontspec
+  \usepackage{unicode-math}
   \defaultfontfeatures{Scale=MatchLowercase}
   \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
 \fi
 \usepackage{lmodern}
-\ifPDFTeX\else
-  % xetex/luatex font selection
+\ifPDFTeX\else  
+    % xetex/luatex font selection
   \setmainfont[]{Times New Roman}
 \fi
 % Use upquote if available, for straight quotes in verbatim environments
@@ -32,33 +30,22 @@
   \usepackage[]{microtype}
   \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
+\usepackage{xcolor}
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
 % Make \paragraph and \subparagraph free-standing
-\makeatletter
 \ifx\paragraph\undefined\else
   \let\oldparagraph\paragraph
-  \renewcommand{\paragraph}{
-    \@ifstar
-      \xxxParagraphStar
-      \xxxParagraphNoStar
-  }
-  \newcommand{\xxxParagraphStar}[1]{\oldparagraph*{#1}\mbox{}}
-  \newcommand{\xxxParagraphNoStar}[1]{\oldparagraph{#1}\mbox{}}
+  \renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
 \fi
 \ifx\subparagraph\undefined\else
   \let\oldsubparagraph\subparagraph
-  \renewcommand{\subparagraph}{
-    \@ifstar
-      \xxxSubParagraphStar
-      \xxxSubParagraphNoStar
-  }
-  \newcommand{\xxxSubParagraphStar}[1]{\oldsubparagraph*{#1}\mbox{}}
-  \newcommand{\xxxSubParagraphNoStar}[1]{\oldsubparagraph{#1}\mbox{}}
+  \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
 \fi
-\makeatother
 
 
-\usepackage{longtable,booktabs,array}
-\newcounter{none} % for unnumbered tables
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}\usepackage{longtable,booktabs,array}
 \usepackage{calc} % for calculating minipage widths
 % Correct order of tables after \paragraph or \subparagraph
 \usepackage{etoolbox}
@@ -70,21 +57,17 @@
 \makesavenoteenv{longtable}
 \usepackage{graphicx}
 \makeatletter
-\newsavebox\pandoc@box
-\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
-  \sbox\pandoc@box{#1}%
-  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
-  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
-  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
-  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
-  \else\usebox{\pandoc@box}%
-  \fi%
-}
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
 % Set default figure placement to htbp
+\makeatletter
 \def\fps@figure{htbp}
 \makeatother
-
-
 % definitions for citeproc citations
 \NewDocumentCommand\citeproctext{}{}
 \NewDocumentCommand\citeproc{mm}{%
@@ -118,18 +101,6 @@
 \newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{\strut#1\strut}}
 \newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{\strut#1\strut}}
 \newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
-
-
-
-\setlength{\emergencystretch}{3em} % prevent overfull lines
-
-\providecommand{\tightlist}{%
-  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
-
-
-
- 
-
 
 \usepackage{booktabs}
 \usepackage{longtable}
@@ -227,9 +198,13 @@
 \@ifpackageloaded{caption}{}{\usepackage{caption}}
 \@ifpackageloaded{subcaption}{}{\usepackage{subcaption}}
 \makeatother
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
 \usepackage{bookmark}
+
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
-\urlstyle{same}
+\urlstyle{same} % disable monospaced font for URLs
 \hypersetup{
   pdftitle={Guard cell size and pore aperture influence stomatal closure kinetics},
   pdfauthor={Christopher D. Muir\^{}\{1,2*\}; Wei Shen Lim\^{}\{1\}},
@@ -240,14 +215,13 @@
   urlcolor={Blue},
   pdfcreator={LaTeX via pandoc}}
 
-
 \title{Guard cell size and pore aperture influence stomatal closure
 kinetics}
 \author{Christopher D. Muir\(^{1,2*}\) \and Wei Shen Lim\(^{1}\)}
 \date{}
+
 \begin{document}
 \maketitle
-
 
 \begin{center}
 $^1$School of Life Sciences, University of Hawaiʻi; Mānoa, Hawaiʻi, USA\\
@@ -284,12 +258,12 @@ Keywords: guard cell size, leaf gas exchange, phylogenetic heritability, \textit
   to an abrupt increase in vapor pressure deficit (VPD) among 29 diverse
   wild tomato populations in the genus \emph{Solanum}.
 \item
-  Leaves with small guard cells and a lower \gop{} to \gmax{} ratio
-  (\fgmax) closed faster, but explained variation in kinetic parameters
-  at different levels of biological organization. Guard cell size had
-  high phylogenetic heritability and varied relatively little within
-  populations, whereas \fgmax{} varied mostly among individuals and
-  between light intensity treatments.
+  Leaves with small guard cells and a lower \gop{} closed faster, but
+  explained variation in kinetic parameters at different levels of
+  biological organization. Guard cell size had high phylogenetic
+  heritability and varied relatively little within populations, whereas
+  \fgmax{} varied mostly among individuals and between light intensity
+  treatments.
 \item
   Smaller stomata can be speedier, but only if stomata are held at an
   aperture where they are responsive to changing turgor pressure.
@@ -406,7 +380,7 @@ al.}, 2016). A four-parameter equation describes stomatal response
 kinetics to a step change in light intensity across dozens of plant
 species (Woning \emph{et al.}, 2026):
 
-\begin{equation}\protect\phantomsection\label{eq-weibull}{
+\begin{equation}\phantomsection\label{eq-weibull}{
   g_\mathrm{sw,t} = g_\mathrm{f} + (g_\mathrm{i} - g_\mathrm{f}) e^{-\left(\frac{t}{\tau}\right)^\lambda}.
 }\end{equation}
 
@@ -498,7 +472,7 @@ likely variation within and among species and growth forms in the
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/conceptual.pdf}}
+\includegraphics{../figures/conceptual.pdf}
 
 }
 
@@ -799,7 +773,10 @@ does not, by itself, induce a spurious \fgmax{}-\(\tau\) association
 (Notes S2). We used the anatomical \gmax{} for the surface(s) measured
 in each curve to calculate \fgmax. For amphi curves, we used the sum of
 adaxial and abaxial \gmax{}; for pseudohypo curves, we used only the
-abaxial \gmax{}.
+abaxial \gmax{}. Although \gmax{} calculated this way is a theoretical
+upper bound based on stomatal geometry rather than a directly measured
+quantity, it corresponds well to empirically measured maximum \gsw{} in
+experimentally controlled \emph{Arabidopsis} (Dow \emph{et al.}, 2014).
 
 \subsubsection{Estimating kinetic
 parameters}\label{estimating-kinetic-parameters}
@@ -940,7 +917,15 @@ parameters are the fixed and phylogenetic effects of \gcl, \gi, and
 we chose this approach for interpretability because it favors simpler
 models that do include additional nonsignificant parameters. Because
 this choice is somewhat arbitrary, we discuss alternative
-interpretations based on the other plausible models.
+interpretations based on the other plausible models. We report Pareto
+\(\hat{k}\), PSIS effective sample size, and Monte Carlo standard error
+diagnostics for the plausible models in Table~\ref{tbl-loo-diagnostics}.
+The large majority of curves (\(99.2\)-\(99.6\%\)) had good Pareto
+\(\hat{k}\) (\(\le 0.7\)), but the minimum PSIS effective sample size
+per curve was sometimes low (as low as 27 draws for some models), so the
+PSIS-LOO estimates for a small number of individual curves, and by
+extension the model-level Monte Carlo standard error, should be
+interpreted with some caution.
 
 \paragraph{Path analysis to test for plastic
 effects}\label{path-analysis-to-test-for-plastic-effects}
@@ -1080,7 +1065,7 @@ not fully compeInsate.
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/variance.pdf}}
+\includegraphics{../figures/variance.pdf}
 
 }
 
@@ -1098,7 +1083,7 @@ populations was low for all traits.}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/accession-anatomy.pdf}}
+\includegraphics{../figures/accession-anatomy.pdf}
 
 }
 
@@ -1112,7 +1097,7 @@ populations was low for all traits.}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{ms_files/figure-pdf/fig-accession-anatomy-cap-1.pdf}}
+\includegraphics{ms_files/figure-pdf/fig-accession-anatomy-cap-1.pdf}
 
 }
 
@@ -1163,7 +1148,7 @@ to 1.36\%{]}.
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/accession-kinetics.pdf}}
+\includegraphics{../figures/accession-kinetics.pdf}
 
 }
 
@@ -1343,7 +1328,7 @@ plausible causal effect of \gcl{} on \(\tau\) among populations.
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/gcl-tau.pdf}}
+\includegraphics{../figures/gcl-tau.pdf}
 
 }
 
@@ -1366,7 +1351,7 @@ section.}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/gi-tau.pdf}}
+\includegraphics{../figures/gi-tau.pdf}
 
 }
 
@@ -1407,7 +1392,7 @@ to \(16.42\)\%{]} and the indirect effect mediated by \gi{} increased
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/mediation.pdf}}
+\includegraphics{../figures/mediation.pdf}
 
 }
 
@@ -1595,12 +1580,12 @@ only way to simultaneously reduce guard cell size, maintain \gop{}, and
 keep \fgmax{} from rising is to increase stomatal density---raising
 \gmax{} and thereby limiting \fgmax{}. This logic predicts a coupled
 evolution of small guard cells and high stomatal density, a pattern
-observed broadly across vascular plants (Franks \& Beerling, 2009; {de
-Boer \emph{et al.}}, 2016; Haworth \emph{et al.}, 2023; Liu \emph{et
+observed broadly across vascular plants (Franks \& Beerling, 2009; de
+Boer \emph{et al.}, 2016; Haworth \emph{et al.}, 2023; Liu \emph{et
 al.}, 2025). Although physical constraints on pore geometry, such as
 increased resistance to diffusion at very small apertures (Leuning,
-1983; {Hodgson \emph{et al.}}, 2010), likely impose a lower limit on
-guard cell size, selection to prevent operating at high \fgmax{} (Franks
+1983; Hodgson \emph{et al.}, 2010), likely impose a lower limit on guard
+cell size, selection to prevent operating at high \fgmax{} (Franks
 \emph{et al.}, 2012) may also explain why optimal guard cell size
 varies.
 
@@ -1668,7 +1653,7 @@ publication.
 
 \singlespacing
 
-\protect\phantomsection\label{refs}
+\phantomsection\label{refs}
 \begin{CSLReferences}{0}{1}
 \bibitem[\citeproctext]{ref-aasamaa_stomatal_2011}
 \textbf{\textbf{Aasamaa K}, \textbf{Sõber A}}. \textbf{2011a}.
@@ -1777,9 +1762,9 @@ Stomatal function in relation to leaf metabolism and environment.
 \textbf{Sack L}}. \textbf{2014}.
 \href{https://doi.org/10.1111/nph.12922}{Are fern stomatal responses to
 different stimuli coordinated? {Testing} responses to light, vapor
-pressure deficit, and {\textsc{CO}}{\textsubscript{2}} for diverse
-species grown under contrasting irradiances}. \emph{New Phytologist}
-\textbf{204}: 92--104.
+pressure deficit, and {CO}{\textsubscript{2}} for diverse species grown
+under contrasting irradiances}. \emph{New Phytologist} \textbf{204}:
+92--104.
 
 \bibitem[\citeproctext]{ref-damour_overview_2010}
 \textbf{\textbf{Damour G}, \textbf{Simonneau T}, \textbf{Cochard H},
@@ -1794,8 +1779,8 @@ conductance}. \emph{Plant, Cell \& Environment} \textbf{33}: 1419--1438.
 \emph{Proceedings of the Royal Society of London} \textbf{63}: 413--417.
 
 \bibitem[\citeproctext]{ref-deboer_optimal_2016}
-\textbf{{\textbf{de Boer HJ}, \textbf{Price CA}, \textbf{Wagner-Cremer
-F}, \textbf{Dekker SC}, \textbf{Franks PJ}, \textbf{Veneklaas EJ}}}.
+\textbf{\textbf{de Boer HJ}, \textbf{Price CA}, \textbf{Wagner-Cremer
+F}, \textbf{Dekker SC}, \textbf{Franks PJ}, \textbf{Veneklaas EJ}}.
 \textbf{2016}. \href{https://doi.org/10.1111/nph.13929}{Optimal
 allocation of leaf epidermal area for gas exchange}. \emph{New
 Phytologist} \textbf{210}: 1219--1228.
@@ -1813,6 +1798,11 @@ Berlin Heidelberg, 287--303.
 \href{https://doi.org/10.64898/2025.12.26.696581}{Abscisic acid-mediated
 water stress regulation can mechanistically explain oscillations and
 water stress memory in stomatal conductance}.
+
+\bibitem[\citeproctext]{ref-dow_integrated_2014}
+\textbf{\textbf{Dow GJ}, \textbf{Bergmann DC}, \textbf{Berry JA}}.
+\textbf{2014}. An integrated model of stomatal development and leaf
+physiology. \emph{New Phytologist} \textbf{201}: 1218--1226.
 
 \bibitem[\citeproctext]{ref-drake_smaller_2013}
 \textbf{\textbf{Drake PL}, \textbf{Froend RH}, \textbf{Franks PJ}}.
@@ -1939,10 +1929,10 @@ sensing and driving environmental change}. \emph{Nature} \textbf{424}:
 901--908.
 
 \bibitem[\citeproctext]{ref-hodgson_stomatal_2010}
-\textbf{{\textbf{Hodgson JG}, \textbf{Sharafi M}, \textbf{Jalili A},
+\textbf{\textbf{Hodgson JG}, \textbf{Sharafi M}, \textbf{Jalili A},
 \textbf{Díaz S}, \textbf{Montserrat-Martí G}, \textbf{Palmer C},
 \textbf{Cerabolini B}, \textbf{Pierce S}, \textbf{Hamzehee B},
-\textbf{Asri Y}, \emph{et al.}}} \textbf{2010}.
+\textbf{Asri Y}, \emph{et al.}} \textbf{2010}.
 \href{https://doi.org/10.1093/aob/mcq011}{Stomatal vs. Genome size in
 angiosperms: The somatic tail wagging the genomic dog?} \emph{Annals of
 Botany} \textbf{105}: 573--584.
@@ -2635,6 +2625,41 @@ Download from:
 
 \clearpage
 
+\begin{table}
+
+\caption{\label{tbl-loo-diagnostics}Pareto \(\hat{k}\), PSIS effective
+sample size (ESS), and Monte Carlo standard error (MCSE) diagnostics for
+the six plausible models identified by LOOIC
+(Table~\ref{tbl-comparison}). The selected model is in bold.
+Good/bad/very bad refer to the conventional Pareto \(\hat{k}\)
+thresholds of 0.7 and 1. MCSE(elpd\textsubscript{loo}) is left blank
+(`--') for models with at least one curve with \(\hat{k} \ge 1\), for
+which the MCSE estimate is undefined.}
+
+\centering{
+
+\centering
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
+\begin{tabular}[t]{lcccccccc}
+\toprule
+Model & $\Delta$LOOIC & SE & $n$ curves & Good $\hat{k}$ (\%) & Bad $\hat{k}$ (\%) & Very bad $\hat{k}$ (\%) & Min. PSIS ESS & MCSE(elpd\textsubscript{loo})\\
+\midrule
+\textbf{fit\_46} & 0.00 & 0.00 & 2125 & 99.48 & 0.52 & 0.00 & 66 & 1.42\\
+fit\_01 & 3.58 & 2.95 & 2125 & 99.48 & 0.52 & 0.00 & 33 & 1.44\\
+fit\_14 & 5.20 & 2.72 & 2125 & 99.25 & 0.75 & 0.00 & 27 & 1.43\\
+fit\_30 & 4.92 & 2.90 & 2125 & 99.53 & 0.47 & 0.00 & 37 & 1.43\\
+fit\_42 & 4.91 & 2.92 & 2125 & 99.62 & 0.38 & 0.00 & 69 & 1.41\\
+\addlinespace
+fit\_44 & 4.80 & 2.96 & 2125 & 99.48 & 0.52 & 0.00 & 51 & 1.42\\
+\bottomrule
+\end{tabular}}
+
+}
+
+\end{table}%
+
+\clearpage
+
 \begin{longtable}{>{\raggedright\arraybackslash}p{3.75in}>{\raggedright\arraybackslash}p{2in}}
 
 \caption{\label{tbl-fixed}Fixed effect parameter estimates and 95\%
@@ -2773,7 +2798,7 @@ traits.}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/vpd-pairs.pdf}}
+\includegraphics{../figures/vpd-pairs.pdf}
 
 }
 
@@ -2792,7 +2817,7 @@ Notes S1).}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/tau-vpd-rate.pdf}}
+\includegraphics{../figures/tau-vpd-rate.pdf}
 
 }
 
@@ -2809,7 +2834,7 @@ line us ordinary least-squares regression fit.}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/vpd-h2o-rate.pdf}}
+\includegraphics{../figures/vpd-h2o-rate.pdf}
 
 }
 
@@ -2827,7 +2852,7 @@ constants come from the same saturating-exponential model used for VPD.}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/vpd-comparison.pdf}}
+\includegraphics{../figures/vpd-comparison.pdf}
 
 }
 
@@ -2844,7 +2869,7 @@ covariate of \(\tau\) and \(\lambda\) (pink; see Notes S1).}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/compare-gsw.pdf}}
+\includegraphics{../figures/compare-gsw.pdf}
 
 }
 
@@ -2879,7 +2904,7 @@ lines are fitted curves. The Bayesian correlation coefficient,
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/gcl.pdf}}
+\includegraphics{../figures/gcl.pdf}
 
 }
 
@@ -2896,7 +2921,7 @@ larger values on the adaxial surface.}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/colinear.pdf}}
+\includegraphics{../figures/colinear.pdf}
 
 }
 
@@ -2915,7 +2940,7 @@ parameter.}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/gmax-lambda.pdf}}
+\includegraphics{../figures/gmax-lambda.pdf}
 
 }
 
@@ -2933,7 +2958,7 @@ treatments are described in the Materials and Methods section.}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/gi-lambda.pdf}}
+\includegraphics{../figures/gi-lambda.pdf}
 
 }
 
@@ -2952,7 +2977,7 @@ treatments are described in the Materials and Methods section.}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/gmax-lambda.pdf}}
+\includegraphics{../figures/gmax-lambda.pdf}
 
 }
 
@@ -3083,7 +3108,7 @@ nonlinear fit.
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/null-sim-fgmax-tau.pdf}}
+\includegraphics{../figures/null-sim-fgmax-tau.pdf}
 
 }
 
@@ -3116,7 +3141,7 @@ the sensitivity parameter \(\rho\) examined below.
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/mediation-dag.pdf}}
+\includegraphics{../figures/mediation-dag.pdf}
 
 }
 
@@ -3175,7 +3200,7 @@ confounders.
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/mediation-sensitivity.pdf}}
+\includegraphics{../figures/mediation-sensitivity.pdf}
 
 }
 
@@ -3186,7 +3211,6 @@ interval); the vertical solid line is the breakdown point \(\rho^*\) at
 which the indirect effect is zero.}
 
 \end{figure}%
-
 
 
 

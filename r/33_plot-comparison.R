@@ -16,7 +16,7 @@ pars_of_interest = c(
 )
 
 par_labels = c(
-  b_logtaumean_loggi = "italic(g)[i]~on~log(tau)",
+  b_logtaumean_loggi = "log(italic(g)[i])~on~log(tau)",
   cor_phy__logtaumean_Intercept__loggcl_Intercept = "phylogenetic~corr(log(italic(l)[gc])*','~log(tau))"
 )
 

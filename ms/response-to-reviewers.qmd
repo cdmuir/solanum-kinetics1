@@ -36,6 +36,8 @@ header-includes: |
   \newcommand{\gmax}{$g_\mathrm{max}$}
   \newcommand{\gop}{$g_\mathrm{op}$}
   \newcommand{\gsw}{$g_\mathrm{sw}$}
+bibliography: solanum-kinetics.bib
+csl: https://www.zotero.org/styles/new-phytologist
 ---
 
 We thank the editor and both reviewers for their thoughtful and constructive
@@ -47,8 +49,10 @@ library(cowplot)
 library(dplyr)
 library(ggplot2)
 library(glue)
+library(kableExtra)
 library(magrittr)
 library(readr)
+library(stringr)
 
 comp_pars_vpd = read_rds("../objects/tbl-comparison-vpd.rds")
 final_vpd_effect = read_rds("../objects/tbl-final-vpd-effect.rds")
@@ -120,6 +124,8 @@ curve_vpd_summary = read_rds("../objects/curve-vpd-summary.rds")
 cor_median_final_vpd = cor(curve_vpd_summary$median_vpd, curve_vpd_summary$final_vpd,
                             use = "complete.obs")
 
+tbl_loo_diagnostics = read_rds("../objects/tbl-loo-diagnostics.rds")
+
 ```
 
 ---
@@ -159,9 +165,8 @@ not simply the inlet humidity setting.
 ::: response
 
 <!-- TODO:
-- check final numbers once vpd model is run a final time
 - put in correct Figure numbers for main text
- -->
+-->
  
 **Response:**
 
@@ -179,7 +184,7 @@ To directly test whether the realized VPD stimulus confounds the \gi{} and \gcl{
 #| echo: false
 #| message: false
 #| warning: false
-#| fig-cap: "The \\fgmax{} effect on $\\tau$ and the phylogenetic correlation between \\gcl{} and $\\tau$ are robust to accounting for final VPD. Posterior means and 95\\% credible intervals for the fixed effect of \\fgmax{} on $\\log \\tau$ (left) and the phylogenetic correlation between $\\log$ \\gcl{} and $\\log \\tau$ (right), comparing the original model (grey) to a model refit with final VPD added as a covariate of $\\tau$ and $\\lambda$ (pink)."
+#| fig-cap: "The \\gi{} effect on $\\tau$ and the phylogenetic correlation between \\gcl{} and $\\tau$ are robust to accounting for final VPD. Posterior means and 95\\% credible intervals for the fixed effect of $\\log \\left( g_\\mathrm{i} \\right)$ on $\\log \\left( \\tau \\right)$ (left) and the phylogenetic correlation between $\\log \\left( l_\\mathrm{gc} \\right)$ and $\\log \\left( \\tau \\right)$ (right), comparing the original model (grey) to a model refit with final VPD added as a covariate (pink)."
 knitr::include_graphics("../figures/vpd-comparison.pdf")
 ```
 
@@ -262,7 +267,7 @@ mechanistic driver of slower closure at lines 506–513. I think the hypothesis
 is interesting, but the current evidence is not enough to treat \fgmax{} as a
 direct aperture measurement. The numerator, \gi, is estimated from the same
 nonlinear curve that also gives $\tau$ and $\lambda$, so parameter covariance
-in the Weibull fit could generate an association between \gi and $\tau$ even
+in the Weibull fit could generate an association between \gi{} and $\tau$ even
 if the underlying biological relationship is weaker. The denominator
 $g_\mathrm{max}$ is also model-derived from stomatal density, guard cell
 length, assumed pore geometry, and conductance calculations. I think one paper
@@ -270,11 +275,11 @@ by the Sack and Buckley group explicitly describes anatomical $g_\mathrm{max}$
 as a theoretical estimate of maximum stomatal diffusion capacity that cannot
 usually be reached in practice, which is useful but not identical to observed
 aperture. I would ask the authors to validate or reframe the variable.
-Specifically, they should report posterior correlations between fitted \gi
+Specifically, they should report posterior correlations between fitted \gi{}
 and $\tau$ within individual curves, run a null simulation showing whether the
 curve fitting procedure alone can induce a \gi–$\tau$ association, and
 repeat the main analysis using alternative predictors such as absolute \gi,
-observed maximum \gsw{}, \gmax{}, and \gi and \gmax{} as separate
+observed maximum \gsw{}, \gmax{}, and \gi{} and \gmax{} as separate
 predictors. If no direct pore aperture measurements exist, I would also
 suggest using more cautious language such as "conductance fraction of
 anatomical maximum" rather than "aperture."
@@ -287,12 +292,11 @@ anatomical maximum" rather than "aperture."
 - check final numbers once vpd model is run a final time
 - put in correct Figure numbers for main text
 - Make sure that text and figures here align with main text
-- More point about Dow et al 2014 more incorporated into the response.
-- Address new model here - is it mentioned response R1.7??
 - Address issue about "aperture" language throughout
+- Are there any particular places to point to where the new analysis has altered interpretation?
  -->
 
-We thank the reviewer for raising this point because it revealed a mistake in our explanation of the methods that is also relevant to Comment R1.4 below. Figure 1a and parts of the written description incorrectly stated that the fitted interval began as soon as the RWR began. To clarify, we deliberately began logging each curve once \gsw{} had declined back down to its pre-step value. We did this by recording the pre-step \gsw{} and starting the log protocol when \gsw{} returned to value after the WWR. The reason for this protocol was that preliminary experiments showed the relationship between \gsw{} and $A$ analyzed in @muir_plasticity_2025 was "off" over the interval of \gsw{} between its maximum and when it returned to the pre-step value (the interval between the start of the RWR and when we started logging as depicted in Figure 1a). Our interpretation is that during the WWR \gsw{} increases faster than photochemistry can be upregulated, such that $A$ doesn't increase as much as you would expect for that amount of change in \gsw. This point is tangential to our analysis of stomatal kinetics, but we hope it clarifies the rationale. Hence, we only have a single of estimate of \fgmax{} where \gi{} is the pre-step \gsw{}, as depicted in the revised version of Figure 1a. We do not have data on maximum \gsw{} at the end of the WWR. In principle, if the relationship between guard cell turgor and \gsw{} (Figure 1d) within a leaf is fixed then we should be able to estimate the effect of \fgmax{} on $\tau$ either way, but we cannot evaluate this in more detail with the data we have. 
+We thank the reviewer for raising this point because it revealed a mistake in our explanation of the methods that is also relevant to Comment R1.4 below. Figure 1a and parts of the written description incorrectly stated that the fitted interval began as soon as the RWR began. To clarify, we deliberately began logging each curve once \gsw{} had declined back down to its pre-step value. We did this by recording the pre-step \gsw{} and starting the log protocol when \gsw{} returned to value after the WWR. The reason for this protocol was that preliminary experiments showed the relationship between \gsw{} and $A$ analyzed in @muir_plasticity_2025 was "off" over the interval of \gsw{} between its maximum and when it returned to the pre-step value (the interval between the start of the RWR and when we started logging as depicted in Figure 1a). Our interpretation is that during the WWR \gsw{} increases faster than photochemistry can be upregulated, such that $A$ doesn't increase as much as you would expect for that amount of change in \gsw. This point is tangential to our analysis of stomatal kinetics, but we hope it clarifies the rationale. Hence, we only have a single of estimate of \fgmax{} where \gi{} is the pre-step \gsw{}, as depicted in the revised version of Figure 1a. We do not have data on maximum \gsw{} at the end of the WWR. \gi{} is therefore also the maximum observed \gsw{} because we allowed leaves to acclimate under conditions (high light, low VPD) conducive to high \gsw. In principle, if the relationship between guard cell turgor and \gsw{} (Figure 1d) within a leaf is fixed then we should be able to estimate the effect of \fgmax{} on $\tau$ either regardless of where along the response curve we start, but we cannot evaluate this in more detail with the data we have. 
 
 We revised Figure 1a and the Materials and Methods (lines XXX-XXX) to describe this precisely, and moved the "Log data" marker in the figure to the point where \gsw{} returns to \gi, distinct from the start of the RWR itself, which begins where \gsw{} first starts to decline from its WWR peak. We also added a caveat to the Discussion noting this limitation.
 
@@ -312,6 +316,7 @@ knitr::include_graphics("../figures/null-sim-fgmax-tau.pdf")
 
 While \gmax{} is theoretical to some extent, it does seem to be a good description of maximum \gsw{} in experimentally controlled *Arabidopsis* plants [@dow_integrated_2014]. We added this in the Materials and Methods on lines XXX.
 
+To address the last part of the reviewer's comment, we substantially revised the model set we considered and this led to significant changes in our conclusions. The reviewer is correct that we do not have direct estimates of stomatal aperture and we revised the manuscript to reflect that our inferences are indirect. We also tested for independent effects of \gi{} and \gmax{} that are described in response to Comment R1.7 below. The new approach revealed that \gi{} is more closely associated with kinetic parameters than \gmax. Therefore, both greater density and/or aperture may slow the rate of closure. We have revised the Results and Discussion in several places to reflect this change in our interpretation.
 :::
 
 ---
@@ -337,6 +342,9 @@ using a parameter estimated from the RWR itself.
 :::
 
 ::: response
+
+<!-- DONE -->
+
 **Response:**
 
 Please see response to Comment R1.3 above.
@@ -365,6 +373,11 @@ are negligible.
 :::
 
 ::: response
+
+<!-- TODO:
+- put in correct lines numbers of changes
+-->
+
 **Response:**
 
 We choose this design because the primary goals of the study were to compare amphi and pseudohypo curves on the same leaf within the same treatment to estimate "amphistomy advantange" [@muir_plasticity_2025]. Preliminary studies indicated the order did not affect amphistomy advantange but that it was much faster to go from the high light to low light compared to the reverse. Therefore, we opted to increase our throughput and sample size at the potential cost of some confounding between measurement order and treatment effect. Unfortunately, we did not observe whether the measurement order affected stomatal kinetics. Hence, we cannot say for sure whether order, recovery state, or prior VPD exposure confounds measurement light intensity. We controlled for time of day by running curves throughout the day and randomizing the order among accessions and growth light treatments. However, we think the bias induced by measurement order is likely small compared to the very large effect of measurement light intensity on \gi{} (+77% for shade plants; +139% for sun plants):
@@ -419,11 +432,16 @@ conclusion.
 :::
 
 ::: response
+
+<!-- TODO:
+- put in correct Figure numbers for main text
+-->
+
 **Response:**
 
-We agree and have replaced "causal mediation analysis" with "path analysis" throughout the manuscript. Note that in response to Comment R1.3, we found stronger evidence for \gi{} rather than \fgmax{} affecting $\tau$. Therefore, we reran path analysis using \gi{} in place of \fgmax{} as described in the revised "Path analysis to test for plastic effects" section. We no longer say that \gi{} "mediates plasticity" as a causal conclusion. We now state only that treatment-associated changes in $\tau$ are statistically consistent with an indirect path through \gi, alongside a direct path, exactly as the reviewer suggested.
+We agree and have replaced "causal mediation analysis" with "path analysis" throughout the manuscript. Note that in response to Comment R1.3 and R1.7, we found stronger evidence for \gi{} rather than \fgmax{} affecting $\tau$. Therefore, we reran path analysis using \gi{} in place of \fgmax{} as described in the revised "Path analysis to test for plastic effects" section. We no longer say that \gi{} "mediates plasticity" as a causal conclusion. We now state only that treatment-associated changes in $\tau$ are statistically consistent with an indirect path through \gi, alongside a direct path, exactly as the reviewer suggested.
 
-We also drew the DAG you requested (@fig-mediation-dag; Figure XXX in the manuscript), showing the assumed causal structure (treatment $\to$ \gi{} $\to$ $\tau$ and treatment $\to$ $\tau$ directly) alongside an unmeasured confounder $U$ representing exactly the kind of variable the reviewer raised (hydraulic status, measurement order, realized VPD trajectory) that would violate sequential ignorability if it affected both \gi{} and $\tau$.
+We also drew the DAG the reviewer requested requested (@fig-mediation-dag; Figure XXX in the manuscript), showing the assumed causal structure (treatment $\to$ \gi{} $\to$ $\tau$ and treatment $\to$ $\tau$ directly) alongside an unmeasured confounder $U$ representing exactly the kind of variable the reviewer raised (hydraulic status, measurement order, realized VPD trajectory) that would violate sequential ignorability if it affected both \gi{} and $\tau$.
 
 ```{r}
 #| label: fig-mediation-dag
@@ -434,9 +452,9 @@ We also drew the DAG you requested (@fig-mediation-dag; Figure XXX in the manusc
 knitr::include_graphics("../figures/mediation-dag.pdf")
 ```
 
-To directly address sequential ignorability, we ran a sensitivity analysis in Notes S3 following the general framework of @imai_general_2010, parameterized by $\rho = \mathrm{Cor}(e_{f_\mathrm{gmax}}, e_\tau)$, the residual correlation between the \gi{} and $\tau$ equations. Under a violation of sequential ignorability with residual correlation $\rho$, the bias-adjusted mediator-on-outcome coefficient is $\beta_2(\rho) = \hat\beta_2 - \rho \cdot \sigma_\tau / \sigma_{f_\mathrm{gmax}}$, so the average causal mediation effect (ACME) is $\mathrm{ACME}(\rho) = \gamma_1 \cdot \beta_2(\rho)$, and the "breakdown point" $\rho^*$ at which the ACME is exactly zero is $\rho^* = \hat\beta_2 \cdot \sigma_{f_\mathrm{gmax}} / \sigma_\tau$. In these equations, $\beta_2$ is the effect of \gi{} on $\tau$ and $\gamma_1$ is the effect of treatments on \gi.
+To directly address sequential ignorability, we ran a sensitivity analysis in Notes S3 following the general framework of @imai_general_2010, parameterized by $\rho = \mathrm{Cor}(e_{g_\mathrm{i}}, e_\tau)$, the residual correlation between the \gi{} and $\tau$ equations. Under a violation of sequential ignorability with residual correlation $\rho$, the bias-adjusted mediator-on-outcome coefficient is $\beta_2(\rho) = \hat\beta_2 - \rho \cdot \sigma_\tau / \sigma_{g_\mathrm{i}}$, so the average causal mediation effect (ACME) is $\mathrm{ACME}(\rho) = \gamma_1 \cdot \beta_2(\rho)$, and the "breakdown point" $\rho^*$ at which the ACME is exactly zero is $\rho^* = \hat\beta_2 \cdot \sigma_{g_\mathrm{i}} / \sigma_\tau$. In these equations, $\beta_2$ is the effect of \gi{} on $\tau$ and $\gamma_1$ is the effect of treatments on \gi.
 
-Our selected model already estimates the residual correlation between the \gi{} and $\tau$ equations ($\rho_\mathrm{estimated}$, from `set_rescor(TRUE)`), because we fit all five responses (\gcl, \gi, \gmax, $\tau$, $\lambda$) jointly. We treat $\hat\beta_2$ as the "naive" coefficient in the sensitivity framework above, and the model's own estimated residual correlation as an estimate of $\rho.
+Our selected model already estimates the residual correlation between the \gi{} and $\tau$ equations ($\rho_\mathrm{estimated}$, from `set_rescor(TRUE)`), because we fit all five responses (\gcl, \gi, \gmax, $\tau$, $\lambda$) jointly. We treat $\hat\beta_2$ as the "naive" coefficient in the sensitivity framework above, and the model's own estimated residual correlation as an estimate of $\rho$.
 
 We found $\rho_\mathrm{estimated}$ = `r rho_hat_fmt` and $\rho^*$ = `r rho_star_fmt` (@fig-mediation-sensitivity, Figure XXX in the revised manuscript). These posteriors do not substantially overlap and the posterior probability that the estimated residual correlation is smaller in magnitude than the breakdown point is nearly `r prob_below_breakdown_fmt`%. In other words, the plastic mediation effects of \gi{} on $\tau$ are probably not explained by unmeasured confounders. Nevertheless, we took the reviewer's suggestion to avoid strong causal claims because the mediator variable \gi{} was not experimentally controlled and could plausibly be related to $\tau$ through confounding variables, though our analysis does not support this conclusion.
 
@@ -475,13 +493,19 @@ Pareto-$k$, PSIS effective sample size and MCSE as reliability checks.
 :::
 
 ::: response
+
+<!-- TODO:
+- put in correct Figure and Table and Line numbers for main text
+- cite specific instances where Results and interpretation changed (overlap with TODO for R1.3)
+-->
+
 **Response:**
 
-The phrase "clearest to interpret" was informal shorthand (CDM) for the fuller explanation in the text, so there is no discrepancy to correct. To make model selection less subjective, we now describe explicit criteria in the revised "Model selection and parameter estimation of individual-level effects" section. We first narrowed the candidate set using LOOIC, then evaluated the remaining models on the focal parameters addressing our hypotheses — individual-level and phylogenetic effects of anatomical traits on kinetic traits. Among these, we selected the model with the highest proportion of significant focal parameters (95% CIs excluding 0), regardless of whether the direction matched our hypotheses. This criterion favors more parsimonious models, particularly ones without additional non-significant terms, and makes the selected model easier to interpret. This criterion is somewhat arbitrary and not based on formal statistical inference. We therefore also discuss alternative interpretations supported by other plausible models.
+The phrase "clearest to interpret" was informal shorthand (CDM) for the fuller explanation in the text, so there is no discrepancy to correct. To make model selection less subjective, we now describe explicit criteria in the revised "Model selection and parameter estimation of individual-level effects" section. We first narrowed the candidate set using LOOIC, then evaluated the remaining models on the focal parameters addressing our hypotheses — individual-level and phylogenetic effects of anatomical traits on kinetic traits. Among these, we selected the model with the highest proportion of significant focal parameters (95% CIs excluding 0), regardless of whether the direction matched our hypotheses. This criterion favors more parsimonious models, particularly ones without additional non-significant terms, and makes the selected model easier to interpret. This criterion is somewhat arbitrary and not based on formal statistical inference. We therefore also discuss alternative interpretations supported by other plausible models. In the revised model comparison, this approach happened to select the model with the lowest LOOIC (see Table XXX), but that would not always be the case.
 
-To address the second half of the comment, we changed the candidate set of models. In the original manuscript, we tested individual-level and phylogenetic effects of the composite variable \fgmax{} on a logit-scale. We realized we could achieve the same goals by modeling the effects of component traits (\gi{} and \gmax) on kinetic traits directly. We reasoned that if \fgmax{} *per se* effects kinetics, then both \gi{} and \gmax{} should be retained in candidate models and have significant effects on kinetic traits. Conversely, if only of the component traits effects kinetics, then it should be retained in the selected model, while the other is dropped. Our new approach is described in the "Model selection and parameter estimation of individual-level effects" section.
+To address the second half of the comment, we changed the candidate set of models as alluded to in response to Comment R1.3. In the original manuscript, we tested individual-level and phylogenetic effects of the composite variable \fgmax{} on a logit-scale. We realized we could achieve the same goals by modeling the effects of component traits (\gi{} and \gmax) on kinetic traits directly. We reasoned that if \fgmax{} *per se* effects kinetics, then both \gi{} and \gmax{} should be retained in candidate models and have significant effects on kinetic traits. Conversely, if only of the component traits effects kinetics, then it should be retained in the selected model, while the other is dropped. Our new approach is described in the "Model selection and parameter estimation of individual-level effects" section.
 
-One minor discrepancy between or former and current approaches is that the current approach models the \fgmax{} on a log rather than logit-scale, since $\log \left( f_\mathrm{gmax} \right) = \log \left( g_\mathrm{i} \right) - \log \left( g_\mathrm{max} \right)$. However, the two transformations of \fgmax{} are highly correlated in our data:
+One minor discrepancy between the former and current approaches is that the current approach models the \fgmax{} on a log rather than logit-scale, since $\log \left( f_\mathrm{gmax} \right) = \log \left( g_\mathrm{i} \right) - \log \left( g_\mathrm{max} \right)$. However, the two transformations of \fgmax{} are highly correlated in our data:
 
 ```{r, echo = FALSE}
 
@@ -500,7 +524,47 @@ ggplot(dat, aes(qlogis(fgmax), log(fgmax))) +
 
 ```
 
-The new modeling approach changed our interpretation somewhat and these changes are reflected in the revised Results and Discussion <!-- TODO: cite specific instances -->. Overall, individual-level variation in \gi{} explained much more of the variation in kinetics than \gmax{}. The \gmax{} still had a significant negative effect on $\lambda$, but not $\tau$. We therefore revised the figures and mediation analyses to emphasize the role of \gi{} rather than \fgmax{}.
+The new modeling approach changed our interpretation somewhat and these changes are reflected in the revised Results and Discussion <!-- TODO: cite specific instances -->. Overall, individual-level variation in \gi{} explained much more of the variation in kinetics than \gmax{}. We therefore revised the figures and mediation analyses to emphasize the role of \gi{} rather than \fgmax{}. We also note that the second best model retained \gmax, the estimated coefficient was in the predicted direction, but it was not significant.
+
+Finally, we report Pareto $\hat{k}$, PSIS effective sample size (ESS), and Monte Carlo standard error (MCSE) diagnostics for the LOOIC comparison, as the reviewer requested (`r/39_get-loo-diagnostics.R`; Table XXX in the Supporting Information). Across the six plausible models, the vast majority of the `r unique(tbl_loo_diagnostics$n_curves)` curves had Pareto $\hat{k} \le 0.7$ (`r formatC(min(tbl_loo_diagnostics$pct_good), format = 'f', digits = 1)`–`r formatC(max(tbl_loo_diagnostics$pct_good), format = 'f', digits = 1)`% of curves), with the remainder in the "bad" (`r formatC(min(tbl_loo_diagnostics$pct_bad), format = 'f', digits = 1)`–`r formatC(max(tbl_loo_diagnostics$pct_bad), format = 'f', digits = 1)`%) rather than "very bad" range; no model had any curve with $\hat{k} \ge 1$. The minimum PSIS ESS across curves was as low as `r round(min(tbl_loo_diagnostics$min_psis_ess))` for some models, which is well below the conventional rule-of-thumb of a few hundred effective draws, so the corresponding PSIS-LOO estimates for those individual curves (and the resulting MCSE for the model as a whole) should be treated with some caution rather than taken at face value. We have added this caveat to the Materials and Methods (lines XXX).
+
+```{r}
+#| label: tbl-loo-diagnostics
+#| echo: false
+#| message: false
+#| warning: false
+
+tbl_loo_diagnostics |>
+  mutate(
+    model = str_replace(model, "_", "\\\\_"),
+    model = ifelse(selected, paste0("\\textbf{", model, "}"), model),
+    across(
+      c(pct_good, pct_bad, pct_very_bad),
+      \(.x) formatC(.x, format = "f", digits = 2)
+    ),
+    mcse_elpd_loo = ifelse(
+      is.na(mcse_elpd_loo),
+      "--",
+      formatC(mcse_elpd_loo, format = "f", digits = 2)
+    ),
+    min_psis_ess = round(min_psis_ess)
+  ) |>
+  select(-selected) |>
+  kbl(
+    format = "latex",
+    booktabs = TRUE,
+    escape = FALSE,
+    col.names = c(
+      "Model", "$\\Delta$LOOIC", "SE", "$n$ curves",
+      "Good $\\hat{k}$ (\\%)", "Bad $\\hat{k}$ (\\%)", "Very bad $\\hat{k}$ (\\%)",
+      "Min. PSIS ESS", "MCSE(elpd\\textsubscript{loo})"
+    ),
+    align = c("l", rep("c", 8)),
+    caption = ": Pareto $\\hat{k}$, PSIS effective sample size (ESS), and Monte Carlo standard error (MCSE) diagnostics for the six plausible models identified by LOOIC (@tbl-comparison in the manuscript). The selected model is in bold. Good/bad/very bad refer to the conventional Pareto $\\hat{k}$ thresholds of 0.7 and 1. MCSE(elpd\\textsubscript{loo}) is left blank ('--') for models with at least one curve with $\\hat{k} \\ge 1$, for which the MCSE estimate is undefined."
+  ) |>
+  kable_styling(latex_options = c("scale_down"))
+```
+
 :::
 
 ---
@@ -527,6 +591,9 @@ a more standard multi-chain fit.
 :::
 
 ::: response
+
+<!-- DONE -->
+
 **Response:**
 
 We refit all curves with 4 chains instead of 1 and updated the Materials and Methods accordingly. As far as we can tell, this did not meaningfully impact any downstream analyses.
@@ -551,6 +618,11 @@ and therefore \fgmax{}.
 :::
 
 ::: response
+
+<!-- TODO:
+- put in correct Figure numbers for main text
+-->
+
 **Response:**
 
 We unintentionally neglected to explain why these three individuals were considered outliers. In the Materials and Methods (lines XXX) we clarified that:
@@ -575,6 +647,9 @@ reversed relative to the plotted colors?
 :::
 
 ::: response
+
+<!-- DONE -->
+
 **Response:**
 
 The reviewer is correct. The in-figure labels and plotted colors in Figure 1d were always consistent (low \fgmax{} = orange/steep slope, high \fgmax{} = blue/shallow slope), but we had the colors swapped in the Figure 1 caption text. We corrected the caption to match the figure.
@@ -597,9 +672,15 @@ organization."
 :::
 
 ::: response
+
+<!-- DONE -->
+
 **Response:**
 
-[YOUR RESPONSE HERE]
+We revised this sentence to be clearer and updated it based on new results:
+
+> Leaves with small guard cells and a lower \gop{} closed faster, but each explained variation in kinetic parameters at different levels of biological organization.
+
 :::
 
 ---
@@ -618,6 +699,8 @@ discussion.
 
 ::: response
 **Response:**
+
+### MARKER - continue here
 
 [YOUR RESPONSE HERE]
 :::
@@ -671,4 +754,9 @@ understanding the figure quickly.
 **Response:**
 
 [YOUR RESPONSE HERE]
+:::
+
+# References
+
+::: {#refs}
 :::

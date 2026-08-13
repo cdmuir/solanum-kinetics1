@@ -21,6 +21,7 @@ suppressPackageStartupMessages({
   library(ggpubr)
   library(ggrepel)
   library(glue)
+  library(loo)
   library(magrittr)
   library(minpack.lm)
   library(patchwork)
