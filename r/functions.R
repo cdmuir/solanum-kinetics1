@@ -1,3 +1,79 @@
+# --- Ochoa et al. (2024) anatomical pore-conductance model ----------------
+# (Plant Physiology, 10.1093/plphys/kiae292, Eq. 3), using Sack & Buckley
+# (2016) non-grass shape factors (c = h = j = 0.5, kidney-shaped guard
+# cells), the same convention already used for gmax in this study.
+
+D_wv_ochoa <- 2.49e-5   # diffusivity of water vapor in air, m^2/s
+v_ochoa    <- 2.24e-2   # molar volume of air, m^3/mol
+c_SB <- 0.5; h_SB <- 0.5; j_SB <- 0.5   # Sack & Buckley non-grass constants
+
+b_ochoa <- D_wv_ochoa / v_ochoa
+m_ochoa <- pi * c_SB^2 / (sqrt(j_SB) * (4 * h_SB * j_SB + pi * c_SB))
+
+mu_ochoa <- c_SB / sqrt(j_SB)      # Ochoa et al. 2024 mu, non-grass -> 1/sqrt(2)
+j_ochoa  <- h_SB * j_SB / c_SB     # Ochoa et al. 2024 j, non-grass -> 0.5
+
+# g_leaf,op as a function of fractional aperture (alpha = a / p)
+gleaf_op <- function(alpha, d, s, gec, x_prime,
+                      D_wa = D_wv_ochoa, V_ma = v_ochoa,
+                      mu = mu_ochoa, j = j_ochoa) {
+  gs  <- (D_wa * pi * alpha^2 * mu^2 * d * s) /
+    (V_ma * (4 * j + pi * sqrt(alpha)) * (x_prime + alpha * mu * sqrt(s)))
+  gns <- (2 - pi / 4) * alpha * mu^2 * d * s * gec
+  gs + gns
+}
+
+# Numerically invert gleaf_op() for alpha given an observed conductance.
+# Returns NA if the target conductance is not achievable within alpha in
+# (0, 1] under the assumed gec/x_prime (i.e. exceeds the anatomical maximum).
+solve_alpha <- function(g_target, d, s, gec, x_prime, mu = mu_ochoa, j = j_ochoa) {
+  f <- function(alpha) gleaf_op(alpha, d, s, gec, x_prime, mu = mu, j = j) - g_target
+  if (f(1) < 0) return(NA_real_)
+  if (f(1e-8) > 0) return(NA_real_)
+  uniroot(f, interval = c(1e-8, 1), tol = 1e-10)$root
+}
+
+# --- Series mesophyll/intercellular-airspace resistance ------------------
+# (Kaiser 2009, Plant, Cell & Environment, 10.1111/j.1365-3040.2009.01990.x)
+#
+# Kaiser found that the pore-geometry-only relationship between aperture
+# and gas exchange (as in gleaf_op() above) systematically underestimates
+# how steeply conductance rises with aperture at small apertures, and that
+# adding a diffusional resistance "in series" downstream of the stomatal
+# pore (representing the substomatal cavity/intercellular airspace path,
+# g_ias) substantially improved the fit. Physically, this additional
+# resistance sits in series with the pore itself (both must be crossed by
+# a diffusing molecule), but in parallel with (i.e. does not affect) the
+# separate cuticular/epidermal pathway (gns), which bypasses the stomatal
+# pore and substomatal cavity entirely. Hence:
+#
+#   1 / g_series(alpha) = 1 / gs(alpha) + 1 / g_ias
+#   gleaf_op_series(alpha) = g_series(alpha) + gns(alpha)
+#
+# As g_ias -> Inf this reduces exactly to gleaf_op() above.
+gleaf_op_series <- function(alpha, d, s, gec, x_prime, g_ias,
+                             D_wa = D_wv_ochoa, V_ma = v_ochoa,
+                             mu = mu_ochoa, j = j_ochoa) {
+  gs  <- (D_wa * pi * alpha^2 * mu^2 * d * s) /
+    (V_ma * (4 * j + pi * sqrt(alpha)) * (x_prime + alpha * mu * sqrt(s)))
+  gns <- (2 - pi / 4) * alpha * mu^2 * d * s * gec
+  g_series <- (gs * g_ias) / (gs + g_ias)
+  g_series + gns
+}
+
+# Numerically invert gleaf_op_series() for alpha given an observed
+# conductance and assumed g_ias. Returns NA if the target conductance is
+# not achievable within alpha in (0, 1].
+solve_alpha_series <- function(g_target, d, s, gec, x_prime, g_ias,
+                                mu = mu_ochoa, j = j_ochoa) {
+  f <- function(alpha) {
+    gleaf_op_series(alpha, d, s, gec, x_prime, g_ias, mu = mu, j = j) - g_target
+  }
+  if (f(1) < 0) return(NA_real_)
+  if (f(1e-8) > 0) return(NA_real_)
+  uniroot(f, interval = c(1e-8, 1), tol = 1e-10)$root
+}
+
 # Functions for fitting curves using brms
 fit_rh1 = function(formula,
                    data,
