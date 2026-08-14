@@ -54,6 +54,9 @@ library(magrittr)
 library(readr)
 library(stringr)
 
+source("../r/functions.R")
+
+df_comparison = read_rds("../objects/tbl-comparison.rds")
 comp_pars_vpd = read_rds("../objects/tbl-comparison-vpd.rds")
 final_vpd_effect = read_rds("../objects/tbl-final-vpd-effect.rds")
 cor_tau_rate = read_rds("../objects/cor-tau-vpd-rate.rds")
@@ -526,7 +529,29 @@ ggplot(dat, aes(qlogis(fgmax), log(fgmax))) +
 
 The new modeling approach changed our interpretation somewhat and these changes are reflected in the revised Results and Discussion <!-- TODO: cite specific instances -->. Overall, individual-level variation in \gi{} explained much more of the variation in kinetics than \gmax{}. We therefore revised the figures and mediation analyses to emphasize the role of \gi{} rather than \fgmax{}. We also note that the second best model retained \gmax, the estimated coefficient was in the predicted direction, but it was not significant.
 
-Finally, we report Pareto $\hat{k}$, PSIS effective sample size (ESS), and Monte Carlo standard error (MCSE) diagnostics for the LOOIC comparison, as the reviewer requested (`r/39_get-loo-diagnostics.R`; Table XXX in the Supporting Information). Across the six plausible models, the vast majority of the `r unique(tbl_loo_diagnostics$n_curves)` curves had Pareto $\hat{k} \le 0.7$ (`r formatC(min(tbl_loo_diagnostics$pct_good), format = 'f', digits = 1)`–`r formatC(max(tbl_loo_diagnostics$pct_good), format = 'f', digits = 1)`% of curves), with the remainder in the "bad" (`r formatC(min(tbl_loo_diagnostics$pct_bad), format = 'f', digits = 1)`–`r formatC(max(tbl_loo_diagnostics$pct_bad), format = 'f', digits = 1)`%) rather than "very bad" range; no model had any curve with $\hat{k} \ge 1$. The minimum PSIS ESS across curves was as low as `r round(min(tbl_loo_diagnostics$min_psis_ess))` for some models, which is well below the conventional rule-of-thumb of a few hundred effective draws, so the corresponding PSIS-LOO estimates for those individual curves (and the resulting MCSE for the model as a whole) should be treated with some caution rather than taken at face value. We have added this caveat to the Materials and Methods (lines XXX).
+In response to the request to present focal estimates across all plausible models, @fig-estimates-b and @fig-estimates-phy show individual-level fixed effects and phylogenetic correlations, respectively, of \gcl, \gi, and \gmax{} on both $\tau$ and $\lambda$ across all `r num2word(sum(df_comparison$plausible))` plausible models identified by LOOIC (Figures SXXX-SXXX in the Supporting Information). Estimates are qualitatively consistent across the plausible model set, supporting our decision to base inference on the selected model while also discussing alternative interpretations from the other plausible models where relevant.
+
+```{r}
+#| label: fig-estimates-b
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-cap: !expr paste0("Individual-level (fixed-effect) estimates of guard cell length (\\gcl), initial stomatal conductance (\\gi), and anatomical maximum stomatal conductance (\\gmax) on the stomatal closure time-constant ($\\tau$) and lag-time ($\\lambda$), across all ", num2word(sum(df_comparison$plausible)), " plausible models identified by LOOIC (@tbl-comparison in the manuscript). Points and horizontal bars are posterior medians and 95\\% credible intervals; the selected model is marked with an asterisk (*). Black indicates estimates whose 95\\% credible interval excludes zero; grey indicates intervals that overlap zero.")
+
+knitr::include_graphics("../figures/estimates-b.pdf")
+```
+
+```{r}
+#| label: fig-estimates-phy
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-cap: !expr paste0("Phylogenetic correlations between guard cell length (\\gcl), initial stomatal conductance (\\gi), and anatomical maximum stomatal conductance (\\gmax) and the stomatal closure time-constant ($\\tau$) and lag-time ($\\lambda$), across all ", num2word(sum(df_comparison$plausible)), " plausible models identified by LOOIC (@tbl-comparison in the manuscript). Points and horizontal bars are posterior medians and 95\\% credible intervals of the phylogenetic correlation; the selected model is marked with an asterisk (*). Black indicates estimates whose 95\\% credible interval excludes zero; grey indicates intervals that overlap zero.")
+
+knitr::include_graphics("../figures/estimates-phy.pdf")
+```
+
+Finally, we report Pareto $\hat{k}$, PSIS effective sample size (ESS), and Monte Carlo standard error (MCSE) diagnostics for the LOOIC comparison, as the reviewer requested (`r/39_get-loo-diagnostics.R`; Table XXX in the Supporting Information). Across the `r num2word(sum(df_comparison$plausible))` plausible models, the vast majority of the `r unique(tbl_loo_diagnostics$n_curves)` curves had Pareto $\hat{k} \le 0.7$ (`r formatC(min(tbl_loo_diagnostics$pct_good), format = 'f', digits = 1)`–`r formatC(max(tbl_loo_diagnostics$pct_good), format = 'f', digits = 1)`% of curves), with the remainder in the "bad" (`r formatC(min(tbl_loo_diagnostics$pct_bad), format = 'f', digits = 1)`–`r formatC(max(tbl_loo_diagnostics$pct_bad), format = 'f', digits = 1)`%) rather than "very bad" range; no model had any curve with $\hat{k} \ge 1$. The minimum PSIS ESS across curves was as low as `r round(min(tbl_loo_diagnostics$min_psis_ess))` for some models, which is well below the conventional rule-of-thumb of a few hundred effective draws, so the corresponding PSIS-LOO estimates for those individual curves (and the resulting MCSE for the model as a whole) should be treated with some caution rather than taken at face value. We have added this caveat to the Materials and Methods (lines XXX).
 
 ```{r}
 #| label: tbl-loo-diagnostics
@@ -560,7 +585,7 @@ tbl_loo_diagnostics |>
       "Min. PSIS ESS", "MCSE(elpd\\textsubscript{loo})"
     ),
     align = c("l", rep("c", 8)),
-    caption = ": Pareto $\\hat{k}$, PSIS effective sample size (ESS), and Monte Carlo standard error (MCSE) diagnostics for the six plausible models identified by LOOIC (@tbl-comparison in the manuscript). The selected model is in bold. Good/bad/very bad refer to the conventional Pareto $\\hat{k}$ thresholds of 0.7 and 1. MCSE(elpd\\textsubscript{loo}) is left blank ('--') for models with at least one curve with $\\hat{k} \\ge 1$, for which the MCSE estimate is undefined."
+    caption = paste0(": Pareto $\\hat{k}$, PSIS effective sample size (ESS), and Monte Carlo standard error (MCSE) diagnostics for the ", num2word(sum(df_comparison$plausible)), " plausible models identified by LOOIC (@tbl-comparison in the manuscript). The selected model is in bold. Good/bad/very bad refer to the conventional Pareto $\\hat{k}$ thresholds of 0.7 and 1. MCSE(elpd\\textsubscript{loo}) is left blank ('--') for models with at least one curve with $\\hat{k} \\ge 1$, for which the MCSE estimate is undefined.")
   ) |>
   kable_styling(latex_options = c("scale_down"))
 ```
