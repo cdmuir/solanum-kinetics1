@@ -20,20 +20,6 @@ par_labels = c(
   cor_phy__logtaumean_Intercept__loggcl_Intercept = "phylogenetic~corr(log(italic(l)[gc])*','~log(tau))"
 )
 
-extract_pars = function(fit, model_name) {
-  as_draws_df(fit, variable = pars_of_interest) |>
-    as_tibble() |>
-    select(all_of(pars_of_interest)) |>
-    pivot_longer(everything(), names_to = "parameter", values_to = "value") |>
-    summarize(
-      estimate = mean(value),
-      lower = quantile(value, 0.025),
-      upper = quantile(value, 0.975),
-      .by = parameter
-    ) |>
-    mutate(model = model_name)
-}
-
 comp_pars = bind_rows(
   extract_pars(selected_model, "Original"),
   extract_pars(selected_model_vpd, "VPD-adjusted")

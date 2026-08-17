@@ -111,14 +111,16 @@ tbl_loo_diagnostics = read_rds("../objects/tbl-loo-diagnostics.rds")
 
 response_vars = tibble(
   definition = c(
-    fgmax = "stomatal conductance as a fraction of anatomical maximum stomatal conductance",
     gcl = "guard cell length",
+    gi = "initial stomatal conductance",
+    gmax = "anatomical maximum stomatal conductance",
     lambda = "lag time",
     tau = "time constant"
   ),
   symbol = c(
-    fgmax = "$f_\\mathrm{gmax}$",
     gcl = "$l_\\mathrm{gc}$",
+    gi = "$g_\\mathrm{i}$",
+    gmax = "$g_\\mathrm{max}$",
     lambda = "$\\lambda$",
     tau = "$\\tau$"
   )
@@ -471,8 +473,6 @@ tau_percent_change = post1 |>
 
 {{< pagebreak >}}
 
-<!-- TDOD; cite this paper [@oren_survey_1999] maybe. This is really about steady-state sensitivity and the pattern is the opposite.  -->
-
 ## Introduction
 
 In nature, change is the only constant. One way that vascular plants (tracheophytes) cope with change is by adjusting stomatal pore aperture to optimize the trade-off between carbon gain and water loss [@cowan_stomatal_1977; @raven_selection_2002; @hetherington_role_2003]. In the absence of physical limits and energetic tradeoffs, natural selection would favor plants that could instantaneously adjust stomatal conductance (\gsw) to perfectly track dynamic environmental conditions [@lawson_photosynthesis_2010]. In reality, stomatal responses take time, creating a lag between actual and optimal stomatal aperture. For example, many species use hydroactive feedback mechanisms to precisely control stomatal responses to changing vapor pressure deficit (VPD), the driving force for evaporation [@buckley_how_2019], but hydroactive control takes time. Leaves must sense a change in VPD through as-yet-unknown mechanisms and then transduce a signal that causes efflux of osmotic solutes to alter guard cell turgor more than the surrounding epidermal cells. Abscisic acid (ABA) dependent responses require several minutes to accumulate or synthesize hormone pools *de novo* [@xie_identification_2006; @bauer_stomatal_2013; @mcadam_stomatal_2016; @desai_abscisic_2025]; ABA-independent stomatal responses require changes in gene expression and protein synthesis that take time [@jalakas_molecular_2021]. Once anion channels are activated, the rate of change in stomatal aperture depends on the rate of change in guard cell turgor ($d P_\mathrm{g} / dt$) and the sensitivity of aperture to change in turgor ($d a_\mathrm{S} / d P_\mathrm{g}$). As we discuss below, these two factors ($d P_\mathrm{g} / dt$ and $d a_\mathrm{S} / d P_\mathrm{g}$) may be influenced by guard cell size and the ratio of operational to maximum stomatal conductance (\fgmax), respectively.
@@ -634,11 +634,11 @@ If adaxial stomata respond faster than abaxial stomata (Question 4), we predicte
 
 Stomatal conductance (\gsw) decreased rapidly in response to a step change in humidity. The model in @eq-weibull fit the data extremely well ([@fig-rh-curves]). The mean and minimum Bayesian $R^2$ across all curves was `r formatC(mean_r2, format = "f", digits = 4)` and `r formatC(min_r2, format = "f", digits = 4)`, respectively. Consider a typical leaf in the experiment characterized by the median time constant ($\tau$) and lag time ($\lambda$) among wild tomato populations in all treatments. After humidity decreased, the transient WWR elapsed, and \gsw{} returned to the initial value \gi, it took on average `r prettyNum(round(median_tau * log(2) ^ (1 / median_lambda)))` s for \gsw{} to decrease half-way ($t_{50}$) from its initial to final (\gf) steady state value. In terms of the kinetic model parameters, most variation among leaves was due to difference in the time constant rather than the lag time. In the previous example, increasing $\lambda$ from its median to its maximum estimated value among populations increased the $t_{50}$ by only $\SI{`r prettyNum(round(median_tau * log(2) ^ (1 / max_lambda) - median_tau * log(2) ^ (1 / median_lambda), 1))`}{\second}$. In contrast, increasing $\tau$ from its median to maximum value increased $t_{50}$ by $\SI{`r prettyNum(round(max_tau * log(2) ^ (1 / median_lambda) - median_tau * log(2) ^ (1 / median_lambda)))`}{\second}$. Hence, we primarily focus on treatments and anatomical parameters affecting $\tau$.
 
-### Variation in guard cell length and aperture
+### Variation in guard cell length, \gi, and \gmax
 
 Guard cell length (\gcl) differed among populations and varied to a lesser extent between growth light intensity treatments and leaf surfaces. In contrast, stomatal conductance as a fraction of maximum conductance (\fgmax) was most strongly determined by measurement light intensity. Excluding treatment effects, phylogenetically structured differences among populations (i.e., phylogenetic heritability) accounted for `r gcl_phylo_var` of the variance in \gcl{} ([@fig-variance; @tbl-variance]). There was also developmental plasticity in \gcl. On average, \gcl{} increased by $`r formatC(post_gcl_sun[['estimate']], format = 'f', digits = 1)`$% [95% CI: $`r formatC(post_gcl_sun[['q2.5']], format = 'f', digits = 1)`$ to $`r formatC(post_gcl_sun[['q97.5']], format = 'f', digits = 1)`$%] in the sun treatment ([@fig-accession-anatomy]a; [@tbl-fixed]). The average \gcl{} of pseudohypo leaves was $`r formatC(post_gcl_curvetype[['estimate']], format = 'f', digits = 1)`$% [95% CI: $`r formatC(post_gcl_curvetype[['q2.5']], format = 'f', digits = 1)`$ to $`r formatC(post_gcl_curvetype[['q97.5']], format = 'f', digits = 1)`$%] shorter than amphi leaves ([@fig-accession-anatomy]a; [@tbl-fixed]). This was not because of plasticity, as we measured amphi and pseudohypo curves on the same leaf. Rather, this was a composition effect. Adaxial stomata are larger than abaxial stomata in these species ([@fig-gcl]), so the average \gcl{} in pseudohypo leaves was lower than in amphi leaves because the former only included abaxial stomata. 
 
-The phylogenetic heritability of \fgmax{} components was low (\gi) to moderate (\gmax), accounting for `r gi_phylo_var` and `r gmax_phylo_var` of the variance, respectively ([@fig-variance; @tbl-variance]). High measurement light intensity increased \gi{} by an average of $`r formatC(log_to_percent(post_gi_high[['estimate']]), format = 'f', digits = 1)`$%  [95% CI: $`r formatC(log_to_percent(post_gi_high[['q2.5']]), format = 'f', digits = 1)`$% to $`r formatC(log_to_percent(post_gi_high[['q97.5']]), format = 'f', digits = 1)`$] ([@fig-accession-anatomy]b; [@tbl-fixed]). Sun leaves had on average $`r formatC(log_to_percent(post_gi_sun[['estimate']]), format = 'f', digits = 1)`$%  [95% CI: $`r formatC(log_to_percent(post_gi_sun[['q2.5']]), format = 'f', digits = 1)`$% to $`r formatC(log_to_percent(post_gi_sun[['q97.5']]), format = 'f', digits = 1)`$%] greater \gmax{} than shade-grown plants ([@fig-accession-anatomy]b; [@tbl-fixed]). The pseudohypo leaf type had on average $`r formatC(log_to_percent(post_gi_pseudohypo[['estimate']]), format = 'f', digits = 1)`$% [95% CI: $`r formatC(log_to_percent(post_gi_pseudohypo[['q2.5']]), format = 'f', digits = 1)`$ to $`r formatC(log_to_percent(post_gi_pseudohypo[['q97.5']]), format = 'f', digits = 1)`$] lower \gi{} than untreated, amphistomatous leaves ([@fig-accession-anatomy]b; [@tbl-fixed]). This is presumably because a large fraction of stomata were blocked by the pseudohypo treatment and increased aperture of the abaxial stomata did not fully compeInsate.
+The phylogenetic heritability of \fgmax{} components was low (\gi) to moderate (\gmax), accounting for `r gi_phylo_var` and `r gmax_phylo_var` of the variance, respectively ([@fig-variance; @tbl-variance]). High measurement light intensity increased \gi{} by an average of $`r formatC(log_to_percent(post_gi_high[['estimate']]), format = 'f', digits = 1)`$%  [95% CI: $`r formatC(log_to_percent(post_gi_high[['q2.5']]), format = 'f', digits = 1)`$% to $`r formatC(log_to_percent(post_gi_high[['q97.5']]), format = 'f', digits = 1)`$] ([@fig-accession-anatomy]b; [@tbl-fixed]). Sun leaves had on average $`r formatC(log_to_percent(post_gi_sun[['estimate']]), format = 'f', digits = 1)`$%  [95% CI: $`r formatC(log_to_percent(post_gi_sun[['q2.5']]), format = 'f', digits = 1)`$% to $`r formatC(log_to_percent(post_gi_sun[['q97.5']]), format = 'f', digits = 1)`$%] greater \gmax{} than shade-grown plants ([@fig-accession-anatomy]b; [@tbl-fixed]). The pseudohypo leaf type had on average $`r formatC(log_to_percent(post_gi_pseudohypo[['estimate']]), format = 'f', digits = 1)`$% [95% CI: $`r formatC(log_to_percent(post_gi_pseudohypo[['q2.5']]), format = 'f', digits = 1)`$ to $`r formatC(log_to_percent(post_gi_pseudohypo[['q97.5']]), format = 'f', digits = 1)`$] lower \gi{} than untreated, amphistomatous leaves ([@fig-accession-anatomy]b; [@tbl-fixed]). This is presumably because a large fraction of stomata were blocked by the pseudohypo treatment and increased aperture of the abaxial stomata did not fully compensate. This observation differs from wheat, where \gsw{} on one surface was not affected by blocking gas exchange in the other [@wall_stomata_2022].
 
 ```{r, variance, echo = FALSE}
 #| label: fig-variance
@@ -668,7 +668,7 @@ knitr::include_graphics("../figures/accession-anatomy.pdf")
 #| fig-align: center
 #| fig-width: 0.1
 #| fig-height: 0.1
-#| fig-cap: "(previous page) \\textbf{Guard cell length (\\gcl) and stomatal conductance as a fraction of maximum conductance (\\fgmax) vary among populations and treatments.} In both panels, black points are mean trait value per population within a particular treatment. Gray lines connect values within populations across treatments. (a) Most of the variation in \\gcl{} is among populations, but developmental plasticity to growth light intensity tends to increase \\gcl{} in sun (right facet) compared to shade (left facet) grown plants. There is no plasticity to leaf type (amphi vs. pseudohypo), but the average \\gcl{} is slightly lower in pseudohypo leaves because adaxial stomata tended to be larger than abaxial stomata on the same leaf. (b) Measurement light intensity has the most direct effect on \\fgmax{} because stomatal aperture increases under high light intensity. To a lesser extent, \\fgmax{} varies among populations, is slightly lower in sun-grown plants, and slightly higher in pseudohypo leaf types."
+#| fig-cap: "(previous page) \\textbf{Guard cell length (\\gcl) and stomatal conductance as a fraction of maximum conductance (\\fgmax) vary among populations and treatments.} In both panels, black points are mean trait value per population within a particular treatment. Gray lines connect values within populations across treatments. (a) Most of the variation in \\gcl{} is among populations, but developmental plasticity to growth light intensity tends to increase \\gcl{} in sun (right facet) compared to shade (left facet) grown plants. There is no plasticity to leaf type (amphi vs. pseudohypo), but the average \\gcl{} is slightly lower in pseudohypo leaves because adaxial stomata tended to be larger than abaxial stomata on the same leaf. (b) Measurement light intensity has the most direct effect on \\fgmax{} because initial stomatal conductance (\\gi) increases under high light intensity. To a lesser extent, \\fgmax{} varies among populations, is slightly lower in sun-grown plants, and slightly higher in pseudohypo leaf types."
 
 ggplot()
 ```
@@ -685,71 +685,14 @@ Estimates of stomatal closure kinetic parameters for each curve are in @tbl-esti
 knitr::include_graphics("../figures/accession-kinetics.pdf")
 ```
 
-### Guard cell length and \fgmax{} influence stomatal kinetics
+### Guard cell length and \gi{} influence stomatal kinetics
 
 <!-- 2. Are \gcl{} and \fgmax{} positively associated with $\tau$? -->
 <!-- 3. At what biological levels of organization do \gcl{} and \fgmax{} vary and influence $\tau$? -->
 
-Guard cell length and \fgmax{} affected stomatal closure kinetics in the directions predicted by our hypotheses, but they operated at different levels of biological organization. Among the models we tested, `r num2word(sum(df_comparison$plausible))` were plausible in that their predictive accuracy was similar based on $\Delta \mathrm{LOOIC}$ (@tbl-comparison). All models in the plausible set indicated among-individual level effects of \gi{}, a component of \fgmax, on $\tau$ and $\lambda$, as we discuss in more detail below. Models that included both individual and phylogenetic effects of \gcl{} had similar LOOIC values but we selected a model with only phylogenetic effects because our selection criteria favored models that exlcuded nonsignficant parameters (@tbl-comparison). In models that included both individual and phylogenetic effects, neither the phylogenetic correlation nor the fixed effect regression coefficient were significantly different from zero (@fig-estimates-b; @fig-estimates-phy). These parameters are highly colinear in the posterior (@fig-colinear) indicating difficulty in estimating both terms simultaneously and "smearing" out their confidence intervals [@mcelreath_statistical_2020]. Hence, the model with only phylogenetic effects is easier to interpret. This model is also consistent with the high phylogenetic heritability in both \gcl{} and $\tau$ (@fig-variance). Visually, we observed positive relationships among population mean trait values (@fig-gcl-tau) but little relationship between \gcl{} and $\tau$ within populations (results not shown). When comparing many models simultaneously, differences in LOOIC performance can occur by chance [@mclatchie_efficient_2024], so judgement calls among models with similar performance can be necessary. The preponderance of evidence indicates that \gcl{} explains variation primarily among rather than within our populations. The results in the main text are based on estimates from the selected model. Individual-level fixed effects (@fig-estimates-b) and phylogenetic correlations (@fig-estimates-phy) of \gcl, \gi, and \gmax{} on $\tau$ and $\lambda$ were qualitatively consistent across all plausible models (Figures SXXX-SXXX in the Supporting Information).
+Guard cell length and \gi{}, a component of \fgmax, affected stomatal closure kinetics in the directions predicted by our hypotheses, but they operated at different levels of biological organization. Among the models we tested, `r num2word(sum(df_comparison$plausible))` were plausible in that their predictive accuracy was similar based on $\Delta \mathrm{LOOIC}$ (@tbl-comparison). All models in the plausible set indicated among-individual level effects of \gi{}, a component of \fgmax, on $\tau$ and $\lambda$, as we discuss in more detail below. Models that included both individual and phylogenetic effects of \gcl{} had similar LOOIC values but the selected model retained only phylogenetic effects because our selection criteria favored models that excluded nonsignficant parameters (@tbl-comparison). In models that included both individual and phylogenetic effects, neither the phylogenetic correlation nor the fixed effect regression coefficient were significantly different from zero (@fig-estimates-b; @fig-estimates-phy). These parameters are highly colinear in the posterior (@fig-colinear) indicating difficulty in estimating both terms simultaneously and "smearing" out their confidence intervals [@mcelreath_statistical_2020]. Hence, the model with only phylogenetic effects is easier to interpret. This model is also consistent with the high phylogenetic heritability in both \gcl{} and $\tau$ (@fig-variance). Visually, we observed positive relationships among population mean trait values (@fig-gcl-tau) but little relationship between \gcl{} and $\tau$ within populations (results not shown). When comparing many models simultaneously, differences in LOOIC performance can occur by chance [@mclatchie_efficient_2024], so judgement calls among models with similar performance can be necessary. The preponderance of evidence indicates that \gcl{} explains variation primarily among rather than within our populations. The results in the main text are based on estimates from the selected model. Individual-level fixed effects (@fig-estimates-b) and phylogenetic correlations (@fig-estimates-phy) of \gcl, \gi, and \gmax{} on $\tau$ and $\lambda$ were qualitatively consistent across all plausible models.
 
-```{r, tbl-comparison}
-#| label: tbl-comparison
-#| tbl-cap: "Model comparison results. Models with a $\\Delta$LOOIC less than two standard errors (SE) from the minimum LOOIC are considered to have substantial support and are used for posterior predictions to test hypotheses about the effects of guard cell length (\\gcl) and the stomatal conductance as a fraction of anatomical maximum stomatal conductance (\\fgmax) on stomatal kinetic parameter $\\lambda$ (time lag) and $\\tau$ (time constant). Unsupported models are in gray italic font. The model selected for subsequent inference is in bold. LOOIC stands for leave-one-out cross-validation information criterion."
-#| results: asis
-#| echo: false
-#| message: false
-#| warning: false
-
-rows_grey = which(!df_comparison$plausible)
-rows_bold = which(df_comparison$selected)
-
-df_comparison1 = df_comparison |>
-  select(
-    `$\\Delta \\mathrm{LOOIC}$`,
-    SE,
-    `$\\lambda$__\\gcl`,
-    `$\\lambda$__\\gi`,
-    `$\\lambda$__\\gmax`,
-    `$\\tau$__\\gcl`,
-    `$\\tau$__\\gi`,
-    `$\\tau$__\\gmax`,
-  )
-
-tbl_comparison = df_comparison1 |>
-  kbl(
-    format = "latex",
-    booktabs = TRUE,
-    escape = FALSE,
-    col.names = str_remove(colnames(df_comparison1), "^.*__"),
-    align = c(rep("l", 2), rep("c", 4))
-  ) |>
-  add_header_above(c(
-    " " = 2,
-    "$\\\\lambda$" = 3,
-    "$\\\\tau$" = 3
-  ), escape = FALSE) 
-
-# grey out implausible models
-if (length(rows_grey) > 0) {
-  for (i in rows_grey) {
-    tbl_comparison = tbl_comparison |>
-      row_spec(i, color = "gray", italic = TRUE)
-  }
-}
-
-# bold selected model
-if (length(rows_bold) > 0) {
-  for (i in rows_bold) {
-    tbl_comparison = tbl_comparison |>
-      row_spec(i, bold = TRUE)
-  }
-}
-
-tbl_comparison
-
-```
-
-Leaves with greater \gi{} closed more slowly than those which were less open (@fig-gi-tau). For example, increasing \gi{} from `r formatC(100 * example_gi[1], format = "f", digits = 0)`% to `r formatC(100 * example_gi[2], format = "f", digits = 0)`% resulted in a `r df_example1[['median']]`% [95% CI: `r df_example1[['q2.5']]` to `r df_example1[['q97.5']]`%] increase in $\tau$ for a typical leaf in the reference treatment set (`r str_c(unlist(example_trt), collapse = ", ")`). We found no evidence that \gmax{} affected $\tau$ (@fig-gmax-tau). Leaves with stomatal aperture closer to their theoretical maximum (greater \fgmax{}) also had a significantly greater lag-time, $\lambda$ ([@fig-gi-lambda; @fig-gmax-lambda]). We inferred an effect of \fgmax{} based on the significant positive and negative estimates for \gi{} and \gmax, respectively ([@tbl-fixed]).
+Leaves with greater \gi{} closed more slowly than those which were less open (@fig-gi-tau; @tbl-fixed). For example, increasing \gi{} from `r formatC(100 * example_gi[1], format = "f", digits = 0)`% to `r formatC(100 * example_gi[2], format = "f", digits = 0)`% resulted in a `r df_example1[['median']]`% [95% CI: `r df_example1[['q2.5']]` to `r df_example1[['q97.5']]`%] increase in $\tau$ for a typical leaf in the reference treatment set (`r str_c(unlist(example_trt), collapse = ", ")`). We found little evidence that \gmax{} affected $\tau$ (@fig-gmax-tau). Leaves with greater \gi{} also had a significantly greater lag-time, $\lambda$ ([@fig-gi-lambda]), but there was little effect \gmax{} ([@fig-gmax-lambda]).
 
 Populations that tended to have greater \gcl{} also tended to have greater $\tau$ as evidenced by a positive phylogenetic correlation ([@tbl-random; @fig-gcl-tau]). However, we found little evidence that variation in \gcl{} explained $\tau$ or $\lambda$ within populations. There were no other significant phylogenetic correlations ([@tbl-random]). The only marginally significant partial correlation was between \gcl{} and $\tau$ ($\rho = `r signif(rho, 2)`$ [95% CI: $`r signif(rho_lower, 2)`$ to $`r signif(rho_upper, 2)`$]), indicating a plausible causal effect of \gcl{} on $\tau$ among populations.
 
@@ -781,9 +724,9 @@ We imposed three treatments that influenced stomatal kinetics: growth light inte
 knitr::include_graphics("../figures/mediation.pdf")
 ```
 
-### No evidence that adaxial stomata close faster than abaxial stomata
+### Adaxial stomata close faster than abaxial stomata, but the effect is masked by plasticity in \gi{}
 
-The time constant $\tau$ was slightly greater in pseudohypo leaves compared to the paired amphi leaf (results not shown), which would suggest that adaxial stomata close faster. However, pseudohypo leaves also had greater \fgmax, which slows stomatal closure, as discussed in the previous section. Once, the indirect effect of \fgmax{} on $\tau$ is accounted for, the direct effect of pseudohypo leaf type on $\tau$ disappears, indicating that the observed difference in $\tau$ between pseudohypo and amphi leaves is mediated by \fgmax{} ([@fig-mediation]). There is actually a tendency for $\tau$ to be slightly lower when only abaxial stomata are measured in pseudohypo leaves, as evidenced by the negative effect of this leaf type on $\tau$ ([@tbl-fixed]).
+Although a simple comparison of $\tau$ between paired amphi and pseudohypo leaves on the same plant shows little net difference (results not shown), the selected model reveals a significant direct effect of leaf type on $\tau$ once \gi{} is accounted for: pseudohypo leaves, which have only abaxial stomata, closed more slowly than amphi leaves ([@fig-mediation]; [@tbl-fixed]). This direct effect is consistent with the hypothesis that adaxial stomata close faster than abaxial stomata. However, pseudohypo leaves also had lower \gi{} and lower \gi{} is itself associated with faster closure ([@fig-gi-tau]). This indirect path through \gi{} counteracts most of the direct effect ([@fig-mediation]), which is why the raw comparison of paired leaves does not reveal much difference in kinetics between leaf types even though adaxial stomata appear to close faster once aperture state is controlled for.
 
 ## Discussion
 
@@ -793,33 +736,20 @@ The kinetics of stomatal closure in response to VPD closely match response to li
 
 The positive association between \gcl{} and $\tau$ ([@fig-gcl-tau]) is consistent with the hypothesis that smaller cells respond faster because they have a greater surface area to volume ratio for osmolyte flux [@franks_mechanical_2007; @drake_smaller_2013; @lawson_speedy_2019; @woning_revisiting_2026]. Among several of the same *Solanum* species, larger guard cells are also associated with slower opening kinetics in response to light [@yoshiyama_natural_2024], suggesting a general mechanism. Specifically, this association implies that the maximum rate of stomatal closure is limited by membrane surface area. We do not have the data to evaluate the hypothesis mechanistically, but this should be tested in the future. An alternative explanation is that the correlation between \gcl{} and $\tau$ is not causal. The fact that \gcl{} did not explain much of the variation in $\tau$ among individuals within populations suggests that \gcl{} may not directly affect $\tau$. However, the high phylogenetic heritability and, hence, low variability in \gcl{} within populations may also explain why we were unable to detect a within-population effect of \gcl{} on $\tau$.
 
-A consequence of greater stomatal aperture is that the pore closes more slowly when the environment changes. Much of the variation in $\tau$ among individuals within populations was explained by variation in \gi{} ([@fig-gi-tau]). This factor was positively associated with $\tau$ among individuals within light treatments, and treatment-associated plasticity in $\tau$ was statistically consistent with an indirect path through \gi{} ([@fig-mediation]; see Notes S3 for a sensitivity analysis of the assumption that this indirect path is unconfounded). The rate of stomatal opening in response to light is associated with \gop{} in a sample of rainforest trees [@kardiman_relationship_2018], which may indicate this is a more general phenomenon. The association between \gi{} and $\tau$ could be explained by the hypothesis that guard cell wall elasticity declines at greater turgor pressure [@franks_physiological_2012], like a rubber band that is stretched under tension. However, if this were the case, we would also expect a negative association between \gmax{} and $\tau$ because leaves with greater \gmax{} could have the same \gi{} and with smaller stomatal aperture. However, this effect was weakly supported ([@fig-gmax-tau; @fig-gmax-lambda]). The selected model did not include an individual-level effect of \gmax{} on kinetic parameters. While the second-best included \gmax{} and the effect was in the predicted direction, the effect was not significantly different than 0 ([@fig-estimates-b]).
+A consequence of greater stomatal aperture is that the pore closes more slowly when the environment changes. Much of the variation in $\tau$ among individuals within populations was explained by variation in \gi{} ([@fig-gi-tau]). This factor was positively associated with $\tau$ among individuals within light treatments, and treatment-associated plasticity in $\tau$ was statistically consistent with an indirect path through \gi{} ([@fig-mediation]; see Notes S3 for a sensitivity analysis of the assumption that this indirect path is unconfounded). The rate of stomatal opening in response to light is associated with \gop{} in a sample of rainforest trees [@kardiman_relationship_2018], which may indicate this is a more general phenomenon. 
 
-<!-- TODO - decide if this is its own paragraph or merge with above? I am not sure if this makes sense-->
-One explanation for why \gi{} but not \gmax{} effected stomatal closure is a nonlinear relationship between aperture and conductance emerges at the level of the leaf rather than the individual stoma. <!-- citations from Vico et al 2011 that I need to check (Ting & Loomis, 1965 - nonlinearity arises from stomatal interference. Kaiser, 2009 - nonlinearity arises . -->
+The association between \gi{} and $\tau$ could be explained by the hypothesis that guard cell wall elasticity declines at greater turgor pressure [@franks_physiological_2012], like a rubber band that is stretched under tension. However, if this were the case, we would also expect a negative association between \gmax{} and $\tau$ because leaves with greater \gmax{} could have the same \gi{} and with smaller stomatal aperture. However, this effect was weakly supported ([@fig-gmax-tau; @fig-gmax-lambda]). The selected model did not include an individual-level effect of \gmax{} on kinetic parameters. Although the second-best included \gmax{} and the effect was in the predicted direction, the effect was not significantly different than 0 ([@fig-estimates-b]). The weak effect of \gmax{} compared to \gi{} casts doubt on whether a nonlinear relationship between turgor pressure and pore aperture is the best explanation. An alternative, albeit not mutually exclusive explanation, is a nonlinear relationship between pore aperture and \gsw{} that weakens the association between these variables at high \gsw. Airspace resistance within the substomatal cavity and stomatal interference are plausible mechanisms that would have this effect [@ting_further_1965; @kaiser_relation_2009; @lehmann_effects_2015], although it is not clear that they are sufficient to produce the observed relationship between \gi{} and $\tau$ in wild tomatoes. 
 
+The impact of \gi{} was most pronounced when comparing measurement light intensity treatments. Leaves acclimated to high light intensity were on average `r gi_percent_change`% more open than the same leaves at low light intensity in the reference treatment (shade, amphi). As a consequence, stomata closed more slowly in leaves acclimated to high light intensity, with a `r tau_percent_change`% greater time-constant on average in the reference treatment, based on parameter estimates from the selected model ([@tbl-fixed]). We did not assess whether \gi{} also affects stomatal opening and this should be measured to further test this hypothesis. The implication is that natural selection should favor \gop{} values that not only optimize instantaneous carbon gain and water loss in the present environment, but also carbon gain and water loss integrated through time in a fluctuating environment. We predict that rapid, temporally-uncorrelated fluctuating environments will favor leaves with greater \gop{} to slow kinetic responses and prevent overreacting to transitory changes that are likely to revert; slower, temporally-correlated changes will favor lower \gop{} to enable close tracking of the environment.
 
-The impact of \gi{} was most pronounced when comparing measurement light intensity treatments. Leaves acclimated to high light intensity were on average `r gi_percent_change`% more open than the same leaves at low light intensity in the reference treatment (shade, amphi). As a consequence, stomata closed more slowly in leaves acclimated to high light intensity, with a `r tau_percent_change`% greater time-constant on average in the reference treatment, based on parameter estimates from the selected model ([@tbl-fixed]). We did not assess whether \fgmax{} also affects stomatal opening and this should be measured to further test this hypothesis. The implication is that natural selection should favor \gop{} values that not only optimize instantaneous carbon gain and water loss in the present environment, but also carbon gain and water loss integrated through time in a fluctuating environment. We predict that rapid, temporally-uncorrelated fluctuating environments will favor leaves with greater \fgmax{} to slow kinetic responses and prevent overreacting to transitory changes that are likely to revert; slower, temporally-correlated changes will favor lower \fgmax{} to enable close tracking of the environment.
+The comparison between measurement light intensity treatments should be interpreted cautiously, however, because it was confounded with measurement order: high light curves always preceded low light curves on the same leaf, following a prior low-humidity closure event (see Materials and Methods). We cannot rule out that some of the apparent effect of measurement light intensity on \gi{} and $\tau$, and the corresponding indirect path through \gi{} in our mediation analysis ([@fig-mediation]), reflects order, incomplete recovery, or prior VPD exposure rather than measurement light intensity itself. This concern applies specifically to the measurement light comparison and not to growth light intensity or leaf type, which were randomized or alternated, respectively.
 
-The comparison between measurement light intensity treatments should be interpreted cautiously, however, because it was confounded with measurement order: high light curves always preceded low light curves on the same leaf, following a prior low-humidity closure event (see Materials and Methods). We cannot rule out that some of the apparent effect of measurement light intensity on \fgmax{} and $\tau$, and the corresponding indirect path through \fgmax{} in our mediation analysis ([@fig-mediation]), reflects order, incomplete recovery, or prior VPD exposure rather than measurement light intensity itself. This concern applies specifically to the measurement light comparison and not to growth light intensity or leaf type, which were randomized or alternated, respectively.
+The direct effect of leaf type on $\tau$ indicates that adaxial stomata close faster than abaxial stomata after accounting for differences in \gi{}. This result is consistent with the broader association between greater adaxial stomatal density and faster stomatal closure across land plants [@haworth_allocation_2018; @woning_revisiting_2026]. One plausible reason adaxial stomata may have evolved to close intrinsically faster is because adaxial stomata directly overlie the photosynthetically active palisade mesophyll and failure to close quickly could rapidly desiccate this tissue and impair photosynthesis [@buckley_sites_2017; @tezara_water_1999]. Hypostomatous leaves may experience less dehydration risk because the palisade is hydraulically buffered from changing VPD when stomata are confined to the abaxial surface [@buckley_sites_2017]. If traits such as guard cell size that influence kinetics act similarly on both surfaces, this shared basis, together with the intrinsic speed difference between surfaces documented here, could jointly explain why leaves and species with a greater proportion of adaxial stomata tend to have faster overall stomatal kinetics.
 
-The absence of a direct effect of leaf type on $\tau$ suggests that adaxial and abaxial stomata close at similar rates when operating at similar apertures. The association between species with more adaxial stomata and faster stomatal closure [@haworth_allocation_2018; @woning_revisiting_2026] may not be caused by adaxial stomata responding faster *per se*. Instead, selection may favor faster closure in leaves with adaxial stomata to prevent desiccation, causing increased abaxial stomatal speed as a byproduct. When there is a sudden increase in evaporative demand, such as from a sunfleck, open adaxial stomata could cause photosynthetically active palisade mesophyll to desiccate [@buckley_sites_2017]. If stomata do not close quickly, this will lower water potential and impair photosynthesis [@tezara_water_1999]. Hypostomatous leaves are less impacted because the palisade are hydraulically buffered from changing VPD [@buckley_sites_2017]. If traits, such as guard cell size, that affect adaxial stomata kinetics similarly affect abaxial stomata, this could explain why leaves with greater stomatal ratio also have faster kinetics despite independent environmental responses on each surface [@mott_leaf_2007; @wall_stomata_2022].
-
-Our findings also suggest a novel explanation for the well-documented negative relationship between stomatal size and density across land plants (recently reviewed in @liu_bounds_2025). Conventional explanations for this relationship focus on optimizing \gop{} and minimizing area allocated to stomata, but not on kinetics. Our results point to an additional, previously unrecognized constraint. Smaller stomata do appear to close faster, consistent with the surface area to volume hypothesis, but this kinetic advantage is contingent on operating at a moderate or low \fgmax{}. If a leaf reduced guard cell size while maintaining the same \gop, the reduced \gmax{} would push \fgmax{} higher, partially offsetting the speed benefit of smaller cells. The only way to simultaneously reduce guard cell size, maintain \gop{}, and keep \fgmax{} from rising is to increase stomatal density---raising \gmax{} and thereby limiting \fgmax{}. This logic predicts a coupled evolution of small guard cells and high stomatal density, a pattern observed broadly across vascular plants [@franks_maximum_2009; @deboer_optimal_2016; @haworth_functional_2023; @liu_bounds_2025]. Although physical constraints on pore geometry, such as increased resistance to diffusion at very small apertures [@leuning_transport_1983; @hodgson_stomatal_2010], likely impose a lower limit on guard cell size, selection to prevent operating at high \fgmax{} [@franks_physiological_2012] may also explain why optimal guard cell size varies.
-
-<!-- TODO: shape this into a paragraph on how future studies of VPD response could be improved: -->
-
-* Control VPD stimulus during entire curve
-* Future studies should also randomize or alternate the order in which repeated within-leaf treatments (such as measurement light intensity) are applied, so that treatment effects can be separated from measurement order, recovery state, and prior stress history, which were confounded in our design.
-* Need to mention subsaturation. If airspace is unsaturated, then gs is underestimated. This doesn't necessarily affect kinetic parameter estimates since all measurements were done at high VPD.
-
-
-Future research is needed to determine how stomatal kinetic responses measured in controlled conditions impact performance in nature. Our experimental protocol induced stomatal closure by abruptly switching incoming air to near-zero humidity, a perturbation far more severe than the gradual or partial VPD fluctuations leaves experience in the field. This approach is well suited for estimating the maximum rate of stomatal closure and comparing it among individuals and treatments, but it need not follow that the same anatomical and physiological factors that govern $\tau$ in our experiment also govern kinetic variation under more naturalistic conditions, where closure VPD may fluctuate more gradually. We hypothesize that ecological conditions which favor close tracking of fluctuating environments will select for leaves with traits like smaller guard cell size and low \fgmax{} that enable rapid kinetics.
+Future research is needed to determine how stomatal kinetic responses measured in controlled conditions impact performance in nature. Our experimental protocol induced stomatal closure by abruptly switching incoming air to near-zero humidity, a perturbation far more severe than the gradual or partial VPD fluctuations leaves experience in the field. This approach is well suited for estimating the maximum rate of stomatal closure and comparing it among individuals and treatments, but it need not follow that the same anatomical and physiological factors that govern $\tau$ in our experiment also govern kinetic variation under more naturalistic conditions, where closure VPD may fluctuate more gradually. Future studies should aim to control the VPD stimulus throughout the entire response curve, rather than allowing it to vary as transpiration itself alters chamber humidity, as it did here ([@tbl-vpd]). Such studies should also randomize or alternate the order in which repeated within-leaf treatments (such as measurement light intensity) are applied, so that treatment effects can be separated from measurement order, recovery state, and prior stress history, which were confounded in our design. It will also be important to consider whether the substomatal airspace remains saturated during the humidity step, because \gsw{} will be underestimated if the airspace is subsaturated [@cernusak_unsaturation_2018; @buckley_humidity_2019; @wong_humidity_2022; @rockwell_extreme_2022]. We hypothesize that ecological conditions which favor close tracking of fluctuating environments will select for leaves with traits like smaller guard cell size and low \gi{} that enable rapid kinetics.
 
 
 <!-- THINGS I WOULD STILL LIKE TO ADD
-
-Need to mention subsaturation. If airspace is unsaturated, then gs is underestimated. This doesn't necessarily affect kinetic parameter estimates since all measurements were done at high VPD.
 
 (not sure where this goes) It might seem that natural selection should favor faster stomatal responses to get closer to the ideal of instantaneous optimization. Under this assumption, variation in stomatal kinetics would depend on how strong directional selection for faster responses is counterbalanced by costs of faster stomata. We discuss multiple, nonmutually exclusive costs below [WHERE?]. However, once models account for inevitable time lags, natural selection can favor slower responses when this prevents overreacting to unpredictable and shortlived changes in the environment. [Review some lit] It is therefore likely that the direction of selection on stomatal response rate varies depending on the predictability and duration of environmental fluctuations, as well as the energetic costs of stomatal movements.
 
@@ -951,6 +881,34 @@ accession_info |>
 
 ```
 
+```{r, vpd, eval=TRUE}
+#| label: tbl-vpd
+#| echo: false
+#| message: false
+#| warning: false
+#| results: asis
+#| tbl-cap: Relative humidity (RH, \%) and leaf vapor pressure deficit (VPD, kPa) during stomatal kinetics measurements systematically differed because of differences in stomatal conductance. Stomatal conductance tended to be greatest in sun-grown plants, measured at high light intensity, and untreated (amphistomatous). For each treatment combination, we report the mean across replicate curves of the RH and VPD at the start (Initial) and end (Final) of the fitted interval, and of the median RH and VPD across time points within the fitted interval (Median).
+#| tbl-pos: "h"
+
+kbl(
+  df_vpd,
+  format = "latex",
+  booktabs = TRUE,
+  escape = FALSE,
+  align = rep("c", 9),
+  col.names = linebreak(c(
+    "Growth\nlight intensity",
+    "Measurement\nlight intensity",
+    "Leaf type",
+    "Initial", "Median", "Final",
+    "Initial", "Median", "Final"
+  ), align = "c")
+) |>
+  add_header_above(c(" " = 3, "RH" = 3, "VPD" = 3)) |>
+  kable_styling(latex_options = c("striped"))
+
+```
+
 ```{r, sample-size}
 #| label: tbl-sample-size
 #| tbl-cap: "Total number of humidity response curves analyzed in this study broken down by treatments."
@@ -1011,35 +969,109 @@ kable(
 
 ```
 
-{{< pagebreak >}}
+\clearpage
 
-```{r eval=TRUE}
-#| label: tbl-vpd
+```{r, tbl-comparison}
+#| label: tbl-comparison
+#| tbl-cap: "Model comparison results. Models with a $\\Delta$LOOIC less than two standard errors (SE) from the minimum LOOIC are considered to have substantial support and are used for posterior predictions to test hypotheses about the effects of guard cell length (\\gcl) and the components (\\gi, \\gmax) of stomatal conductance as a fraction of anatomical maximum stomatal conductance (\\fgmax) on stomatal kinetic parameter $\\lambda$ (time lag) and $\\tau$ (time constant). Unsupported models are in gray italic font. The model selected for subsequent inference is in bold. LOOIC stands for leave-one-out cross-validation information criterion."
+#| results: asis
 #| echo: false
 #| message: false
 #| warning: false
-#| results: asis
-#| tbl-cap: Relative humidity (RH, \%) and leaf vapor pressure deficit (VPD, kPa) during stomatal kinetics measurements systematically differed because of differences in stomatal conductance. Stomatal conductance tended to be greatest in sun-grown plants, measured at high light intensity, and untreated (amphistomatous). For each treatment combination, we report the mean across replicate curves of the RH and VPD at the start (Initial) and end (Final) of the fitted interval, and of the median RH and VPD across time points within the fitted interval (Median).
-#| tbl-pos: "h"
 
-kbl(
-  df_vpd,
-  format = "latex",
-  booktabs = TRUE,
-  escape = FALSE,
-  align = rep("c", 9),
-  col.names = linebreak(c(
-    "Growth\nlight intensity",
-    "Measurement\nlight intensity",
-    "Leaf type",
-    "Initial", "Median", "Final",
-    "Initial", "Median", "Final"
-  ), align = "c")
-) |>
-  add_header_above(c(" " = 3, "RH" = 3, "VPD" = 3)) |>
-  kable_styling(latex_options = c("striped"))
+rows_grey = which(!df_comparison$plausible)
+rows_bold = which(df_comparison$selected)
+
+df_comparison1 = df_comparison |>
+  select(
+    `$\\Delta \\mathrm{LOOIC}$`,
+    SE,
+    `$\\lambda$__\\gcl`,
+    `$\\lambda$__\\gi`,
+    `$\\lambda$__\\gmax`,
+    `$\\tau$__\\gcl`,
+    `$\\tau$__\\gi`,
+    `$\\tau$__\\gmax`,
+  )
+
+tbl_comparison = df_comparison1 |>
+  kbl(
+    format = "latex",
+    booktabs = TRUE,
+    longtable = TRUE,
+    escape = FALSE,
+    col.names = str_remove(colnames(df_comparison1), "^.*__"),
+    align = c(rep("l", 2), rep("c", 4))
+  ) |>
+  add_header_above(c(
+    " " = 2,
+    "$\\\\lambda$" = 3,
+    "$\\\\tau$" = 3
+  ), escape = FALSE) |>
+  kableExtra::kable_styling(
+    latex_options = c("repeat_header")
+  )
+
+# grey out implausible models
+if (length(rows_grey) > 0) {
+  for (i in rows_grey) {
+    tbl_comparison = tbl_comparison |>
+      row_spec(i, color = "gray", italic = TRUE)
+  }
+}
+
+# bold selected model
+if (length(rows_bold) > 0) {
+  for (i in rows_bold) {
+    tbl_comparison = tbl_comparison |>
+      row_spec(i, bold = TRUE)
+  }
+}
+
+tbl_comparison
 
 ```
+
+```{r, loo-diagnostics}
+#| label: tbl-loo-diagnostics
+#| results: asis
+#| echo: false
+#| message: false
+#| warning: false
+#| tbl-cap: !expr paste0("Pareto $\\hat{k}$, PSIS effective sample size (ESS), and Monte Carlo standard error (MCSE) diagnostics for the ", num2word(sum(df_comparison$plausible)), " plausible models identified by LOOIC ([@tbl-comparison]). The selected model is in bold. Good/bad/very bad refer to the conventional Pareto $\\hat{k}$ thresholds of 0.7 and 1. MCSE(elpd\\textsubscript{loo}) is left blank ('--') for models with at least one curve with $\\hat{k} \\ge 1$, for which the MCSE estimate is undefined.")
+
+tbl_loo_diagnostics |>
+  mutate(
+    model = str_replace(model, "fit_", "model "),
+    model = ifelse(selected, paste0("\\textbf{", model, "}"), model),
+    across(
+      c(pct_good, pct_bad, pct_very_bad),
+      \(.x) formatC(.x, format = "f", digits = 2)
+    ),
+    mcse_elpd_loo = ifelse(
+      is.na(mcse_elpd_loo),
+      "--",
+      formatC(mcse_elpd_loo, format = "f", digits = 2)
+    ),
+    min_psis_ess = round(min_psis_ess)
+  ) |>
+  select(-selected) |>
+  kbl(
+    format = "latex",
+    booktabs = TRUE,
+    escape = FALSE,
+    col.names = c(
+      "Model", "$\\Delta$LOOIC", "SE", "$n$ curves",
+      "Good $\\hat{k}$ (\\%)", "Bad $\\hat{k}$ (\\%)", "Very bad $\\hat{k}$ (\\%)",
+      "Min. PSIS ESS", "MCSE(elpd\\textsubscript{loo})"
+    ),
+    align = c("l", rep("c", 8))
+  ) |>
+  kable_styling(latex_options = c("scale_down"))
+
+```
+
+\clearpage
 
 ```{r, variance-cap, echo = FALSE}
 symbol_definitions = glue("{symbol}: {definition}", .envir = as.environment(response_vars)) |>
@@ -1088,64 +1120,11 @@ tbl_variance |>
     pack_rows(tv2$Trait[4],
              tv2$cumsum[3] + 1,
              tv2$cumsum[4],
+             escape = FALSE) |>
+    pack_rows(tv2$Trait[5],
+             tv2$cumsum[4] + 1,
+             tv2$cumsum[5],
              escape = FALSE) 
-```
-
-{{< pagebreak >}}
-
-::: {#tbl-estimates-curve}
-**Table file:**  
-Download from: \url{https://github.com/cdmuir/solanum-kinetics/raw/refs/heads/main/tables/tbl-estimates-curve.csv}
-
-Raw data file in CSV format containing estimates of stomatal anatomy and kinetic variables associated with each curve. These are raw data for fitting multiresponse models. A final version will be deposited on Dryad after acceptance. This version is available for reviewers.
-:::
-
-::: {#tbl-estimates-accession}
-**Table file:**  
-Download from: \url{https://github.com/cdmuir/solanum-kinetics/raw/refs/heads/main/tables/tbl-estimates-accession.csv}
-
-Raw data file in CSV format containing estimates of stomatal anatomy and kinetic variables associated with each population based on multiresponse model predictions. A final version will be deposited on Dryad after acceptance. This version is available for reviewers.
-:::
-
-\clearpage
-
-```{r, loo-diagnostics}
-#| label: tbl-loo-diagnostics
-#| results: asis
-#| echo: false
-#| message: false
-#| warning: false
-#| tbl-cap: !expr paste0("Pareto $\\hat{k}$, PSIS effective sample size (ESS), and Monte Carlo standard error (MCSE) diagnostics for the ", num2word(sum(df_comparison$plausible)), " plausible models identified by LOOIC ([@tbl-comparison]). The selected model is in bold. Good/bad/very bad refer to the conventional Pareto $\\hat{k}$ thresholds of 0.7 and 1. MCSE(elpd\\textsubscript{loo}) is left blank ('--') for models with at least one curve with $\\hat{k} \\ge 1$, for which the MCSE estimate is undefined.")
-
-tbl_loo_diagnostics |>
-  mutate(
-    model = str_replace(model, "_", "\\\\_"),
-    model = ifelse(selected, paste0("\\textbf{", model, "}"), model),
-    across(
-      c(pct_good, pct_bad, pct_very_bad),
-      \(.x) formatC(.x, format = "f", digits = 2)
-    ),
-    mcse_elpd_loo = ifelse(
-      is.na(mcse_elpd_loo),
-      "--",
-      formatC(mcse_elpd_loo, format = "f", digits = 2)
-    ),
-    min_psis_ess = round(min_psis_ess)
-  ) |>
-  select(-selected) |>
-  kbl(
-    format = "latex",
-    booktabs = TRUE,
-    escape = FALSE,
-    col.names = c(
-      "Model", "$\\Delta$LOOIC", "SE", "$n$ curves",
-      "Good $\\hat{k}$ (\\%)", "Bad $\\hat{k}$ (\\%)", "Very bad $\\hat{k}$ (\\%)",
-      "Min. PSIS ESS", "MCSE(elpd\\textsubscript{loo})"
-    ),
-    align = c("l", rep("c", 8))
-  ) |>
-  kable_styling(latex_options = c("scale_down"))
-
 ```
 
 \clearpage
@@ -1156,14 +1135,15 @@ tbl_loo_diagnostics |>
 #| echo: false
 #| message: false
 #| warning: false
-#| tbl-cap: "Fixed effect parameter estimates and 95% confidence intervals (CIs) from the posterior distribution of the selected model. For each response variable, we estimated effects of growth light intensity (sun vs. shade), measurement light intensity (high vs. low), and leaf type (amphi vs. pseudohypo). The selected model potentially includes effects of \\gcl{} and \\fgmax{} on $\\tau$ and $\\lambda$."
+#| tbl-cap: "Fixed effect parameter estimates and 95% confidence intervals (CIs) from the posterior distribution of the selected model. For each response variable, we estimated effects of growth light intensity (sun vs. shade), measurement light intensity (high vs. low), and leaf type (amphi vs. pseudohypo). The selected model potentially includes effects of \\gcl, \\gi{}, and \\gmax{} on $\\tau$ and $\\lambda$."
 #| tbl-pos: "h"
 
 
 clean_repsonse_var = function(.x) {
   case_when(
-    .x == "logitfgmax" ~ "$\\logit(f_\\mathrm{gmax})$",
     .x == "loggcl" ~ "$\\log(l_\\mathrm{gc})$",
+    .x == "loggi" ~ "$\\log(g_\\mathrm{i})$",
+    .x == "loggmax" ~ "$\\log(g_\\mathrm{max})$",
     .x == "loglambdamean" ~ "$\\log(\\lambda)$",
     .x == "logtaumean" ~ "$\\log(\\tau)$",
     TRUE ~ .x
@@ -1176,8 +1156,9 @@ clean_explanatory_var = function(.x) {
     .x == "lighttreatmentsun" ~ "sun growth treatment",
     .x == "lightintensityhigh" ~ "high measurement light intensity",
     .x == "leaftypepseudohypo" ~ "pseudohypo leaf type",
-    .x == "logitfgmax" ~ "$\\logit(f_\\mathrm{gmax})$",
     .x == "loggcl" ~ "$\\log(l_\\mathrm{gc})$",
+    .x == "logii" ~ "$\\log(g_\\mathrm{i})$",
+    .x == "loggmax" ~ "$\\log(g_\\mathrm{max})$",
     .x == "loglambdamean" ~ "$\\log(\\lambda)$",
     .x == "logtaumean" ~ "$\\log(\\tau)$",
     TRUE ~ .x
@@ -1207,8 +1188,9 @@ fx1 = fixef(selected_model, summary = TRUE) |>
       "lighttreatmentsun",
       "lightintensityhigh",
       "leaftypepseudohypo",
-      "logitfgmax",
-      "loggcl"
+      "loggcl",
+      "loggi",
+      "loggmax"
     )
   )) |>
   mutate(response = clean_repsonse_var(response),
@@ -1251,12 +1233,32 @@ fx1 |>
              fx2$cumsum[3] + 1,
              fx2$cumsum[4],
              escape = FALSE) |>
+  pack_rows(fx2$response[5],
+             fx2$cumsum[4] + 1,
+             fx2$cumsum[5],
+             escape = FALSE) |>
   column_spec(1, width = "3.75in") |>
   column_spec(2, width = "2in")
 
 ```
 
 {{< pagebreak >}}
+
+::: {#tbl-estimates-curve}
+**Table file:**  
+Download from: \url{https://github.com/cdmuir/solanum-kinetics/raw/refs/heads/main/tables/tbl-estimates-curve.csv}
+
+Raw data file in CSV format containing estimates of stomatal anatomy and kinetic variables associated with each curve. These are raw data for fitting multiresponse models. A final version will be deposited on Dryad after acceptance. This version is available for reviewers.
+:::
+
+::: {#tbl-estimates-accession}
+**Table file:**  
+Download from: \url{https://github.com/cdmuir/solanum-kinetics/raw/refs/heads/main/tables/tbl-estimates-accession.csv}
+
+Raw data file in CSV format containing estimates of stomatal anatomy and kinetic variables associated with each population based on multiresponse model predictions. A final version will be deposited on Dryad after acceptance. This version is available for reviewers.
+:::
+
+\clearpage
 
 ```{r random, eval = TRUE}
 #| label: tbl-random
@@ -1385,7 +1387,7 @@ knitr::include_graphics("../figures/gcl.pdf")
 ```{r, estimates-b, echo = FALSE}
 #| label: fig-estimates-b
 #| fig-align: center
-#| fig-cap: !expr paste0("\\textbf{Individual-level (fixed-effect) estimates of guard cell length (\\gcl), initial stomatal conductance (\\gi), and anatomical maximum stomatal conductance (\\gmax) on the stomatal closure time-constant ($\\tau$) and lag-time ($\\lambda$) are broadly consistent across all plausible models (@tbl-comparison).} Points and horizontal bars are posterior medians and 95\\% credible intervals from each of the ", num2word(sum(df_comparison$plausible)), " plausible models (rows), ordered by $\\Delta$LOOIC; the selected model is marked with an asterisk (*). Black indicates estimates whose 95\\% credible interval excludes zero; grey indicates intervals that overlap zero.")
+#| fig-cap: !expr paste0("\\textbf{Individual-level (fixed-effect) estimates of guard cell length (\\gcl), initial stomatal conductance (\\gi), and anatomical maximum stomatal conductance (\\gmax) on the stomatal closure time-constant ($\\tau$) and lag-time ($\\lambda$) are broadly consistent across all plausible models.} Points and horizontal bars are posterior medians and 95\\% credible intervals from each of the ", num2word(sum(df_comparison$plausible)), " plausible models (rows; @tbl-comparison), ordered by $\\Delta$LOOIC; the selected model is marked with an asterisk (*). Black indicates estimates whose 95\\% credible interval excludes zero; grey indicates intervals that overlap zero.")
 
 knitr::include_graphics("../figures/estimates-b.pdf")
 ```
@@ -1393,7 +1395,7 @@ knitr::include_graphics("../figures/estimates-b.pdf")
 ```{r, estimates-phy, echo = FALSE}
 #| label: fig-estimates-phy
 #| fig-align: center
-#| fig-cap: !expr paste0("\\textbf{Phylogenetic correlations between guard cell length (\\gcl), initial stomatal conductance (\\gi), and anatomical maximum stomatal conductance (\\gmax) and the stomatal closure time-constant ($\\tau$) and lag-time ($\\lambda$) are broadly consistent across all plausible models (@tbl-comparison).} Points and horizontal bars are posterior medians and 95\\% credible intervals of the phylogenetic correlation from each of the ", num2word(sum(df_comparison$plausible)), " plausible models (rows), ordered by $\\Delta$LOOIC; the selected model is marked with an asterisk (*). Black indicates estimates whose 95\\% credible interval excludes zero; grey indicates intervals that overlap zero.")
+#| fig-cap: !expr paste0("\\textbf{Phylogenetic correlations between guard cell length (\\gcl), initial stomatal conductance (\\gi), and anatomical maximum stomatal conductance (\\gmax) and the stomatal closure time-constant ($\\tau$) and lag-time ($\\lambda$) are broadly consistent across all plausible models.} Points and horizontal bars are posterior medians and 95\\% credible intervals of the phylogenetic correlation from each of the ", num2word(sum(df_comparison$plausible)), " plausible models (rows; @tbl-comparison), ordered by $\\Delta$LOOIC; the selected model is marked with an asterisk (*). Black indicates estimates whose 95\\% credible interval excludes zero; grey indicates intervals that overlap zero.")
 
 knitr::include_graphics("../figures/estimates-phy.pdf")
 ```

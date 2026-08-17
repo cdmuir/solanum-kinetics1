@@ -21,9 +21,9 @@ estimates_by_model = read_rds("objects/estimates_by_model.rds") |>
     ),
     s = ifelse(model == selected_model, "*", ""),
     model1 = factor(
-      str_c(str_replace(model, "_", " "), 
+      str_c(str_replace(model, "s/fit_", " "), 
             ifelse(model == selected_model, "*", "")), 
-      levels = rev(str_c(str_replace(levels(model), "_", " "), 
+      levels = rev(str_c(str_replace(levels(model), "s/fit_", " "), 
       ifelse(levels(model) == selected_model, "*", "")))
     )
   ) |>

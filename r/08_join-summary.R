@@ -3,7 +3,7 @@ source("r/header.R")
 
 pars_summary = read_rds("objects/pars-summary.rds") |>
   filter(
-    variable %in% c("ginit", "gfinal", "b_logtau_Intercept", "b_loglambda_Intercept"),
+    variable %in% c("ginit", "gfinal", "b_logtau_Intercept", "b_loglambda_Intercept", "sigma"),
     rhat < convergence_criteria$rhat_max,
     ess_bulk > convergence_criteria$ess_min
   ) |>
@@ -12,7 +12,8 @@ pars_summary = read_rds("objects/pars-summary.rds") |>
       variable == "gfinal" ~ "gfinal",
       variable == "ginit" ~ "ginit",
       variable == "b_logtau_Intercept" ~ "logtau",
-      variable == "b_loglambda_Intercept" ~ "loglambda"
+      variable == "b_loglambda_Intercept" ~ "loglambda",
+      variable == "sigma" ~ "sigma"
     )
   ) |>
   select(variable, mean, sd, id) |>
@@ -31,6 +32,7 @@ pars_summary = read_rds("objects/pars-summary.rds") |>
 
 joined_data = read_rds("data/joined-data.rds") |>
   summarize(
+    stomatal_density_mm2 = first(stomatal_density_mm2),
     guard_cell_length_um = first(guard_cell_length_um),
     gmax = first(gmax),
     .by = c(acc, id, curve_type)

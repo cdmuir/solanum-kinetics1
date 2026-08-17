@@ -1,5 +1,4 @@
 % Options for packages loaded elsewhere
-% Options for packages loaded elsewhere
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
 \PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
@@ -8,22 +7,21 @@
   letterpaper,
   DIV=11,
   numbers=noendperiod]{scrartcl}
-\usepackage{xcolor}
+
 \usepackage{amsmath,amssymb}
-\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
 \usepackage{iftex}
 \ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
 \else % if luatex or xetex
-  \usepackage{unicode-math} % this also loads fontspec
+  \usepackage{unicode-math}
   \defaultfontfeatures{Scale=MatchLowercase}
   \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
 \fi
 \usepackage{lmodern}
-\ifPDFTeX\else
-  % xetex/luatex font selection
+\ifPDFTeX\else  
+    % xetex/luatex font selection
   \setmainfont[]{Times New Roman}
 \fi
 % Use upquote if available, for straight quotes in verbatim environments
@@ -32,33 +30,22 @@
   \usepackage[]{microtype}
   \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
+\usepackage{xcolor}
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
 % Make \paragraph and \subparagraph free-standing
-\makeatletter
 \ifx\paragraph\undefined\else
   \let\oldparagraph\paragraph
-  \renewcommand{\paragraph}{
-    \@ifstar
-      \xxxParagraphStar
-      \xxxParagraphNoStar
-  }
-  \newcommand{\xxxParagraphStar}[1]{\oldparagraph*{#1}\mbox{}}
-  \newcommand{\xxxParagraphNoStar}[1]{\oldparagraph{#1}\mbox{}}
+  \renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
 \fi
 \ifx\subparagraph\undefined\else
   \let\oldsubparagraph\subparagraph
-  \renewcommand{\subparagraph}{
-    \@ifstar
-      \xxxSubParagraphStar
-      \xxxSubParagraphNoStar
-  }
-  \newcommand{\xxxSubParagraphStar}[1]{\oldsubparagraph*{#1}\mbox{}}
-  \newcommand{\xxxSubParagraphNoStar}[1]{\oldsubparagraph{#1}\mbox{}}
+  \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
 \fi
-\makeatother
 
 
-\usepackage{longtable,booktabs,array}
-\newcounter{none} % for unnumbered tables
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}\usepackage{longtable,booktabs,array}
 \usepackage{calc} % for calculating minipage widths
 % Correct order of tables after \paragraph or \subparagraph
 \usepackage{etoolbox}
@@ -70,21 +57,17 @@
 \makesavenoteenv{longtable}
 \usepackage{graphicx}
 \makeatletter
-\newsavebox\pandoc@box
-\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
-  \sbox\pandoc@box{#1}%
-  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
-  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
-  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
-  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
-  \else\usebox{\pandoc@box}%
-  \fi%
-}
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
 % Set default figure placement to htbp
+\makeatletter
 \def\fps@figure{htbp}
 \makeatother
-
-
 % definitions for citeproc citations
 \NewDocumentCommand\citeproctext{}{}
 \NewDocumentCommand\citeproc{mm}{%
@@ -118,18 +101,6 @@
 \newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{\strut#1\strut}}
 \newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{\strut#1\strut}}
 \newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
-
-
-
-\setlength{\emergencystretch}{3em} % prevent overfull lines
-
-\providecommand{\tightlist}{%
-  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
-
-
-
- 
-
 
 \usepackage{booktabs}
 \usepackage{longtable}
@@ -227,11 +198,15 @@
 \@ifpackageloaded{caption}{}{\usepackage{caption}}
 \@ifpackageloaded{subcaption}{}{\usepackage{subcaption}}
 \makeatother
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
 \usepackage{bookmark}
+
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
-\urlstyle{same}
+\urlstyle{same} % disable monospaced font for URLs
 \hypersetup{
-  pdftitle={Guard cell size and pore aperture influence stomatal closure kinetics},
+  pdftitle={Guard cell size and initial conductance influence stomatal closure kinetics},
   pdfauthor={Christopher D. Muir\^{}\{1,2*\}; Wei Shen Lim\^{}\{1\}},
   colorlinks=true,
   linkcolor={blue},
@@ -240,14 +215,13 @@
   urlcolor={Blue},
   pdfcreator={LaTeX via pandoc}}
 
-
-\title{Guard cell size and pore aperture influence stomatal closure
-kinetics}
+\title{Guard cell size and initial conductance influence stomatal
+closure kinetics}
 \author{Christopher D. Muir\(^{1,2*}\) \and Wei Shen Lim\(^{1}\)}
 \date{}
+
 \begin{document}
 \maketitle
-
 
 \begin{center}
 $^1$School of Life Sciences, University of Hawaiʻi; Mānoa, Hawaiʻi, USA\\
@@ -284,12 +258,12 @@ Keywords: guard cell size, leaf gas exchange, phylogenetic heritability, \textit
   to an abrupt increase in vapor pressure deficit (VPD) among 29 diverse
   wild tomato populations in the genus \emph{Solanum}.
 \item
-  Leaves with small guard cells and a lower \gop{} closed faster, but
-  each explained variation in kinetic parameters at different levels of
-  biological organization. Guard cell size had high phylogenetic
-  heritability and varied relatively little within populations, whereas
-  \fgmax{} varied mostly among individuals and between light intensity
-  treatments.
+  Leaves with small guard cells and a lower initial stomatal conductance
+  (\gi) closed faster, but each explained variation in kinetic
+  parameters at different levels of biological organization. Guard cell
+  size had high phylogenetic heritability and varied relatively little
+  within populations, whereas \gi{} varied mostly among individuals and
+  between light intensity treatments.
 \item
   Smaller stomata can be speedier, but only if stomata are held at an
   aperture where they are responsive to changing turgor pressure.
@@ -406,7 +380,7 @@ al.}, 2016). A four-parameter equation describes stomatal response
 kinetics to a step change in light intensity across dozens of plant
 species (Woning \emph{et al.}, 2026):
 
-\begin{equation}\protect\phantomsection\label{eq-weibull}{
+\begin{equation}\phantomsection\label{eq-weibull}{
   g_\mathrm{sw,t} = g_\mathrm{f} + (g_\mathrm{i} - g_\mathrm{f}) e^{-\left(\frac{t}{\tau}\right)^\lambda}.
 }\end{equation}
 
@@ -451,13 +425,13 @@ Empirical support for the hypothesis that smaller guard cells are faster
 is mixed and has primarily come from step changes in light (Drake
 \emph{et al.}, 2013; Elliott-Kingston \emph{et al.}, 2016; McAusland
 \emph{et al.}, 2016; Kardiman \& Ræbild, 2018; Haworth \emph{et al.},
-2023; Brench \emph{et al.}, 2026; Tang \emph{et al.}, 2026).
-Meta-analysis of dozens of species suggests that stomatal size alone is
-weakly related to kinetics and modulated by guard cell shape (Woning
-\emph{et al.}, 2026). The relationship between guard cell size and
-stomatal response kinetics to leaf water potential (Aasamaa \emph{et
-al.}, 2001) and VPD (Kübarsepp \emph{et al.}, 2020; Qie \emph{et al.},
-2024) is less well studied, but similarly equivocal.
+2023; Yoshiyama \emph{et al.}, 2024; Brench \emph{et al.}, 2026; Tang
+\emph{et al.}, 2026). Meta-analysis of dozens of species suggests that
+stomatal size alone is weakly related to kinetics and modulated by guard
+cell shape (Woning \emph{et al.}, 2026). The relationship between guard
+cell size and stomatal response kinetics to leaf water potential
+(Aasamaa \emph{et al.}, 2001) and VPD (Kübarsepp \emph{et al.}, 2020;
+Qie \emph{et al.}, 2024) is less well studied, but similarly equivocal.
 
 One factor that might complicate the relationship between size and speed
 is aperture. Stomatal aperture can vary from near 0 when guard cell
@@ -498,7 +472,7 @@ likely variation within and among species and growth forms in the
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/conceptual.pdf}}
+\includegraphics{../figures/conceptual.pdf}
 
 }
 
@@ -1049,8 +1023,8 @@ to maximum value increased \(t_{50}\) by \(\SI{86}{\second}\). Hence, we
 primarily focus on treatments and anatomical parameters affecting
 \(\tau\).
 
-\subsubsection{Variation in guard cell length and
-aperture}\label{variation-in-guard-cell-length-and-aperture}
+\subsubsection{\texorpdfstring{Variation in guard cell length, \gi, and
+\gmax}{Variation in guard cell length, , and }}\label{variation-in-guard-cell-length-and}
 
 Guard cell length (\gcl) differed among populations and varied to a
 lesser extent between growth light intensity treatments and leaf
@@ -1085,13 +1059,15 @@ pseudohypo leaf type had on average \(-19.6\)\% {[}95\% CI: \(-21.6\) to
 (Figure~\ref{fig-accession-anatomy}b; Table~\ref{tbl-fixed}). This is
 presumably because a large fraction of stomata were blocked by the
 pseudohypo treatment and increased aperture of the abaxial stomata did
-not fully compeInsate.
+not fully compensate. This observation differs from wheat, where \gsw{}
+on one surface was not affected by blocking gas exchange in the other
+(Wall \emph{et al.}, 2022).
 
 \begin{figure}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/variance.pdf}}
+\includegraphics{../figures/variance.pdf}
 
 }
 
@@ -1109,7 +1085,7 @@ populations was low for all traits.}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/accession-anatomy.pdf}}
+\includegraphics{../figures/accession-anatomy.pdf}
 
 }
 
@@ -1123,7 +1099,7 @@ populations was low for all traits.}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{ms_files/figure-pdf/fig-accession-anatomy-cap-1.pdf}}
+\includegraphics{ms_files/figure-pdf/fig-accession-anatomy-cap-1.pdf}
 
 }
 
@@ -1138,10 +1114,10 @@ facet) grown plants. There is no plasticity to leaf type (amphi
 vs.~pseudohypo), but the average \gcl{} is slightly lower in pseudohypo
 leaves because adaxial stomata tended to be larger than abaxial stomata
 on the same leaf. (b) Measurement light intensity has the most direct
-effect on \fgmax{} because stomatal aperture increases under high light
-intensity. To a lesser extent, \fgmax{} varies among populations, is
-slightly lower in sun-grown plants, and slightly higher in pseudohypo
-leaf types.}
+effect on \fgmax{} because initial stomatal conductance (\gi) increases
+under high light intensity. To a lesser extent, \fgmax{} varies among
+populations, is slightly lower in sun-grown plants, and slightly higher
+in pseudohypo leaf types.}
 
 \end{figure}%
 
@@ -1174,7 +1150,7 @@ to 1.36\%{]}.
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/accession-kinetics.pdf}}
+\includegraphics{../figures/accession-kinetics.pdf}
 
 }
 
@@ -1190,28 +1166,30 @@ described in the Materials and Methods section.}
 
 \end{figure}%
 
-\subsubsection{\texorpdfstring{Guard cell length and \fgmax{} influence
+\subsubsection{\texorpdfstring{Guard cell length and \gi{} influence
 stomatal
 kinetics}{Guard cell length and  influence stomatal kinetics}}\label{guard-cell-length-and-influence-stomatal-kinetics}
 
-Guard cell length and \fgmax{} affected stomatal closure kinetics in the
-directions predicted by our hypotheses, but they operated at different
-levels of biological organization. Among the models we tested, six were
-plausible in that their predictive accuracy was similar based on
-\(\Delta \mathrm{LOOIC}\) (Table~\ref{tbl-comparison}). All models in
-the plausible set indicated among-individual level effects of \fgmax{}
-on \(\tau\) and \(\lambda\), as we discuss in more detail below. Models
+Guard cell length and \gi{}, a component of \fgmax, affected stomatal
+closure kinetics in the directions predicted by our hypotheses, but they
+operated at different levels of biological organization. Among the
+models we tested, six were plausible in that their predictive accuracy
+was similar based on \(\Delta \mathrm{LOOIC}\)
+(Table~\ref{tbl-comparison}). All models in the plausible set indicated
+among-individual level effects of \gi{}, a component of \fgmax, on
+\(\tau\) and \(\lambda\), as we discuss in more detail below. Models
 that included both individual and phylogenetic effects of \gcl{} had
-similar LOOIC values but we selected a model with only phylogenetic
-effects for two reasons (Table~\ref{tbl-comparison}). First, in models
-that included both individual and phylogenetic effects, neither the
+similar LOOIC values but the selected model retained only phylogenetic
+effects because our selection criteria favored models that excluded
+nonsignficant parameters (Table~\ref{tbl-comparison}). In models that
+included both individual and phylogenetic effects, neither the
 phylogenetic correlation nor the fixed effect regression coefficient
-were significantly different from zero (results not shown). These
-parameters are highly colinear in the posterior
-(Figure~\ref{fig-colinear}) indicating difficulty in estimating both
-terms simultaneously and ``smearing'' out their confidence intervals
-(McElreath, 2020). Hence, the model with only phylogenetic effects is
-easier to interpret. The second reason we favor this model is that it is
+were significantly different from zero (Figure~\ref{fig-estimates-b};
+Figure~\ref{fig-estimates-phy}). These parameters are highly colinear in
+the posterior (Figure~\ref{fig-colinear}) indicating difficulty in
+estimating both terms simultaneously and ``smearing'' out their
+confidence intervals (McElreath, 2020). Hence, the model with only
+phylogenetic effects is easier to interpret. This model is also
 consistent with the high phylogenetic heritability in both \gcl{} and
 \(\tau\) (Figure~\ref{fig-variance}). Visually, we observed positive
 relationships among population mean trait values
@@ -1222,123 +1200,21 @@ chance (McLatchie \& Vehtari, 2024), so judgement calls among models
 with similar performance can be necessary. The preponderance of evidence
 indicates that \gcl{} explains variation primarily among rather than
 within our populations. The results in the main text are based on
-estimates from the selected model.
-
-\begin{table}
-
-\caption{\label{tbl-comparison}Model comparison results. Models with a
-\(\Delta\)LOOIC less than two standard errors (SE) from the minimum
-LOOIC are considered to have substantial support and are used for
-posterior predictions to test hypotheses about the effects of guard cell
-length (\gcl) and the stomatal conductance as a fraction of anatomical
-maximum stomatal conductance (\fgmax) on stomatal kinetic parameter
-\(\lambda\) (time lag) and \(\tau\) (time constant). Unsupported models
-are in gray italic font. The model selected for subsequent inference is
-in bold. LOOIC stands for leave-one-out cross-validation information
-criterion.}
-
-\centering{
-
-\begin{tabular}[t]{llccccll}
-\toprule
-\multicolumn{2}{c}{ } & \multicolumn{3}{c}{$\lambda$} & \multicolumn{3}{c}{$\tau$} \\
-\cmidrule(l{3pt}r{3pt}){3-5} \cmidrule(l{3pt}r{3pt}){6-8}
-$\Delta \mathrm{LOOIC}$ & SE & \gcl & \gi & \gmax & \gcl & \gi & \gmax\\
-\midrule
-\textbf{0.00} & \textbf{0.00} & \textbf{} & \textbf{\cmark} & \textbf{} & \textbf{} & \textbf{\cmark} & \textbf{}\\
-3.58 & 2.95 & \cmark & \cmark & \cmark & \cmark & \cmark & \cmark\\
-4.80 & 2.96 &  & \cmark &  & \cmark & \cmark & \\
-4.91 & 2.92 &  & \cmark &  &  & \cmark & \cmark\\
-4.92 & 2.90 & \cmark & \cmark &  &  & \cmark & \\
-\addlinespace
-5.20 & 2.72 &  & \cmark & \cmark &  & \cmark & \\
-\textcolor{gray}{\em{5.91}} & \textcolor{gray}{\em{2.91}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}}\\
-\textcolor{gray}{\em{6.06}} & \textcolor{gray}{\em{2.85}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}}\\
-\textcolor{gray}{\em{6.21}} & \textcolor{gray}{\em{2.85}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}}\\
-\textcolor{gray}{\em{6.80}} & \textcolor{gray}{\em{3.04}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}}\\
-\addlinespace
-\textcolor{gray}{\em{7.70}} & \textcolor{gray}{\em{2.96}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}}\\
-\textcolor{gray}{\em{8.20}} & \textcolor{gray}{\em{2.90}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}}\\
-\textcolor{gray}{\em{9.04}} & \textcolor{gray}{\em{2.95}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}}\\
-\textcolor{gray}{\em{9.05}} & \textcolor{gray}{\em{2.85}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}}\\
-\textcolor{gray}{\em{9.91}} & \textcolor{gray}{\em{2.98}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}}\\
-\addlinespace
-\textcolor{gray}{\em{10.76}} & \textcolor{gray}{\em{2.88}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}}\\
-\textcolor{gray}{\em{38.52}} & \textcolor{gray}{\em{13.42}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}}\\
-\textcolor{gray}{\em{38.61}} & \textcolor{gray}{\em{13.29}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}}\\
-\textcolor{gray}{\em{39.19}} & \textcolor{gray}{\em{13.38}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}}\\
-\textcolor{gray}{\em{39.20}} & \textcolor{gray}{\em{13.37}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}}\\
-\addlinespace
-\textcolor{gray}{\em{39.34}} & \textcolor{gray}{\em{13.43}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}}\\
-\textcolor{gray}{\em{39.62}} & \textcolor{gray}{\em{13.26}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}}\\
-\textcolor{gray}{\em{39.93}} & \textcolor{gray}{\em{13.34}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}}\\
-\textcolor{gray}{\em{40.18}} & \textcolor{gray}{\em{13.39}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}}\\
-\textcolor{gray}{\em{40.33}} & \textcolor{gray}{\em{13.40}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}}\\
-\addlinespace
-\textcolor{gray}{\em{40.55}} & \textcolor{gray}{\em{13.31}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}}\\
-\textcolor{gray}{\em{40.87}} & \textcolor{gray}{\em{13.30}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}}\\
-\textcolor{gray}{\em{41.02}} & \textcolor{gray}{\em{13.53}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}}\\
-\textcolor{gray}{\em{41.40}} & \textcolor{gray}{\em{13.34}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}}\\
-\textcolor{gray}{\em{43.99}} & \textcolor{gray}{\em{13.30}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}}\\
-\addlinespace
-\textcolor{gray}{\em{44.44}} & \textcolor{gray}{\em{13.42}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}}\\
-\textcolor{gray}{\em{45.04}} & \textcolor{gray}{\em{13.23}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}}\\
-\textcolor{gray}{\em{53.96}} & \textcolor{gray}{\em{15.47}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}}\\
-\textcolor{gray}{\em{55.21}} & \textcolor{gray}{\em{15.36}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}}\\
-\textcolor{gray}{\em{56.20}} & \textcolor{gray}{\em{15.41}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}}\\
-\addlinespace
-\textcolor{gray}{\em{57.58}} & \textcolor{gray}{\em{15.46}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}}\\
-\textcolor{gray}{\em{57.85}} & \textcolor{gray}{\em{15.37}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}}\\
-\textcolor{gray}{\em{57.94}} & \textcolor{gray}{\em{15.52}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}}\\
-\textcolor{gray}{\em{58.12}} & \textcolor{gray}{\em{15.40}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}}\\
-\textcolor{gray}{\em{59.08}} & \textcolor{gray}{\em{15.46}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}}\\
-\addlinespace
-\textcolor{gray}{\em{59.45}} & \textcolor{gray}{\em{15.41}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}}\\
-\textcolor{gray}{\em{59.87}} & \textcolor{gray}{\em{15.42}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}}\\
-\textcolor{gray}{\em{60.11}} & \textcolor{gray}{\em{15.43}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}}\\
-\textcolor{gray}{\em{60.21}} & \textcolor{gray}{\em{15.45}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}}\\
-\textcolor{gray}{\em{60.63}} & \textcolor{gray}{\em{15.41}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}}\\
-\addlinespace
-\textcolor{gray}{\em{61.45}} & \textcolor{gray}{\em{15.37}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}}\\
-\textcolor{gray}{\em{61.86}} & \textcolor{gray}{\em{15.49}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}}\\
-\textcolor{gray}{\em{63.84}} & \textcolor{gray}{\em{15.41}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}}\\
-\textcolor{gray}{\em{92.74}} & \textcolor{gray}{\em{20.59}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}}\\
-\textcolor{gray}{\em{93.78}} & \textcolor{gray}{\em{20.53}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}}\\
-\addlinespace
-\textcolor{gray}{\em{94.61}} & \textcolor{gray}{\em{20.53}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}}\\
-\textcolor{gray}{\em{94.93}} & \textcolor{gray}{\em{20.57}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}}\\
-\textcolor{gray}{\em{95.18}} & \textcolor{gray}{\em{20.58}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}}\\
-\textcolor{gray}{\em{96.21}} & \textcolor{gray}{\em{20.59}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}}\\
-\textcolor{gray}{\em{96.69}} & \textcolor{gray}{\em{20.51}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}}\\
-\addlinespace
-\textcolor{gray}{\em{96.75}} & \textcolor{gray}{\em{20.54}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}}\\
-\textcolor{gray}{\em{96.87}} & \textcolor{gray}{\em{20.64}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}}\\
-\textcolor{gray}{\em{97.11}} & \textcolor{gray}{\em{20.50}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}}\\
-\textcolor{gray}{\em{97.98}} & \textcolor{gray}{\em{20.56}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}}\\
-\textcolor{gray}{\em{98.01}} & \textcolor{gray}{\em{20.53}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}}\\
-\addlinespace
-\textcolor{gray}{\em{98.27}} & \textcolor{gray}{\em{20.45}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}}\\
-\textcolor{gray}{\em{99.69}} & \textcolor{gray}{\em{20.68}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}}\\
-\textcolor{gray}{\em{100.41}} & \textcolor{gray}{\em{20.64}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}}\\
-\textcolor{gray}{\em{101.31}} & \textcolor{gray}{\em{20.43}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}}\\
-\bottomrule
-\end{tabular}
-
-}
-
-\end{table}%
+estimates from the selected model. Individual-level fixed effects
+(Figure~\ref{fig-estimates-b}) and phylogenetic correlations
+(Figure~\ref{fig-estimates-phy}) of \gcl, \gi, and \gmax{} on \(\tau\)
+and \(\lambda\) were qualitatively consistent across all plausible
+models.
 
 Leaves with greater \gi{} closed more slowly than those which were less
-open (Figure~\ref{fig-gi-tau}). For example, increasing \gi{} from 20\%
-to 40\% resulted in a 24.9\% {[}95\% CI: 17.7 to 32.6\%{]} increase in
-\(\tau\) for a typical leaf in the reference treatment set (shade, low,
-amphi). We found no evidence that \gmax{} affected \(\tau\)
-(Figure~\ref{fig-gmax-tau}). Leaves with stomatal aperture closer to
-their theoretical maximum (greater \fgmax{}) also had a significantly
-greater lag-time, \(\lambda\)
-(Figure~\ref{fig-gi-lambda}, Figure~\ref{fig-gmax-lambda}). We inferred
-an effect of \fgmax{} based on the significant positive and negative
-estimates for \gi{} and \gmax, respectively (Table~\ref{tbl-fixed}).
+open (Figure~\ref{fig-gi-tau}; Table~\ref{tbl-fixed}). For example,
+increasing \gi{} from 20\% to 40\% resulted in a 24.9\% {[}95\% CI: 17.7
+to 32.6\%{]} increase in \(\tau\) for a typical leaf in the reference
+treatment set (shade, low, amphi). We found little evidence that \gmax{}
+affected \(\tau\) (Figure~\ref{fig-gmax-tau}). Leaves with greater \gi{}
+also had a significantly greater lag-time, \(\lambda\)
+(Figure~\ref{fig-gi-lambda}), but there was little effect \gmax{}
+(Figure~\ref{fig-gmax-lambda}).
 
 Populations that tended to have greater \gcl{} also tended to have
 greater \(\tau\) as evidenced by a positive phylogenetic correlation
@@ -1354,7 +1230,7 @@ plausible causal effect of \gcl{} on \(\tau\) among populations.
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/gcl-tau.pdf}}
+\includegraphics{../figures/gcl-tau.pdf}
 
 }
 
@@ -1377,7 +1253,7 @@ section.}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/gi-tau.pdf}}
+\includegraphics{../figures/gi-tau.pdf}
 
 }
 
@@ -1418,7 +1294,7 @@ to \(16.42\)\%{]} and the indirect effect mediated by \gi{} increased
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/mediation.pdf}}
+\includegraphics{../figures/mediation.pdf}
 
 }
 
@@ -1440,22 +1316,24 @@ for a sensitivity analysis of this assumption.}
 
 \end{figure}%
 
-\subsubsection{No evidence that adaxial stomata close faster than
-abaxial
-stomata}\label{no-evidence-that-adaxial-stomata-close-faster-than-abaxial-stomata}
+\subsubsection{\texorpdfstring{Adaxial stomata close faster than abaxial
+stomata, but the effect is masked by plasticity in
+\gi{}}{Adaxial stomata close faster than abaxial stomata, but the effect is masked by plasticity in }}\label{adaxial-stomata-close-faster-than-abaxial-stomata-but-the-effect-is-masked-by-plasticity-in}
 
-The time constant \(\tau\) was slightly greater in pseudohypo leaves
-compared to the paired amphi leaf (results not shown), which would
-suggest that adaxial stomata close faster. However, pseudohypo leaves
-also had greater \fgmax, which slows stomatal closure, as discussed in
-the previous section. Once, the indirect effect of \fgmax{} on \(\tau\)
-is accounted for, the direct effect of pseudohypo leaf type on \(\tau\)
-disappears, indicating that the observed difference in \(\tau\) between
-pseudohypo and amphi leaves is mediated by \fgmax{}
-(Figure~\ref{fig-mediation}). There is actually a tendency for \(\tau\)
-to be slightly lower when only abaxial stomata are measured in
-pseudohypo leaves, as evidenced by the negative effect of this leaf type
-on \(\tau\) (Table~\ref{tbl-fixed}).
+Although a simple comparison of \(\tau\) between paired amphi and
+pseudohypo leaves on the same plant shows little net difference (results
+not shown), the selected model reveals a significant direct effect of
+leaf type on \(\tau\) once \gi{} is accounted for: pseudohypo leaves,
+which have only abaxial stomata, closed more slowly than amphi leaves
+(Figure~\ref{fig-mediation}; Table~\ref{tbl-fixed}). This direct effect
+is consistent with the hypothesis that adaxial stomata close faster than
+abaxial stomata. However, pseudohypo leaves also had lower \gi{} and
+lower \gi{} is itself associated with faster closure
+(Figure~\ref{fig-gi-tau}). This indirect path through \gi{} counteracts
+most of the direct effect (Figure~\ref{fig-mediation}), which is why the
+raw comparison of paired leaves does not reveal much difference in
+kinetics between leaf types even though adaxial stomata appear to close
+faster once aperture state is controlled for.
 
 \subsection{Discussion}\label{discussion}
 
@@ -1478,13 +1356,14 @@ pressure respond more slowly because of reduced cell wall elasticity
 (Franks \emph{et al.}, 2012). Based on these hypotheses, we predicted
 that leaves with smaller guard cells and operating further from their
 anatomical maximum \gsw{} (i.e., lower \fgmax) would have faster
-stomatal closure kinetics (lower \(\tau\)). Analysis of 2,125 time
-courses of stomatal closure from 29 populations in multiple environments
-demonstrates that both guard cell size and stomatal aperture influence
-kinetics at different levels of biological organization. This new
-understanding suggests unexplored explanations for the relationships
-between stomatal size, density, speed, and operational \gsw{} (\gop)
-among angiosperms.
+stomatal closure kinetics (lower \(\tau\)). The parameter \fgmax{} is
+here defined as the initial stomatal conductance (\gi) divided by \gmax.
+Analysis of 2,125 time courses of stomatal closure from 29 populations
+in multiple environments demonstrates that both guard cell size and
+\gi{}, a component of \fgmax, influence kinetics at different levels of
+biological organization. This new understanding suggests unexplored
+explanations for the relationships between stomatal size, density,
+speed, and operational \gsw{} (\gop) among angiosperms.
 
 The kinetics of stomatal closure in response to VPD closely match
 response to light, suggesting similar underlying mechanisms. The
@@ -1513,7 +1392,10 @@ The positive association between \gcl{} and \(\tau\)
 smaller cells respond faster because they have a greater surface area to
 volume ratio for osmolyte flux (Franks \& Farquhar, 2007; Drake \emph{et
 al.}, 2013; Lawson \& Vialet-Chabrand, 2019; Woning \emph{et al.},
-2026). If correct, this implies that the maximum rate of stomatal
+2026). Among several of the same \emph{Solanum} species, larger guard
+cells are also associated with slower opening kinetics in response to
+light (Yoshiyama \emph{et al.}, 2024), suggesting a general mechanism.
+Specifically, this association implies that the maximum rate of stomatal
 closure is limited by membrane surface area. We do not have the data to
 evaluate the hypothesis mechanistically, but this should be tested in
 the future. An alternative explanation is that the correlation between
@@ -1530,15 +1412,34 @@ among individuals within populations was explained by variation in \gi{}
 (Figure~\ref{fig-gi-tau}). This factor was positively associated with
 \(\tau\) among individuals within light treatments, and
 treatment-associated plasticity in \(\tau\) was statistically consistent
-with an indirect path through \gi{} (Figure~\ref{fig-mediation}; but see
+with an indirect path through \gi{} (Figure~\ref{fig-mediation}; see
 Notes S3 for a sensitivity analysis of the assumption that this indirect
 path is unconfounded). The rate of stomatal opening in response to light
 is associated with \gop{} in a sample of rainforest trees (Kardiman \&
-Ræbild, 2018), which may indicate this is a more general phenomenon. The
-association between \fgmax{} and \(\tau\) could be explained by the
+Ræbild, 2018), which may indicate this is a more general phenomenon.
+
+The association between \gi{} and \(\tau\) could be explained by the
 hypothesis that guard cell wall elasticity declines at greater turgor
 pressure (Franks \emph{et al.}, 2012), like a rubber band that is
-stretched under tension.
+stretched under tension. However, if this were the case, we would also
+expect a negative association between \gmax{} and \(\tau\) because
+leaves with greater \gmax{} could have the same \gi{} and with smaller
+stomatal aperture. However, this effect was weakly supported
+(Figure~\ref{fig-gmax-tau}, Figure~\ref{fig-gmax-lambda}). The selected
+model did not include an individual-level effect of \gmax{} on kinetic
+parameters. Although the second-best included \gmax{} and the effect was
+in the predicted direction, the effect was not significantly different
+than 0 (Figure~\ref{fig-estimates-b}). The weak effect of \gmax{}
+compared to \gi{} casts doubt on whether a nonlinear relationship
+between turgor pressure and pore aperture is the best explanation. An
+alternative, albeit not mutually exclusive explanation, is a nonlinear
+relationship between pore aperture and \gsw{} that weakens the
+association between these variables at high \gsw. Airspace resistance
+within the substomatal cavity and stomatal interference are plausible
+mechanisms that would have this effect (Ting \& Loomis, 1965; Kaiser,
+2009; Lehmann \& Or, 2015), although it is not clear that they are
+sufficient to produce the observed relationship between \gi{} and
+\(\tau\) in wild tomatoes.
 
 The impact of \gi{} was most pronounced when comparing measurement light
 intensity treatments. Leaves acclimated to high light intensity were on
@@ -1547,89 +1448,48 @@ the reference treatment (shade, amphi). As a consequence, stomata closed
 more slowly in leaves acclimated to high light intensity, with a 27.4\%
 greater time-constant on average in the reference treatment, based on
 parameter estimates from the selected model (Table~\ref{tbl-fixed}). We
-did not assess whether \fgmax{} also affects stomatal opening and this
+did not assess whether \gi{} also affects stomatal opening and this
 should be measured to further test this hypothesis. The implication is
 that natural selection should favor \gop{} values that not only optimize
 instantaneous carbon gain and water loss in the present environment, but
 also carbon gain and water loss integrated through time in a fluctuating
 environment. We predict that rapid, temporally-uncorrelated fluctuating
-environments will favor leaves with greater \fgmax{} to slow kinetic
+environments will favor leaves with greater \gop{} to slow kinetic
 responses and prevent overreacting to transitory changes that are likely
-to revert; slower, temporally-correlated changes will favor lower
-\fgmax{} to enable close tracking of the environment.
+to revert; slower, temporally-correlated changes will favor lower \gop{}
+to enable close tracking of the environment.
 
 The comparison between measurement light intensity treatments should be
 interpreted cautiously, however, because it was confounded with
 measurement order: high light curves always preceded low light curves on
 the same leaf, following a prior low-humidity closure event (see
 Materials and Methods). We cannot rule out that some of the apparent
-effect of measurement light intensity on \fgmax{} and \(\tau\), and the
-corresponding indirect path through \fgmax{} in our mediation analysis
+effect of measurement light intensity on \gi{} and \(\tau\), and the
+corresponding indirect path through \gi{} in our mediation analysis
 (Figure~\ref{fig-mediation}), reflects order, incomplete recovery, or
 prior VPD exposure rather than measurement light intensity itself. This
 concern applies specifically to the measurement light comparison and not
 to growth light intensity or leaf type, which were randomized or
 alternated, respectively.
 
-The absence of a direct effect of leaf type on \(\tau\) suggests that
-adaxial and abaxial stomata close at similar rates when operating at
-similar apertures. The association between species with more adaxial
-stomata and faster stomatal closure (Haworth \emph{et al.}, 2018; Woning
-\emph{et al.}, 2026) may not be caused by adaxial stomata responding
-faster \emph{per se}. Instead, selection may favor faster closure in
-leaves with adaxial stomata to prevent desiccation, causing increased
-abaxial stomatal speed as a byproduct. When there is a sudden increase
-in evaporative demand, such as from a sunfleck, open adaxial stomata
-could cause photosynthetically active palisade mesophyll to desiccate
-(Buckley \emph{et al.}, 2017a). If stomata do not close quickly, this
-will lower water potential and impair photosynthesis (Tezara \emph{et
-al.}, 1999). Hypostomatous leaves are less impacted because the palisade
-are hydraulically buffered from changing VPD (Buckley \emph{et al.},
-2017a). If traits, such as guard cell size, that affect adaxial stomata
-kinetics similarly affect abaxial stomata, this could explain why leaves
-with greater stomatal ratio also have faster kinetics despite
-independent environmental responses on each surface (Mott, 2007; Wall
-\emph{et al.}, 2022).
-
-Our findings also suggest a novel explanation for the well-documented
-negative relationship between stomatal size and density across land
-plants (recently reviewed in Liu \emph{et al.} (2025)). Conventional
-explanations for this relationship focus on optimizing \gop{} and
-minimizing area allocated to stomata, but not on kinetics. Our results
-point to an additional, previously unrecognized constraint. Smaller
-stomata do appear to close faster, consistent with the surface area to
-volume hypothesis, but this kinetic advantage is contingent on operating
-at a moderate or low \fgmax{}. If a leaf reduced guard cell size while
-maintaining the same \gop, the reduced \gmax{} would push \fgmax{}
-higher, partially offsetting the speed benefit of smaller cells. The
-only way to simultaneously reduce guard cell size, maintain \gop{}, and
-keep \fgmax{} from rising is to increase stomatal density---raising
-\gmax{} and thereby limiting \fgmax{}. This logic predicts a coupled
-evolution of small guard cells and high stomatal density, a pattern
-observed broadly across vascular plants (Franks \& Beerling, 2009; {de
-Boer \emph{et al.}}, 2016; Haworth \emph{et al.}, 2023; Liu \emph{et
-al.}, 2025). Although physical constraints on pore geometry, such as
-increased resistance to diffusion at very small apertures (Leuning,
-1983; {Hodgson \emph{et al.}}, 2010), likely impose a lower limit on
-guard cell size, selection to prevent operating at high \fgmax{} (Franks
-\emph{et al.}, 2012) may also explain why optimal guard cell size
-varies.
-
-\begin{itemize}
-\tightlist
-\item
-  Control VPD stimulus during entire curve
-\item
-  Future studies should also randomize or alternate the order in which
-  repeated within-leaf treatments (such as measurement light intensity)
-  are applied, so that treatment effects can be separated from
-  measurement order, recovery state, and prior stress history, which
-  were confounded in our design.
-\item
-  Need to mention subsaturation. If airspace is unsaturated, then gs is
-  underestimated. This doesn't necessarily affect kinetic parameter
-  estimates since all measurements were done at high VPD.
-\end{itemize}
+The direct effect of leaf type on \(\tau\) indicates that adaxial
+stomata close faster than abaxial stomata after accounting for
+differences in \gi{}. This result is consistent with the broader
+association between greater adaxial stomatal density and faster stomatal
+closure across land plants (Haworth \emph{et al.}, 2018; Woning \emph{et
+al.}, 2026). One plausible reason adaxial stomata may have evolved to
+close intrinsically faster is because adaxial stomata directly overlie
+the photosynthetically active palisade mesophyll and failure to close
+quickly could rapidly desiccate this tissue and impair photosynthesis
+(Tezara \emph{et al.}, 1999; Buckley \emph{et al.}, 2017a).
+Hypostomatous leaves may experience less dehydration risk because the
+palisade is hydraulically buffered from changing VPD when stomata are
+confined to the abaxial surface (Buckley \emph{et al.}, 2017a). If
+traits such as guard cell size that influence kinetics act similarly on
+both surfaces, this shared basis, together with the intrinsic speed
+difference between surfaces documented here, could jointly explain why
+leaves and species with a greater proportion of adaxial stomata tend to
+have faster overall stomatal kinetics.
 
 Future research is needed to determine how stomatal kinetic responses
 measured in controlled conditions impact performance in nature. Our
@@ -1641,10 +1501,21 @@ closure and comparing it among individuals and treatments, but it need
 not follow that the same anatomical and physiological factors that
 govern \(\tau\) in our experiment also govern kinetic variation under
 more naturalistic conditions, where closure VPD may fluctuate more
-gradually. We hypothesize that ecological conditions which favor close
-tracking of fluctuating environments will select for leaves with traits
-like smaller guard cell size and low \fgmax{} that enable rapid
-kinetics.
+gradually. Future studies should aim to control the VPD stimulus
+throughout the entire response curve, rather than allowing it to vary as
+transpiration itself alters chamber humidity, as it did here
+(Table~\ref{tbl-vpd}). Such studies should also randomize or alternate
+the order in which repeated within-leaf treatments (such as measurement
+light intensity) are applied, so that treatment effects can be separated
+from measurement order, recovery state, and prior stress history, which
+were confounded in our design. It will also be important to consider
+whether the substomatal airspace remains saturated during the humidity
+step, because \gsw{} will be underestimated if the airspace is
+subsaturated (Cernusak \emph{et al.}, 2018; Buckley \& Sack, 2019; Wong
+\emph{et al.}, 2022; Rockwell \emph{et al.}, 2022). We hypothesize that
+ecological conditions which favor close tracking of fluctuating
+environments will select for leaves with traits like smaller guard cell
+size and low \gi{} that enable rapid kinetics.
 
 \subsection{Acknowledgements}\label{acknowledgements}
 
@@ -1679,7 +1550,7 @@ publication.
 
 \singlespacing
 
-\protect\phantomsection\label{refs}
+\phantomsection\label{refs}
 \begin{CSLReferences}{0}{1}
 \bibitem[\citeproctext]{ref-aasamaa_stomatal_2011}
 \textbf{\textbf{Aasamaa K}, \textbf{Sõber A}}. \textbf{2011a}.
@@ -1753,6 +1624,12 @@ within leaves}. \emph{Plant Physiology} \textbf{173}: 1763--1782.
 hydromechanical and biochemical model of stomatal conductance}.
 \emph{Plant, Cell \& Environment} \textbf{26}: 1767--1785.
 
+\bibitem[\citeproctext]{ref-buckley_humidity_2019}
+\textbf{\textbf{Buckley TN}, \textbf{Sack L}}. \textbf{2019}.
+\href{https://doi.org/10.1002/ajb2.1282}{The humidity inside leaves and
+why you should care: Implications of unsaturation of leaf intercellular
+airspaces}. \emph{American Journal of Botany} \textbf{106}: 618--621.
+
 \bibitem[\citeproctext]{ref-buckley_optimal_2017}
 \textbf{\textbf{Buckley TN}, \textbf{Sack L}, \textbf{Farquhar GD}}.
 \textbf{2017b}. \href{https://doi.org/10.1111/pce.12823}{Optimal plant
@@ -1770,6 +1647,15 @@ of {Bundle Sheath Extensions} and {Life Form} in {Stomatal Responses} to
 \href{https://doi.org/10.18637/jss.v080.i01}{{\textbf{\textbraceleft brms\textbraceright}}:
 {An} {\emph{R}} package for {Bayesian} multilevel models using
 {\emph{Stan}}}. \emph{Journal of Statistical Software} \textbf{80}.
+
+\bibitem[\citeproctext]{ref-cernusak_unsaturation_2018}
+\textbf{\textbf{Cernusak LA}, \textbf{Ubierna N}, \textbf{Jenkins MW},
+\textbf{Garrity SR}, \textbf{Rahn T}, \textbf{Powers HH}, \textbf{Hanson
+DT}, \textbf{Sevanto S}, \textbf{Wong SC}, \textbf{McDowell NG},
+\emph{et al.}} \textbf{2018}.
+\href{https://doi.org/10.1038/s41598-018-25838-2}{Unsaturation of vapour
+pressure inside leaves of two conifer species}. \emph{Scientific
+Reports} \textbf{8}: 7667.
 
 \bibitem[\citeproctext]{ref-cowan_oscillations_1972}
 \textbf{\textbf{Cowan IR}}. \textbf{1972}.
@@ -1803,13 +1689,6 @@ conductance}. \emph{Plant, Cell \& Environment} \textbf{33}: 1419--1438.
 \textbf{\textbf{Darwin F}}. \textbf{1898}.
 \href{https://doi.org/10.1098/rspl.1898.0053}{Observations on stomata}.
 \emph{Proceedings of the Royal Society of London} \textbf{63}: 413--417.
-
-\bibitem[\citeproctext]{ref-deboer_optimal_2016}
-\textbf{{\textbf{de Boer HJ}, \textbf{Price CA}, \textbf{Wagner-Cremer
-F}, \textbf{Dekker SC}, \textbf{Franks PJ}, \textbf{Veneklaas EJ}}}.
-\textbf{2016}. \href{https://doi.org/10.1111/nph.13929}{Optimal
-allocation of leaf epidermal area for gas exchange}. \emph{New
-Phytologist} \textbf{210}: 1219--1228.
 
 \bibitem[\citeproctext]{ref-devillemereuil_general_2014}
 \textbf{\textbf{De Villemereuil P}, \textbf{Nakagawa S}}. \textbf{2014}.
@@ -1846,12 +1725,6 @@ conductance}. \emph{Journal of Experimental Botany} \textbf{64}:
 {Stomatal Closing Rate Than Stomatal Size} in {Taxa That Diversified}
 under {Low CO}{\textsubscript{2}}}. \emph{Frontiers in Plant Science}
 \textbf{7}.
-
-\bibitem[\citeproctext]{ref-franks_maximum_2009}
-\textbf{\textbf{Franks PJ}, \textbf{Beerling DJ}}. \textbf{2009}.
-Maximum leaf conductance driven by {CO}{\textsubscript{2}} effects on
-stomatal size and density over geologic time. \emph{Proceedings of the
-National Academy of Sciences} \textbf{106}: 10343--10347.
 
 \bibitem[\citeproctext]{ref-franks_guard_2001}
 \textbf{\textbf{Franks PJ}, \textbf{Buckley TN}, \textbf{Shope JC},
@@ -1954,15 +1827,6 @@ Experimental Botany} \textbf{151}: 55--63.
 sensing and driving environmental change}. \emph{Nature} \textbf{424}:
 901--908.
 
-\bibitem[\citeproctext]{ref-hodgson_stomatal_2010}
-\textbf{{\textbf{Hodgson JG}, \textbf{Sharafi M}, \textbf{Jalili A},
-\textbf{Díaz S}, \textbf{Montserrat-Martí G}, \textbf{Palmer C},
-\textbf{Cerabolini B}, \textbf{Pierce S}, \textbf{Hamzehee B},
-\textbf{Asri Y}, \emph{et al.}}} \textbf{2010}.
-\href{https://doi.org/10.1093/aob/mcq011}{Stomatal vs. Genome size in
-angiosperms: The somatic tail wagging the genomic dog?} \emph{Annals of
-Botany} \textbf{105}: 573--584.
-
 \bibitem[\citeproctext]{ref-homann_number_2002}
 \textbf{\textbf{Homann U}, \textbf{Thiel G}}. \textbf{2002}.
 \href{https://doi.org/10.1073/pnas.152324399}{The number of
@@ -2009,6 +1873,13 @@ al.}} \textbf{2021}.
 endomembrane {Ca2}+-{ATPases} underpin a {`carbon memory'} of
 photosynthetic assimilation that impacts on water-use efficiency}.
 \emph{Nature Plants} \textbf{7}: 1301--1313.
+
+\bibitem[\citeproctext]{ref-kaiser_relation_2009}
+\textbf{\textbf{Kaiser H}}. \textbf{2009}.
+\href{https://doi.org/10.1111/j.1365-3040.2009.01990.x}{The relation
+between stomatal aperture and gas exchange under consideration of pore
+geometry and diffusional resistance in the mesophyll}. \emph{Plant, Cell
+\& Environment} \textbf{32}: 1091--1098.
 
 \bibitem[\citeproctext]{ref-kardiman_relationship_2018}
 \textbf{\textbf{Kardiman R}, \textbf{Ræbild A}}. \textbf{2018}.
@@ -2070,18 +1941,10 @@ and plant water use efficiency}. \emph{New Phytologist} \textbf{221}:
 eds. Progress in {Botany} 72. Berlin, Heidelberg: Springer Berlin
 Heidelberg, 265--304.
 
-\bibitem[\citeproctext]{ref-leuning_transport_1983}
-\textbf{\textbf{Leuning R}}. \textbf{1983}.
-\href{https://doi.org/10.1111/1365-3040.ep11587617}{Transport of gases
-into leaves}. \emph{Plant, Cell \& Environment} \textbf{6}: 181--194.
-
-\bibitem[\citeproctext]{ref-liu_bounds_2025}
-\textbf{\textbf{Liu C}, \textbf{Muir CD}, \textbf{Sack L}, \textbf{Li
-Y}, \textbf{Xu L}, \textbf{Li M}, \textbf{Zhang J}, \textbf{De Boer HJ},
-\textbf{Han X}, \textbf{Yu G}, \emph{et al.}} \textbf{2025}.
-\href{https://doi.org/10.1111/nph.70626}{Bounds on stomatal size can
-explain scaling with stomatal density in forest plants}. \emph{New
-Phytologist} \textbf{248}: 2910--2926.
+\bibitem[\citeproctext]{ref-lehmann_effects_2015}
+\textbf{\textbf{Lehmann P}, \textbf{Or D}}. \textbf{2015}.
+\href{https://doi.org/10.1111/nph.13442}{Effects of stomata clustering
+on leaf gas exchange}. \emph{New Phytologist} \textbf{207}: 1015--1025.
 
 \bibitem[\citeproctext]{ref-lynch_methods_1991}
 \textbf{\textbf{Lynch M}}. \textbf{1991}.
@@ -2166,12 +2029,6 @@ reinterpretation of stomatal responses to humidity}. \emph{Plant, Cell
 \textbf{\textbf{Monteith JL}, \textbf{Unsworth MH}}. \textbf{2013}.
 \emph{Principles of environmental physics: Plants, animals, and the
 atmosphere}. Amsterdam ; Boston: Elsevier/Academic Press.
-
-\bibitem[\citeproctext]{ref-mott_leaf_2007}
-\textbf{\textbf{Mott KA}}. \textbf{2007}.
-\href{https://doi.org/10.1111/j.1365-3040.2007.01720.x}{Leaf hydraulic
-conductivity and stomatal responses to humidity in amphistomatous
-leaves}. \emph{Plant, Cell \& Environment} \textbf{30}: 1444--1449.
 
 \bibitem[\citeproctext]{ref-mott_stomatal_1991}
 \textbf{\textbf{Mott KA}, \textbf{Parkhurst DF}}. \textbf{1991}.
@@ -2282,6 +2139,13 @@ pressures on stomatal evolution}. \emph{New Phytologist} \textbf{153}:
 \href{https://doi.org/10.1093/jxb/eru032}{Speedy small stomata?}
 \emph{Journal of Experimental Botany} \textbf{65}: 1415--1424.
 
+\bibitem[\citeproctext]{ref-rockwell_extreme_2022}
+\textbf{\textbf{Rockwell FE}, \textbf{Holbrook NM}, \textbf{Jain P},
+\textbf{Huber AE}, \textbf{Sen S}, \textbf{Stroock AD}}. \textbf{2022}.
+\href{https://doi.org/10.1093/aob/mcac094}{Extreme undersaturation in
+the intercellular airspace of leaves: A failure of {Gaastra} or {Ohm}?}
+\emph{Annals of Botany} \textbf{130}: 301--316.
+
 \bibitem[\citeproctext]{ref-sack_developmental_2016}
 \textbf{\textbf{Sack L}, \textbf{Buckley TN}}. \textbf{2016}.
 \href{https://doi.org/10.1104/pp.16.00476}{The developmental basis of
@@ -2334,6 +2198,11 @@ and {Photosynthetic Induction Between Subtropical Evergreen} and
 \href{https://doi.org/10.1038/44842}{Water stress inhibits plant
 photosynthesis by decreasing coupling factor and {ATP}}. \emph{Nature}
 \textbf{401}: 914--917.
+
+\bibitem[\citeproctext]{ref-ting_further_1965}
+\textbf{\textbf{Ting IP}, \textbf{Loomis WE}}. \textbf{1965}.
+\href{https://doi.org/10.1104/pp.40.2.220}{Further {Studies Concerning
+Stomatal Diffusion}}. \emph{Plant Physiology} \textbf{40}: 220--228.
 
 \bibitem[\citeproctext]{ref-uyeda_rethinking_2018}
 \textbf{\textbf{Uyeda JC}, \textbf{Zenil-Ferguson R}, \textbf{Pennell
@@ -2388,6 +2257,13 @@ conservative trait correlation: {Quantification} and interpretation}.
 \emph{\href{https://doi.org/10.1007/978-94-011-0579-8}{Stomata}}.
 Dordrecht: Springer Netherlands.
 
+\bibitem[\citeproctext]{ref-wong_humidity_2022}
+\textbf{\textbf{Wong SC}, \textbf{Canny MJ}, \textbf{Holloway-Phillips
+M}, \textbf{Stuart-Williams H}, \textbf{Cernusak LA}, \textbf{Márquez
+DA}, \textbf{Farquhar GD}}. \textbf{2022}.
+\href{https://doi.org/10.1038/s41477-022-01202-1}{Humidity gradients in
+the air spaces of leaves}. \emph{Nature Plants} \textbf{8}: 971--978.
+
 \bibitem[\citeproctext]{ref-woning_revisiting_2026}
 \textbf{\textbf{Woning N}, \textbf{Al-Salman Y}, \textbf{Kaiser E},
 \textbf{Berman SR}, \textbf{Brendel O}, \textbf{Cano FJ},
@@ -2411,6 +2287,15 @@ trait coordinating network adaptation to environmental gradients}.
 \href{https://doi.org/10.1016/j.cub.2006.03.028}{The {Identification} of
 {Genes Involved} in the {Stomatal Response} to {Reduced Atmospheric
 Relative Humidity}}. \emph{Current Biology} \textbf{16}: 882--887.
+
+\bibitem[\citeproctext]{ref-yoshiyama_natural_2024}
+\textbf{\textbf{Yoshiyama Y}, \textbf{Wakabayashi Y}, \textbf{Mercer
+KL}, \textbf{Kawabata S}, \textbf{Kobayashi T}, \textbf{Tabuchi T},
+\textbf{Yamori W}}. \textbf{2024}.
+\href{https://doi.org/10.1093/jxb/erae082}{Natural genetic variation in
+dynamic photosynthesis is correlated with stomatal anatomical traits in
+diverse tomato species across geographical habitats} (T Lawson, Ed.).
+\emph{Journal of Experimental Botany} \textbf{75}: 6762--6777.
 
 \end{CSLReferences}
 
@@ -2488,34 +2373,6 @@ Species & TGRC accession & Latitude & Longitude & Elevation (mas)\\
 
 \end{longtable}
 
-\begin{table}
-
-\caption{\label{tbl-sample-size}Total number of humidity response curves
-analyzed in this study broken down by treatments.}
-
-\centering{
-
-\begin{tabular}{lccccc}
-\toprule
-\multicolumn{1}{c}{ } & \multicolumn{4}{c}{Measurement light intensity} & \multicolumn{1}{c}{ } \\
-\cmidrule(l{3pt}r{3pt}){2-5}
-\multicolumn{1}{c}{ } & \multicolumn{2}{c}{Low} & \multicolumn{2}{c}{High} & \multicolumn{1}{c}{ } \\
-\cmidrule(l{3pt}r{3pt}){2-3} \cmidrule(l{3pt}r{3pt}){4-5}
-Growth light intensity & amphi & pseudohypo & amphi & pseudohypo & Total\\
-\midrule
-shade & 275 & 275 & 270 & 266 & 1,086\\
-sun & 245 & 246 & 274 & 274 & 1,039\\
-\midrule
-Total & 520 & 521 & 544 & 540 & 2,125\\
-\bottomrule
-\end{tabular}
-
-}
-
-\end{table}%
-
-\newpage{}
-
 \begin{table}[h]
 
 \caption{\label{tbl-vpd}Relative humidity (RH, \%) and leaf vapor
@@ -2553,6 +2410,180 @@ sun & high & amphi & 29.8 & 20.4 & 13.8 & 2.17 & 2.50 & 2.72\\
 
 \end{table}%
 
+\begin{table}
+
+\caption{\label{tbl-sample-size}Total number of humidity response curves
+analyzed in this study broken down by treatments.}
+
+\centering{
+
+\begin{tabular}{lccccc}
+\toprule
+\multicolumn{1}{c}{ } & \multicolumn{4}{c}{Measurement light intensity} & \multicolumn{1}{c}{ } \\
+\cmidrule(l{3pt}r{3pt}){2-5}
+\multicolumn{1}{c}{ } & \multicolumn{2}{c}{Low} & \multicolumn{2}{c}{High} & \multicolumn{1}{c}{ } \\
+\cmidrule(l{3pt}r{3pt}){2-3} \cmidrule(l{3pt}r{3pt}){4-5}
+Growth light intensity & amphi & pseudohypo & amphi & pseudohypo & Total\\
+\midrule
+shade & 275 & 275 & 270 & 266 & 1,086\\
+sun & 245 & 246 & 274 & 274 & 1,039\\
+\midrule
+Total & 520 & 521 & 544 & 540 & 2,125\\
+\bottomrule
+\end{tabular}
+
+}
+
+\end{table}%
+
+\clearpage
+
+\begin{longtable}[t]{llccccll}
+
+\caption{\label{tbl-comparison}Model comparison results. Models with a
+\(\Delta\)LOOIC less than two standard errors (SE) from the minimum
+LOOIC are considered to have substantial support and are used for
+posterior predictions to test hypotheses about the effects of guard cell
+length (\gcl) and the components (\gi, \gmax) of stomatal conductance as
+a fraction of anatomical maximum stomatal conductance (\fgmax) on
+stomatal kinetic parameter \(\lambda\) (time lag) and \(\tau\) (time
+constant). Unsupported models are in gray italic font. The model
+selected for subsequent inference is in bold. LOOIC stands for
+leave-one-out cross-validation information criterion.}
+
+\tabularnewline
+
+\toprule
+\multicolumn{2}{c}{ } & \multicolumn{3}{c}{$\lambda$} & \multicolumn{3}{c}{$\tau$} \\
+\cmidrule(l{3pt}r{3pt}){3-5} \cmidrule(l{3pt}r{3pt}){6-8}
+$\Delta \mathrm{LOOIC}$ & SE & \gcl & \gi & \gmax & \gcl & \gi & \gmax\\
+\midrule
+\endfirsthead
+\multicolumn{8}{@{}l}{\textit{(continued)}}\\
+\toprule
+\multicolumn{2}{c}{ } & \multicolumn{3}{c}{$\lambda$} & \multicolumn{3}{c}{$\tau$} \\
+\cmidrule(l{3pt}r{3pt}){3-5} \cmidrule(l{3pt}r{3pt}){6-8}
+$\Delta \mathrm{LOOIC}$ & SE & \gcl & \gi & \gmax & \gcl & \gi & \gmax\\
+\midrule
+\endhead
+
+\endfoot
+\bottomrule
+\endlastfoot
+\textbf{0.00} & \textbf{0.00} & \textbf{} & \textbf{\cmark} & \textbf{} & \textbf{} & \textbf{\cmark} & \textbf{}\\
+3.58 & 2.95 & \cmark & \cmark & \cmark & \cmark & \cmark & \cmark\\
+4.80 & 2.96 &  & \cmark &  & \cmark & \cmark & \\
+4.91 & 2.92 &  & \cmark &  &  & \cmark & \cmark\\
+4.92 & 2.90 & \cmark & \cmark &  &  & \cmark & \\
+\addlinespace
+5.20 & 2.72 &  & \cmark & \cmark &  & \cmark & \\
+\textcolor{gray}{\em{5.91}} & \textcolor{gray}{\em{2.91}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}}\\
+\textcolor{gray}{\em{6.06}} & \textcolor{gray}{\em{2.85}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}}\\
+\textcolor{gray}{\em{6.21}} & \textcolor{gray}{\em{2.85}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}}\\
+\textcolor{gray}{\em{6.80}} & \textcolor{gray}{\em{3.04}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}}\\
+\addlinespace
+\textcolor{gray}{\em{7.70}} & \textcolor{gray}{\em{2.96}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}}\\
+\textcolor{gray}{\em{8.20}} & \textcolor{gray}{\em{2.90}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}}\\
+\textcolor{gray}{\em{9.04}} & \textcolor{gray}{\em{2.95}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}}\\
+\textcolor{gray}{\em{9.05}} & \textcolor{gray}{\em{2.85}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}}\\
+\textcolor{gray}{\em{9.91}} & \textcolor{gray}{\em{2.98}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}}\\
+\addlinespace
+\textcolor{gray}{\em{10.76}} & \textcolor{gray}{\em{2.88}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}}\\
+\textcolor{gray}{\em{38.52}} & \textcolor{gray}{\em{13.42}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}}\\
+\textcolor{gray}{\em{38.61}} & \textcolor{gray}{\em{13.29}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}}\\
+\textcolor{gray}{\em{39.19}} & \textcolor{gray}{\em{13.38}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}}\\
+\textcolor{gray}{\em{39.20}} & \textcolor{gray}{\em{13.37}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}}\\
+\addlinespace
+\textcolor{gray}{\em{39.34}} & \textcolor{gray}{\em{13.43}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}}\\
+\textcolor{gray}{\em{39.62}} & \textcolor{gray}{\em{13.26}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}}\\
+\textcolor{gray}{\em{39.93}} & \textcolor{gray}{\em{13.34}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}}\\
+\textcolor{gray}{\em{40.18}} & \textcolor{gray}{\em{13.39}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}}\\
+\textcolor{gray}{\em{40.33}} & \textcolor{gray}{\em{13.40}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}}\\
+\addlinespace
+\textcolor{gray}{\em{40.55}} & \textcolor{gray}{\em{13.31}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}}\\
+\textcolor{gray}{\em{40.87}} & \textcolor{gray}{\em{13.30}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}}\\
+\textcolor{gray}{\em{41.02}} & \textcolor{gray}{\em{13.53}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}}\\
+\textcolor{gray}{\em{41.40}} & \textcolor{gray}{\em{13.34}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}}\\
+\textcolor{gray}{\em{43.99}} & \textcolor{gray}{\em{13.30}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}}\\
+\addlinespace
+\textcolor{gray}{\em{44.44}} & \textcolor{gray}{\em{13.42}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}}\\
+\textcolor{gray}{\em{45.04}} & \textcolor{gray}{\em{13.23}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}}\\
+\textcolor{gray}{\em{53.96}} & \textcolor{gray}{\em{15.47}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}}\\
+\textcolor{gray}{\em{55.21}} & \textcolor{gray}{\em{15.36}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}}\\
+\textcolor{gray}{\em{56.20}} & \textcolor{gray}{\em{15.41}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}}\\
+\addlinespace
+\textcolor{gray}{\em{57.58}} & \textcolor{gray}{\em{15.46}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}}\\
+\textcolor{gray}{\em{57.85}} & \textcolor{gray}{\em{15.37}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}}\\
+\textcolor{gray}{\em{57.94}} & \textcolor{gray}{\em{15.52}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}}\\
+\textcolor{gray}{\em{58.12}} & \textcolor{gray}{\em{15.40}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}}\\
+\textcolor{gray}{\em{59.08}} & \textcolor{gray}{\em{15.46}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}}\\
+\addlinespace
+\textcolor{gray}{\em{59.45}} & \textcolor{gray}{\em{15.41}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}}\\
+\textcolor{gray}{\em{59.87}} & \textcolor{gray}{\em{15.42}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}}\\
+\textcolor{gray}{\em{60.11}} & \textcolor{gray}{\em{15.43}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}}\\
+\textcolor{gray}{\em{60.21}} & \textcolor{gray}{\em{15.45}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}}\\
+\textcolor{gray}{\em{60.63}} & \textcolor{gray}{\em{15.41}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}}\\
+\addlinespace
+\textcolor{gray}{\em{61.45}} & \textcolor{gray}{\em{15.37}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}}\\
+\textcolor{gray}{\em{61.86}} & \textcolor{gray}{\em{15.49}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}}\\
+\textcolor{gray}{\em{63.84}} & \textcolor{gray}{\em{15.41}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}}\\
+\textcolor{gray}{\em{92.74}} & \textcolor{gray}{\em{20.59}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}}\\
+\textcolor{gray}{\em{93.78}} & \textcolor{gray}{\em{20.53}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}}\\
+\addlinespace
+\textcolor{gray}{\em{94.61}} & \textcolor{gray}{\em{20.53}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}}\\
+\textcolor{gray}{\em{94.93}} & \textcolor{gray}{\em{20.57}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}}\\
+\textcolor{gray}{\em{95.18}} & \textcolor{gray}{\em{20.58}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}}\\
+\textcolor{gray}{\em{96.21}} & \textcolor{gray}{\em{20.59}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}}\\
+\textcolor{gray}{\em{96.69}} & \textcolor{gray}{\em{20.51}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}}\\
+\addlinespace
+\textcolor{gray}{\em{96.75}} & \textcolor{gray}{\em{20.54}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}}\\
+\textcolor{gray}{\em{96.87}} & \textcolor{gray}{\em{20.64}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}}\\
+\textcolor{gray}{\em{97.11}} & \textcolor{gray}{\em{20.50}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}}\\
+\textcolor{gray}{\em{97.98}} & \textcolor{gray}{\em{20.56}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}}\\
+\textcolor{gray}{\em{98.01}} & \textcolor{gray}{\em{20.53}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}}\\
+\addlinespace
+\textcolor{gray}{\em{98.27}} & \textcolor{gray}{\em{20.45}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}}\\
+\textcolor{gray}{\em{99.69}} & \textcolor{gray}{\em{20.68}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}}\\
+\textcolor{gray}{\em{100.41}} & \textcolor{gray}{\em{20.64}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}}\\
+\textcolor{gray}{\em{101.31}} & \textcolor{gray}{\em{20.43}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{}} & \textcolor{gray}{\em{\cmark}}\\*
+
+\end{longtable}
+
+\begin{table}
+
+\caption{\label{tbl-loo-diagnostics}Pareto \(\hat{k}\), PSIS effective
+sample size (ESS), and Monte Carlo standard error (MCSE) diagnostics for
+the six plausible models identified by LOOIC
+(Table~\ref{tbl-comparison}). The selected model is in bold.
+Good/bad/very bad refer to the conventional Pareto \(\hat{k}\)
+thresholds of 0.7 and 1. MCSE(elpd\textsubscript{loo}) is left blank
+(`--') for models with at least one curve with \(\hat{k} \ge 1\), for
+which the MCSE estimate is undefined.}
+
+\centering{
+
+\centering
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
+\begin{tabular}[t]{lcccccccc}
+\toprule
+Model & $\Delta$LOOIC & SE & $n$ curves & Good $\hat{k}$ (\%) & Bad $\hat{k}$ (\%) & Very bad $\hat{k}$ (\%) & Min. PSIS ESS & MCSE(elpd\textsubscript{loo})\\
+\midrule
+\textbf{model 46} & 0.00 & 0.00 & 2125 & 99.48 & 0.52 & 0.00 & 66 & 1.42\\
+model 01 & 3.58 & 2.95 & 2125 & 99.48 & 0.52 & 0.00 & 33 & 1.44\\
+model 14 & 5.20 & 2.72 & 2125 & 99.25 & 0.75 & 0.00 & 27 & 1.43\\
+model 30 & 4.92 & 2.90 & 2125 & 99.53 & 0.47 & 0.00 & 37 & 1.43\\
+model 42 & 4.91 & 2.92 & 2125 & 99.62 & 0.38 & 0.00 & 69 & 1.41\\
+\addlinespace
+model 44 & 4.80 & 2.96 & 2125 & 99.48 & 0.52 & 0.00 & 51 & 1.42\\
+\bottomrule
+\end{tabular}}
+
+}
+
+\end{table}%
+
+\clearpage
+
 \newpage{}
 
 \begin{longtable}{lll}
@@ -2565,10 +2596,10 @@ non-phylogenetic variance among populations. The among-individual
 variance component is the variation among individuals within a
 population after accounting for treatment effect. Estimates and 95\%
 confidence intervals (CI) are estimated as the median and quantile
-intervals of the posterior distribution. \(f_\mathrm{gmax}\): stomatal
-conductance as a fraction of anatomical maximum stomatal conductance;
-\(l_\mathrm{gc}\): guard cell length; \(\lambda\): lag time; \(\tau\):
-time constant.}
+intervals of the posterior distribution. \(l_\mathrm{gc}\): guard cell
+length; \(g_\mathrm{i}\): initial stomatal conductance;
+\(g_\mathrm{max}\): anatomical maximum stomatal conductance;
+\(\lambda\): lag time; \(\tau\): time constant.}
 
 \tabularnewline
 
@@ -2605,9 +2636,73 @@ component & \% variance & 95\% CI\\
 \hspace{1em}phylogenetic & 14.7 & {}[0.2, 38.4]\\
 \hspace{1em}population (nonphylogenetic) & 4.7 & {}[0.2, 15.1]\\
 \hspace{1em}among-individual & 80.2 & {}[58.8, 90.9]\\
-phylogenetic & 40.6 & {}[20.2, 60.9]\\
-population (nonphylogenetic) & 1.1 & {}[0.0, 11.3]\\
-among-individual & 57.5 & {}[38.6, 73.5]\\*
+\addlinespace[0.3em]
+\multicolumn{3}{l}{\textbf{$\log \left( \tau \right)$}}\\
+\hspace{1em}phylogenetic & 40.6 & {}[20.2, 60.9]\\
+\hspace{1em}population (nonphylogenetic) & 1.1 & {}[0.0, 11.3]\\
+\hspace{1em}among-individual & 57.5 & {}[38.6, 73.5]\\*
+
+\end{longtable}
+
+\clearpage
+
+\begin{longtable}{>{\raggedright\arraybackslash}p{3.75in}>{\raggedright\arraybackslash}p{2in}}
+
+\caption{\label{tbl-fixed}Fixed effect parameter estimates and 95\%
+confidence intervals (CIs) from the posterior distribution of the
+selected model. For each response variable, we estimated effects of
+growth light intensity (sun vs.~shade), measurement light intensity
+(high vs.~low), and leaf type (amphi vs.~pseudohypo). The selected model
+potentially includes effects of \gcl, \gi{}, and \gmax{} on \(\tau\) and
+\(\lambda\).}
+
+\tabularnewline
+
+\toprule
+\textbf{Parameter} & \textbf{Estimate [95\% CI]}\\
+\midrule
+\endfirsthead
+\multicolumn{2}{@{}l}{\textit{(continued)}}\\
+\toprule
+\textbf{Parameter} & \textbf{Estimate [95\% CI]}\\
+\midrule
+\endhead
+
+\endfoot
+\bottomrule
+\endlastfoot
+\addlinespace[0.3em]
+\multicolumn{2}{l}{\textbf{$\log(l_\mathrm{gc})$}}\\
+\hspace{1em}intercept (shade, low light, amphi) & 2.96 [2.81, 3.11]\\
+\hspace{1em}effect of sun growth treatment on $\log(l_\mathrm{gc})$ & 0.12 [0.11, 0.12]\\
+\hspace{1em}effect of pseudohypo leaf type on $\log(l_\mathrm{gc})$ & -0.06 [-0.07, -0.05]\\
+\addlinespace[0.3em]
+\multicolumn{2}{l}{\textbf{$\log(g_\mathrm{i})$}}\\
+\hspace{1em}intercept (shade, low light, amphi) & -1.71 [-1.95, -1.47]\\
+\hspace{1em}effect of sun growth treatment on $\log(g_\mathrm{i})$ & 0.35 [0.29, 0.40]\\
+\hspace{1em}effect of high measurement light intensity on $\log(g_\mathrm{i})$ & 0.76 [0.73, 0.78]\\
+\hspace{1em}effect of pseudohypo leaf type on $\log(g_\mathrm{i})$ & -0.22 [-0.24, -0.19]\\
+\addlinespace[0.3em]
+\multicolumn{2}{l}{\textbf{$\log(g_\mathrm{max})$}}\\
+\hspace{1em}intercept (shade, low light, amphi) & 0.87 [0.56, 1.19]\\
+\hspace{1em}effect of sun growth treatment on $\log(g_\mathrm{max})$ & 0.60 [0.55, 0.64]\\
+\hspace{1em}effect of high measurement light intensity on $\log(g_\mathrm{max})$ & -0.00 [-0.01, 0.01]\\
+\hspace{1em}effect of pseudohypo leaf type on $\log(g_\mathrm{max})$ & -0.40 [-0.41, -0.39]\\
+\addlinespace[0.3em]
+\multicolumn{2}{l}{\textbf{$\log(\lambda)$}}\\
+\hspace{1em}intercept (shade, low light, amphi) & 0.45 [0.35, 0.56]\\
+\hspace{1em}effect of sun growth treatment on $\log(\lambda)$ & 0.08 [0.05, 0.11]\\
+\hspace{1em}effect of high measurement light intensity on $\log(\lambda)$ & -0.01 [-0.04, 0.01]\\
+\hspace{1em}effect of pseudohypo leaf type on $\log(\lambda)$ & -0.02 [-0.04, 0.00]\\
+\hspace{1em}effect of loggi on $\log(\lambda)$ & 0.15 [0.12, 0.19]\\
+\hspace{1em}effect of $\log(g_\mathrm{max})$ on $\log(\lambda)$ & -0.08 [-0.11, -0.04]\\
+\addlinespace[0.3em]
+\multicolumn{2}{l}{\textbf{$\log(\tau)$}}\\
+\hspace{1em}intercept (shade, low light, amphi) & 5.58 [5.23, 5.91]\\
+\hspace{1em}effect of sun growth treatment on $\log(\tau)$ & -0.11 [-0.16, -0.06]\\
+\hspace{1em}effect of high measurement light intensity on $\log(\tau)$ & 0.08 [0.01, 0.15]\\
+\hspace{1em}effect of pseudohypo leaf type on $\log(\tau)$ & 0.08 [0.05, 0.11]\\
+\hspace{1em}effect of loggi on $\log(\tau)$ & 0.32 [0.23, 0.41]\\*
 
 \end{longtable}
 
@@ -2650,101 +2745,6 @@ Download from:
 \end{table}%
 
 \clearpage
-
-\begin{table}
-
-\caption{\label{tbl-loo-diagnostics}Pareto \(\hat{k}\), PSIS effective
-sample size (ESS), and Monte Carlo standard error (MCSE) diagnostics for
-the six plausible models identified by LOOIC
-(Table~\ref{tbl-comparison}). The selected model is in bold.
-Good/bad/very bad refer to the conventional Pareto \(\hat{k}\)
-thresholds of 0.7 and 1. MCSE(elpd\textsubscript{loo}) is left blank
-(`--') for models with at least one curve with \(\hat{k} \ge 1\), for
-which the MCSE estimate is undefined.}
-
-\centering{
-
-\centering
-\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
-\begin{tabular}[t]{lcccccccc}
-\toprule
-Model & $\Delta$LOOIC & SE & $n$ curves & Good $\hat{k}$ (\%) & Bad $\hat{k}$ (\%) & Very bad $\hat{k}$ (\%) & Min. PSIS ESS & MCSE(elpd\textsubscript{loo})\\
-\midrule
-\textbf{fit\_46} & 0.00 & 0.00 & 2125 & 99.48 & 0.52 & 0.00 & 66 & 1.42\\
-fit\_01 & 3.58 & 2.95 & 2125 & 99.48 & 0.52 & 0.00 & 33 & 1.44\\
-fit\_14 & 5.20 & 2.72 & 2125 & 99.25 & 0.75 & 0.00 & 27 & 1.43\\
-fit\_30 & 4.92 & 2.90 & 2125 & 99.53 & 0.47 & 0.00 & 37 & 1.43\\
-fit\_42 & 4.91 & 2.92 & 2125 & 99.62 & 0.38 & 0.00 & 69 & 1.41\\
-\addlinespace
-fit\_44 & 4.80 & 2.96 & 2125 & 99.48 & 0.52 & 0.00 & 51 & 1.42\\
-\bottomrule
-\end{tabular}}
-
-}
-
-\end{table}%
-
-\clearpage
-
-\begin{longtable}{>{\raggedright\arraybackslash}p{3.75in}>{\raggedright\arraybackslash}p{2in}}
-
-\caption{\label{tbl-fixed}Fixed effect parameter estimates and 95\%
-confidence intervals (CIs) from the posterior distribution of the
-selected model. For each response variable, we estimated effects of
-growth light intensity (sun vs.~shade), measurement light intensity
-(high vs.~low), and leaf type (amphi vs.~pseudohypo). The selected model
-potentially includes effects of \gcl{} and \fgmax{} on \(\tau\) and
-\(\lambda\).}
-
-\tabularnewline
-
-\toprule
-\textbf{Parameter} & \textbf{Estimate [95\% CI]}\\
-\midrule
-\endfirsthead
-\multicolumn{2}{@{}l}{\textit{(continued)}}\\
-\toprule
-\textbf{Parameter} & \textbf{Estimate [95\% CI]}\\
-\midrule
-\endhead
-
-\endfoot
-\bottomrule
-\endlastfoot
-\addlinespace[0.3em]
-\multicolumn{2}{l}{\textbf{$\log(l_\mathrm{gc})$}}\\
-\hspace{1em}intercept (shade, low light, amphi) & 2.96 [2.81, 3.11]\\
-\hspace{1em}effect of sun growth treatment on $\log(l_\mathrm{gc})$ & 0.12 [0.11, 0.12]\\
-\hspace{1em}effect of pseudohypo leaf type on $\log(l_\mathrm{gc})$ & -0.06 [-0.07, -0.05]\\
-\addlinespace[0.3em]
-\multicolumn{2}{l}{\textbf{loggi}}\\
-\hspace{1em}intercept (shade, low light, amphi) & -1.71 [-1.95, -1.47]\\
-\hspace{1em}effect of sun growth treatment on loggi & 0.35 [0.29, 0.40]\\
-\hspace{1em}effect of high measurement light intensity on loggi & 0.76 [0.73, 0.78]\\
-\hspace{1em}effect of pseudohypo leaf type on loggi & -0.22 [-0.24, -0.19]\\
-\addlinespace[0.3em]
-\multicolumn{2}{l}{\textbf{loggmax}}\\
-\hspace{1em}intercept (shade, low light, amphi) & 0.87 [0.56, 1.19]\\
-\hspace{1em}effect of sun growth treatment on loggmax & 0.60 [0.55, 0.64]\\
-\hspace{1em}effect of high measurement light intensity on loggmax & -0.00 [-0.01, 0.01]\\
-\hspace{1em}effect of pseudohypo leaf type on loggmax & -0.40 [-0.41, -0.39]\\
-\addlinespace[0.3em]
-\multicolumn{2}{l}{\textbf{$\log(\lambda)$}}\\
-\hspace{1em}intercept (shade, low light, amphi) & 0.45 [0.35, 0.56]\\
-\hspace{1em}effect of sun growth treatment on $\log(\lambda)$ & 0.08 [0.05, 0.11]\\
-\hspace{1em}effect of high measurement light intensity on $\log(\lambda)$ & -0.01 [-0.04, 0.01]\\
-\hspace{1em}effect of pseudohypo leaf type on $\log(\lambda)$ & -0.02 [-0.04, 0.00]\\
-\hspace{1em}effect of loggi on $\log(\lambda)$ & 0.15 [0.12, 0.19]\\
-\hspace{1em}effect of loggmax on $\log(\lambda)$ & -0.08 [-0.11, -0.04]\\
-intercept (shade, low light, amphi) & 5.58 [5.23, 5.91]\\
-effect of sun growth treatment on $\log(\tau)$ & -0.11 [-0.16, -0.06]\\
-effect of high measurement light intensity on $\log(\tau)$ & 0.08 [0.01, 0.15]\\
-effect of pseudohypo leaf type on $\log(\tau)$ & 0.08 [0.05, 0.11]\\
-effect of loggi on $\log(\tau)$ & 0.32 [0.23, 0.41]\\*
-
-\end{longtable}
-
-\newpage{}
 
 \begin{longtable}{>{\raggedright\arraybackslash}p{3.5in}>{\raggedright\arraybackslash}p{2in}}
 
@@ -2824,7 +2824,7 @@ traits.}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/vpd-pairs.pdf}}
+\includegraphics{../figures/vpd-pairs.pdf}
 
 }
 
@@ -2843,7 +2843,7 @@ Notes S1).}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/tau-vpd-rate.pdf}}
+\includegraphics{../figures/tau-vpd-rate.pdf}
 
 }
 
@@ -2860,7 +2860,7 @@ line us ordinary least-squares regression fit.}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/vpd-h2o-rate.pdf}}
+\includegraphics{../figures/vpd-h2o-rate.pdf}
 
 }
 
@@ -2878,7 +2878,7 @@ constants come from the same saturating-exponential model used for VPD.}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/vpd-comparison.pdf}}
+\includegraphics{../figures/vpd-comparison.pdf}
 
 }
 
@@ -2895,7 +2895,7 @@ covariate of \(\tau\) and \(\lambda\) (pink; see Notes S1).}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/compare-gsw.pdf}}
+\includegraphics{../figures/compare-gsw.pdf}
 
 }
 
@@ -2930,7 +2930,7 @@ lines are fitted curves. The Bayesian correlation coefficient,
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/gcl.pdf}}
+\includegraphics{../figures/gcl.pdf}
 
 }
 
@@ -2947,7 +2947,43 @@ larger values on the adaxial surface.}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/colinear.pdf}}
+\includegraphics{../figures/estimates-b.pdf}
+
+}
+
+\caption{\label{fig-estimates-b}\textbf{Individual-level (fixed-effect) estimates of guard cell length (\gcl), initial stomatal conductance (\gi), and anatomical maximum stomatal conductance (\gmax) on the stomatal closure time-constant ($\tau$) and lag-time ($\lambda$) are broadly consistent across all plausible models.}
+Points and horizontal bars are posterior medians and 95\% credible
+intervals from each of the six plausible models (rows;
+Table~\ref{tbl-comparison}), ordered by \(\Delta\)LOOIC; the selected
+model is marked with an asterisk (*). Black indicates estimates whose
+95\% credible interval excludes zero; grey indicates intervals that
+overlap zero.}
+
+\end{figure}%
+
+\begin{figure}
+
+\centering{
+
+\includegraphics{../figures/estimates-phy.pdf}
+
+}
+
+\caption{\label{fig-estimates-phy}\textbf{Phylogenetic correlations between guard cell length (\gcl), initial stomatal conductance (\gi), and anatomical maximum stomatal conductance (\gmax) and the stomatal closure time-constant ($\tau$) and lag-time ($\lambda$) are broadly consistent across all plausible models.}
+Points and horizontal bars are posterior medians and 95\% credible
+intervals of the phylogenetic correlation from each of the six plausible
+models (rows; Table~\ref{tbl-comparison}), ordered by \(\Delta\)LOOIC;
+the selected model is marked with an asterisk (*). Black indicates
+estimates whose 95\% credible interval excludes zero; grey indicates
+intervals that overlap zero.}
+
+\end{figure}%
+
+\begin{figure}
+
+\centering{
+
+\includegraphics{../figures/colinear.pdf}
 
 }
 
@@ -2966,7 +3002,7 @@ parameter.}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/gmax-lambda.pdf}}
+\includegraphics{../figures/gmax-lambda.pdf}
 
 }
 
@@ -2984,7 +3020,7 @@ treatments are described in the Materials and Methods section.}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/gi-lambda.pdf}}
+\includegraphics{../figures/gi-lambda.pdf}
 
 }
 
@@ -3003,7 +3039,7 @@ treatments are described in the Materials and Methods section.}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/gmax-lambda.pdf}}
+\includegraphics{../figures/gmax-lambda.pdf}
 
 }
 
@@ -3134,7 +3170,7 @@ nonlinear fit.
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/null-sim-fgmax-tau.pdf}}
+\includegraphics{../figures/null-sim-fgmax-tau.pdf}
 
 }
 
@@ -3167,7 +3203,7 @@ the sensitivity parameter \(\rho\) examined below.
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/mediation-dag.pdf}}
+\includegraphics{../figures/mediation-dag.pdf}
 
 }
 
@@ -3226,7 +3262,7 @@ confounders.
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/mediation-sensitivity.pdf}}
+\includegraphics{../figures/mediation-sensitivity.pdf}
 
 }
 
@@ -3237,7 +3273,6 @@ interval); the vertical solid line is the breakdown point \(\rho^*\) at
 which the indirect effect is zero.}
 
 \end{figure}%
-
 
 
 

@@ -72,7 +72,7 @@ stomata_long = read_rds("data/stomata.rds") |>
       lower_guard_cell_length_um * lower_stomatal_density_mm2 + upper_guard_cell_length_um * upper_stomatal_density_mm2
     ) / total_stomatal_density_mm2
   ) |>
-  select(-starts_with("upper_"), -ends_with("_stomatal_density_mm2")) |>
+  select(-starts_with("upper_")) |>
   pivot_longer(
     cols = -c(acc, id, leaflet_stomata),
     names_to = c("curve_type", "trait"),
@@ -102,6 +102,14 @@ stomata = stomata_long |>
         guard_cell_length_um[idx_match[1]] # take the (first) matching value
       } else {
         guard_cell_length_um[which(!is.na(guard_cell_length_um))[1]] # otherwise take first available
+      }
+    },
+    stomatal_density_mm2 = {
+      idx_match = which(leaflet_stomata == leaflet_licor & !is.na(stomatal_density_mm2))
+      if (length(idx_match) == 1) {
+        stomatal_density_mm2[idx_match[1]]                 # take the (first) matching value
+      } else {
+        stomatal_density_mm2[which(!is.na(stomatal_density_mm2))[1]]       # otherwise take first available
       }
     },
     # Was alternate leaflet used for stomatal anatomy?
