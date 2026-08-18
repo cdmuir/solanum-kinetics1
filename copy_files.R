@@ -74,14 +74,17 @@ files_to_copy <- c(
   "data/rh_curves.rds",
   "data/stomata.rds",
 
-  # Pre-computed outputs of the stamped/skipped scripts (02-06 and 10, which
-  # either fit brms models or read from objects/weibull/)
+  # Pre-computed outputs of the stamped/skipped slow scripts (02-06, 10, 30,
+  # and 33, which fit brms models, run the null-simulation Monte Carlo, or
+  # read from objects/weibull/)
   "objects/r2.rds",
   "objects/pars-summary.rds",
   "objects/df_forms.rds",
   "objects/fits/",
   "objects/n_removed.rds",
   "objects/weibull/",
+  "objects/selected_model_vpd.rds",
+  "objects/null-sim-fgmax-tau.rds",
   "figures/compare-gsw.pdf",
 
   # Git configuration files
@@ -162,7 +165,9 @@ future_stamps <- c(
   "04_calc-r2",
   "05_summarize-pars",
   "06_compare-gsw",
-  "10_fit-all"
+  "10_fit-all",
+  "30_refit-vpd",
+  "33_simulate-null"
 )
 
 for (stamp in future_stamps) {

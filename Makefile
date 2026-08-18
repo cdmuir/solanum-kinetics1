@@ -2,11 +2,13 @@
 #
 # Usage:
 #   make pdf   -- render ms/ms.pdf from existing computed outputs (fastest)
-#   make fast  -- rerun all non-brms R scripts then render; requires brms
-#                 outputs (objects/weibull/ and objects/fits/) to already
-#                 exist from a prior `make all`
-#   make all   -- run every R script (r/00_ through r/38_) including brms
-#                 models, then render (slow)
+#   make fast  -- rerun all fast R scripts then render; requires the slow
+#                 scripts' outputs (objects/weibull/, objects/fits/,
+#                 objects/selected_model_vpd.rds, and
+#                 objects/null-sim-fgmax-tau.rds) to already exist from a
+#                 prior `make all`
+#   make all   -- run every R script (r/00_ through r/38_) including the
+#                 slow ones, then render (slow)
 #
 # This reflects the public repo layout: r/00_ through r/38_ (the archived
 # scripts under r/archive/ -- including the former r/27_plot-conceptual-BD.R,
@@ -14,8 +16,10 @@
 # plus the data/, figures/, objects/, and tables/ directories those scripts
 # read and write.
 #
-# brms scripts (slow): r/02_fit-weibull.R, r/03_refit-weibull.R,
-# r/10_fit-all.R
+# Slow scripts skipped by `make fast`: r/02_fit-weibull.R,
+# r/03_refit-weibull.R, r/10_fit-all.R, and r/30_refit-vpd.R fit brms
+# models; r/33_simulate-null.R runs a 1,000-replicate Monte Carlo
+# simulation (not brms, but still slow).
 
 .PHONY: all fast pdf clean
 .DEFAULT_GOAL := pdf
@@ -43,45 +47,62 @@ $(STAMPS)/01_join-data: r/01_join-data.R r/header.R r/functions.R \
 	touch $@
 
 # ---- brms: individual Weibull fits (slow) ----
+# NOTE: the dependency on $(STAMPS)/01_join-data is order-only (after the
+# `|`), not a normal prerequisite. In the public repo, copy_files.R ships
+# this stamp already future-dated so `make fast` can skip re-fitting; if
+# 01_join-data were a normal prerequisite, Make would force this target to
+# rebuild whenever 01_join-data itself needs rebuilding (which it always
+# does in the copied repo, since joined-data.rds is intentionally
+# regenerated fresh), regardless of this stamp's own timestamp. Order-only
+# preserves correct build order for a from-scratch `make all` without
+# defeating that skip mechanism. The same applies to the other brms/
+# brms-adjacent targets below (03, 04, 05, 06, 10).
 $(STAMPS)/02_fit-weibull: r/02_fit-weibull.R r/header.R r/functions.R \
-  $(STAMPS)/01_join-data | $(STAMPS)
+  | $(STAMPS)/01_join-data $(STAMPS)
 	@echo "==> r/02_fit-weibull.R (slow)"
 	Rscript r/02_fit-weibull.R
 	touch $@
 
 # ---- brms: refit non-converged curves (slow) ----
 $(STAMPS)/03_refit-weibull: r/03_refit-weibull.R r/header.R r/functions.R \
-  $(STAMPS)/02_fit-weibull | $(STAMPS)
+  | $(STAMPS)/02_fit-weibull $(STAMPS)
 	@echo "==> r/03_refit-weibull.R (slow)"
 	Rscript r/03_refit-weibull.R
 	touch $@
 
 $(STAMPS)/04_calc-r2: r/04_calc-r2.R r/header.R r/functions.R \
-  $(STAMPS)/03_refit-weibull | $(STAMPS)
+  | $(STAMPS)/03_refit-weibull $(STAMPS)
 	@echo "==> r/04_calc-r2.R"
 	Rscript r/04_calc-r2.R
 	touch $@
 
 $(STAMPS)/05_summarize-pars: r/05_summarize-pars.R r/header.R r/functions.R \
-  $(STAMPS)/03_refit-weibull | $(STAMPS)
+  | $(STAMPS)/03_refit-weibull $(STAMPS)
 	@echo "==> r/05_summarize-pars.R"
 	Rscript r/05_summarize-pars.R
 	touch $@
 
 $(STAMPS)/06_compare-gsw: r/06_compare-gsw.R r/header.R r/functions.R \
-  $(STAMPS)/03_refit-weibull | $(STAMPS)
+  | $(STAMPS)/03_refit-weibull $(STAMPS)
 	@echo "==> r/06_compare-gsw.R"
 	Rscript r/06_compare-gsw.R
 	touch $@
 
+# NOTE: $(STAMPS)/03_refit-weibull and $(STAMPS)/04_calc-r2 are order-only.
+# A future-dated skip stamp (see copy_files.R) is always "newer" than any
+# real timestamp, so if they were regular prerequisites this target would
+# be considered out of date -- and thus rebuilt -- on every single `make
+# fast` invocation, not just the first.
 $(STAMPS)/07_plot-curves: r/07_plot-curves.R r/header.R r/functions.R \
-  $(STAMPS)/00_load-data $(STAMPS)/03_refit-weibull $(STAMPS)/04_calc-r2 | $(STAMPS)
+  $(STAMPS)/00_load-data | $(STAMPS)/03_refit-weibull $(STAMPS)/04_calc-r2 $(STAMPS)
 	@echo "==> r/07_plot-curves.R"
 	Rscript r/07_plot-curves.R
 	touch $@
 
+# NOTE: $(STAMPS)/05_summarize-pars is order-only; see the NOTE above
+# r/07_plot-curves.R's rule.
 $(STAMPS)/08_join-summary: r/08_join-summary.R r/header.R r/functions.R \
-  $(STAMPS)/00_load-data $(STAMPS)/01_join-data $(STAMPS)/05_summarize-pars | $(STAMPS)
+  $(STAMPS)/00_load-data $(STAMPS)/01_join-data | $(STAMPS)/05_summarize-pars $(STAMPS)
 	@echo "==> r/08_join-summary.R"
 	Rscript r/08_join-summary.R
 	touch $@
@@ -93,14 +114,18 @@ $(STAMPS)/09_make-tbl-vpd: r/09_make-tbl-vpd.R r/header.R r/functions.R \
 	touch $@
 
 # ---- brms: multiresponse phylogenetic model (slow) ----
+# See the NOTE above r/02_fit-weibull.R's rule: these two prerequisites are
+# order-only so the future-dated skip stamp shipped by copy_files.R works.
 $(STAMPS)/10_fit-all: r/10_fit-all.R r/header.R r/functions.R \
-  $(STAMPS)/00_load-data $(STAMPS)/08_join-summary | $(STAMPS)
+  | $(STAMPS)/00_load-data $(STAMPS)/08_join-summary $(STAMPS)
 	@echo "==> r/10_fit-all.R (slow)"
 	Rscript r/10_fit-all.R
 	touch $@
 
+# NOTE: $(STAMPS)/10_fit-all is order-only; see the NOTE above
+# r/07_plot-curves.R's rule.
 $(STAMPS)/11_compare-models: r/11_compare-models.R r/header.R r/functions.R \
-  $(STAMPS)/10_fit-all | $(STAMPS)
+  | $(STAMPS)/10_fit-all $(STAMPS)
 	@echo "==> r/11_compare-models.R"
 	Rscript r/11_compare-models.R
 	touch $@
@@ -165,8 +190,10 @@ $(STAMPS)/21_plot-gcl-tau: r/21_plot-gcl-tau.R r/header.R r/functions.R \
 	Rscript r/21_plot-gcl-tau.R
 	touch $@
 
+# NOTE: $(STAMPS)/10_fit-all is order-only; see the NOTE above
+# r/07_plot-curves.R's rule.
 $(STAMPS)/22_plot-collinear: r/22_plot-collinear.R r/header.R r/functions.R \
-  $(STAMPS)/10_fit-all | $(STAMPS)
+  | $(STAMPS)/10_fit-all $(STAMPS)
 	@echo "==> r/22_plot-collinear.R"
 	Rscript r/22_plot-collinear.R
 	touch $@
@@ -212,32 +239,48 @@ $(STAMPS)/29_plot-vpd-h2o-rate: r/29_plot-vpd-h2o-rate.R r/header.R r/functions.
 	Rscript r/29_plot-vpd-h2o-rate.R
 	touch $@
 
+# ---- brms: refit with VPD covariate (slow) ----
+# See the NOTE above r/02_fit-weibull.R's rule: these two prerequisites are
+# order-only so a future-dated skip stamp (see copy_files.R) works, and
+# `make fast` will use the pre-shipped objects/selected_model_vpd.rds
+# instead of re-fitting.
 $(STAMPS)/30_refit-vpd: r/30_refit-vpd.R r/header.R r/functions.R \
-  $(STAMPS)/12_select-model $(STAMPS)/27_summarize-vpd | $(STAMPS)
+  | $(STAMPS)/12_select-model $(STAMPS)/27_summarize-vpd $(STAMPS)
 	@echo "==> r/30_refit-vpd.R (slow)"
 	Rscript r/30_refit-vpd.R
 	touch $@
 
+# NOTE: $(STAMPS)/30_refit-vpd is order-only; see the NOTE above
+# r/07_plot-curves.R's rule.
 $(STAMPS)/31_plot-tau-vpd-rate: r/31_plot-tau-vpd-rate.R r/header.R r/functions.R \
-  $(STAMPS)/27_summarize-vpd $(STAMPS)/30_refit-vpd | $(STAMPS)
+  $(STAMPS)/27_summarize-vpd | $(STAMPS)/30_refit-vpd $(STAMPS)
 	@echo "==> r/31_plot-tau-vpd-rate.R"
 	Rscript r/31_plot-tau-vpd-rate.R
 	touch $@
 
+# NOTE: $(STAMPS)/30_refit-vpd is order-only; see the NOTE above
+# r/07_plot-curves.R's rule.
 $(STAMPS)/32_plot-comparison: r/32_plot-comparison.R r/header.R r/functions.R \
-  $(STAMPS)/12_select-model $(STAMPS)/30_refit-vpd | $(STAMPS)
+  $(STAMPS)/12_select-model | $(STAMPS)/30_refit-vpd $(STAMPS)
 	@echo "==> r/32_plot-comparison.R"
 	Rscript r/32_plot-comparison.R
 	touch $@
 
+# ---- 1,000-replicate Monte Carlo null simulation (slow) ----
+# See the NOTE above r/02_fit-weibull.R's rule: both prerequisites are
+# order-only so a future-dated skip stamp (see copy_files.R) works, and
+# `make fast` will use the pre-shipped objects/null-sim-fgmax-tau.rds
+# instead of re-simulating.
 $(STAMPS)/33_simulate-null: r/33_simulate-null.R r/header.R r/functions.R \
-  $(STAMPS)/01_join-data $(STAMPS)/05_summarize-pars | $(STAMPS)
-	@echo "==> r/33_simulate-null.R"
+  | $(STAMPS)/01_join-data $(STAMPS)/05_summarize-pars $(STAMPS)
+	@echo "==> r/33_simulate-null.R (slow)"
 	Rscript r/33_simulate-null.R
 	touch $@
 
+# NOTE: $(STAMPS)/33_simulate-null is order-only; see the NOTE above
+# r/07_plot-curves.R's rule.
 $(STAMPS)/34_plot-null: r/34_plot-null.R r/header.R r/functions.R \
-  $(STAMPS)/08_join-summary $(STAMPS)/33_simulate-null | $(STAMPS)
+  $(STAMPS)/08_join-summary | $(STAMPS)/33_simulate-null $(STAMPS)
 	@echo "==> r/34_plot-null.R"
 	Rscript r/34_plot-null.R
 	touch $@
@@ -271,8 +314,8 @@ $(STAMPS)/38_get-loo-diagnostics: r/38_get-loo-diagnostics.R r/header.R r/functi
 
 RENDER := cd ms && quarto render ms.qmd
 
-# All stamps, in pipeline order (used by both `fast` and `all`)
-NONBRMS_STAMPS := \
+# All fast-script stamps, in pipeline order (used by both `fast` and `all`)
+FAST_STAMPS := \
   $(STAMPS)/00_load-data \
   $(STAMPS)/01_join-data \
   $(STAMPS)/04_calc-r2 \
@@ -300,20 +343,23 @@ NONBRMS_STAMPS := \
   $(STAMPS)/27_summarize-vpd \
   $(STAMPS)/28_plot-vpd-pairs \
   $(STAMPS)/29_plot-vpd-h2o-rate \
-  $(STAMPS)/30_refit-vpd \
   $(STAMPS)/31_plot-tau-vpd-rate \
   $(STAMPS)/32_plot-comparison \
-  $(STAMPS)/33_simulate-null \
   $(STAMPS)/34_plot-null \
   $(STAMPS)/35_validate-nls-vs-bayes \
   $(STAMPS)/36_mediation-sensitivity \
   $(STAMPS)/37_plot-mediation-dag \
   $(STAMPS)/38_get-loo-diagnostics
 
-BRMS_STAMPS := \
+# Slow scripts skipped by `make fast` (see the NOTE at the top of this
+# file); not all of these are brms fits (r/33_simulate-null.R is a Monte
+# Carlo simulation), but all are slow enough to pre-ship their output.
+SLOW_STAMPS := \
   $(STAMPS)/02_fit-weibull \
   $(STAMPS)/03_refit-weibull \
-  $(STAMPS)/10_fit-all
+  $(STAMPS)/10_fit-all \
+  $(STAMPS)/30_refit-vpd \
+  $(STAMPS)/33_simulate-null
 
 # --------------------------------------------------------------------------
 # Top-level targets
@@ -323,13 +369,14 @@ BRMS_STAMPS := \
 pdf:
 	$(RENDER)
 
-# Run all non-brms scripts (requires objects/weibull/ and objects/fits/
-# to already exist from a prior `make all`), then render
-fast: $(NONBRMS_STAMPS)
+# Run all fast scripts (requires the slow scripts' outputs to already
+# exist from a prior `make all`; see the NOTE at the top of this file),
+# then render
+fast: $(FAST_STAMPS)
 	$(RENDER)
 
-# Run every script (r/00_ through r/38_) including brms models, then render
-all: $(BRMS_STAMPS) $(NONBRMS_STAMPS)
+# Run every script (r/00_ through r/38_) including the slow ones, then render
+all: $(SLOW_STAMPS) $(FAST_STAMPS)
 	$(RENDER)
 
 # --------------------------------------------------------------------------

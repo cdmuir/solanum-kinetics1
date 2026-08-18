@@ -89,6 +89,6 @@ tbl_comparison |>
 
 # Write selected model
 selected_model |>
-  str_replace("^model", "objects/fits/fit") |>
+  str_replace("^models/fit_", "objects/fits/fit_") |>
   str_c(".rds") |>
-  file.copy("objects/selected_model.rds")
+  file.copy("objects/selected_model.rds", overwrite = TRUE)
