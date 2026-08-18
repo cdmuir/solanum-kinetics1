@@ -1,10 +1,10 @@
-# Refit the tau/lambda model with curve-level VPD covariate to check whether the
-# gi -> tau effect is confounded by accounting for realized VPD stimulus
+# --- Refit the kinetics model with a curve-level VPD covariate ---------------
 #
-# brms does not support update()-ing the formula of a multivariate model
-# (see ?update.brmsfit), so the model is refit from scratch with brm() using
-# the same sampler settings as r/10_fit-all.R, starting from the formula
-# structure of the previously selected model (objects/selected_model.rds).
+# Checks whether the gi -> tau effect is confounded by the realized VPD
+# stimulus. brms does not support update()-ing the formula of a multivariate
+# model (see ?update.brmsfit), so the model is refit from scratch with brm(),
+# using the same sampler settings as r/10_fit-all.R and the formula structure
+# of the previously selected model (objects/selected_model.rds).
 
 source("r/header.R")
 

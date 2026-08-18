@@ -1,11 +1,10 @@
-# Pareto k, PSIS effective sample size (ESS), and Monte Carlo standard error
-# (MCSE) reliability diagnostics for the plausible models identified in
-# r/11_compare-models.R (Comment R1.7, ms/response-to-reviewers.qmd).
+# --- Report Pareto k / PSIS-ESS / MCSE diagnostics for the plausible models ---
 #
-# NOTE: objects/df_forms.rds and other scripts (e.g. r/12_select-model.R,
-# r/22_plot-colinear.R) reference "objects/fits/fit_NN.rds", but the 64
-# mv-brms model fits currently live at "objects/fit_NN.rds" (one level up).
-# This script reads from the latter, where the files actually are.
+# Diagnostics for the plausible models identified in r/11_compare-models.R
+#
+# NOTE: the 64 mv-brms model fits live at "objects/fits/fit_NN.rds", as
+# referenced by r/12_select-model.R and r/22_plot-collinear.R; this script
+# reads from the same location.
 
 source("r/header.R")
 
@@ -17,7 +16,7 @@ plausible_models = df_comparison |>
 
 plausible_fits = tibble(model = plausible_models) |>
   mutate(
-    file = str_replace(model, "^models/fit_", "objects/fit_") |> paste0(".rds"),
+    file = str_replace(model, "^models/fit_", "objects/fits/fit_") |> paste0(".rds"),
     fit = map(file, read_rds),
     loo_obj = map(fit, \(.x) .x$criteria$loo)
   )

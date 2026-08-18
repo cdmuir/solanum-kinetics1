@@ -1,7 +1,8 @@
-# Compare models using LOOIC
+# --- Compare candidate models using LOOIC ------------------------------------
+
 source("r/header.R")
 
-plan(multisession, workers = 9)
+plan(multisession, workers = 19)
 
 fits = read_rds("objects/df_forms.rds") |>
   mutate(
@@ -19,8 +20,6 @@ converged = fits$fit |>
 looic_table = fits$loo |>
   set_names(fits$model) |>
   loo_compare() 
-
-write_rds(looic_table, "objects/looic_table.rds")
 
 map2_dfr(fits$fit, fits$model, \(.fit, .name) {
   tibble(par = .fit |>

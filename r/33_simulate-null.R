@@ -1,4 +1,4 @@
-# --- Simulate null correlation between gi and log(tau) -----------------
+# --- Simulate the null correlation between gi and log(tau) -------------------
 
 source("r/header.R")
 
@@ -52,5 +52,3 @@ example_sim_data = sim_one_dataset(real_pars,
                                    "LA1364-X_pseudohypo_2000",
                                    "LA0716-T_pseudohypo_2000")
 example_fits = bind_cols(example_sim_data, fit_nls_one(example_sim_data))
-
-write_rds(example_fits, "objects/null-sim-fgmax-tau-example.rds")

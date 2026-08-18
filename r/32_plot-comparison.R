@@ -1,9 +1,11 @@
-# Compare key posterior estimates between the original model
-# (objects/selected_model.rds) and the model refit with final VPD as a
-# curve-level covariate of tau and lambda (objects/selected_model_vpd.rds; see
-# r/31_refit-vpd.R), to check whether the gi -> tau effect and the
-# gcl-tau phylogenetic correlation are robust to accounting for realized VPD
-# exposure (Notes S1).
+# --- Compare posterior estimates with and without the VPD covariate ----------
+#
+# Compares key posterior estimates between the original model
+# (objects/selected_model.rds) and the model refit with final VPD as a curve-
+# level covariate of tau and lambda (objects/selected_model_vpd.rds; see
+# r/30_refit-vpd.R), to check whether the gi -> tau effect and the gcl-tau
+# phylogenetic correlation are robust to accounting for realized VPD exposure
+# (Notes S1).
 
 source("r/header.R")
 

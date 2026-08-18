@@ -1,7 +1,8 @@
-# Select model for parameter estimation and inference
-# Criteria:
-# 1. Model is among plausible models based on LOOIC
-# 2. Highest proportion of "significant" focal parameters based on 95% CIs
+# --- Select the model used for parameter estimation and inference ------------
+#
+# Criteria: (1) the model is among the plausible set based on LOOIC, and (2) it
+# has the highest proportion of significant focal parameters based on 95% CIs.
+
 source("r/header.R")
 
 # Plausible models

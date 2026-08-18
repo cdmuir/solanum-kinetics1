@@ -1,10 +1,13 @@
-# The same saturating model is also fit to the two raw humidity channels the VPD
-# calculation is built from: H2O_s (sample cell, i.e. the air actually exchanged
-# with the leaf) and H2O_r (reference cell, i.e. incoming air upstream of the
-# leaf). We expect H2O_s to behave like VPD (both reflect leaf transpiration
-# declining as stomata close), and H2O_r to be comparatively flat (it should
-# mostly reflect the controlled/scrubbed incoming air, not the leaf response).
-# This is a check, not a covariate source -- see bottom of script.
+# --- Check that the VPD saturation rate is driven by the sample, not reference, airstream ---
+#
+# The same saturating model fit to VPD (r/27_summarize-vpd.R) is also fit to
+# the two raw humidity channels it is built from: H2O_s (sample cell, i.e. the
+# air actually exchanged with the leaf) and H2O_r (reference cell, i.e.
+# incoming air upstream of the leaf). H2O_s should behave like VPD (both
+# reflect declining leaf transpiration as stomata close), while H2O_r should be
+# comparatively flat (it mostly reflects the controlled/scrubbed incoming air,
+# not the leaf response). This is a check, not a covariate source -- see bottom
+# of script.
 
 source("r/header.R")
 

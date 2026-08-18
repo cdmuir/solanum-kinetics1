@@ -1,4 +1,5 @@
-# Plot comparing adaxial and abaxial guard cell length among populations
+# --- Plot adaxial vs. abaxial guard cell length by population ----------------
+
 source("r/header.R")
 
 stomata = read_rds("data/stomata.rds")

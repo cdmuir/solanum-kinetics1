@@ -1,5 +1,5 @@
-# Decompose variance in response variables to phylogenetic, population, and
-# individual components
+# --- Decompose trait variance into phylogenetic, population, and individual components ---
+
 source("r/header.R")
 
 selected_model = read_rds("objects/selected_model.rds")

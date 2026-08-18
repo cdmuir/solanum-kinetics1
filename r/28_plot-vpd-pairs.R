@@ -1,3 +1,5 @@
+# --- Plot pairwise relationships among curve-level VPD covariates ------------
+
 source("r/header.R")
 
 curve_vpd = read_rds("objects/curve-vpd-summary.rds")

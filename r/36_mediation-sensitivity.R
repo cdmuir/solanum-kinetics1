@@ -1,16 +1,18 @@
-# Test whether the "sequential ignorability" assumption (no unmeasured 
-# confounder of the gi-tau relationship). This script implements an Imai, 
-# Keele & Yamamoto (2010)-style sensitivity analysis for a linear mediation 
-# model, parameterized by rho = Cor(e_M, e_Y), the residual correlation between 
-# the mediator (gi) and outcome (tau) equations. The selected joint multivariate 
-# model (objects/selected_model.rds) already estimates this residual correlation (rescor__logtaumean__loggi, from set_rescor(TRUE) in r/10_fit-all.R). 
-
-# For a linear mediator model M = ... + e_M (Var = sigma_M^2) and outcome
-# model Y = ... + beta2*M + e_Y (Var = sigma_Y^2) with Cor(e_M, e_Y) = rho,
-# the bias-adjusted mediator effect is:
-#   beta2(rho) = beta2_hat - rho * sigma_Y / sigma_M
-# so ACME(rho) = gamma1 * beta2(rho), and the breakdown point (ACME = 0) is:
-#   rho* = beta2_hat * sigma_M / sigma_Y
+# --- Sensitivity analysis for the sequential-ignorability assumption in the gi-tau path ---
+#
+# Tests whether the gi -> tau path analysis is robust to an unmeasured
+# confounder of the gi-tau relationship, following an Imai, Keele & Yamamoto
+# (2010)-style sensitivity analysis for a linear mediation model, parameterized
+# by rho = Cor(e_M, e_Y), the residual correlation between the mediator (gi)
+# and outcome (tau) equations. The selected joint multivariate model
+# (objects/selected_model.rds) already estimates this residual correlation
+# (rescor__logtaumean__loggi, from set_rescor(TRUE) in r/10_fit-all.R).
+#
+# For a linear mediator model M = ... + e_M (Var = sigma_M^2) and outcome model
+# Y = ... + beta2*M + e_Y (Var = sigma_Y^2) with Cor(e_M, e_Y) = rho, the bias-
+# adjusted mediator effect is beta2(rho) = beta2_hat - rho * sigma_Y / sigma_M,
+# so ACME(rho) = gamma1 * beta2(rho), and the breakdown point (ACME = 0) is
+# rho* = beta2_hat * sigma_M / sigma_Y.
 
 source("r/header.R")
 
@@ -95,8 +97,6 @@ sens_curve = map_dfr(names(treatments), function(tx) {
     )
   })
 })
-
-write_rds(sens_curve, "objects/mediation-sensitivity-curve.rds")
 
 # --- Figures ---------------------------------------------------------------
 

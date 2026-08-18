@@ -1,4 +1,4 @@
-# --- Compare to the real, observed fgmax-tau association -----------------
+# --- Compare the null distribution to the real, observed gi-tau association ---
 
 source("r/header.R")
 

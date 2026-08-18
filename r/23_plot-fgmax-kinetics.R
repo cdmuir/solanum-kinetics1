@@ -1,4 +1,5 @@
-# Plot effects of fgmax components (gi and gmax) on tau and lambda
+# --- Plot effects of fgmax components (gi and gmax) on tau and lambda --------
+
 source("r/header.R")
 
 selected_model = read_rds("objects/selected_model.rds")

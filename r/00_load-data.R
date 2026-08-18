@@ -1,4 +1,5 @@
-# Download and preprocess data
+# --- Download and preprocess raw data from the companion solanum-aa repository ---
+
 source("r/header.R")
 
 read_rds("https://github.com/cdmuir/solanum-aa/raw/refs/heads/main/data/accession-info.rds") |>

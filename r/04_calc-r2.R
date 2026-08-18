@@ -1,4 +1,5 @@
-# Estimate Bayesian R2 for all curves
+# --- Estimate Bayesian R2 for every fitted curve -----------------------------
+
 source("r/header.R")
 
 sk_dir1 = "objects/weibull"

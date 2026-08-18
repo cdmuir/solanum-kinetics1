@@ -1,7 +1,10 @@
-# Validate that the fast nls() re-fit used in r/32_null-sim-fgmax-tau.R is a
-# reasonable approximation to the production Bayesian pipeline
-# (fit_rh1()/bform_cdweibull/pri from r/02_fit-weibull.R and r/functions.R),
-# by re-fitting a subsample of simulated curves both ways and comparing.
+# --- Validate the fast nls() refit against the full Bayesian pipeline --------
+#
+# Confirms that the fast nls() re-fit used in the null simulation
+# (r/33_simulate-null.R) is a reasonable approximation to the production
+# Bayesian pipeline (fit_rh1()/bform_cdweibull/pri from r/02_fit-weibull.R and
+# r/functions.R), by refitting a subsample of simulated curves both ways and
+# comparing.
 
 source("r/header.R")
 

@@ -1,4 +1,5 @@
-# Make table of parameter estimates for each accession
+# --- Make the per-curve table of kinetic and anatomical parameter estimates ---
+
 source("r/header.R")
 
 selected_model = read_rds("objects/selected_model.rds")

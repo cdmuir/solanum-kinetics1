@@ -1,4 +1,5 @@
-# Summarize parameter estimates for all curves
+# --- Summarize posterior parameter estimates for every fitted curve ----------
+
 source("r/header.R")
 
 sk_dir1 = "objects/weibull"

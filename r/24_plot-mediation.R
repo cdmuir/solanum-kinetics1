@@ -1,15 +1,14 @@
-# Test whether plasticity in stomatal anatomy mediates the effects of light
-# and leaf type on tau.
-
-# NOTE: We can't include phylogenetic and residual covariances in mediation
-# because effects of lighttreatment and lightintensity are not varying at those
-# levels.
-
-# This produces same results as bayestestR::mediation()
-
-# NOTE: Standardizing coefficients by the standard deviations of the traits does
-# not change results because both direct and mediated effects are divided by the
-# standard deviation of tau, so the standard deviations of the traits cancel out
+# --- Test whether plasticity in stomatal anatomy mediates treatment effects on tau ---
+#
+# NOTE: phylogenetic and residual covariances cannot be included in the
+# mediation model because the effects of lighttreatment and lightintensity do
+# not vary at those levels.
+#
+# NOTE: standardizing coefficients by trait standard deviations does not change
+# the results, because both the direct and mediated effects are divided by the
+# standard deviation of tau, which cancels out.
+#
+# This produces the same results as bayestestR::mediation().
 
 source("r/header.R")
 

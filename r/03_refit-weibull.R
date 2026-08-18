@@ -1,7 +1,8 @@
-# Refit each CDWeibull model curve to achieve convergence if needed
+# --- Refit curves that failed to converge in r/02_fit-weibull.R --------------
+
 source("r/header.R")
 
-plan(multisession, workers = 15)
+plan(multisession, workers = 19)
 
 sk_dir = c("objects/weibull/")
 list.files(sk_dir, full.names = TRUE) |>

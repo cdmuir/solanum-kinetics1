@@ -1,11 +1,11 @@
-# Rate of VPD change is summarized with a saturating exponential
-# (y = Asym + (R0 - Asym) * exp(-rate * t_sec)) rather than a linear slope:
-# inspection of raw trajectories showed VPD rises then plateaus, and the
-# saturating model fit far better (median R2 = 0.99 vs. 0.89 for a straight
-# line, across all curves). nlsLM (Levenberg-Marquardt) with data-driven
-# starting values is used because SSasymp's default self-start algorithm
-# failed to converge for 10/2156 curves; the smarter starting values below
-# rescue all of them.
+# --- Summarize the VPD trajectory of each curve with a saturating exponential ---
+#
+# VPD(t) = Asym + (R0 - Asym) * exp(-rate * t_sec) is used instead of a linear
+# slope: raw trajectories rise then plateau, and the saturating model fits far
+# better (median R2 = 0.99 vs. 0.89 for a straight line, across all curves).
+# nlsLM() (Levenberg-Marquardt) with data-driven starting values is used
+# because SSasymp()'s default self-start algorithm failed to converge for
+# 10/2156 curves; the starting values below rescue all of them.
 
 source("r/header.R")
 

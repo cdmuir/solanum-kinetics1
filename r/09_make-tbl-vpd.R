@@ -1,4 +1,4 @@
-# Summarize RH and VPD treatments in a supporting table
+# --- Summarize realized RH and VPD by treatment combination for a supporting table ---
 
 source("r/header.R")
 

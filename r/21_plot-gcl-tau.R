@@ -1,4 +1,5 @@
-# Plot accession-level gcl against tau
+# --- Plot accession-level guard cell length against tau ----------------------
+
 source("r/header.R")
 
 selected_model = read_rds("objects/selected_model.rds")

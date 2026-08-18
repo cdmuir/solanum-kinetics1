@@ -1,4 +1,9 @@
-# Join stomatal kinetic data with stomatal anatomical data
+# --- Clean humidity-response curves and join with leaflet-level stomatal anatomy ---
+#
+# Produces data/joined-data.rds (per-timepoint gsw data joined with gmax, guard
+# cell length, and stomatal density) and objects/gcl_switch_summary.rds (how
+# often the anatomical leaflet had to be substituted for the LI-6800 leaflet).
+
 source("r/header.R")
 
 rh_curves = read_rds("data/rh_curves.rds")  |>

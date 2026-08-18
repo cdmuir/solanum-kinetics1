@@ -1,7 +1,6 @@
-# Conceptual figure — panels B and D only (modified)
-source("r/header.R")
+# --- Conceptual figure, panels B and D only (modified layout) ----------------
 
-annotate <- ggplot2::annotate
+source("r/header.R")
 
 t_seq <- seq(0, 400, by = 2)
 gi0   <- 0.35

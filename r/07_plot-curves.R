@@ -1,4 +1,5 @@
-# Plot curve fits
+# --- Plot each humidity-response curve with its fitted Weibull line ----------
+
 source("r/header.R")
 
 sk_dir1 = "objects/weibull"

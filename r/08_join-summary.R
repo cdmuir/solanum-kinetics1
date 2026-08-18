@@ -1,4 +1,8 @@
-# Join stomatal kinetic data with stomatal anatomical data
+# --- Join per-curve kinetic parameter estimates with anatomy and treatment metadata ---
+#
+# Produces data/joined-summary.rds, the per-curve (not per-timepoint) summary
+# table used from r/09 onward.
+
 source("r/header.R")
 
 pars_summary = read_rds("objects/pars-summary.rds") |>

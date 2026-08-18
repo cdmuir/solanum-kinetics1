@@ -1,4 +1,5 @@
-# Compare estimated to observed maximum gsw
+# --- Compare estimated vs. observed maximum gsw for every fitted curve -------
+
 source("r/header.R")
 
 sk_dir1 = "objects/weibull"

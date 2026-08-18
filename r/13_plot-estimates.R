@@ -1,3 +1,5 @@
+# --- Plot fixed-effect and phylogenetic-correlation estimates across all plausible models ---
+
 source("r/header.R")
 
 selected_model = read_rds("objects/tbl-comparison.rds") |>

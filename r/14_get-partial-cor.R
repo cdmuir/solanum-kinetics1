@@ -1,4 +1,5 @@
-# Estimate phylogenetic partial correlations
+# --- Estimate phylogenetic partial correlations among traits -----------------
+
 source("r/header.R")
 
 selected_model = read_rds("objects/selected_model.rds")

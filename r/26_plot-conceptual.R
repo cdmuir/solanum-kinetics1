@@ -1,8 +1,6 @@
-# Conceptual figure illustrating stomatal closure kinetics
-source("r/header.R")
+# --- Conceptual figure illustrating the two hypotheses linking anatomy to kinetics ---
 
-# ggpp (loaded via header.R) masks ggplot2::annotate; restore the ggplot2 version since this script relies on parse = TRUE support
-annotate <- ggplot2::annotate
+source("r/header.R")
 
 t_seq  <- seq(0, 400, by = 2)
 gi0    <- 0.35

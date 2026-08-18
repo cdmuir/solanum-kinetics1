@@ -1,4 +1,5 @@
-# Fit CDWeibulll model to each curve separately
+# --- Fit the Weibull closure-kinetics model to each humidity-response curve ---
+
 source("r/header.R")
 
 sk_dir = c("objects/weibull/")

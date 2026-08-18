@@ -1,4 +1,5 @@
-# Plot anatomical parameters for each accession in each treatment
+# --- Plot anatomical parameters (gcl, fgmax) for each accession by treatment ---
+
 source("r/header.R")
 
 selected_model = read_rds("objects/selected_model.rds")

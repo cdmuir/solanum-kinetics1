@@ -1,4 +1,5 @@
-# Make table of parameter estimates for each accession
+# --- Make the per-accession table of kinetic and anatomical parameter estimates ---
+
 source("r/header.R")
 
 phy = read_rds("data/phylogeny.rds")

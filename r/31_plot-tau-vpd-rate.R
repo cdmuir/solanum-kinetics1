@@ -1,4 +1,4 @@
-# --- Relationship between tau and VPD saturation rate ---------------------
+# --- Relationship between tau and the VPD saturation rate --------------------
 #
 # The VPD saturation rate k is strongly correlated with the fitted kinetics
 # time-constant tau, which is why k is not used as a covariate for tau (that

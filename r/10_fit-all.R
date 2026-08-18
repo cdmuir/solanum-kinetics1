@@ -1,6 +1,9 @@
-# Analyze effect of anatomy on tau in untreated (amphistomatous) leaves
-# Note: I did some preliminary model comparisons suggesting no random effects
-# of light_intensity, light_treatment, log_gcl, log_gi, or log_gmax
+# --- Fit the multiresponse phylogenetic model relating anatomy to kinetics ---
+#
+# Note: preliminary model comparisons found no support for random effects of
+# light_intensity, light_treatment, log_gcl, log_gi, or log_gmax, so none are
+# included here.
+
 source("r/header.R")
 
 plan(multisession, workers = 16)

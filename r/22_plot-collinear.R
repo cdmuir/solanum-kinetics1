@@ -1,5 +1,4 @@
-# Figure showing colinearity between phylogenetic and regressione effects of gcl
-# on tau
+# --- Plot the collinearity between phylogenetic and individual-level effects of gcl on tau ---
 
 source("r/header.R")
 
@@ -16,7 +15,7 @@ p = ggplot(
   labs(x = "Phylogenetic correlation between $l_\\mathrm{gc}$ on $\\tau$", y = "Regression coffecient of $l_\\mathrm{gc}$ on $\\tau$")
 
 tikz(
-  "figures/colinear.tex",
+  "figures/collinear.tex",
   standAlone = TRUE,
   width = 4,
   height = 4
@@ -24,4 +23,4 @@ tikz(
 print(p)
 dev.off()
 
-system("cd figures; pdflatex colinear.tex; rm colinear.aux colinear.log")
+system("cd figures; pdflatex collinear.tex; rm collinear.aux collinear.log")

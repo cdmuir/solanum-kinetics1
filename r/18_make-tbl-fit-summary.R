@@ -1,7 +1,4 @@
-# Make table of all model parameter estimates and CIs
-# Note that I made separate fixed effects table in the qmd file, so even though
-# I export a fixed effects table, I am currently only using the random effects
-# table in the qmd file.
+# --- Make the table of all model parameter estimates and confidence intervals ---
 
 source("r/header.R")
 

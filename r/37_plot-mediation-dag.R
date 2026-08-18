@@ -1,9 +1,11 @@
-# Plot a simple DAG illustrating the assumed causal structure behind the gi path 
-# analysis (r/22_plot-mediation.R) and the sequential-ignorability assumption 
-# tested by the sensitivity analysis in r/38_mediation-sensitivity.R: 
-# Treatment -> gi -> tau, Treatment -> tau (direct path), and an unmeasured 
-# confounder U with arrows into both gi and tau (representing, e.g., hydraulic 
-# status, measurement order, or realized VPD trajectory)
+# --- Plot the assumed causal DAG behind the gi-tau path analysis -------------
+#
+# Illustrates the causal structure behind the gi path analysis
+# (r/24_plot-mediation.R) and the sequential-ignorability assumption tested by
+# the sensitivity analysis in r/36_mediation-sensitivity.R: Treatment -> gi ->
+# tau, Treatment -> tau (direct path), and an unmeasured confounder U with
+# arrows into both gi and tau (representing, e.g., hydraulic status,
+# measurement order, or realized VPD trajectory).
 
 source("r/header.R")
 

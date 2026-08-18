@@ -1,4 +1,5 @@
-# Plot kinetic parameters for each accession in each treatment
+# --- Plot kinetic parameters (tau, lambda) for each accession by treatment ---
+
 source("r/header.R")
 
 dat = read_rds("objects/selected_model.rds")$data |>
