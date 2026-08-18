@@ -232,14 +232,31 @@ df_B <- expand_grid(tau = c(80, 220),
     lambda_lab = ifelse(lambda < 2, "Small $\\lambda$", "Large $\\lambda$ (lag)")
   )
 
+df_B_legend <- distinct(df_B, tau_lab) |>
+  mutate(t = 0, gsw = 0)
+
 pB <- ggplot(df_B, aes(t, gsw, color = tau_lab, linetype = lambda_lab)) +
-  geom_line(linewidth = 1) +
+  # show.legend suppresses only the color legend on this layer -- the
+  # default legend key glyph for a line geom's color aesthetic is a
+  # colored line segment, which reviewers found distracting/ambiguous
+  # next to the linetype legend for lambda. The color (tau) legend is
+  # instead drawn from the invisible geom_point layer below, whose
+  # default point glyph is overridden to a solid square swatch.
+  geom_line(linewidth = 1, show.legend = c(color = FALSE, linetype = TRUE)) +
+  geom_point(
+    data = df_B_legend,
+    aes(t, gsw, color = tau_lab),
+    inherit.aes = FALSE,
+    alpha = 0,
+    show.legend = TRUE
+  ) +
   scale_color_manual(
     values = c(
       "Small $\\tau$ (fast)" = col_fast,
       "Large $\\tau$ (slow)" = col_slow
     ),
-    name = NULL
+    name = NULL,
+    guide = guide_legend(override.aes = list(alpha = 1, shape = 15, size = 5))
   ) +
   scale_linetype_manual(
     values = c(

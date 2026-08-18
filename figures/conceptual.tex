@@ -1,4 +1,4 @@
-% Created by tikzDevice version 0.12.6 on 2026-07-30 16:33:31
+% Created by tikzDevice version 0.12.6 on 2026-08-17 22:47:20
 % !TEX encoding = UTF-8 Unicode
 \documentclass[10pt]{article}
 \usepackage{tikz}
@@ -1372,6 +1372,10 @@
 	(487.73,283.80) --
 	(488.72,283.79) --
 	(489.71,283.79);
+
+\path[] (291.00,268.99) circle (  1.96);
+
+\path[] (291.00,268.99) circle (  1.96);
 \definecolor{drawColor}{gray}{0.55}
 
 \path[draw=drawColor,line width= 0.6pt,dash pattern=on 1pt off 3pt ,line join=round] (281.06,397.48) -- (499.65,397.48);
@@ -1442,60 +1446,72 @@
 \definecolor{fillColor}{RGB}{255,255,255}
 
 \path[fill=fillColor] (398.16,413.11) rectangle (429.46,427.57);
-\definecolor{drawColor}{RGB}{0,114,178}
+\definecolor{drawColor}{RGB}{0,0,0}
 
-\path[draw=drawColor,line width= 1.1pt,line join=round] (401.29,420.34) -- (426.33,420.34);
+\path[draw=drawColor,line width= 1.1pt,dash pattern=on 4pt off 4pt ,line join=round] (401.29,420.34) -- (426.33,420.34);
+
+\path[] (413.81,420.34) circle (  1.96);
 \end{scope}
 \begin{scope}
 \path[clip] (  0.00,  0.00) rectangle (512.15,455.24);
 \definecolor{fillColor}{RGB}{255,255,255}
 
 \path[fill=fillColor] (398.16,398.66) rectangle (429.46,413.11);
-\definecolor{drawColor}{RGB}{213,94,0}
+\definecolor{drawColor}{RGB}{0,0,0}
 
 \path[draw=drawColor,line width= 1.1pt,line join=round] (401.29,405.88) -- (426.33,405.88);
+
+\path[] (413.81,405.88) circle (  1.96);
 \end{scope}
 \begin{scope}
 \path[clip] (  0.00,  0.00) rectangle (512.15,455.24);
 \definecolor{drawColor}{RGB}{0,0,0}
 
-\node[text=drawColor,anchor=base west,inner sep=0pt, outer sep=0pt, scale=  0.90] at (434.96,417.24) {Large $\tau$ (slow)};
+\node[text=drawColor,anchor=base west,inner sep=0pt, outer sep=0pt, scale=  0.90] at (434.96,417.24) {Large $\lambda$ (lag)};
 \end{scope}
 \begin{scope}
 \path[clip] (  0.00,  0.00) rectangle (512.15,455.24);
 \definecolor{drawColor}{RGB}{0,0,0}
 
-\node[text=drawColor,anchor=base west,inner sep=0pt, outer sep=0pt, scale=  0.90] at (434.96,402.79) {Small $\tau$ (fast)};
+\node[text=drawColor,anchor=base west,inner sep=0pt, outer sep=0pt, scale=  0.90] at (434.96,402.79) {Small $\lambda$};
 \end{scope}
 \begin{scope}
 \path[clip] (  0.00,  0.00) rectangle (512.15,455.24);
 \definecolor{fillColor}{RGB}{255,255,255}
 
 \path[fill=fillColor] (398.16,362.20) rectangle (429.46,376.66);
-\definecolor{drawColor}{RGB}{0,0,0}
+\definecolor{fillColor}{RGB}{0,114,178}
 
-\path[draw=drawColor,line width= 1.1pt,dash pattern=on 4pt off 4pt ,line join=round] (401.29,369.43) -- (426.33,369.43);
+\path[fill=fillColor] (408.10,363.72) --
+	(419.52,363.72) --
+	(419.52,375.14) --
+	(408.10,375.14) --
+	cycle;
 \end{scope}
 \begin{scope}
 \path[clip] (  0.00,  0.00) rectangle (512.15,455.24);
 \definecolor{fillColor}{RGB}{255,255,255}
 
 \path[fill=fillColor] (398.16,347.75) rectangle (429.46,362.20);
-\definecolor{drawColor}{RGB}{0,0,0}
+\definecolor{fillColor}{RGB}{213,94,0}
 
-\path[draw=drawColor,line width= 1.1pt,line join=round] (401.29,354.98) -- (426.33,354.98);
+\path[fill=fillColor] (408.10,349.27) --
+	(419.52,349.27) --
+	(419.52,360.69) --
+	(408.10,360.69) --
+	cycle;
 \end{scope}
 \begin{scope}
 \path[clip] (  0.00,  0.00) rectangle (512.15,455.24);
 \definecolor{drawColor}{RGB}{0,0,0}
 
-\node[text=drawColor,anchor=base west,inner sep=0pt, outer sep=0pt, scale=  0.90] at (434.96,366.33) {Large $\lambda$ (lag)};
+\node[text=drawColor,anchor=base west,inner sep=0pt, outer sep=0pt, scale=  0.90] at (434.96,366.33) {Large $\tau$ (slow)};
 \end{scope}
 \begin{scope}
 \path[clip] (  0.00,  0.00) rectangle (512.15,455.24);
 \definecolor{drawColor}{RGB}{0,0,0}
 
-\node[text=drawColor,anchor=base west,inner sep=0pt, outer sep=0pt, scale=  0.90] at (434.96,351.88) {Small $\lambda$};
+\node[text=drawColor,anchor=base west,inner sep=0pt, outer sep=0pt, scale=  0.90] at (434.96,351.88) {Small $\tau$ (fast)};
 \end{scope}
 \begin{scope}
 \path[clip] (  0.00,  0.00) rectangle (512.15,455.24);
