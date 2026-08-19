@@ -4,9 +4,11 @@
 #   make pdf   -- render ms/ms.pdf from existing computed outputs (fastest)
 #   make fast  -- rerun all fast R scripts then render; requires the slow
 #                 scripts' outputs (objects/weibull/, objects/fits/,
+#                 objects/r2.rds, objects/pars-summary.rds,
+#                 figures/compare-gsw.pdf, figures/rh-curves.pdf,
 #                 objects/selected_model_vpd.rds, and
-#                 objects/null-sim-fgmax-tau.rds) to already exist from a
-#                 prior `make all`
+#                 objects/null-sim-fgmax-tau.rds) to already exist
+#                 from a prior `make all`
 #   make all   -- run every R script (r/00_ through r/38_) including the
 #                 slow ones, then render (slow)
 #
@@ -19,7 +21,13 @@
 # Slow scripts skipped by `make fast`: r/02_fit-weibull.R,
 # r/03_refit-weibull.R, r/10_fit-all.R, and r/30_refit-vpd.R fit brms
 # models; r/33_simulate-null.R runs a 1,000-replicate Monte Carlo
-# simulation (not brms, but still slow).
+# simulation (not brms, but still slow); r/04_calc-r2.R,
+# r/05_summarize-pars.R, r/06_compare-gsw.R, and r/07_plot-curves.R each
+# iterate over all ~2,100 individual weibull curve fits in
+# objects/weibull/ (over a GB on disk) -- r/07_plot-curves.R additionally
+# calls posterior_epred() per curve, making it the heaviest of the four --
+# which is slow I/O/computation rather than a brms fit itself, but still
+# too slow for `make fast`.
 
 .PHONY: all fast pdf clean
 .DEFAULT_GOAL := pdf
@@ -318,10 +326,6 @@ RENDER := cd ms && quarto render ms.qmd
 FAST_STAMPS := \
   $(STAMPS)/00_load-data \
   $(STAMPS)/01_join-data \
-  $(STAMPS)/04_calc-r2 \
-  $(STAMPS)/05_summarize-pars \
-  $(STAMPS)/06_compare-gsw \
-  $(STAMPS)/07_plot-curves \
   $(STAMPS)/08_join-summary \
   $(STAMPS)/09_make-tbl-vpd \
   $(STAMPS)/11_compare-models \
@@ -353,10 +357,17 @@ FAST_STAMPS := \
 
 # Slow scripts skipped by `make fast` (see the NOTE at the top of this
 # file); not all of these are brms fits (r/33_simulate-null.R is a Monte
-# Carlo simulation), but all are slow enough to pre-ship their output.
+# Carlo simulation, and r/04_calc-r2.R/r/05_summarize-pars.R/
+# r/06_compare-gsw.R/r/07_plot-curves.R are slow I/O and/or posterior
+# computation over objects/weibull/ rather than a model fit), but all are
+# slow enough to pre-ship their output.
 SLOW_STAMPS := \
   $(STAMPS)/02_fit-weibull \
   $(STAMPS)/03_refit-weibull \
+  $(STAMPS)/04_calc-r2 \
+  $(STAMPS)/05_summarize-pars \
+  $(STAMPS)/06_compare-gsw \
+  $(STAMPS)/07_plot-curves \
   $(STAMPS)/10_fit-all \
   $(STAMPS)/30_refit-vpd \
   $(STAMPS)/33_simulate-null

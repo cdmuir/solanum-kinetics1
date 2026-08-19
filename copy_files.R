@@ -12,6 +12,16 @@ if (!dir.exists(dest_dir)) {
   cat("Created directory:", dest_dir, "\n")
 }
 
+# Clear out any existing contents of dest_dir before copying fresh files,
+# so stale files from a previous copy don't linger. dest_dir is a public
+# git repository, so .git is explicitly preserved.
+existing_items <- list.files(dest_dir, all.files = TRUE, no.. = TRUE, full.names = FALSE)
+existing_items <- setdiff(existing_items, ".git")
+if (length(existing_items) > 0) {
+  unlink(file.path(dest_dir, existing_items), recursive = TRUE, force = TRUE)
+  cat("Cleared", length(existing_items), "existing item(s) from", dest_dir, "(preserved .git)\n\n")
+}
+
 # Define all files needed based on Makefile dependencies
 files_to_copy <- c(
   # R scripts (00_load-data.R is copied but won't run; its outputs are pre-copied
@@ -74,9 +84,13 @@ files_to_copy <- c(
   "data/rh_curves.rds",
   "data/stomata.rds",
 
-  # Pre-computed outputs of the stamped/skipped slow scripts (02-06, 10, 30,
-  # and 33, which fit brms models, run the null-simulation Monte Carlo, or
-  # read from objects/weibull/)
+  # Pre-computed outputs of the stamped/skipped slow scripts (02-07, 10,
+  # 30, and 33, which fit brms models, run the null-simulation Monte
+  # Carlo, or read from objects/weibull/). figures/rh-curves.pdf must be
+  # shipped here specifically because ms.qmd links to it by its expected
+  # path in *this* public repo (raw.../solanum-kinetics/.../figures/rh-curves.pdf)
+  # rather than embedding it, so that link is broken unless this file is
+  # actually present in the destination repo.
   "objects/r2.rds",
   "objects/pars-summary.rds",
   "objects/df_forms.rds",
@@ -86,6 +100,7 @@ files_to_copy <- c(
   "objects/selected_model_vpd.rds",
   "objects/null-sim-fgmax-tau.rds",
   "figures/compare-gsw.pdf",
+  "figures/rh-curves.pdf",
 
   # Git configuration files
   ".gitignore",
@@ -165,6 +180,7 @@ future_stamps <- c(
   "04_calc-r2",
   "05_summarize-pars",
   "06_compare-gsw",
+  "07_plot-curves",
   "10_fit-all",
   "30_refit-vpd",
   "33_simulate-null"
