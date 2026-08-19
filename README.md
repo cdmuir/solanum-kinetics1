@@ -64,7 +64,7 @@ All steps are coordinated by `make`. Three targets are available:
 | Target | What it does |
 |--------|-------------|
 | `make pdf` | Renders `ms/ms.pdf` from existing computed outputs — no R scripts are run. Use this when outputs are already up to date. |
-| `make fast` | Reruns all R scripts **except** the slow brms model fits, then renders the manuscript. Requires `objects/weibull/` and `objects/fits/` to already exist from a prior `make all`. |
+| `make fast` | Reruns all R scripts **except** the slow brms model fits and other computationally intensive scripts (see **Note**), then renders the manuscript. Requires `objects/weibull/` and `objects/fits/` to already exist from a prior `make all`. |
 | `make all` | Runs **every** R script including the brms model fits, then renders. This will take a very long time. |
 
 > **Note:** Nine scripts are slow enough to skip in `make fast` (their pre-computed outputs are shipped instead): `r/02_fit-weibull.R`, `r/03_refit-weibull.R`, and `r/10_fit-all.R` fit Bayesian models with [**brms**](https://paul-buerkner.github.io/brms/) and take many hours; `r/30_refit-vpd.R` is a comparatively quick single brms refit; `r/33_simulate-null.R` runs a 1,000-replicate Monte Carlo simulation; `r/04_calc-r2.R`, `r/05_summarize-pars.R`, `r/06_compare-gsw.R`, and `r/07_plot-curves.R` each iterate over every one of the ~2,100 individual weibull curve fits (over a GB on disk) -- `r/07_plot-curves.R` additionally computes a posterior prediction per curve, making it the slowest of the four -- which is slow I/O/computation rather than a model fit but still too slow for `make fast`.

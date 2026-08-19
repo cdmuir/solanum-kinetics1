@@ -398,8 +398,10 @@ all: $(SLOW_STAMPS) $(FAST_STAMPS)
 
 .PHONY: diff
 diff: ms/ms-v1-submitted.tex ms/ms.tex
-	latexdiff --encoding=utf8 ms/ms-v1-submitted.tex ms/ms.tex > ms/ms-diff.tex
-	cd ms && latexmk -pdf -interaction=nonstopmode ms-diff.tex
+	latexdiff --encoding=utf8 \
+	  --add-to-config "PICTUREENV=longtable[\w\d*@]*" \
+	  ms/ms-v1-submitted.tex ms/ms.tex > ms/ms-diff.tex
+	cd ms && latexmk -pdflua -interaction=nonstopmode ms-diff.tex
 	cd ms && latexmk -c ms-diff.tex
 
 # --------------------------------------------------------------------------
