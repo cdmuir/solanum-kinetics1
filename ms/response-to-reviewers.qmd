@@ -210,7 +210,7 @@ knitr::include_graphics("../figures/vpd-pairs.pdf")
 #| echo: false
 #| message: false
 #| warning: false
-#| fig-cap: "The stomatal closure time-constant $\\tau$ is positively correlated with the inverse of the VPD saturation rate, $k^{-1}$ (both log scale; $r = `r formatC(cor_tau_rate, format = 'f', digits = 2)`$), consistent with $k$ being largely driven by the same $g_\\mathrm{sw}$-decline signal that determines $\\tau$, rather than an independent property of the VPD stimulus. Each point is one humidity response curve."
+#| fig-cap: "The stomatal closure time constant $\\tau$ is positively correlated with the inverse of the VPD saturation rate, $k^{-1}$ (both log scale; $r = `r formatC(cor_tau_rate, format = 'f', digits = 2)`$), consistent with $k$ being largely driven by the same $g_\\mathrm{sw}$-decline signal that determines $\\tau$, rather than an independent property of the VPD stimulus. Each point is one humidity response curve."
 knitr::include_graphics("../figures/tau-vpd-rate.pdf")
 ```
 
@@ -339,7 +339,7 @@ While \gmax{} is theoretical to some extent, it does seem to be a good descripti
 
 To address the last part of the reviewer's comment, we substantially revised the model set we considered and this led to significant changes in our conclusions. The reviewer is correct that we do not have direct estimates of stomatal aperture and we revised the manuscript to reflect that our inferences are indirect. We also tested for independent effects of \gi{} and \gmax{} that are described in response to Comment R1.7 below. The new approach revealed that \gi{} is more closely associated with kinetic parameters than \gmax. Therefore, both greater density and/or aperture may slow the rate of closure. We have revised the Results and Discussion in several places to reflect this change in our interpretation. The main change in our interpretation is stated in this paragraph (lines XXX-XXX):
 
-> The association between \gi{} and $\tau$ could be explained by the hypothesis that guard cell wall elasticity declines at greater turgor pressure [@franks_physiological_2012], like a rubber band that is stretched under tension. However, if this were the case, we would also expect a negative association between \gmax{} and $\tau$ because leaves with greater \gmax{} could have the same \gi{} and with smaller stomatal aperture. However, this effect was weakly supported (Figures S10 and S12). The selected model did not include an individual-level effect of \gmax{} on kinetic parameters. Although the second-best included \gmax{} and the effect was in the predicted direction, the effect was not significantly different than 0 (Figure S7). The weak effect of \gmax{} compared to \gi{} casts doubt on whether a nonlinear relationship between turgor pressure and pore aperture is the best explanation. An alternative, albeit not mutually exclusive explanation, is a nonlinear relationship between pore aperture and \gsw{} that weakens the association between these variables at high \gsw. Airspace resistance within the substomatal cavity and stomatal interference are plausible mechanisms that would have this effect [@ting_further_1965; @kaiser_relation_2009; @lehmann_effects_2015], although it is not clear that they are sufficient to produce the observed relationship between \gi{} and $\tau$ in wild tomatoes. 
+> The association between \gi{} and $\tau$ could be explained by the hypothesis that guard cell wall elasticity declines at greater turgor pressure [@franks_physiological_2012], like a rubber band that is stretched under tension. However, if this were the case, we would also expect a negative association between \gmax{} and $\tau$ because leaves with greater \gmax{} could have the same \gi{} with a smaller stomatal aperture. However, this effect was weakly supported (Figures S10 and S12). The selected model did not include an individual-level effect of \gmax{} on kinetic parameters. Although the second-best model included \gmax{} and the effect was in the predicted direction, the effect was not significantly different than 0 (Figure S7). The weak effect of \gmax{} compared to \gi{} casts doubt on whether a nonlinear relationship between turgor pressure and pore aperture is the best explanation. An alternative, albeit not mutually exclusive explanation, is a nonlinear relationship between pore aperture and \gsw{} that weakens the association between these variables at high \gsw. Airspace resistance within the substomatal cavity and stomatal interference are plausible mechanisms that would have this effect [@ting_further_1965; @kaiser_relation_2009; @lehmann_effects_2015], although it is not clear that they are sufficient to produce the observed relationship between \gi{} and $\tau$ in wild tomatoes. 
 
 
 ```{=latex}
@@ -434,11 +434,11 @@ We have already mentioned that this analysis is opportunistic and therefore some
 
 1. Mentioning the potential for measurement order to confound effects of measurement light treatments (Materials and Methods lines XXX-XXX).
 
-> "As a consequence, measurement light intensity is confounded with measurement order in our design: low light-intensity curves were always measured after high light-intensity curves on the same leaf, following a preceding low-humidity closure event, so we cannot fully separate an effect of light intensity per se from order, recovery state, or prior VPD exposure (see Discussion)."
+> "As a consequence, measurement light intensity is confounded with measurement order in our design: low light-intensity curves were always measured after high light-intensity curves on the same leaf, following a low-humidity closure event, so we cannot fully separate an effect of light intensity per se from order, recovery state, or prior VPD exposure (see Discussion)."
 
 2. Advising caution in interpreting effects of measurement light treatment and mediation analysis (Discussion lines XXX-XXX).
 
-> "This comparison should be interpreted cautiously, however, because measurement light intensity was confounded with measurement order: high light curves always preceded low light curves on the same leaf, following a prior low-humidity closure event (see Materials and Methods). We cannot rule out that some of the apparent effect of measurement light intensity on \fgmax{} and $\tau$, and the corresponding indirect path through \fgmax{} in our mediation analysis (Figure 7), reflects order, incomplete recovery, or prior VPD exposure rather than measurement light intensity itself. This concern applies specifically to the measurement light comparison and not to growth light intensity or leaf type, which were randomized or alternated, respectively."
+> "The comparison between measurement light intensity treatments should be interpreted cautiously, however, because it was confounded with measurement order: high light curves always preceded low light curves on the same leaf, following a prior low-humidity closure event (see Materials and Methods). We cannot rule out that some of the apparent effect of measurement light intensity on \gi{} and $\tau$, and the corresponding indirect path through \gi{} in our mediation analysis (Figure 7), reflects order, incomplete recovery, or prior VPD exposure rather than measurement light intensity itself. This concern applies specifically to the measurement light comparison and not to growth light intensity or leaf type, which were randomized or alternated, respectively."
 
 3. Advising that future studies randomize or alternate measurement order to avoid this issue (Discussion lines XXX).
 
@@ -512,7 +512,7 @@ We found $\rho_\mathrm{estimated}$ = `r rho_hat_fmt` and $\rho^*$ = `r rho_star_
 #| echo: false
 #| message: false
 #| warning: false
-#| fig-cap: "Sensitivity of the average causal mediation effect (ACME) of each treatment on $\\log \\tau$, acting through \\gi{}, to an assumed residual correlation $\\rho$ between the \\gi{} and $\\tau$ equations. The vertical dotted line is the model's own estimated residual correlation ($\\rho_\\mathrm{estimated}$, shaded band = 95\\% credible interval); the vertical solid line is the breakdown point $\\rho^*$ at which the ACME is zero."
+#| fig-cap: "\\textbf{Sensitivity of the indirect effect of each treatment on $\\log \\tau$, acting through \\gi, to an assumed residual correlation $\\rho$ between the \\gi{} and $\\tau$ equations.} The vertical dotted line is the model's own estimated residual correlation ($\\rho_\\mathrm{estimated}$, shaded band = 95\\% credible interval); the vertical solid line is the breakdown point $\\rho^*$ at which the indirect effect is zero."
 knitr::include_graphics("../figures/mediation-sensitivity.pdf")
 ```
 
@@ -590,7 +590,7 @@ In response to the request to present focal estimates across all plausible model
 #| echo: false
 #| message: false
 #| warning: false
-#| fig-cap: !expr paste0("Individual-level (fixed-effect) estimates of guard cell length (\\gcl), initial stomatal conductance (\\gi), and anatomical maximum stomatal conductance (\\gmax) on the stomatal closure time-constant ($\\tau$) and lag-time ($\\lambda$), across all ", num2word(sum(df_comparison$plausible)), " plausible models identified by LOOIC (Table S4 in the manuscript). Points and horizontal bars are posterior medians and 95\\% credible intervals; the selected model is marked with an asterisk (*). Black indicates estimates whose 95\\% credible interval excludes zero; grey indicates intervals that overlap zero.")
+#| fig-cap: !expr paste0("Individual-level (fixed-effect) estimates of guard cell length (\\gcl), initial stomatal conductance (\\gi), and anatomical maximum stomatal conductance (\\gmax) on the stomatal closure time constant ($\\tau$) and lag time ($\\lambda$), across all ", num2word(sum(df_comparison$plausible)), " plausible models identified by LOOIC (Table S4 in the manuscript). Points and horizontal bars are posterior medians and 95\\% credible intervals; the selected model is marked with an asterisk (*). Black indicates estimates whose 95\\% credible interval excludes zero; grey indicates intervals that overlap zero.")
 
 knitr::include_graphics("../figures/estimates-b.pdf")
 ```
@@ -600,7 +600,7 @@ knitr::include_graphics("../figures/estimates-b.pdf")
 #| echo: false
 #| message: false
 #| warning: false
-#| fig-cap: !expr paste0("Phylogenetic correlations between guard cell length (\\gcl), initial stomatal conductance (\\gi), and anatomical maximum stomatal conductance (\\gmax) and the stomatal closure time-constant ($\\tau$) and lag-time ($\\lambda$), across all ", num2word(sum(df_comparison$plausible)), " plausible models identified by LOOIC (Table S4 in the manuscript). Points and horizontal bars are posterior medians and 95\\% credible intervals of the phylogenetic correlation; the selected model is marked with an asterisk (*). Black indicates estimates whose 95\\% credible interval excludes zero; grey indicates intervals that overlap zero.")
+#| fig-cap: !expr paste0("Phylogenetic correlations between guard cell length (\\gcl), initial stomatal conductance (\\gi), and anatomical maximum stomatal conductance (\\gmax) and the stomatal closure time constant ($\\tau$) and lag time ($\\lambda$), across all ", num2word(sum(df_comparison$plausible)), " plausible models identified by LOOIC (Table S4 in the manuscript). Points and horizontal bars are posterior medians and 95\\% credible intervals of the phylogenetic correlation; the selected model is marked with an asterisk (*). Black indicates estimates whose 95\\% credible interval excludes zero; grey indicates intervals that overlap zero.")
 
 knitr::include_graphics("../figures/estimates-phy.pdf")
 ```
@@ -822,7 +822,7 @@ discussion.
 
 We agree that more mechanistic follow up studies are required. We added on lines XXX that:
 
-> Our study is limited by the fact that we not directly measure guard cell turgor or stomatal aperture, but future studies should use newly developed methods (Brodersen *et al.* 2025) to directly evaluate the association between these traits.
+> Our study is limited by the fact that we did not directly measure guard cell turgor or stomatal aperture, but future studies should use newly developed methods (Brodersen *et al.* 2025) to directly evaluate the association between these traits.
 
 ```{=latex}
 \end{response}
