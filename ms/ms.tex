@@ -940,9 +940,9 @@ rigorous statistical principles, we discuss alternative interpretations
 based on the other plausible models. We report Pareto \(\hat{k}\), PSIS
 effective sample size, and Monte Carlo standard error diagnostics for
 the plausible models in Table~\ref{tbl-loo-diagnostics}. The large
-majority of curves (\(99.2\)-\(99.6\%\)) had good Pareto \(\hat{k}\)
+majority of curves (\(100.0\)-\(100.0\%\)) had good Pareto \(\hat{k}\)
 (\(\le 0.7\)), but the minimum PSIS effective sample size per curve was
-sometimes low (as low as 27 draws for some models), so the PSIS-LOO
+sometimes low (as low as 94 draws for some models), so the PSIS-LOO
 estimates for a small number of individual curves, and by extension the
 model-level Monte Carlo standard error, should be interpreted with some
 caution.
@@ -2624,13 +2624,13 @@ which the MCSE estimate is undefined.}
 \toprule
 Model & $\Delta$LOOIC & SE & $n$ curves & Good $\hat{k}$ (\%) & Bad $\hat{k}$ (\%) & Very bad $\hat{k}$ (\%) & Min. PSIS ESS & MCSE(elpd\textsubscript{loo})\\
 \midrule
-\textbf{model 46} & 0.00 & 0.00 & 2125 & 99.48 & 0.52 & 0.00 & 66 & 1.42\\
-model 01 & 3.58 & 2.95 & 2125 & 99.48 & 0.52 & 0.00 & 33 & 1.44\\
-model 14 & 5.20 & 2.72 & 2125 & 99.25 & 0.75 & 0.00 & 27 & 1.43\\
-model 30 & 4.92 & 2.90 & 2125 & 99.53 & 0.47 & 0.00 & 37 & 1.43\\
-model 42 & 4.91 & 2.92 & 2125 & 99.62 & 0.38 & 0.00 & 69 & 1.41\\
+\textbf{model 46} & 0.00 & 0.00 & 2125 & 99.95 & 0.05 & 0.00 & 155 & 0.99\\
+model 01 & 3.58 & 2.95 & 2125 & 99.95 & 0.05 & 0.00 & 149 & 0.99\\
+model 14 & 5.20 & 2.72 & 2125 & 100.00 & 0.00 & 0.00 & 137 & 1.00\\
+model 30 & 4.92 & 2.90 & 2125 & 99.95 & 0.05 & 0.00 & 158 & 1.00\\
+model 42 & 4.91 & 2.92 & 2125 & 100.00 & 0.00 & 0.00 & 94 & 1.00\\
 \addlinespace
-model 44 & 4.80 & 2.96 & 2125 & 99.48 & 0.52 & 0.00 & 51 & 1.42\\
+model 44 & 4.80 & 2.96 & 2125 & 100.00 & 0.00 & 0.00 & 172 & 0.99\\
 \bottomrule
 \end{tabular}}
 
@@ -3157,13 +3157,13 @@ and \gcl{} effects on \(\tau\), we refit the selected model with final
 VPD added as a covariate of \(\tau\) and \(\lambda\)
 (Figure~\ref{fig-vpd-comparison}). The individual-level effect of \gi{}
 on \(\log \left( \tau \right)\) was slightly weaker (original: 0.32
-{[}0.23, 0.41{]}; VPD-adjusted: 0.27 {[}0.18, 0.35{]}), as was the
-phylogenetic correlation between \gcl{} and \(\tau\) (original: 0.57
-{[}0.07, 0.88{]}; VPD-adjusted: 0.53 {[}-0.01, 0.87{]}). This indicates
+{[}0.23, 0.41{]}; VPD-adjusted: 0.27 {[}0.18, 0.36{]}), as was the
+phylogenetic correlation between \gcl{} and \(\tau\) (original: 0.59
+{[}0.14, 0.88{]}; VPD-adjusted: 0.54 {[}-0.04, 0.88{]}). This indicates
 that variation in VPD slightly amplified the apparent effects of \gi{}
 and \gcl{} on stomatal closure kinetics, but does not qualitatively
 change the main conclusions. Final VPD itself had a negative fixed
-effect on \(\log \left( \tau \right)\) (-0.41 {[}-0.53, -0.28{]}),
+effect on \(\log \left( \tau \right)\) (-0.41 {[}-0.53, -0.27{]}),
 consistent with higher realized VPD accelerating stomatal closure.
 
 We lack data on the rate of VPD change during the wrong-way response and
@@ -3208,8 +3208,8 @@ cor(\(\lambda\)) = 1.00), and computed the correlation between the
 \emph{estimated} \gi{} and \(\log(\tau)\). We repeated this 1,000 times
 to build a null distribution of this correlation.
 
-The null-simulation correlations ranged from -0.08 to 0.07 (median
-\(-1.8 \times 10^{-3}\)) across the 1,000 replicates, indistinguishable
+The null-simulation correlations ranged from -0.06 to 0.09 (median
+\(-3.1 \times 10^{-3}\)) across the 1,000 replicates, indistinguishable
 from zero (Figure~\ref{fig-null-sim-fgmax-tau}). In contrast, the real,
 observed correlation between \gi{} and \(\log(\tau)\) is 0.39 {[}0.35,
 0.42{]}, far outside the null range (empirical \(p\) = 0.000). This
@@ -3302,8 +3302,8 @@ treat \(\hat\beta_2\) as the ``naive'' coefficient in the sensitivity
 framework above, and the model's own estimated residual correlation as a
 data-driven estimate of \(\rho\).
 
-We found \(\rho_\mathrm{estimated}\) = 0.07 {[}-0.06, 0.20{]} and
-\(\rho^*\) = 0.40 {[}0.28, 0.51{]}
+We found \(\rho_\mathrm{estimated}\) = 0.06 {[}-0.07, 0.18{]} and
+\(\rho^*\) = 0.40 {[}0.29, 0.51{]}
 (Figure~\ref{fig-mediation-sensitivity}). These posterior distributions
 do not substantially overlap and the posterior probability that the
 estimated residual correlation is smaller in magnitude than the
