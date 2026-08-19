@@ -762,7 +762,7 @@ value greater than 0.45, which visually appeared as a clear break in the
 residual distribution. When the leaflet used for the LI-6800
 humidity-response curve did not have a matching leaflet-level anatomical
 measurement, we used the first available anatomical measurement from a
-different leaflet on the same plant as a proxy; this fallback was used
+different leaflet on the same leaf as a proxy; this fallback was used
 for 9 of 561 individual-by-leaf-type combinations (1.6\%). For each
 surface we calculated the anatomical maximum stomatal conductance
 (\gmax) at a reference leaf temperature of \(\SI{25}{\degreeCelsius}\)
@@ -939,13 +939,12 @@ parameters. Because this choice is somewhat arbitrary and not based on
 rigorous statistical principles, we discuss alternative interpretations
 based on the other plausible models. We report Pareto \(\hat{k}\), PSIS
 effective sample size, and Monte Carlo standard error diagnostics for
-the plausible models in Table~\ref{tbl-loo-diagnostics}. The large
-majority of curves (\(100.0\)-\(100.0\%\)) had good Pareto \(\hat{k}\)
-(\(\le 0.7\)), but the minimum PSIS effective sample size per curve was
-sometimes low (as low as 94 draws for some models), so the PSIS-LOO
-estimates for a small number of individual curves, and by extension the
-model-level Monte Carlo standard error, should be interpreted with some
-caution.
+the plausible models in Table~\ref{tbl-loo-diagnostics}. Nearly every
+curve had good Pareto \(\hat{k}\) (\(\le 0.7\)), but the minimum PSIS
+effective sample size per curve was sometimes low (as low as 94 draws
+for some models), so the PSIS-LOO estimates for a small number of
+individual curves, and by extension the model-level Monte Carlo standard
+error, should be interpreted with some caution.
 
 \paragraph{Path analysis to test for plastic
 effects}\label{path-analysis-to-test-for-plastic-effects}
@@ -1347,10 +1346,10 @@ stomata, but the effect is masked by plasticity in
 \gi{}}{Adaxial stomata close faster than abaxial stomata, but the effect is masked by plasticity in }}\label{adaxial-stomata-close-faster-than-abaxial-stomata-but-the-effect-is-masked-by-plasticity-in}
 
 Although a simple comparison of \(\tau\) between paired amphi and
-pseudohypo leaves on the same plant shows little net difference (results
-not shown), the selected model reveals a significant direct effect of
-leaf type on \(\tau\) once \gi{} is accounted for: pseudohypo leaves,
-which have only abaxial stomata, closed more slowly than amphi leaves
+pseudohypo leaf types shows little net difference (results not shown),
+the selected model reveals a significant direct effect of leaf type on
+\(\tau\) once \gi{} is accounted for: pseudohypo leaves, which have only
+abaxial stomata, closed more slowly than amphi leaves
 (Figure~\ref{fig-mediation}; Table~\ref{tbl-fixed}). This direct effect
 is consistent with the hypothesis that adaxial stomata close faster than
 abaxial stomata. However, pseudohypo leaves also had lower \gi{} and
@@ -1552,6 +1551,7 @@ enable rapid kinetics.
 
 \subsection{Acknowledgements}\label{acknowledgements}
 
+Comments from two anonymous reviewers greatly improved the manuscript.
 Sam McKlin and Tom Buckley helped with protocol development. Justin
 Alter, Max Gatlin, Joana Kim, Jenna Matsuyama, Brandon Najarian, Dachuan
 Wang, and Kai Yasuda contributed to data collection. We used Copilot,

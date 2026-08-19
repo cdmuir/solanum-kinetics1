@@ -41,7 +41,7 @@ csl: https://www.zotero.org/styles/new-phytologist
 ---
 
 We thank the editor and both reviewers for their thoughtful and constructive
-comments. We have thoroughly responded to all reviewer comments through additional analyses that resulted in some important changes to our conclusions. The revised manuscript includes three new supplementary notes, 11 new supplementary figures, and one additional table. The reviewer comments appear below in boxes followed by our responses appear in \textcolor{blue}{blue}. To easily understand the most important changes, many of the new figures and substantive changes to the text are included in the responses.
+comments. We have thoroughly responded to all reviewer comments through additional analyses that resulted in some important changes to our conclusions. The revised manuscript includes three new supplementary notes, 11 new supplementary figures, and one additional table. The reviewer comments appear below in boxes, followed by our responses in \textcolor{blue}{blue}. To help readers easily identify the most important changes, we have included many of the new figures and substantive text changes alongside the responses.
 
 ```{r setup, echo=FALSE, message=FALSE, warning=FALSE}
 library(cowplot)
@@ -172,13 +172,9 @@ not simply the inlet humidity setting.
 \begin{response}
 ```
 
-<!-- TODO:
-- put in correct Figure numbers for main text
--->
- 
 **Response:**
 
-We added Notes S1 to the Supporting Information to address the potential for variable VPD stimuli to confound our results, and updated the Materials and Methods to point to it. Note that in response Comment R1.7, we found that \gi{} is more strongly associated with $\tau$ than \fgmax. Hence, we discuss whether effects \gi{} and \gcl{} on $\tau$ are robust once variation in VPD is incorporated into the analysis. We find that both effects are robust but slightly weaker once final VPD is included as a covariate in the selected model. The fixed effect of \gi{} on $\log \left( \tau \right)$ (original: `r gi_orig`; VPD-adjusted: `r gi_vpd`) and the phylogenetic correlation between \gcl{} and $\tau$ (original: `r gcl_orig`; VPD-adjusted: `r gcl_vpd`) were both slightly weaker after adding final VPD as a covariate of $\tau$ and $\lambda$ (@fig-vpd-comparison; Figure S4 in the Supporting Information). One caveat is that we do not have data on the initial rate of change in VPD, which limits our ability to evaluate whether this influenced stomatal kinetic responses; we added a recommendation for future research on this point at the end of Notes S1.
+We added Notes S1 to the Supporting Information to address the potential for variable VPD stimuli to confound our results, and updated the Materials and Methods to point to it. Note that in response to Comment R1.7, we found that \gi{} is more strongly associated with $\tau$ than \fgmax. Hence, we discuss whether effects \gi{} and \gcl{} on $\tau$ are robust once variation in VPD is incorporated into the analysis. We find that both effects are robust but slightly weaker once final VPD is included as a covariate in the selected model. The fixed effect of \gi{} on $\log \left( \tau \right)$ (original: `r gi_orig`; VPD-adjusted: `r gi_vpd`) and the phylogenetic correlation between \gcl{} and $\tau$ (original: `r gcl_orig`; VPD-adjusted: `r gcl_vpd`) were both slightly weaker after adding final VPD as a covariate of $\tau$ and $\lambda$ (@fig-vpd-comparison; Figure S4 in the Supporting Information). One caveat is that we do not have data on the initial rate of change in VPD, which limits our ability to evaluate whether this influenced stomatal kinetic responses; we added a recommendation for future research on this point at the end of Notes S1.
 
 We extracted the leaf-to-air VPD trajectory for every curve from the logged humidity data and summarized it with two curve-level covariates: the VPD at the end of the fitted interval ("final VPD") and the rate at which VPD approached that final value ("VPD saturation rate"). We considered adding
 median VPD and VPD step magnitude as well, as the reviewer suggested. However, median VPD and final VPD are highly correlated ($r = `r formatC(cor_median_final_vpd, format = "f", digits = 2)`$; @fig-vpd-pairs a; Figure S1 in the Supporting Information), so we chose to use the final VPD. Final VPD contains the same information as the VPD step magnitude since all leaves were started at the same RH and Tleaf, hence starting VPD was approximately constant.
@@ -210,7 +206,7 @@ knitr::include_graphics("../figures/vpd-pairs.pdf")
 #| echo: false
 #| message: false
 #| warning: false
-#| fig-cap: "The stomatal closure time constant $\\tau$ is positively correlated with the inverse of the VPD saturation rate, $k^{-1}$ (both log scale; $r = `r formatC(cor_tau_rate, format = 'f', digits = 2)`$), consistent with $k$ being largely driven by the same $g_\\mathrm{sw}$-decline signal that determines $\\tau$, rather than an independent property of the VPD stimulus. Each point is one humidity response curve."
+#| fig-cap: !expr paste0("The stomatal closure time constant $\\tau$ is positively correlated with the inverse of the VPD saturation rate, $k^{-1}$ (both log scale; $r = ", formatC(cor_tau_rate, format = "f", digits = 2), "$), consistent with $k$ being largely driven by the same $g_\\mathrm{sw}$-decline signal that determines $\\tau$, rather than an independent property of the VPD stimulus. Each point is one humidity response curve.")
 knitr::include_graphics("../figures/tau-vpd-rate.pdf")
 ```
 
@@ -261,11 +257,9 @@ stimulus itself may vary across the same treatments used to explain $\tau$.
 \begin{response}
 ```
 
-<!-- DONE -->
-
 **Response:**
 
-We thank the reviewer for catching the discrepancy between what we reported in Table S3 versus the actual content. At noted in the response to the previous comment, the median and final RH and VPD are highly correlated, so this mistake did not affect the interpretation. We revised Table S3 to report the average RH and VPD at three time points: when logging started, when logging finished, and the median during the logging interval. We also added the curve-level values for these variables to Table S1. We did not record the pre-step VPD but it was nearly identical for every leaf because we set leaf temperature to $\SI{25}{\degreeCelsius}$ and RH to 70% to standardize starting conditions. This is equivalent to $\mathrm{VPD} \approx \SI{0.82}{\kPa}$, as mentioned in the Materials and Methods. As mentioned in the previous response, we also do not have data on the initial rate of VPD increase.
+We thank the reviewer for catching the discrepancy between what we reported in Table S3 versus the actual content. As noted in the response to the previous comment, the median and final RH and VPD are highly correlated, so this mistake did not affect the interpretation. We revised Table S3 (now Table S2) to report the average RH and VPD at three time points: when logging started, when logging finished, and the median during the logging interval. We also added the curve-level values for these variables to Table S1. We did not record the pre-step VPD but it was nearly identical for every leaf because we set leaf temperature to $\SI{25}{\degreeCelsius}$ and RH to 70% to standardize starting conditions. This is equivalent to $\mathrm{VPD} \approx \SI{0.82}{\kPa}$, as mentioned in the Materials and Methods. As mentioned in the previous response, we also do not have data on the initial rate of VPD increase.
 
 ```{=latex}
 \end{response}
@@ -312,16 +306,11 @@ anatomical maximum" rather than "aperture."
 ```
 **Response:**
 
-<!-- TODO:
-- put in correct Figure numbers for main text
-- Make sure that text and figures here align with main text
- -->
+We thank the reviewer for raising this point because it revealed a mistake in our explanation of the methods that is also relevant to Comment R1.4 below. Figure 1a and parts of the written description incorrectly stated that the fitted interval began as soon as the RWR began. To clarify, we deliberately began logging each curve once \gsw{} had declined back down to its pre-step value. We did this by recording the pre-step \gsw{} and starting the log protocol when \gsw{} returned to value after the WWR. The reason for this protocol was that preliminary experiments showed the relationship between \gsw{} and $A$ analyzed in @muir_plasticity_2025 was "off" over the interval of \gsw{} between its maximum and when it returned to the pre-step value (the interval between the start of the RWR and when we started logging as depicted in Figure 1a). Our interpretation is that during the WWR \gsw{} increases faster than photochemistry can be upregulated, such that $A$ doesn't increase as much as you would expect for that amount of change in \gsw. This point is tangential to our analysis of stomatal kinetics, but we hope it clarifies the rationale. Hence, we only have a single estimate of \fgmax{} where \gi{} is the pre-step \gsw{}, as depicted in the revised version of Figure 1a. We do not have data on maximum \gsw{} at the end of the WWR. \gi{} is therefore also the maximum observed \gsw{} because we allowed leaves to acclimate under conditions (high light, low VPD) conducive to high \gsw. In principle, if the relationship between guard cell turgor and \gsw{} (Figure 1d) within a leaf is fixed then we should be able to estimate the effect of \fgmax{} on $\tau$ regardless of where along the response curve we start, but we cannot evaluate this in more detail with the data we have. 
 
-We thank the reviewer for raising this point because it revealed a mistake in our explanation of the methods that is also relevant to Comment R1.4 below. Figure 1a and parts of the written description incorrectly stated that the fitted interval began as soon as the RWR began. To clarify, we deliberately began logging each curve once \gsw{} had declined back down to its pre-step value. We did this by recording the pre-step \gsw{} and starting the log protocol when \gsw{} returned to value after the WWR. The reason for this protocol was that preliminary experiments showed the relationship between \gsw{} and $A$ analyzed in @muir_plasticity_2025 was "off" over the interval of \gsw{} between its maximum and when it returned to the pre-step value (the interval between the start of the RWR and when we started logging as depicted in Figure 1a). Our interpretation is that during the WWR \gsw{} increases faster than photochemistry can be upregulated, such that $A$ doesn't increase as much as you would expect for that amount of change in \gsw. This point is tangential to our analysis of stomatal kinetics, but we hope it clarifies the rationale. Hence, we only have a single of estimate of \fgmax{} where \gi{} is the pre-step \gsw{}, as depicted in the revised version of Figure 1a. We do not have data on maximum \gsw{} at the end of the WWR. \gi{} is therefore also the maximum observed \gsw{} because we allowed leaves to acclimate under conditions (high light, low VPD) conducive to high \gsw. In principle, if the relationship between guard cell turgor and \gsw{} (Figure 1d) within a leaf is fixed then we should be able to estimate the effect of \fgmax{} on $\tau$ either regardless of where along the response curve we start, but we cannot evaluate this in more detail with the data we have. 
+We revised Figure 1a and the Materials and Methods (lines 255-256) to describe this precisely, and moved the "Log data" marker in the figure to the point where \gsw{} returns to \gi, distinct from the start of the RWR itself, which begins where \gsw{} first starts to decline from its WWR peak. We also added a caveat to the Notes S1 on lines 930-936 noting this limitation.
 
-We revised Figure 1a and the Materials and Methods (lines XXX-XXX) to describe this precisely, and moved the "Log data" marker in the figure to the point where \gsw{} returns to \gi, distinct from the start of the RWR itself, which begins where \gsw{} first starts to decline from its WWR peak. We also added a caveat to the Discussion noting this limitation.
-
-We also added simulations demonstrating that the association between \gi, \fgmax{}, and $\tau$ is unlikely to be an artifact of simultaneously estimating \gi{} and $\tau$. For every real curve, we simulated a synthetic \gsw{} trajectory using that curve's own measurement times, residual variance, and fitted $\tau$ and $\lambda$ values, but with fitted values of \gi{} and \gf{} randomly swapped with another curve. Hence, synthetic curves retain the observed associations between $\tau$ and $\lambda$ from curve $i$ and the observed associations between \gi{} and \gf{} from curve $j$. Since $i$ and $j$ are chosen at random, there is no actual association between \gi{} and kinetic parameters among the synthetic curves. Since the denominator in \fgmax{} is estimated independently from stomatal anatomy, it is sufficient to evaluate a spurious association between \gi{} and $\tau$. For each synthetic curve, we re-fit the same Weibull functional form to each simulated curve (via `nls()`, validated against the full Bayesian pipeline used for the real data: cor($\tau$) = `r fmt_cor(ct_tau$estimate)`, cor($\lambda$) = `r fmt_cor(ct_lambda$estimate)`) and computed the correlation between the *estimated* \gi{} and $\log \left( \tau \right)$. We repeated this `r prettyNum(nrow(null_sim_results), big.mark = ",")` times to build a null distribution of this correlation. 
+We also added simulations demonstrating that the association between \gi, \fgmax{}, and $\tau$ is unlikely to be an artifact of simultaneously estimating \gi{} and $\tau$ (see Notes S2). For every real curve, we simulated a synthetic \gsw{} trajectory using that curve's own measurement times, residual variance, and fitted $\tau$ and $\lambda$ values, but with fitted values of \gi{} and \gf{} randomly swapped with another curve. Hence, synthetic curves retain the observed associations between $\tau$ and $\lambda$ from curve $i$ and the observed associations between \gi{} and \gf{} from curve $j$. Since $i$ and $j$ are chosen at random, there is no actual association between \gi{} and kinetic parameters among the synthetic curves. Since the denominator in \fgmax{} is estimated independently from stomatal anatomy, it is sufficient to evaluate a spurious association between \gi{} and $\tau$. For each synthetic curve, we re-fit the same Weibull functional form to each simulated curve (via `nls()`, validated against the full Bayesian pipeline used for the real data: cor($\tau$) = `r fmt_cor(ct_tau$estimate)`, cor($\lambda$) = `r fmt_cor(ct_lambda$estimate)`) and computed the correlation between the *estimated* \gi{} and $\log \left( \tau \right)$. We repeated this `r prettyNum(nrow(null_sim_results), big.mark = ",")` times to build a null distribution of this correlation. 
 
 The null-simulation correlations ranged from `r fmt_cor(min(null_sim_results$cor))` to `r fmt_cor(max(null_sim_results$cor))` (median `r fmt_cor(median(null_sim_results$cor))`) across the `r prettyNum(nrow(null_sim_results), big.mark = ",")` synthetic curves -- indistinguishable from zero -- whereas the real, observed correlation between $\log \left( g_\mathrm{i} \right)$ and $\log \left( \tau \right)$ is `r fmt_cor(real_cor_fgmax_tau$cor)` [`r fmt_cor(real_cor_fgmax_tau$cor_lower)`, `r fmt_cor(real_cor_fgmax_tau$cor_upper)`] (@fig-null-sim-fgmax-tau; Figure S13 in the Supporting Information), far outside the null range (`r null_sim_p`). This indicates that the curve-fitting procedure alone cannot explain the observed \gi-$\tau$ association, and that it more plausibly reflects a real relationship in the data.
 
@@ -335,11 +324,11 @@ The null-simulation correlations ranged from `r fmt_cor(min(null_sim_results$cor
 knitr::include_graphics("../figures/null-sim-fgmax-tau.pdf")
 ```
 
-While \gmax{} is theoretical to some extent, it does seem to be a good description of maximum \gsw{} in experimentally controlled *Arabidopsis* plants [@dow_integrated_2014]. We added this in the Materials and Methods on lines XXX.
+While \gmax{} is theoretical to some extent, it does seem to be a good description of maximum \gsw{} in experimentally controlled *Arabidopsis* plants [@dow_integrated_2014]. We added this in the Materials and Methods on lines 293-295.
 
-To address the last part of the reviewer's comment, we substantially revised the model set we considered and this led to significant changes in our conclusions. The reviewer is correct that we do not have direct estimates of stomatal aperture and we revised the manuscript to reflect that our inferences are indirect. We also tested for independent effects of \gi{} and \gmax{} that are described in response to Comment R1.7 below. The new approach revealed that \gi{} is more closely associated with kinetic parameters than \gmax. Therefore, both greater density and/or aperture may slow the rate of closure. We have revised the Results and Discussion in several places to reflect this change in our interpretation. The main change in our interpretation is stated in this paragraph (lines XXX-XXX):
+To address the last part of the reviewer's comment, we substantially revised the model set we considered and this led to significant changes in our conclusions. The reviewer is correct that we do not have direct estimates of stomatal aperture and we revised the manuscript to reflect that our inferences are indirect. We also tested for independent effects of \gi{} and \gmax{} that are described in response to Comment R1.7 below. The new approach revealed that \gi{} is more closely associated with kinetic parameters than \gmax. Therefore, both greater density and/or aperture may slow the rate of closure. We have revised the Results and Discussion in several places to reflect this change in our interpretation. The main change in our interpretation is stated in this paragraph (lines 564-577):
 
-> The association between \gi{} and $\tau$ could be explained by the hypothesis that guard cell wall elasticity declines at greater turgor pressure [@franks_physiological_2012], like a rubber band that is stretched under tension. However, if this were the case, we would also expect a negative association between \gmax{} and $\tau$ because leaves with greater \gmax{} could have the same \gi{} with a smaller stomatal aperture. However, this effect was weakly supported (Figures S10 and S12). The selected model did not include an individual-level effect of \gmax{} on kinetic parameters. Although the second-best model included \gmax{} and the effect was in the predicted direction, the effect was not significantly different than 0 (Figure S7). The weak effect of \gmax{} compared to \gi{} casts doubt on whether a nonlinear relationship between turgor pressure and pore aperture is the best explanation. An alternative, albeit not mutually exclusive explanation, is a nonlinear relationship between pore aperture and \gsw{} that weakens the association between these variables at high \gsw. Airspace resistance within the substomatal cavity and stomatal interference are plausible mechanisms that would have this effect [@ting_further_1965; @kaiser_relation_2009; @lehmann_effects_2015], although it is not clear that they are sufficient to produce the observed relationship between \gi{} and $\tau$ in wild tomatoes. 
+> "The association between \gi{} and $\tau$ could be explained by the hypothesis that guard cell wall elasticity declines at greater turgor pressure [@franks_physiological_2012], like a rubber band that is stretched under tension. However, if this were the case, we would also expect a negative association between \gmax{} and $\tau$ because leaves with greater \gmax{} could have the same \gi{} with a smaller stomatal aperture. However, this effect was weakly supported (Figures S10 and S12). The selected model did not include an individual-level effect of \gmax{} on kinetic parameters. Although the second-best model included \gmax{} and the effect was in the predicted direction, the effect was not significantly different than 0 (Figure S7). The weak effect of \gmax{} compared to \gi{} casts doubt on whether a nonlinear relationship between turgor pressure and pore aperture is the best explanation. An alternative, albeit not mutually exclusive explanation, is a nonlinear relationship between pore aperture and \gsw{} that weakens the association between these variables at high \gsw. Airspace resistance within the substomatal cavity and stomatal interference are plausible mechanisms that would have this effect [@ting_further_1965; @kaiser_relation_2009; @lehmann_effects_2015], although it is not clear that they are sufficient to produce the observed relationship between \gi{} and $\tau$ in wild tomatoes."
 
 
 ```{=latex}
@@ -375,8 +364,6 @@ using a parameter estimated from the RWR itself.
 ```{=latex}
 \begin{response}
 ```
-
-<!-- DONE -->
 
 **Response:**
 
@@ -415,13 +402,9 @@ are negligible.
 \begin{response}
 ```
 
-<!-- TODO:
-- put in correct lines numbers of changes
--->
-
 **Response:**
 
-We choose this design because the primary goals of the study were to compare amphi and pseudohypo curves on the same leaf within the same treatment to estimate "amphistomy advantage" [@muir_plasticity_2025]. Preliminary studies indicated the order did not affect amphistomy advantage but that it was much faster to go from the high light to low light compared to the reverse. Therefore, we opted to increase our throughput and sample size at the potential cost of some confounding between measurement order and treatment effect. Unfortunately, we did not observe whether the measurement order affected stomatal kinetics. Hence, we cannot say for sure whether order, recovery state, or prior VPD exposure confounds measurement light intensity. We controlled for time of day by running curves throughout the day and randomizing the order among accessions and growth light treatments. However, we think the bias induced by measurement order is likely small compared to the very large effect of measurement light intensity on \gi{} (+77% for shade plants; +139% for sun plants):
+We chose this design because the primary goals of the study were to compare amphi and pseudohypo curves on the same leaf within the same treatment to estimate "amphistomy advantage" [@muir_plasticity_2025]. Preliminary studies indicated the order did not affect amphistomy advantage but that it was much faster to go from the high light to low light compared to the reverse. Therefore, we opted to increase our throughput and sample size at the potential cost of some confounding between measurement order and treatment effect. Unfortunately, we did not observe whether the measurement order affected stomatal kinetics. Hence, we cannot say for sure whether order, recovery state, or prior VPD exposure confounds measurement light intensity. We controlled for time of day by running curves throughout the day and randomizing the order among accessions and growth light treatments. However, we think the bias induced by measurement order is likely small compared to the very large effect of measurement light intensity on \gi{} (+77% for shade plants; +139% for sun plants):
 
 | Growth light | Measurement: low | Measurement: high |
 | --- | --- | --- |
@@ -430,21 +413,17 @@ We choose this design because the primary goals of the study were to compare amp
 
 Table: Average \gi{} in different treatment combinations across the amphi leaf type curves.
 
-We have already mentioned that this analysis is opportunistic and therefore some of the experimental design choices are sub-optimal for the purpose of study stomatal kinetics. We addressed the reviewer's concerns about measurement order more specifically by:
+We have already mentioned that this analysis is opportunistic and therefore some of the experimental design choices are sub-optimal for the purpose of studying stomatal kinetics. We addressed the reviewer's concerns about measurement order more specifically by:
 
-1. Mentioning the potential for measurement order to confound effects of measurement light treatments (Materials and Methods lines XXX-XXX).
+1. Mentioning the potential for measurement order to confound effects of measurement light treatments (Materials and Methods lines 225-228).
 
 > "As a consequence, measurement light intensity is confounded with measurement order in our design: low light-intensity curves were always measured after high light-intensity curves on the same leaf, following a low-humidity closure event, so we cannot fully separate an effect of light intensity per se from order, recovery state, or prior VPD exposure (see Discussion)."
 
-2. Advising caution in interpreting effects of measurement light treatment and mediation analysis (Discussion lines XXX-XXX).
+2. Advising caution in interpreting effects of measurement light treatment and mediation analysis (Discussion lines 592-599).
 
 > "The comparison between measurement light intensity treatments should be interpreted cautiously, however, because it was confounded with measurement order: high light curves always preceded low light curves on the same leaf, following a prior low-humidity closure event (see Materials and Methods). We cannot rule out that some of the apparent effect of measurement light intensity on \gi{} and $\tau$, and the corresponding indirect path through \gi{} in our mediation analysis (Figure 7), reflects order, incomplete recovery, or prior VPD exposure rather than measurement light intensity itself. This concern applies specifically to the measurement light comparison and not to growth light intensity or leaf type, which were randomized or alternated, respectively."
 
-3. Advising that future studies randomize or alternate measurement order to avoid this issue (Discussion lines XXX).
-
-> "Future studies should also randomize or alternate the order in which repeated within-leaf treatments (such as measurement light intensity) are applied, so that treatment effects can be separated from measurement order, recovery state, and prior stress history, which were confounded in our design."
-
-4. Adding that the average time between high and low measurement light intensity curves was 48.9 minutes (lines XXX).
+3. Adding that the average time between high and low measurement light intensity curves was 48.9 minutes (line 258).
 
 > "...on average 48.9 minutes after the start of the high-light curve."
 
@@ -481,10 +460,6 @@ conclusion.
 ```{=latex}
 \begin{response}
 ```
-
-<!-- TODO:
-- put in correct Figure numbers for main text
--->
 
 **Response:**
 
@@ -551,11 +526,6 @@ Pareto-$k$, PSIS effective sample size and MCSE as reliability checks.
 \begin{response}
 ```
 
-<!-- TODO:
-- put in correct Figure and Table and Line numbers for main text
-- cite specific instances where Results and interpretation changed (overlap with TODO for R1.3)
--->
-
 **Response:**
 
 The phrase "clearest to interpret" was informal shorthand (CDM) for the fuller explanation in the text, so there is no discrepancy to correct. To make model selection less subjective, we now describe explicit criteria in the revised "Model selection and parameter estimation of individual-level effects" section. We first narrowed the candidate set using LOOIC, then evaluated the remaining models on the focal parameters addressing our hypotheses — individual-level and phylogenetic effects of anatomical traits on kinetic traits. Among these, we selected the model with the highest proportion of significant focal parameters (95% CIs excluding 0), regardless of whether the direction matched our hypotheses. This criterion favors more parsimonious models, particularly ones without additional non-significant terms, and makes the selected model easier to interpret. This criterion is somewhat arbitrary and not based on formal statistical inference. We therefore also discuss alternative interpretations supported by other plausible models. In the revised model comparison, this approach happened to select the model with the lowest LOOIC (see Table S4), but that would not always be the case.
@@ -581,7 +551,7 @@ ggplot(dat, aes(qlogis(fgmax), log(fgmax))) +
 
 ```
 
-The new modeling approach changed our interpretation somewhat and these changes are reflected in the revised Results and Discussion <!-- TODO: cite specific instances -->. Overall, individual-level variation in \gi{} explained much more of the variation in kinetics than \gmax{}. We therefore revised the figures and mediation analyses to emphasize the role of \gi{} rather than \fgmax{}. We also note that the second best model retained \gmax, the estimated coefficient was in the predicted direction, but it was not significant.
+The new modeling approach changed our interpretation somewhat and these changes are reflected in the revised Results and Discussion (see example above in response to Comment R1.3). Overall, individual-level variation in \gi{} explained much more of the variation in kinetics than \gmax{}. We therefore revised the figures and mediation analyses to emphasize the role of \gi{} rather than \fgmax{}. We also note that the second-best model retained \gmax{}; the estimated coefficient was in the predicted direction, but it was not significant.
 
 In response to the request to present focal estimates across all plausible models, @fig-estimates-b and @fig-estimates-phy show individual-level fixed effects and phylogenetic correlations, respectively, of \gcl, \gi, and \gmax{} on both $\tau$ and $\lambda$ across all `r num2word(sum(df_comparison$plausible))` plausible models identified by LOOIC (Figures S7-S8 in the Supporting Information). Estimates are qualitatively consistent across the plausible model set, supporting our decision to base inference on the selected model while also discussing alternative interpretations from the other plausible models where relevant.
 
@@ -605,7 +575,7 @@ knitr::include_graphics("../figures/estimates-b.pdf")
 knitr::include_graphics("../figures/estimates-phy.pdf")
 ```
 
-Finally, we report Pareto $\hat{k}$, PSIS effective sample size (ESS), and Monte Carlo standard error (MCSE) diagnostics for the LOOIC comparison, as the reviewer requested (`r/38_get-loo-diagnostics.R`; Table S5 in the Supporting Information). Across the `r num2word(sum(df_comparison$plausible))` plausible models, the vast majority of the `r unique(tbl_loo_diagnostics$n_curves)` curves had Pareto $\hat{k} \le 0.7$ (`r formatC(min(tbl_loo_diagnostics$pct_good), format = 'f', digits = 1)`–`r formatC(max(tbl_loo_diagnostics$pct_good), format = 'f', digits = 1)`% of curves), with the remainder in the "bad" (`r formatC(min(tbl_loo_diagnostics$pct_bad), format = 'f', digits = 1)`–`r formatC(max(tbl_loo_diagnostics$pct_bad), format = 'f', digits = 1)`%) rather than "very bad" range; no model had any curve with $\hat{k} \ge 1$. The minimum PSIS ESS across curves was as low as `r round(min(tbl_loo_diagnostics$min_psis_ess))` for some models, which is well below the conventional rule-of-thumb of a few hundred effective draws, so the corresponding PSIS-LOO estimates for those individual curves (and the resulting MCSE for the model as a whole) should be treated with some caution rather than taken at face value. We have added this caveat to the Materials and Methods (lines XXX).
+Finally, we report Pareto $\hat{k}$, PSIS effective sample size (ESS), and Monte Carlo standard error (MCSE) diagnostics for the LOOIC comparison, as the reviewer requested (`r/38_get-loo-diagnostics.R`; Table S5 in the Supporting Information). Across the `r num2word(sum(df_comparison$plausible))` plausible models, the vast majority of the `r unique(tbl_loo_diagnostics$n_curves)` curves had Pareto $\hat{k} \le 0.7$ rather than "very bad" range; no model had any curve with $\hat{k} \ge 1$. The minimum PSIS ESS across curves was as low as `r round(min(tbl_loo_diagnostics$min_psis_ess))` for some models, which is well below the conventional rule-of-thumb of a few hundred effective draws, so the corresponding PSIS-LOO estimates for those individual curves (and the resulting MCSE for the model as a whole) should be treated with some caution rather than taken at face value. We have added this caveat to the Materials and Methods (lines 364-368).
 
 ```{r}
 #| label: tbl-loo-diagnostics
@@ -651,6 +621,8 @@ tbl_loo_diagnostics |>
 
 ---
 
+\clearpage
+
 ## Comment R1.8 — Single-chain Bayesian diagnostics for curve-level fits
 
 ```{=latex}
@@ -679,8 +651,6 @@ a more standard multi-chain fit.
 ```{=latex}
 \begin{response}
 ```
-
-<!-- DONE -->
 
 **Response:**
 
@@ -715,17 +685,13 @@ and therefore \fgmax{}.
 \begin{response}
 ```
 
-<!-- TODO:
-- put in correct Figure numbers for main text
--->
-
 **Response:**
 
-We unintentionally neglected to explain why these three individuals were considered outliers. In the Materials and Methods (lines XXX) we clarified that:
+We unintentionally neglected to explain why these three individuals were considered outliers. In the Materials and Methods (lines 271-274) we clarified that:
 
 > "We excluded three individuals with extreme outlying guard cell length values. Preliminary analysis of variation in guard cell length among growth treatments, leaf types, and accessions identified these outliers based on a residual value greater than 0.45, which visually appeared as a clear break in the residual distribution."
 
-Regarding the leaflet-matching fallback: when a leaflet was measured for stomatal anatomy but did not match the leaflet used for the LI-6800 humidity-response curve, we used the first available anatomical measurement from a different leaflet on the same leaf as a proxy, rather than discarding the individual. This fallback was triggered for `r gcl_switch_summary$n_switched` of `r gcl_switch_summary$n_total` individual-by-leaf-type combinations (`r formatC(100 * gcl_switch_summary$n_switched / gcl_switch_summary$n_total, format = 'f', digits = 2)`%). We agree this could add measurement error to \gmax{}, guard cell length, and \fgmax{} for those individuals, and we have added this frequency and a caveat to the Materials and Methods.
+Regarding the leaflet-matching fallback: when a leaflet was measured for stomatal anatomy but did not match the leaflet used for the LI-6800 humidity-response curve, we used the first available anatomical measurement from a different leaflet on the same leaf as a proxy, rather than discarding the individual. This fallback was triggered for `r gcl_switch_summary$n_switched` of `r gcl_switch_summary$n_total` individual-by-leaf-type combinations (`r formatC(100 * gcl_switch_summary$n_switched / gcl_switch_summary$n_total, format = 'f', digits = 2)`%). We agree this could add measurement error to \gmax{}, guard cell length, and \fgmax{} for those individuals, and we have added this frequency and a caveat to the Materials and Methods (line 275-278).
 
 ```{=latex}
 \end{response}
@@ -751,8 +717,6 @@ reversed relative to the plotted colors?
 ```{=latex}
 \begin{response}
 ```
-
-<!-- DONE -->
 
 **Response:**
 
@@ -785,13 +749,11 @@ organization."
 \begin{response}
 ```
 
-<!-- DONE -->
-
 **Response:**
 
 We revised this sentence to be clearer and updated it based on new results:
 
-> Leaves with small guard cells and a lower initial stomatal conductance (\gi) closed faster, but each explained variation in kinetic parameters at different levels of biological organization.
+> "Leaves with small guard cells and a lower initial stomatal conductance (\gi) closed faster, but each explained variation in kinetic parameters at different levels of biological organization."
 
 ```{=latex}
 \end{response}
@@ -820,9 +782,9 @@ discussion.
 ```
 **Response:**
 
-We agree that more mechanistic follow up studies are required. We added on lines XXX that:
+We agree that more mechanistic follow-up studies are required. We added on lines 577-579 that:
 
-> Our study is limited by the fact that we did not directly measure guard cell turgor or stomatal aperture, but future studies should use newly developed methods (Brodersen *et al.* 2025) to directly evaluate the association between these traits.
+> "Our study is limited by the fact that we did not directly measure guard cell turgor or stomatal aperture, but future studies should use newly developed methods (Brodersen *et al.* 2025) to directly evaluate the association between these traits."
 
 ```{=latex}
 \end{response}
@@ -848,9 +810,9 @@ of the 'hump' in Figure 1a)?
 ```
 **Response:**
 
-Unfortunately, as described in response to Comment R1.3, we did not log data on the magnitude of the WWR and therefore cannot analyze that with this data set. We agree that it would be useful to know whether the magnitude of the WWR affects the lag time or speed of closing. In the Discussion on lines XXX, we added:
+Unfortunately, as described in response to Comment R1.3, we did not log data on the magnitude of the WWR and therefore cannot analyze that with this data set. We agree that it would be useful to know whether the magnitude of the WWR affects the lag time or speed of closing. In the Discussion on lines 548-551, we added:
 
-> In addition to guard cell size, it will be useful to test whether the ratio of guard cell to adjacent epidermal size affects the strength of the WWR, which may be necessary to induce more rapid stomatal closure (Buckley *et al.* 2003; Pichaco  *et al.* 2025).
+> "In addition to guard cell size, it will be useful to test whether the ratio of guard cell to adjacent epidermal size affects the strength of the WWR, which may be necessary to induce more rapid stomatal closure (Buckley *et al.* 2003; Pichaco *et al.* 2025)."
 
 ```{=latex}
 \end{response}
@@ -875,9 +837,9 @@ compensatory?
 ```
 **Response:**
 
-We do not have any stronger data to support this idea, but we agree that this explanation makes sense. We added a comment about on lines XXX:
+We do not have any stronger data to support this idea, but we agree that this explanation makes sense. We added a comment about on lines 441-444:
 
-> This is presumably because a large fraction of stomata were blocked by the pseudohypo treatment and increased aperture of the abaxial stomata did not fully compensate. This observation differs from wheat, where \gsw{} on one surface was not affected by blocking gas exchange in the other (Wall *et al.* 2022).
+> "This is presumably because a large fraction of stomata were blocked by the pseudohypo treatment and increased aperture of the abaxial stomata did not fully compensate. This observation differs from wheat, where \gsw{} on one surface was not affected by blocking gas exchange in the other (Wall *et al.* 2022)."
 
 ```{=latex}
 \end{response}
