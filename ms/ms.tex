@@ -139,8 +139,7 @@
 \usepackage{float}
 \usepackage{colortbl}
 \usepackage{pdflscape}
-\usepackage{tabularx}
-\usepackage{xltabular}
+\usepackage{tabu}
 \usepackage{threeparttable}
 \usepackage{threeparttablex}
 \usepackage[normalem]{ulem}
@@ -311,12 +310,12 @@ solutes to alter guard cell turgor more than the surrounding epidermal
 cells. Abscisic acid (ABA) dependent responses require several minutes
 to accumulate or synthesize hormone pools \emph{de novo} (Xie \emph{et
 al.}, 2006; Bauer \emph{et al.}, 2013; McAdam \emph{et al.}, 2016; Desai
-\& Stroock, 2025; \textbf{pichaco\_hydroactive\_2026?}); ABA-independent
-stomatal responses require changes in gene expression and protein
-synthesis that take time (Jalakas \emph{et al.}, 2021). Once anion
-channels are activated, the rate of change in stomatal aperture depends
-on the rate of change in guard cell turgor (\(d P_\mathrm{g} / dt\)) and
-the sensitivity of aperture to change in turgor
+\& Stroock, 2025; Pichaco \emph{et al.}, 2026); ABA-independent stomatal
+responses require changes in gene expression and protein synthesis that
+take time (Jalakas \emph{et al.}, 2021). Once anion channels are
+activated, the rate of change in stomatal aperture depends on the rate
+of change in guard cell turgor (\(d P_\mathrm{g} / dt\)) and the
+sensitivity of aperture to change in turgor
 (\(d a_\mathrm{S} / d P_\mathrm{g}\)). As we discuss below, these two
 factors (\(d P_\mathrm{g} / dt\) and
 \(d a_\mathrm{S} / d P_\mathrm{g}\)) may be influenced by guard cell
@@ -922,7 +921,7 @@ effects}\label{model-selection-and-parameter-estimation-of-individual-level-effe
 To infer whether individual-level variation in \gcl{} and \fgmax{}
 influence kinetic parameters, we used the leave-one-out cross-validation
 information criterion (LOOIC) to compare the fit of models using the
-\emph{R} package \textbf{loo} version 2.10.1 (Vehtari \emph{et al.},
+\emph{R} package \textbf{loo} version 2.10.0 (Vehtari \emph{et al.},
 2017). We compared models with all permutations of \gcl, \gi, and
 \gmax{} influencing \(\lambda\) and \(\tau\). We considered all models
 within two \(\Delta\)LOOIC standard errors of the minimum LOOIC
@@ -1369,27 +1368,27 @@ control of stomatal aperture in angiosperms increases flexibility to
 modulate carbon gain and water loss depending on leaf water status
 (Buckley, 2019), perhaps enabling a competitive advantage in
 environments where light and evaporative demand fluctuate at high
-frequency (McAdam \& Brodribb, 2012, 2015;
-\textbf{pichaco\_hydroactive\_2026?}). We now understand the
-steady-state response of stomatal conductance (\gsw) to global increases
-in vapor pressure deficit (VPD) better but there is greater uncertainty
-surrounding kinetic responses to VPD (Buckley \emph{et al.}, 2023). Here
-we considered two nonmutually exclusive mechanistic hypotheses for how
-stomatal anatomy influences stomatal closure kinetics. First, smaller
-stomata may close faster because of greater surface area to volume ratio
-(Drake \emph{et al.}, 2013). Second, guard cells under higher turgor
-pressure respond more slowly because of reduced cell wall elasticity
-(Franks \emph{et al.}, 2012). Based on these hypotheses, we predicted
-that leaves with smaller guard cells and operating further from their
-anatomical maximum \gsw{} (i.e., lower \fgmax) would have faster
-stomatal closure kinetics (lower \(\tau\)). The parameter \fgmax{} is
-here defined as the initial stomatal conductance (\gi) divided by \gmax.
-Analysis of 2,125 time courses of stomatal closure from 29 populations
-in multiple environments demonstrates that both guard cell size and
-\gi{}, a component of \fgmax, influence kinetics at different levels of
-biological organization. This new understanding suggests unexplored
-explanations for the relationships between stomatal size, density,
-speed, and operational \gsw{} (\gop) among angiosperms.
+frequency (McAdam \& Brodribb, 2012, 2015; Pichaco \emph{et al.}, 2026).
+We now understand the steady-state response of stomatal conductance
+(\gsw) to global increases in vapor pressure deficit (VPD) better but
+there is greater uncertainty surrounding kinetic responses to VPD
+(Buckley \emph{et al.}, 2023). Here we considered two nonmutually
+exclusive mechanistic hypotheses for how stomatal anatomy influences
+stomatal closure kinetics. First, smaller stomata may close faster
+because of greater surface area to volume ratio (Drake \emph{et al.},
+2013). Second, guard cells under higher turgor pressure respond more
+slowly because of reduced cell wall elasticity (Franks \emph{et al.},
+2012). Based on these hypotheses, we predicted that leaves with smaller
+guard cells and operating further from their anatomical maximum \gsw{}
+(i.e., lower \fgmax) would have faster stomatal closure kinetics (lower
+\(\tau\)). The parameter \fgmax{} is here defined as the initial
+stomatal conductance (\gi) divided by \gmax. Analysis of 2,125 time
+courses of stomatal closure from 29 populations in multiple environments
+demonstrates that both guard cell size and \gi{}, a component of \fgmax,
+influence kinetics at different levels of biological organization. This
+new understanding suggests unexplored explanations for the relationships
+between stomatal size, density, speed, and operational \gsw{} (\gop)
+among angiosperms.
 
 The kinetics of stomatal closure in response to VPD closely match
 response to light, suggesting similar underlying mechanisms. The
@@ -1625,9 +1624,9 @@ stomata driven by increased gas exchange rates rather than increasing
 water use efficiency?} \emph{New Phytologist} \textbf{249}: 2355--2371.
 
 \bibitem[\citeproctext]{ref-brodersen_situ_2025}
-\textbf{\textbf{Brodersen CR}, \textbf{Brodribb T}, \textbf{Hochberg U},
-\textbf{Holbrook NM}, \textbf{McAdam SAM}, \textbf{Zailaa J},
-\textbf{Huggett B}, \textbf{Marmottant P}}. \textbf{2025}.
+\textbf{\textbf{Brodersen CR}, \textbf{Brodribb TJ}, \textbf{Hochberg
+U}, \textbf{Holbrook NM}, \textbf{McAdam SAM}, \textbf{Zailaa J},
+\textbf{Huggett BA}, \textbf{Marmottant P}}. \textbf{2025}.
 \href{https://doi.org/10.1073/pnas.2419887122}{In situ cavitation bubble
 manometry reveals a lack of light-activated guard cell turgor modulation
 in bryophytes}. \emph{Proceedings of the National Academy of Sciences}
@@ -1686,8 +1685,8 @@ of {Bundle Sheath Extensions} and {Life Form} in {Stomatal Responses} to
 
 \bibitem[\citeproctext]{ref-burkner_brms_2017}
 \textbf{\textbf{Bürkner P-C}}. \textbf{2017}.
-\href{https://doi.org/10.18637/jss.v080.i01}{{\textbf{\textbraceleft brms\textbraceright}}:
-{An} {\emph{R}} package for {Bayesian} multilevel models using
+\href{https://doi.org/10.18637/jss.v080.i01}{{\textbf{brms}}: {An}
+{\emph{R}} package for {Bayesian} multilevel models using
 {\emph{Stan}}}. \emph{Journal of Statistical Software} \textbf{80}.
 
 \bibitem[\citeproctext]{ref-cernusak_unsaturation_2018}
@@ -1998,8 +1997,8 @@ the analysis of comparative data in evolutionary biology}.
 \textbf{\textbf{Matthews JSA}, \textbf{Vialet-Chabrand S},
 \textbf{Lawson T}}. \textbf{2020}.
 \href{https://doi.org/10.1093/jxb/erz563}{Role of blue and red light in
-stomatal dynamic behaviour} (J Evans, Ed.). \emph{Journal of
-Experimental Botany} \textbf{71}: 2253--2269.
+stomatal dynamic behaviour}. \emph{Journal of Experimental Botany}
+\textbf{71}: 2253--2269.
 
 \bibitem[\citeproctext]{ref-mcadam_stomatal_2012}
 \textbf{\textbf{McAdam SAM}, \textbf{Brodribb TJ}}. \textbf{2012}.
@@ -2129,8 +2128,8 @@ Delhi Singapore: Cambridge University Press.
 \textbf{\textbf{Pease JB}, \textbf{Haak DC}, \textbf{Hahn MW},
 \textbf{Moyle LC}}. \textbf{2016}.
 \href{https://doi.org/10.1371/journal.pbio.1002379}{Phylogenomics
-reveals three sources of adaptive variation during a rapid radiation} (D
-Penny, Ed.). \emph{PLOS Biology} \textbf{14}: e1002379.
+reveals three sources of adaptive variation during a rapid radiation}.
+\emph{PLOS Biology} \textbf{14}: e1002379.
 
 \bibitem[\citeproctext]{ref-peralta_taxonomy_2008}
 \textbf{\textbf{Peralta IE}, \textbf{Spooner DM}, \textbf{Knapp S}}.
@@ -2142,7 +2141,7 @@ Penny, Ed.). \emph{PLOS Biology} \textbf{14}: e1002379.
 \bibitem[\citeproctext]{ref-pichaco_stomataltoepidermal_2025}
 \textbf{\textbf{Pichaco J}, \textbf{Diaz-Espejo A},
 \textbf{Rodriguez-Dominguez CM}}. \textbf{2025}.
-\href{https://doi.org/10.1111/ppl.70543}{Stomatal-{To}-{Epidermal Cell
+\href{https://doi.org/10.1111/ppl.70543}{Stomatal-{To-Epidermal Cell
 Size Ratio} and {Physiological Coordination Influence Stomatal Response
 Speed} to {Leaf Water Disruption} in {Tomato Plants}}. \emph{Physiologia
 Plantarum} \textbf{177}: e70543.
@@ -2151,7 +2150,14 @@ Plantarum} \textbf{177}: e70543.
 \textbf{\textbf{Pichaco J}, \textbf{Manandhar A}, \textbf{McAdam SAM}}.
 \textbf{2024}. \href{https://doi.org/10.1093/plphys/kiae023}{Mechanical
 advantage makes stomatal opening speed a function of evaporative
-demand}. \emph{Plant Physiology}.
+demand}. \emph{Plant Physiology} \textbf{195}: 370--377.
+
+\bibitem[\citeproctext]{ref-pichaco_hydroactive_2026}
+\textbf{\textbf{Pichaco J}, \textbf{Rodriguez-Dominguez CM},
+\textbf{Diaz-Espejo A}}. \textbf{2026}.
+\href{https://doi.org/10.1016/j.tplants.2026.07.013}{Hydroactive
+stomata: A key innovation underpinning angiosperm ecological dominance}.
+\emph{Trends in Plant Science}: S1360138526002438.
 
 \bibitem[\citeproctext]{ref-potkay_generalized_2025}
 \textbf{\textbf{Potkay A}, \textbf{Cabon A}, \textbf{Peters RL},
@@ -2169,8 +2175,7 @@ e70049.
 \textbf{Maire V}, \textbf{Wright IJ}}. \textbf{2014}.
 \href{https://doi.org/10.1111/ele.12211}{Balancing the costs of carbon
 gain and water transport: Testing a new theoretical framework for plant
-functional ecology} (J Penuelas, Ed.). \emph{Ecology Letters}
-\textbf{17}: 82--91.
+functional ecology}. \emph{Ecology Letters} \textbf{17}: 82--91.
 
 \bibitem[\citeproctext]{ref-qie_stomatal_2024}
 \textbf{\textbf{Qie Y-D}, \textbf{Zhang Q-W}, \textbf{McAdam SAM},
@@ -2483,7 +2488,7 @@ Growth light intensity & amphi & pseudohypo & amphi & pseudohypo & Total\\
 \midrule
 shade & 275 & 275 & 270 & 266 & 1,086\\
 sun & 245 & 246 & 274 & 274 & 1,039\\
-\midrule
+\midrule\\
 Total & 520 & 521 & 544 & 540 & 2,125\\
 \bottomrule
 \end{tabular}
