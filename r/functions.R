@@ -610,7 +610,7 @@ run_one_replicate = function(replicate_id, real_pars, time_design, quiet = FALSE
            tau_hat > 0, lambda_hat > 0) |>
     mutate(logtau_hat = log(tau_hat))
   
-  ct = suppressWarnings(cor.test(fits_valid$gi_hat, fits_valid$logtau_hat))
+  ct = suppressWarnings(cor.test(log(fits_valid$gi_hat), fits_valid$logtau_hat))
   
   tibble(
     replicate = replicate_id,

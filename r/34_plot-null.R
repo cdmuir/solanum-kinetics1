@@ -6,7 +6,7 @@ null_sim_results = read_rds("objects/null-sim-fgmax-tau.rds")
 joined_summary = read_rds("data/joined-summary.rds")
 real_cor = joined_summary |>
   filter(!is.na(ginit_mean), !is.na(logtau_mean)) |>
-  {\(.df) cor.test(.df$ginit_mean, .df$logtau_mean)}()
+  {\(.df) cor.test(log(.df$ginit_mean), .df$logtau_mean)}()
 
 real_cor_summary = tibble(
   cor = unname(real_cor$estimate),
