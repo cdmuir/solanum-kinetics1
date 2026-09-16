@@ -24,6 +24,7 @@ mediation = list(
     mutate(
       direct_effect = b_logtaumean_lighttreatmentsun,
       mediated_effect_gi = b_loggi_lighttreatmentsun * b_logtaumean_loggi,
+      total_effect = direct_effect + mediated_effect_gi,
       proportion_mediated = mediated_effect_gi / (direct_effect + mediated_effect_gi),
       .keep = "none"
     ),
@@ -34,6 +35,7 @@ mediation = list(
     mutate(
       direct_effect = b_logtaumean_lightintensityhigh,
       mediated_effect_gi = b_loggi_lightintensityhigh * b_logtaumean_loggi,
+      total_effect = direct_effect + mediated_effect_gi,
       proportion_mediated = mediated_effect_gi / (direct_effect + mediated_effect_gi),
       .keep = "none"
     ),
@@ -44,6 +46,7 @@ mediation = list(
     mutate(
       direct_effect = b_logtaumean_leaftypepseudohypo,
       mediated_effect_gi = b_loggi_leaftypepseudohypo * b_logtaumean_loggi,
+      total_effect = direct_effect + mediated_effect_gi,
       proportion_mediated = mediated_effect_gi / (direct_effect + mediated_effect_gi),
       .keep = "none"
     )

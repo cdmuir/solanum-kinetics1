@@ -40,57 +40,45 @@ bibliography: solanum-kinetics.bib
 csl: https://www.zotero.org/styles/new-phytologist
 ---
 
-We thank the editor and both reviewers for their thoughtful and constructive
-comments on the revised manuscript. Below, we address each reviewer comment in
+We thank the editor and reviewer for their comments on the revised manuscript. Below, we address each reviewer comment in
 detail with additional analyses, clarifications, or textual changes as
 appropriate. The reviewer comments appear below in boxes, followed by our
 responses in \textcolor{blue}{blue}. 
 
 ```{r setup, echo=FALSE, message=FALSE, warning=FALSE}
-library(cowplot)
-library(dplyr)
-library(ggplot2)
-library(glue)
+# library(cowplot)
+# library(dplyr)
+# library(ggplot2)
+# library(glue)
 ```
-
-## Editor Comments
-
-::: revcomment
-
-**EDITOR COMMENT PLACEHOLDER**
-
-:::
-
-::: response
-
-RESPONSE PLACEHOLDER
-
-:::
 
 ## Reviewer 1
 
 ::: revcomment
 
-**REVIEWER 1 COMMENT PLACEHOLDER**
+Thank you for putting so much work into this revision and I think the manuscript is considerably stronger now. I particularly appreciated the decision to analyse initial conductance and anatomical maximum conductance separately, and to change the interpretation when those analyses pointed to a different explanation. Refitting all the curves with four chains and showing the focal estimates across the plausible models were also very helpful. Just a quick note, I found at tau 36.8% of the conductance difference remains, meaning that 63.2% of the transition has been completed. Please check the reported 41.6% sun growth increase in gmax against Table S7 and distinguish the 27.6% indirect high light effect from the total effect. Additionally I think Figure 2 might not to describe most of the variation in tau as phylogenetic when Table S6 assigns the larger component to among individual variation. Other points like phrases such as "113% more open" should refer to higher conductance, since aperture was not directly measured. I also found in your code appears to calculate correlations using untransformed initial conductance and log transformed time constants whilst the figure label says both are log transformed? Regardless I still have doubts on the line where suggesting residual correlation estimated by the fitted multivariate model can be treated as a direct estimate of the unmeasured confounding parameter in the sensitivity analysis, in particular, comparing that estimate with the breakdown point does not, by itself, establish that unmeasured confounding is unlikely to explain the indirect association, would be interesting to check sensitivity formula.
 
 :::
 
 ::: response
 
-RESPONSE PLACEHOLDER
+We are glad that the revised manuscript addressed the reviewer's comments thoroughly and appreciate their effort reviewing this work. We have addressed their minor comments:
 
+* We changed 36.8% to 63.2% (line ~87) as suggested. I think we initially meant to say 36.8% above the final \gsw, but obviously made an error along the way.
+
+* The main text incorrectly stated that "Sun leaves had on average 41.6% [95% CI: 34.4% to 49.5%] greater \gmax{} than shade-grown plants." This was caused by copy-and-paste error in the code that we have now corrected (line ~441). We fixed the error and it now matches estimated reported in Table S7.
+
+* We clarified that the 27.6% figure was specifically the indirect effect of high measurement light intensity on $\tau$ mediated by \gi{}, and we now also report the combined total effect (direct + indirect), which is 38.6% [95% CI: 35.3% to 41.7%] (line ~491+). We note in the text that direct and indirect percentage effects combine additively on the log scale, not the percentage scale, which is why they do not simply sum to the total.
+
+* We clarified that "much" or "a large fraction" of the variation in in guard cell length was phylogenetic, rather than saying "most" of the variation.
+
+* We replaced references to more or less "open" with references to \gi{} specifically.
+
+Table S7: 0.61 change in log(gmax)
 :::
 
-## Reviewer 2
 
-::: revcomment
+log_to_percent = function(.x) {
+  100 * (exp(.x) - 1)
+}
 
-**REVIEWER 2 COMMENT PLACEHOLDER**
-
-:::
-
-::: response
-
-RESPONSE PLACEHOLDER
-
-:::

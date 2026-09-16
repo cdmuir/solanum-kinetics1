@@ -1,5 +1,4 @@
 % Options for packages loaded elsewhere
-% Options for packages loaded elsewhere
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
 \PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
@@ -8,22 +7,21 @@
   letterpaper,
   DIV=11,
   numbers=noendperiod]{scrartcl}
-\usepackage{xcolor}
+
 \usepackage{amsmath,amssymb}
-\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
 \usepackage{iftex}
 \ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
 \else % if luatex or xetex
-  \usepackage{unicode-math} % this also loads fontspec
+  \usepackage{unicode-math}
   \defaultfontfeatures{Scale=MatchLowercase}
   \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
 \fi
 \usepackage{lmodern}
-\ifPDFTeX\else
-  % xetex/luatex font selection
+\ifPDFTeX\else  
+    % xetex/luatex font selection
   \setmainfont[]{Times New Roman}
 \fi
 % Use upquote if available, for straight quotes in verbatim environments
@@ -32,33 +30,22 @@
   \usepackage[]{microtype}
   \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
+\usepackage{xcolor}
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
 % Make \paragraph and \subparagraph free-standing
-\makeatletter
 \ifx\paragraph\undefined\else
   \let\oldparagraph\paragraph
-  \renewcommand{\paragraph}{
-    \@ifstar
-      \xxxParagraphStar
-      \xxxParagraphNoStar
-  }
-  \newcommand{\xxxParagraphStar}[1]{\oldparagraph*{#1}\mbox{}}
-  \newcommand{\xxxParagraphNoStar}[1]{\oldparagraph{#1}\mbox{}}
+  \renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
 \fi
 \ifx\subparagraph\undefined\else
   \let\oldsubparagraph\subparagraph
-  \renewcommand{\subparagraph}{
-    \@ifstar
-      \xxxSubParagraphStar
-      \xxxSubParagraphNoStar
-  }
-  \newcommand{\xxxSubParagraphStar}[1]{\oldsubparagraph*{#1}\mbox{}}
-  \newcommand{\xxxSubParagraphNoStar}[1]{\oldsubparagraph{#1}\mbox{}}
+  \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
 \fi
-\makeatother
 
 
-\usepackage{longtable,booktabs,array}
-\newcounter{none} % for unnumbered tables
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}\usepackage{longtable,booktabs,array}
 \usepackage{calc} % for calculating minipage widths
 % Correct order of tables after \paragraph or \subparagraph
 \usepackage{etoolbox}
@@ -70,21 +57,17 @@
 \makesavenoteenv{longtable}
 \usepackage{graphicx}
 \makeatletter
-\newsavebox\pandoc@box
-\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
-  \sbox\pandoc@box{#1}%
-  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
-  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
-  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
-  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
-  \else\usebox{\pandoc@box}%
-  \fi%
-}
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
 % Set default figure placement to htbp
+\makeatletter
 \def\fps@figure{htbp}
 \makeatother
-
-
 % definitions for citeproc citations
 \NewDocumentCommand\citeproctext{}{}
 \NewDocumentCommand\citeproc{mm}{%
@@ -119,18 +102,6 @@
 \newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{\strut#1\strut}}
 \newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
 
-
-
-\setlength{\emergencystretch}{3em} % prevent overfull lines
-
-\providecommand{\tightlist}{%
-  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
-
-
-
- 
-
-
 \usepackage{booktabs}
 \usepackage{longtable}
 \usepackage{array}
@@ -139,7 +110,8 @@
 \usepackage{float}
 \usepackage{colortbl}
 \usepackage{pdflscape}
-\usepackage{tabu}
+\usepackage{tabularx}
+\usepackage{xltabular}
 \usepackage{threeparttable}
 \usepackage{threeparttablex}
 \usepackage[normalem]{ulem}
@@ -217,9 +189,13 @@
 \@ifpackageloaded{caption}{}{\usepackage{caption}}
 \@ifpackageloaded{subcaption}{}{\usepackage{subcaption}}
 \makeatother
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
 \usepackage{bookmark}
+
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
-\urlstyle{same}
+\urlstyle{same} % disable monospaced font for URLs
 \hypersetup{
   pdftitle={Guard cell size and initial conductance influence stomatal closure kinetics},
   pdfauthor={Christopher D. Muir\^{}\{1,2*\}; Wei Shen Lim\^{}\{1\}},
@@ -230,14 +206,13 @@
   urlcolor={Blue},
   pdfcreator={LaTeX via pandoc}}
 
-
 \title{Guard cell size and initial conductance influence stomatal
 closure kinetics}
 \author{Christopher D. Muir\(^{1,2*}\) \and Wei Shen Lim\(^{1}\)}
 \date{}
+
 \begin{document}
 \maketitle
-
 
 \begin{center}
 $^1$School of Life Sciences, University of Hawaiʻi; Mānoa, Hawaiʻi, USA\\
@@ -397,7 +372,7 @@ al.}, 2016). A four-parameter equation describes stomatal response
 kinetics to a step change in light intensity across dozens of plant
 species (Woning \emph{et al.}, 2026):
 
-\begin{equation}\protect\phantomsection\label{eq-weibull}{
+\begin{equation}\phantomsection\label{eq-weibull}{
   g_\mathrm{sw,t} = g_\mathrm{f} + (g_\mathrm{i} - g_\mathrm{f}) e^{-\left(\frac{t}{\tau}\right)^\lambda}.
 }\end{equation}
 
@@ -408,8 +383,8 @@ describes how quickly stomata respond to the step change, and
 \(\lambda\) is a shape parameter that describes how the response rate
 changes over time. When \(\lambda = 1\), the response rate is constant
 over time and \(\tau\) represents the time required for \gsw{} to reach
-36.8\% (\(1/e\)) of the way between initial and final values. When
-\(\lambda > 1\), the response rate increases over time, and when
+63.2\% (\(1 - e^{-1}\)) of the way between initial and final values.
+When \(\lambda > 1\), the response rate increases over time, and when
 \(\lambda < 1\), the response rate decreases over time. Woning \emph{et
 al.} (2026) refer to \(\lambda\) as a lag-time parameter because
 empirically \(\lambda > 1\). We refer to stomatal kinetic parameters
@@ -489,7 +464,7 @@ likely variation within and among species and growth forms in the
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/conceptual.pdf}}
+\includegraphics{../figures/conceptual.pdf}
 
 }
 
@@ -921,7 +896,7 @@ effects}\label{model-selection-and-parameter-estimation-of-individual-level-effe
 To infer whether individual-level variation in \gcl{} and \fgmax{}
 influence kinetic parameters, we used the leave-one-out cross-validation
 information criterion (LOOIC) to compare the fit of models using the
-\emph{R} package \textbf{loo} version 2.10.0 (Vehtari \emph{et al.},
+\emph{R} package \textbf{loo} version 2.10.1 (Vehtari \emph{et al.},
 2017). We compared models with all permutations of \gcl, \gi, and
 \gmax{} influencing \(\lambda\) and \(\tau\). We considered all models
 within two \(\Delta\)LOOIC standard errors of the minimum LOOIC
@@ -1073,8 +1048,8 @@ and 59.1\% {[}95\% CI: 34.4\% to 75.5\%{]} of the variance, respectively
 (Figure~\ref{fig-variance}, Table~\ref{tbl-variance}). High measurement
 light intensity increased \gi{} by an average of \(113.2\)\% {[}95\% CI:
 \(107.7\)\% to \(118.5\)\%{]} (Figure~\ref{fig-accession-anatomy}b;
-Table~\ref{tbl-fixed}). Sun leaves had on average \(41.6\)\% {[}95\% CI:
-\(34.4\)\% to \(49.5\)\%{]} greater \gmax{} than shade-grown plants
+Table~\ref{tbl-fixed}). Sun leaves had on average \(83.3\)\% {[}95\% CI:
+\(79.5\)\% to \(87.1\)\%{]} greater \gmax{} than shade-grown plants
 (Figure~\ref{fig-accession-anatomy}b; Table~\ref{tbl-fixed}). The
 pseudohypo leaf type had on average \(-19.5\)\% {[}95\% CI: \(-21.5\)\%
 to \(-17.3\)\%{]} lower \gi{} than untreated, amphistomatous leaves
@@ -1089,7 +1064,7 @@ on one surface was not affected by blocking gas exchange in the other
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/variance.pdf}}
+\includegraphics{../figures/variance.pdf}
 
 }
 
@@ -1107,7 +1082,7 @@ populations was low for all traits.}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/accession-anatomy.pdf}}
+\includegraphics{../figures/accession-anatomy.pdf}
 
 }
 
@@ -1121,7 +1096,7 @@ populations was low for all traits.}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{ms_files/figure-pdf/fig-accession-anatomy-cap-1.pdf}}
+\includegraphics{ms_files/figure-pdf/fig-accession-anatomy-cap-1.pdf}
 
 }
 
@@ -1173,7 +1148,7 @@ to 1.39\%{]}.
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/accession-kinetics.pdf}}
+\includegraphics{../figures/accession-kinetics.pdf}
 
 }
 
@@ -1254,7 +1229,7 @@ plausible causal effect of \gcl{} on \(\tau\) among populations.
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/gcl-tau.pdf}}
+\includegraphics{../figures/gcl-tau.pdf}
 
 }
 
@@ -1277,7 +1252,7 @@ section.}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/gi-tau.pdf}}
+\includegraphics{../figures/gi-tau.pdf}
 
 }
 
@@ -1318,7 +1293,7 @@ increased \(\tau\) by \(27.62\)\% {[}95\% CI: \(19.18\)\% to
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/mediation.pdf}}
+\includegraphics{../figures/mediation.pdf}
 
 }
 
@@ -1582,7 +1557,7 @@ publication.
 
 \singlespacing
 
-\protect\phantomsection\label{refs}
+\phantomsection\label{refs}
 \begin{CSLReferences}{0}{1}
 \bibitem[\citeproctext]{ref-aasamaa_stomatal_2011}
 \textbf{\textbf{Aasamaa K}, \textbf{Sõber A}}. \textbf{2011a}.
@@ -2488,7 +2463,7 @@ Growth light intensity & amphi & pseudohypo & amphi & pseudohypo & Total\\
 \midrule
 shade & 275 & 275 & 270 & 266 & 1,086\\
 sun & 245 & 246 & 274 & 274 & 1,039\\
-\midrule\\
+\midrule
 Total & 520 & 521 & 544 & 540 & 2,125\\
 \bottomrule
 \end{tabular}
@@ -2882,7 +2857,7 @@ traits.}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/vpd-pairs.pdf}}
+\includegraphics{../figures/vpd-pairs.pdf}
 
 }
 
@@ -2901,7 +2876,7 @@ Notes S1).}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/tau-vpd-rate.pdf}}
+\includegraphics{../figures/tau-vpd-rate.pdf}
 
 }
 
@@ -2918,7 +2893,7 @@ line us ordinary least-squares regression fit.}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/vpd-h2o-rate.pdf}}
+\includegraphics{../figures/vpd-h2o-rate.pdf}
 
 }
 
@@ -2936,7 +2911,7 @@ constants come from the same saturating-exponential model used for VPD.}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/vpd-comparison.pdf}}
+\includegraphics{../figures/vpd-comparison.pdf}
 
 }
 
@@ -2953,7 +2928,7 @@ covariate of \(\tau\) and \(\lambda\) (pink; see Notes S1).}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/compare-gsw.pdf}}
+\includegraphics{../figures/compare-gsw.pdf}
 
 }
 
@@ -2989,7 +2964,7 @@ curve.}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/gcl.pdf}}
+\includegraphics{../figures/gcl.pdf}
 
 }
 
@@ -3006,7 +2981,7 @@ larger values on the adaxial surface.}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/estimates-b.pdf}}
+\includegraphics{../figures/estimates-b.pdf}
 
 }
 
@@ -3024,7 +2999,7 @@ overlap zero.}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/estimates-phy.pdf}}
+\includegraphics{../figures/estimates-phy.pdf}
 
 }
 
@@ -3042,7 +3017,7 @@ intervals that overlap zero.}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/collinear.pdf}}
+\includegraphics{../figures/collinear.pdf}
 
 }
 
@@ -3061,7 +3036,7 @@ parameter.}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/gmax-tau.pdf}}
+\includegraphics{../figures/gmax-tau.pdf}
 
 }
 
@@ -3079,7 +3054,7 @@ treatments are described in the Materials and Methods section.}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/gi-lambda.pdf}}
+\includegraphics{../figures/gi-lambda.pdf}
 
 }
 
@@ -3098,7 +3073,7 @@ treatments are described in the Materials and Methods section.}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/gmax-lambda.pdf}}
+\includegraphics{../figures/gmax-lambda.pdf}
 
 }
 
@@ -3228,7 +3203,7 @@ nonlinear fit.
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/null-sim-fgmax-tau.pdf}}
+\includegraphics{../figures/null-sim-fgmax-tau.pdf}
 
 }
 
@@ -3261,7 +3236,7 @@ the sensitivity parameter \(\rho\) examined below.
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/mediation-dag.pdf}}
+\includegraphics{../figures/mediation-dag.pdf}
 
 }
 
@@ -3320,7 +3295,7 @@ confounders.
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{../figures/mediation-sensitivity.pdf}}
+\includegraphics{../figures/mediation-sensitivity.pdf}
 
 }
 
@@ -3331,7 +3306,6 @@ interval); the vertical solid line is the breakdown point \(\rho^*\) at
 which the indirect effect is zero.}
 
 \end{figure}%
-
 
 
 
