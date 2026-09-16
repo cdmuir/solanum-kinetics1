@@ -1,4 +1,5 @@
 % Options for packages loaded elsewhere
+% Options for packages loaded elsewhere
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
 \PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
@@ -7,21 +8,22 @@
   letterpaper,
   DIV=11,
   numbers=noendperiod]{scrartcl}
-
+\usepackage{xcolor}
 \usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
 \usepackage{iftex}
 \ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
 \else % if luatex or xetex
-  \usepackage{unicode-math}
+  \usepackage{unicode-math} % this also loads fontspec
   \defaultfontfeatures{Scale=MatchLowercase}
   \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
 \fi
 \usepackage{lmodern}
-\ifPDFTeX\else  
-    % xetex/luatex font selection
+\ifPDFTeX\else
+  % xetex/luatex font selection
   \setmainfont[]{Times New Roman}
 \fi
 % Use upquote if available, for straight quotes in verbatim environments
@@ -30,22 +32,33 @@
   \usepackage[]{microtype}
   \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
-\usepackage{xcolor}
-\setlength{\emergencystretch}{3em} % prevent overfull lines
-\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
 % Make \paragraph and \subparagraph free-standing
+\makeatletter
 \ifx\paragraph\undefined\else
   \let\oldparagraph\paragraph
-  \renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+  \renewcommand{\paragraph}{
+    \@ifstar
+      \xxxParagraphStar
+      \xxxParagraphNoStar
+  }
+  \newcommand{\xxxParagraphStar}[1]{\oldparagraph*{#1}\mbox{}}
+  \newcommand{\xxxParagraphNoStar}[1]{\oldparagraph{#1}\mbox{}}
 \fi
 \ifx\subparagraph\undefined\else
   \let\oldsubparagraph\subparagraph
-  \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+  \renewcommand{\subparagraph}{
+    \@ifstar
+      \xxxSubParagraphStar
+      \xxxSubParagraphNoStar
+  }
+  \newcommand{\xxxSubParagraphStar}[1]{\oldsubparagraph*{#1}\mbox{}}
+  \newcommand{\xxxSubParagraphNoStar}[1]{\oldsubparagraph{#1}\mbox{}}
 \fi
+\makeatother
 
 
-\providecommand{\tightlist}{%
-  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}\usepackage{longtable,booktabs,array}
+\usepackage{longtable,booktabs,array}
+\newcounter{none} % for unnumbered tables
 \usepackage{calc} % for calculating minipage widths
 % Correct order of tables after \paragraph or \subparagraph
 \usepackage{etoolbox}
@@ -57,17 +70,21 @@
 \makesavenoteenv{longtable}
 \usepackage{graphicx}
 \makeatletter
-\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
-\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
-\makeatother
-% Scale images if necessary, so that they will not overflow the page
-% margins by default, and it is still possible to overwrite the defaults
-% using explicit options in \includegraphics[width, height, ...]{}
-\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
 % Set default figure placement to htbp
-\makeatletter
 \def\fps@figure{htbp}
 \makeatother
+
+
 % definitions for citeproc citations
 \NewDocumentCommand\citeproctext{}{}
 \NewDocumentCommand\citeproc{mm}{%
@@ -102,6 +119,18 @@
 \newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{\strut#1\strut}}
 \newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
 
+
+
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+
+
+ 
+
+
 \usepackage{booktabs}
 \usepackage{longtable}
 \usepackage{array}
@@ -110,8 +139,7 @@
 \usepackage{float}
 \usepackage{colortbl}
 \usepackage{pdflscape}
-\usepackage{tabularx}
-\usepackage{xltabular}
+\usepackage{tabu}
 \usepackage{threeparttable}
 \usepackage{threeparttablex}
 \usepackage[normalem]{ulem}
@@ -189,13 +217,13 @@
 \@ifpackageloaded{caption}{}{\usepackage{caption}}
 \@ifpackageloaded{subcaption}{}{\usepackage{subcaption}}
 \makeatother
-\ifLuaTeX
-  \usepackage{selnolig}  % disable illegal ligatures
-\fi
 \usepackage{bookmark}
-
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
-\urlstyle{same} % disable monospaced font for URLs
+\urlstyle{same}
+% fallback for those not using the hyperref driver hyperxmp:
+\makeatletter
+\@ifundefined{xmpquote}{\newcommand{\xmpquote}[1]{#1}}{}
+\makeatother
 \hypersetup{
   pdftitle={Guard cell size and initial conductance influence stomatal closure kinetics},
   pdfauthor={Christopher D. Muir\^{}\{1,2*\}; Wei Shen Lim\^{}\{1\}},
@@ -206,13 +234,14 @@
   urlcolor={Blue},
   pdfcreator={LaTeX via pandoc}}
 
+
 \title{Guard cell size and initial conductance influence stomatal
 closure kinetics}
 \author{Christopher D. Muir\(^{1,2*}\) \and Wei Shen Lim\(^{1}\)}
 \date{}
-
 \begin{document}
 \maketitle
+
 
 \begin{center}
 $^1$School of Life Sciences, University of Hawaiʻi; Mānoa, Hawaiʻi, USA\\
@@ -372,7 +401,7 @@ al.}, 2016). A four-parameter equation describes stomatal response
 kinetics to a step change in light intensity across dozens of plant
 species (Woning \emph{et al.}, 2026):
 
-\begin{equation}\phantomsection\label{eq-weibull}{
+\begin{equation}\protect\phantomsection\label{eq-weibull}{
   g_\mathrm{sw,t} = g_\mathrm{f} + (g_\mathrm{i} - g_\mathrm{f}) e^{-\left(\frac{t}{\tau}\right)^\lambda}.
 }\end{equation}
 
@@ -464,7 +493,7 @@ likely variation within and among species and growth forms in the
 
 \centering{
 
-\includegraphics{../figures/conceptual.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{../figures/conceptual.pdf}}
 
 }
 
@@ -896,7 +925,7 @@ effects}\label{model-selection-and-parameter-estimation-of-individual-level-effe
 To infer whether individual-level variation in \gcl{} and \fgmax{}
 influence kinetic parameters, we used the leave-one-out cross-validation
 information criterion (LOOIC) to compare the fit of models using the
-\emph{R} package \textbf{loo} version 2.10.1 (Vehtari \emph{et al.},
+\emph{R} package \textbf{loo} version 2.10.0 (Vehtari \emph{et al.},
 2017). We compared models with all permutations of \gcl, \gi, and
 \gmax{} influencing \(\lambda\) and \(\tau\). We considered all models
 within two \(\Delta\)LOOIC standard errors of the minimum LOOIC
@@ -1064,16 +1093,16 @@ on one surface was not affected by blocking gas exchange in the other
 
 \centering{
 
-\includegraphics{../figures/variance.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{../figures/variance.pdf}}
 
 }
 
 \caption{\label{fig-variance}\textbf{Traits vary at different levels of biological organization}.
-A preponderance of the variation in guard cell length (\gcl), anatomical
-maximum stomatal conductance (\gmax), and the time constant \(\tau\) is
-phylogenetically structured among populations. In contrast, most of the
-variance in initial stomatal conductance (\gi) and the lag time
-(\(\lambda\)) is among individuals. Nonphylogenetic variation among
+A large fraction of the variation in guard cell length (\gcl),
+anatomical maximum stomatal conductance (\gmax), and the time constant
+\(\tau\) is phylogenetically structured among populations. In contrast,
+most of the variance in initial stomatal conductance (\gi) and the lag
+time (\(\lambda\)) is among individuals. Nonphylogenetic variation among
 populations was low for all traits.}
 
 \end{figure}%
@@ -1082,7 +1111,7 @@ populations was low for all traits.}
 
 \centering{
 
-\includegraphics{../figures/accession-anatomy.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{../figures/accession-anatomy.pdf}}
 
 }
 
@@ -1096,7 +1125,7 @@ populations was low for all traits.}
 
 \centering{
 
-\includegraphics{ms_files/figure-pdf/fig-accession-anatomy-cap-1.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{ms_files/figure-pdf/fig-accession-anatomy-cap-1.pdf}}
 
 }
 
@@ -1104,7 +1133,7 @@ populations was low for all traits.}
 \textbf{Guard cell length (\gcl) and stomatal conductance as a fraction of maximum conductance (\fgmax) vary among populations and treatments.}
 In both panels, black points are mean trait value per population within
 a particular treatment. Gray lines connect values within populations
-across treatments. (a) Most of the variation in \gcl{} is among
+across treatments. (a) Much of the variation in \gcl{} is among
 populations, but developmental plasticity to growth light intensity
 tends to increase \gcl{} in sun (right facet) compared to shade (left
 facet) grown plants. There is no plasticity to leaf type (amphi
@@ -1148,7 +1177,7 @@ to 1.39\%{]}.
 
 \centering{
 
-\includegraphics{../figures/accession-kinetics.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{../figures/accession-kinetics.pdf}}
 
 }
 
@@ -1204,8 +1233,8 @@ estimates from the selected model. Individual-level fixed effects
 and \(\lambda\) were qualitatively consistent across all plausible
 models.
 
-Leaves with greater \gi{} closed more slowly than those which were less
-open (Figure~\ref{fig-gi-tau}; Table~\ref{tbl-fixed}). For example,
+Leaves with greater \gi{} closed more slowly than those with lower \gi{}
+(Figure~\ref{fig-gi-tau}; Table~\ref{tbl-fixed}). For example,
 increasing \gi{} from 0.2 to
 \(\SI{0.4}{\mole\per\meter\squared\per\second}\) resulted in a 25.1\%
 {[}95\% CI: 17.6\% to 32.6\%{]} increase in \(\tau\) for a typical leaf
@@ -1229,7 +1258,7 @@ plausible causal effect of \gcl{} on \(\tau\) among populations.
 
 \centering{
 
-\includegraphics{../figures/gcl-tau.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{../figures/gcl-tau.pdf}}
 
 }
 
@@ -1252,7 +1281,7 @@ section.}
 
 \centering{
 
-\includegraphics{../figures/gi-tau.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{../figures/gi-tau.pdf}}
 
 }
 
@@ -1287,13 +1316,16 @@ indirect effects of high measurement light intensity increased \(\tau\).
 The direct effect increased \(\tau\) by \(8.56\)\% {[}95\% CI:
 \(1.40\)\% to \(16.40\)\%{]} and the indirect effect mediated by \gi{}
 increased \(\tau\) by \(27.62\)\% {[}95\% CI: \(19.18\)\% to
-\(36.24\)\%{]}.
+\(36.24\)\%{]}, for a combined total effect of \(38.59\)\% {[}95\% CI:
+\(35.29\)\% to \(41.74\)\%{]} (note that direct and indirect percentage
+effects combine additively on the log scale before back-transformation,
+so they do not simply sum on the percentage scale).
 
 \begin{figure}
 
 \centering{
 
-\includegraphics{../figures/mediation.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{../figures/mediation.pdf}}
 
 }
 
@@ -1452,22 +1484,23 @@ developed methods (Brodersen \emph{et al.}, 2025) to directly evaluate
 the association between these traits.
 
 The impact of \gi{} was most pronounced when comparing measurement light
-intensity treatments. Leaves acclimated to high light intensity were on
-average 113\% more open than the same leaves at low light intensity in
-the reference treatment (shade, amphi). As a consequence, stomata closed
-more slowly in leaves acclimated to high light intensity, with a 27.6\%
-greater time constant on average in the reference treatment, based on
-parameter estimates from the selected model (Table~\ref{tbl-fixed}). We
-did not assess whether \gi{} also affects stomatal opening and this
-should be measured to further test this hypothesis. The implication is
-that natural selection should favor \gop{} values that not only optimize
-instantaneous carbon gain and water loss in the present environment, but
-also carbon gain and water loss integrated through time in a fluctuating
-environment. We predict that rapid, temporally-uncorrelated fluctuating
-environments will favor leaves with greater \gop{} to slow kinetic
-responses and prevent overreacting to transitory changes that are likely
-to revert; slower, temporally-correlated changes will favor lower \gop{}
-to enable close tracking of the environment.
+intensity treatments. Leaves acclimated to high light intensity had on
+average 113\% greater \gi{} than the same leaves at low light intensity
+in the reference treatment (shade, amphi). As a consequence, stomata
+closed more slowly in leaves acclimated to high light intensity, with a
+27.6\% greater time constant on average in the reference treatment,
+based on parameter estimates from the selected model
+(Table~\ref{tbl-fixed}). We did not assess whether \gi{} also affects
+stomatal opening and this should be measured to further test this
+hypothesis. The implication is that natural selection should favor
+\gop{} values that not only optimize instantaneous carbon gain and water
+loss in the present environment, but also carbon gain and water loss
+integrated through time in a fluctuating environment. We predict that
+rapid, temporally-uncorrelated fluctuating environments will favor
+leaves with greater \gop{} to slow kinetic responses and prevent
+overreacting to transitory changes that are likely to revert; slower,
+temporally-correlated changes will favor lower \gop{} to enable close
+tracking of the environment.
 
 The comparison between measurement light intensity treatments should be
 interpreted cautiously, however, because it was confounded with
@@ -1557,7 +1590,7 @@ publication.
 
 \singlespacing
 
-\phantomsection\label{refs}
+\protect\phantomsection\label{refs}
 \begin{CSLReferences}{0}{1}
 \bibitem[\citeproctext]{ref-aasamaa_stomatal_2011}
 \textbf{\textbf{Aasamaa K}, \textbf{Sõber A}}. \textbf{2011a}.
@@ -2463,7 +2496,7 @@ Growth light intensity & amphi & pseudohypo & amphi & pseudohypo & Total\\
 \midrule
 shade & 275 & 275 & 270 & 266 & 1,086\\
 sun & 245 & 246 & 274 & 274 & 1,039\\
-\midrule
+\midrule\\
 Total & 520 & 521 & 544 & 540 & 2,125\\
 \bottomrule
 \end{tabular}
@@ -2729,14 +2762,14 @@ potentially includes effects of \gcl, \gi{}, and \gmax{} on \(\tau\) and
 \hspace{1em}effect of sun growth treatment on $\log(\lambda)$ & 0.03 [0.01, 0.06]\\
 \hspace{1em}effect of high measurement light intensity on $\log(\lambda)$ & -0.02 [-0.04, 0.01]\\
 \hspace{1em}effect of pseudohypo leaf type on $\log(\lambda)$ & 0.01 [-0.00, 0.03]\\
-\hspace{1em}effect of loggi on $\log(\lambda)$ & 0.15 [0.11, 0.19]\\
+\hspace{1em}effect of $\log(g_\mathrm{i})$ on $\log(\lambda)$ & 0.15 [0.11, 0.19]\\
 \addlinespace[0.3em]
 \multicolumn{2}{l}{\textbf{$\log(\tau)$}}\\
 \hspace{1em}intercept (shade, low light, amphi) & 5.58 [5.24, 5.91]\\
 \hspace{1em}effect of sun growth treatment on $\log(\tau)$ & -0.11 [-0.16, -0.06]\\
 \hspace{1em}effect of high measurement light intensity on $\log(\tau)$ & 0.08 [0.01, 0.15]\\
 \hspace{1em}effect of pseudohypo leaf type on $\log(\tau)$ & 0.08 [0.05, 0.11]\\
-\hspace{1em}effect of loggi on $\log(\tau)$ & 0.32 [0.23, 0.41]\\*
+\hspace{1em}effect of $\log(g_\mathrm{i})$ on $\log(\tau)$ & 0.32 [0.23, 0.41]\\*
 
 \end{longtable}
 
@@ -2857,7 +2890,7 @@ traits.}
 
 \centering{
 
-\includegraphics{../figures/vpd-pairs.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{../figures/vpd-pairs.pdf}}
 
 }
 
@@ -2876,7 +2909,7 @@ Notes S1).}
 
 \centering{
 
-\includegraphics{../figures/tau-vpd-rate.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{../figures/tau-vpd-rate.pdf}}
 
 }
 
@@ -2893,7 +2926,7 @@ line us ordinary least-squares regression fit.}
 
 \centering{
 
-\includegraphics{../figures/vpd-h2o-rate.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{../figures/vpd-h2o-rate.pdf}}
 
 }
 
@@ -2911,7 +2944,7 @@ constants come from the same saturating-exponential model used for VPD.}
 
 \centering{
 
-\includegraphics{../figures/vpd-comparison.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{../figures/vpd-comparison.pdf}}
 
 }
 
@@ -2928,7 +2961,7 @@ covariate of \(\tau\) and \(\lambda\) (pink; see Notes S1).}
 
 \centering{
 
-\includegraphics{../figures/compare-gsw.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{../figures/compare-gsw.pdf}}
 
 }
 
@@ -2964,7 +2997,7 @@ curve.}
 
 \centering{
 
-\includegraphics{../figures/gcl.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{../figures/gcl.pdf}}
 
 }
 
@@ -2981,7 +3014,7 @@ larger values on the adaxial surface.}
 
 \centering{
 
-\includegraphics{../figures/estimates-b.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{../figures/estimates-b.pdf}}
 
 }
 
@@ -2999,7 +3032,7 @@ overlap zero.}
 
 \centering{
 
-\includegraphics{../figures/estimates-phy.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{../figures/estimates-phy.pdf}}
 
 }
 
@@ -3017,7 +3050,7 @@ intervals that overlap zero.}
 
 \centering{
 
-\includegraphics{../figures/collinear.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{../figures/collinear.pdf}}
 
 }
 
@@ -3036,7 +3069,7 @@ parameter.}
 
 \centering{
 
-\includegraphics{../figures/gmax-tau.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{../figures/gmax-tau.pdf}}
 
 }
 
@@ -3054,7 +3087,7 @@ treatments are described in the Materials and Methods section.}
 
 \centering{
 
-\includegraphics{../figures/gi-lambda.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{../figures/gi-lambda.pdf}}
 
 }
 
@@ -3073,7 +3106,7 @@ treatments are described in the Materials and Methods section.}
 
 \centering{
 
-\includegraphics{../figures/gmax-lambda.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{../figures/gmax-lambda.pdf}}
 
 }
 
@@ -3188,11 +3221,11 @@ cor(\(\lambda\)) = 1.00), and computed the correlation between the
 \emph{estimated} \gi{} and \(\log(\tau)\). We repeated this 1,000 times
 to build a null distribution of this correlation.
 
-The null-simulation correlations ranged from -0.06 to 0.09 (median
-\(-3.1 \times 10^{-3}\)) across the 1,000 replicates, indistinguishable
+The null-simulation correlations ranged from -0.08 to 0.08 (median
+\(-3 \times 10^{-3}\)) across the 1,000 replicates, indistinguishable
 from zero (Figure~\ref{fig-null-sim-fgmax-tau}). In contrast, the real,
-observed correlation between \gi{} and \(\log(\tau)\) is 0.39 {[}0.35,
-0.42{]}, far outside the null range (empirical \(p\) = 0.000). This
+observed correlation between \gi{} and \(\log(\tau)\) is 0.43 {[}0.39,
+0.46{]}, far outside the null range (empirical \(p\) = 0.000). This
 indicates that the curve-fitting procedure alone cannot explain the
 observed \gi{}-\(\tau\) association, supporting our interpretation that
 it reflects a real relationship in the data rather than a statistical
@@ -3203,7 +3236,7 @@ nonlinear fit.
 
 \centering{
 
-\includegraphics{../figures/null-sim-fgmax-tau.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{../figures/null-sim-fgmax-tau.pdf}}
 
 }
 
@@ -3236,7 +3269,7 @@ the sensitivity parameter \(\rho\) examined below.
 
 \centering{
 
-\includegraphics{../figures/mediation-dag.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{../figures/mediation-dag.pdf}}
 
 }
 
@@ -3295,7 +3328,7 @@ confounders.
 
 \centering{
 
-\includegraphics{../figures/mediation-sensitivity.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{../figures/mediation-sensitivity.pdf}}
 
 }
 
@@ -3306,6 +3339,7 @@ interval); the vertical solid line is the breakdown point \(\rho^*\) at
 which the indirect effect is zero.}
 
 \end{figure}%
+
 
 
 

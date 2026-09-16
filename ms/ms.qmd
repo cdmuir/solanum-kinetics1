@@ -1156,7 +1156,7 @@ clean_explanatory_var = function(.x) {
     .x == "lightintensityhigh" ~ "high measurement light intensity",
     .x == "leaftypepseudohypo" ~ "pseudohypo leaf type",
     .x == "loggcl" ~ "$\\log(l_\\mathrm{gc})$",
-    .x == "logii" ~ "$\\log(g_\\mathrm{i})$",
+    .x == "loggi" ~ "$\\log(g_\\mathrm{i})$",
     .x == "loggmax" ~ "$\\log(g_\\mathrm{max})$",
     .x == "loglambdamean" ~ "$\\log(\\lambda)$",
     .x == "logtaumean" ~ "$\\log(\\tau)$",

@@ -74,11 +74,10 @@ We are glad that the revised manuscript addressed the reviewer's comments thorou
 
 * We replaced references to more or less "open" with references to \gi{} specifically.
 
-Table S7: 0.61 change in log(gmax)
+* We fixed the null simulation code to analyze the correlation between $\log \left( g_\mathrm{i} \right)$ and $\log \left( \tau\right)$ for consistency throughout the manuscript.
+
+* We agree that the residual covariance may not account for unmeasured confounding, but we believe that the changes we made before to refer to path analysis rather than causal mediation already addresses the reviewer's concern.
+
 :::
 
-
-log_to_percent = function(.x) {
-  100 * (exp(.x) - 1)
-}
 
